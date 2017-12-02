@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>短信模板</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="hz-sms-template-container">
+    <div class="sms-template-list">
+      <div class="sms-template-item" *ngFor="let template of (smsTemplates$ | async)" 
+      [class.active]="selectedTemplate === template" (click)="select(template)">
+        {{template.label}}
+      </div>
+    </div>
+
+    <div class="sms-template-detail">
+      <hz-sms-template-detail [label]="selectedTemplate?.label" [preview]="selectedTemplate?.preview"></hz-sms-template-detail>
+    </div>
+
+    <div class="sms-template-show">
+      <div class="phone-show">
+        <div class="template-preview">
+          {{selectedTemplate?.preview}}
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

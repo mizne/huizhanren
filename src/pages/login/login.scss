@@ -1,0 +1,56 @@
+page-login {
+  ion-content {
+    background: url(../assets/images/bg-huizhanren.png) no-repeat;
+    // background-color: #282c34 !important;
+
+    background-size: cover;
+    display: flex;
+    
+    @media screen and (max-width: 600px)  {
+      .hz-input-wrapper {
+        width: 90%;
+      }
+    }
+
+    @media screen and (min-width: 600px)  {
+      .hz-input-wrapper {
+        width: 600px;
+      }
+    }
+
+    .hz-input-wrapper {
+      margin: 100px auto;
+      display: flex;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+
+      .hz-form-control {
+        width: 80%;
+        background: transparent;
+        color: #fff;
+        height: 80px;
+        font-size: 24px;
+        padding: 4px 20px;
+        border: none;
+
+        &::-webkit-input-placeholder {
+          color: #fff;
+        }
+      }
+
+      .hz-input-group-addon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 20%;
+        font-size: 23px;
+        margin-left: -2px;
+        padding: 4px 20px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        height: 80px;
+      }
+    }
+  }
+}

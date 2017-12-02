@@ -1,0 +1,34 @@
+page-recommend {
+  ion-content {
+    background: url(../assets/images/bg-huizhanren-pure.png) no-repeat;
+    // background-color: #282c34 !important;
+    background-size: cover;
+    color: #aaaaaa;
+
+    .recommend-container {
+      display: flex;
+
+      .list-area {
+        background-color: #1f2022;
+        transition: width 1s;
+        flex: 1;
+
+        &.expand {
+          flex: 2;
+        }
+
+        .load-more {
+          color: #67686c;
+          text-align: center;
+        }
+      }
+
+      .detail-area {
+        flex: 1;
+        &.expand {
+          flex: 2;
+        }
+      }
+    }
+  }
+}

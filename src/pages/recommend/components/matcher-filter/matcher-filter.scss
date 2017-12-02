@@ -1,0 +1,19 @@
+.matcher-filter-container {
+  height: 82px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  label {
+    color: #999999;
+    margin-right: 10px;
+
+    &.first {
+      color: #666666;
+    }
+  }
+
+  ion-checkbox {
+    margin-right: 10px;
+  }
+}

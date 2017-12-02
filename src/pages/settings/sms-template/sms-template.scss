@@ -1,0 +1,71 @@
+sms-template {
+  ion-content {
+    background: url(../assets/images/bg-open.jpg) no-repeat;
+    background-size: cover;
+
+    .hz-sms-template-container {
+      display: flex;
+      height: calc(100vh - 140px);
+
+      .sms-template-list {
+        flex: 1;
+        min-width: 140px;
+        height: fit-content;
+        background-color: #fff;
+        color: map-get($colors, primary);
+
+        .sms-template-item {
+          text-align: center;
+          height: 50px;
+          line-height: 50px;
+
+          &:not(:first-child) {
+            border-top: 1px solid map-get($colors, primary);
+          }
+
+          &.active {
+            background-color: map-get($colors, primary);
+            color: white;
+          }
+        }
+      }
+
+      .sms-template-detail {
+        flex: 8;
+        height: 100%;
+        background: #f5f5f5;
+        padding: 50px 120px;
+      }
+
+      .sms-template-show {
+        flex: 6;
+        background: rgba(47, 94, 189, 0.5);
+        position: relative;
+
+        .phone-show {
+          width: 254px;
+          height: 549px;
+          background: url(../assets/images/setting_template_phone.png) no-repeat;
+          background-size: contain;
+          padding: 156px 77px 156px 33px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+
+          .template-preview {
+            background: #e6e5eb;
+            border-radius: 14px 14px 14px 4px;
+            padding: 8px 5px;
+            font-size: 11px;
+            line-height: 13px;
+            border: 1px solid #dfdfdf;
+            position: relative;
+          }
+        }
+      }
+    }
+  }
+}

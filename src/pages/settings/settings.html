@@ -1,0 +1,26 @@
+<!-- <ion-header>
+  <ion-navbar>
+    <ion-title>设 置</ion-title>
+  </ion-navbar>
+</ion-header> -->
+
+<ion-content padding>
+
+  <div class="hz-settings-container">
+
+    <div class="hz-settings-group">
+      <hz-setting-item *ngFor="let item of items1" [hzTitle]="item.title" [hzEditable]="item.editable" 
+      [hzItems]="item.items" (smsTemplate)="toSmsTemplate()" (tagManagement)="toTagManagement()"></hz-setting-item>
+    </div>
+
+    <div class="hz-settings-group">
+      <hz-setting-item *ngFor="let item of items2" [hzTitle]="item.title" [hzEditable]="item.editable" 
+      [hzItems]="item.items" (userManage)="toUserManage()"></hz-setting-item>
+    </div>
+
+    <div class="hz-settings-group">
+      <hz-setting-item *ngFor="let item of items3" [hzTitle]="item.title" [hzEditable]="item.editable" 
+      [hzItems]="item.items" (download)="toDownload()" (checkUpdate)="checkUpdate()" (logout)="toLogout()" (about)="toAbout()"></hz-setting-item>
+    </div>
+  </div>
+</ion-content>

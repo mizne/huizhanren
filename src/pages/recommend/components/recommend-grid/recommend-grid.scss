@@ -1,0 +1,45 @@
+.recommend-grid-container {
+  .header {
+    color: #6288d5;
+  }
+
+  .row-item {
+    color: #aaa;
+    &.even {
+      background-color: #27272a;
+    }
+
+    ion-col {
+      display: flex;
+      height: 50px;
+      align-items: center;
+
+      &:last-child {
+        justify-content: space-evenly;
+      }
+
+      .icon-wrapper {
+        border: 1px solid map-get($colors, grey);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        @include flexboxCenter;
+
+        &.active {
+          border-color: map-get($colors, primary);
+          color: map-get($colors, primary);
+        }
+
+        .icon {
+          font-size: 1rem;
+          margin-top: 3px;
+        }
+
+        .iconfont {
+          font-size: 12px;
+          color: map-get($colors, grey);
+        }
+      }
+    }
+  }
+}

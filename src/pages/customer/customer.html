@@ -1,0 +1,106 @@
+<!--
+  Generated template for the CustomerPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header>
+
+  <ion-navbar>
+    <ion-title>客 户</ion-title>
+
+    <ion-buttons end>
+      <button ion-button *ngIf="(status$ | async) === 'editable'">
+        保 存
+      </button>
+      <button ion-button icon-only *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
+        <ion-icon name="switch"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header> -->
+
+
+<ion-content padding>
+  <div class="hz-customer-container">
+    <div class="hz-toggle-log" *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
+      <i *ngIf="showLog$ | async" class="iconfont icon-right"></i>
+      <i *ngIf="!(showLog$ | async)" class="iconfont icon-left"></i>
+    </div>
+    <div class="hz-customer-left">
+      <hz-list-header (sendSms)="toSendSms()" (setGroup)="toSetGroup()" (del)="toMultiDelete()" [totalCount]="customerCount$ | async"></hz-list-header>
+      <hz-list-search>
+        <div class="input-wrapper">
+          <input class="search-input" [formControl]="searchControl" type="text" placeholder="请输入公司名/客户名/电话" [(ngModel)]="name">
+          <ion-icon class="search-icon" name="search"></ion-icon>
+        </div>
+      </hz-list-search>
+
+      <hz-collapseset>
+        <hz-collapse *ngFor="let group of (nestGroups$ | async)" [nzTitle]="group.name" [num]="group.num" [nzActive]="group.active"
+          [nzDisabled]="group.disabled" [nzSelected]="group.selected" (toggleActive)="toggleActiveGroup(group.id)" (toggleSelect)="toggleSelectGroup(group.id)"
+          (scrollTop)="onScrollTop($event, group.id)" [scrollTopHeight]="group.scrollTop">
+          <hz-customer-item *ngFor="let customer of (group.customers)" [customer]="customer" (select)="onSelectCustomer($event)" (toShowDetail)="toShowDetail($event, group.id)">
+          </hz-customer-item>
+
+          <p class="no-customer" *ngIf="group.customers.length === 0">
+            没有客户哦
+          </p>
+        </hz-collapse>
+      </hz-collapseset>
+    </div>
+
+    <div class="hz-customer-right">
+      <div class="hz-customer-editable" *ngIf="((status$ | async) === 'editable') || ((status$ | async) === 'createable')">
+        <div class="hz-customer-input-area">
+          <div class="hz-customer-center">
+            <div class="hz-card-container">
+              <img [src]="cardImg$ | async">
+            </div>
+            <hz-field-item *ngFor="let field of fields1$ | async" [field]="field"></hz-field-item>
+          </div>
+          <div class="hz-customer-input-area-right">
+            <div class="hz-card-behind-container">
+
+              <img *ngIf="cardBehindImg$ | async" [src]="cardBehindImg$ | async">
+
+              <div *ngIf="!(cardBehindImg$ | async)" class="hz-card-box" (click)="takeCardBehind()">
+                <ion-icon class="hz-icon" name="camera"></ion-icon>
+              </div>
+              <p *ngIf="!(cardBehindImg$ | async)" class="hz-card-text">添加名片背面</p>
+
+            </div>
+            <hz-field-item *ngFor="let field of fields2$ | async" [field]="field"></hz-field-item>
+            <!-- <hz-field-add></hz-field-add> -->
+          </div>
+        </div>
+
+        <div class="hz-customer-btn-wrapper">
+          <button ion-button color="light" (click)="delCard()">{{(status$ | async) === 'editable' ? '返回' : '放弃'}}</button>
+          <button ion-button (click)="saveCustomer()">保存</button>
+        </div>
+      </div>
+
+      <div class="hz-customer-detail" *ngIf="(status$ | async) === 'detailable'">
+        <hz-card-detail (editCustomer)="toEditCustomer()" (delCustomer)="toDeleteCustomer()" (showNotification)="toShowNotification()"
+          (toList)="toList()" [open]="!((showLog$ | async) || (showNotification$ | async))" [class.open]="!((showLog$ | async) || (showNotification$ | async))"
+          [class.close]="(showLog$ | async) || (showNotification$ | async)">
+        </hz-card-detail>
+        <hz-card-log *ngIf="showLog$ | async" [open]="(showLog$ | async)" [class.open]="(showLog$ | async)" [class.close]="!(showLog$ | async)">
+        </hz-card-log>
+
+        <hz-card-notification *ngIf="showNotification$ | async" [open]="(showNotification$ | async)" [class.open]="(showNotification$ | async)"
+          [class.close]="!(showNotification$ | async)">>
+        </hz-card-notification>
+      </div>
+
+      <div class="hz-customer-manage-container" *ngIf="(status$ | async) === 'manageable'">
+        <hz-customer-manage [active]="manageableStatus$ | async"></hz-customer-manage>
+      </div>
+
+    </div>
+  </div>
+</ion-content>
+
+<!-- <hz-help-toggle-log *ngIf="needShowHelpOfToggleLog$ | async">切换日志显示</hz-help-toggle-log> -->

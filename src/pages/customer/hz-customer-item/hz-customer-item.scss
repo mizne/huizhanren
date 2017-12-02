@@ -1,0 +1,61 @@
+.hz-customer-item {
+  display: flex;
+  padding: 10px;
+  background-color: #18181a;
+
+  &.choosed {
+    background-color: rgba(98, 136, 213, 0.19);
+  }
+
+  .left-area {
+    flex: 2;
+  }
+
+  .center-area {
+    margin-left: 10px;
+    flex: 16;
+
+    .item-name {
+      color: white;
+      max-width: 180px;
+      @include textOverflow;
+    }
+    .item-company {
+      margin-top: 5px;
+      color: #aaa;
+      max-width: 180px;
+      @include textOverflow;
+    }
+  }
+
+  .right-area {
+    flex: 5;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .icon-wrapper {
+      border: 1px solid map-get($colors, grey);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      @include flexboxCenter;
+
+      &.active {
+        border-color: map-get($colors, primary);
+        color: map-get($colors, primary);
+      }
+
+      .icon {
+        font-size: 1rem;
+        margin-top: 3px;
+      }
+
+      .iconfont {
+        font-size: 12px;
+        color: map-get($colors, grey);
+      }
+    }
+  }
+}

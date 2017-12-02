@@ -1,0 +1,14 @@
+.hz-field-add {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 30px;
+
+  .hz-icon {
+    color: map-get($colors, primary);
+  }
+  .hz-add-text {
+    margin-left: 5px;
+    color: map-get($colors, primary);
+  }
+}

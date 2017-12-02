@@ -1,0 +1,36 @@
+page-service {
+  ion-content {
+    background: url(../assets/images/bg-huizhanren-pure.png) no-repeat;
+    // background-color: #282c34 !important;
+    background-size: cover;
+    display: flex;
+
+    .hz-service-container {
+      width: 100%;
+      height: calc(100vh - 140px);
+      margin: 0 auto;
+      padding: 0 35px;
+      // background-color: rgba(33, 33, 33, 0.95);
+      
+      a {
+        text-decoration: none;
+        color: white;
+        text-align: center;
+        font-size: 27px;
+      }
+      
+      .hz-module-box1 {
+        padding-top: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .hz-module-box2 {
+        padding-top: 50px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+    }
+  }
+}

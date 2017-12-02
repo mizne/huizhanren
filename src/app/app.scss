@@ -1,0 +1,91 @@
+// http://ionicframework.com/docs/theming/
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+@media (min-width: 800px) {
+  .tabbar {
+    padding: 0 260px;
+    background-color: #0d0d0f !important;
+
+    &.show-tabbar {
+      transition: all linear .3s;
+    }
+
+    .tab-button {
+      // min-height: 70px;
+      margin-left: 10px;
+      margin-right: 10px;
+      min-height: 50px;
+
+      &:nth-child(3n) {
+        background-color: #6287d5;
+        border-radius: 30px;
+
+        & .icon {
+          margin-top: 0;
+        }
+      }
+
+      .icon {
+        // font-size: 4rem;
+        font-size: 3rem;
+        // height: 40px;
+        color: white;
+      }
+      .tab-button-text {
+        // font-size: 1.6rem;
+        font-size: 1.3rem;
+        color: white;
+      }
+    }
+
+    .tab-button[aria-selected=true] {
+      background-color: #222224;
+      color: white;
+      & .icon {
+        color: white;
+      }
+    }
+  }
+}
+
+.toolbar-background {
+  background-color: #1d1c1c;
+}
+
+.toolbar-content {
+  .toolbar-title {
+    color: white;
+    text-align: center;
+  }
+}
+
+ul, ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toast-message {
+  text-align: center !important;
+  font-size: 2rem !important;
+  background-color: white !important;
+  color: #333 !important;
+}
+
+@import '../styles/modal';
+@import '../styles/button';
+@import '../styles/mixins';
+@import '../styles/fix';
+@import '../styles/iconfont';

@@ -1,0 +1,76 @@
+.hz-field-item {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  .hz-field-title {
+    display: flex;
+    .hz-title-text {
+      flex: 8;
+      color: #6288d5;
+    }
+
+    .hz-icon {
+      flex: 1;
+      text-align: right;
+      color: #6288d5;
+    }
+  }
+
+  .hz-field-single {
+    height: 30px;
+    line-height: 30px;
+
+    .hz-field-input {
+      width: 90%;
+      font-size: 16px;
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  .hz-field-multi {
+    @include flexboxCenter;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+
+    .hz-field-label {
+      position: relative;
+      width: 30%;
+      input {
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-bottom: 1px solid #ddd;
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        right: -3px;
+        -webkit-transform: rotate(135deg);
+        -ms-transform: rotate(135deg);
+        transform: rotate(135deg);
+        height: 0;
+        width: 0;
+        border-bottom: 5px solid #ddd;
+        border-left: 5px dashed transparent;
+        border-right: 5px dashed transparent;
+      }
+    }
+    .hz-field-value {
+      width: 60%;
+      input, textarea {
+        width: 100%;
+        font-size: 16px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+    .hz-icon {
+      width: 10%;
+      color: #ddd;
+    }
+  }
+}

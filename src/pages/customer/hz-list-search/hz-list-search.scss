@@ -1,0 +1,37 @@
+.hz-list-search {
+  display: flex;
+  height: 82px;
+  padding: 16px 10px;
+  background-color: transparent;
+
+  .input-wrapper {
+    position: relative;
+    background-color: #18181a;
+    border-radius: 36px;
+    .search-input {
+      flex: 10;
+      border-radius: 36px;
+      background-color: #18181a;
+      color: white;
+      border: 1px #18181a solid;
+      padding-left: 12px;
+      transition: all .5s;
+
+      &:focus {
+        border: 1px #6190ec solid;
+      }
+    }
+  
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+  }
+}
+

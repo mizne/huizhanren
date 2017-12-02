@@ -1,0 +1,18 @@
+.hz-selector {
+  position: relative;
+  flex: 1;
+  color: #666666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  &:not(:last-child) {
+    border-right: 1px solid #27272A;
+  }
+
+  i {
+    margin-left: 10px;
+  }
+}
+

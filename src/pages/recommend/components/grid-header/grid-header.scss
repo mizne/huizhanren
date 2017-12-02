@@ -1,0 +1,31 @@
+.grid-header-container {
+  display: flex;
+
+  .grid-header {
+    position: relative;
+    flex: 1;
+    height: 60px;
+    background-color: #2c2d31;
+    color: #999999;
+    display: flex;
+
+    .text {
+      flex: 9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+    }
+    .icon-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &.active {
+      background-color: #38393c;
+      color: #ffffff;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+page-settings {
+
+  @media screen and (max-width: 500px) {
+    .hz-settings-container {
+      padding: 0;
+    }
+  }
+
+  @media screen and (min-width: 500px) {
+    .hz-settings-container {
+      padding: 0 160px;
+    }
+  }
+
+  .hz-settings-container {
+    .hz-settings-group {
+      display: flex;
+      margin-bottom: 10px;
+
+      hz-setting-item {
+        flex: 1;
+
+        @media screen and (min-width: 500px) {
+          &:not(:first-child) {
+            margin-left: 165px;
+          }
+        }
+
+        @media screen and (max-width: 500px) {
+          &:not(:first-child) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+}

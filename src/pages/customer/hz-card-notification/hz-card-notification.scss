@@ -1,0 +1,27 @@
+hz-card-notification {
+  width: 100%;
+}
+
+.hz-card-notification {
+  background-color: rgba(47, 94, 189, 0.8);;
+  width: 100%;
+  height: calc(100vh - 90px);
+
+  .hz-notification-title {
+    height: 52px;
+    background: #2f5ebd;
+    line-height: 52px;
+    padding: 0 14px;
+    vertical-align: middle;
+    color: #fff;
+    font-size: 18px;
+  }
+
+  .hz-notification-container {
+    padding: 22px 28px 22px 24px;
+    color: #fff;
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+  }
+}
+

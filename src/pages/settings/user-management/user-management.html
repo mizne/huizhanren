@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>用户管理</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="user-management">
+    <div class="user-management-nav">
+      <p>{{companyName$ | async}}</p>
+    </div>
+
+    <div class="user-management-content">
+      <div class="admin-container">
+        <div class="admin-wrapper">
+          <div class="admin-title">管理员</div>
+
+          <div class="admin-content">
+            <hz-admin-item type="name" title="管理员" [value]="adminName$ | async"></hz-admin-item>
+            <hz-admin-item type="phone" title="已验证手机" [value]="phone$ | async"></hz-admin-item>
+            <hz-admin-item type="company" title="公司" [value]="companyName$ | async"></hz-admin-item>
+          </div>
+        </div>
+      </div>
+
+      <div class="user-container">
+        <div class="user-wrapper">
+          <div class="user-title">用户</div>
+
+          <div class="user-content" *ngIf="(users$ | async)?.length > 0">
+            <hz-user-item *ngFor="let user of (users$ | async)" [name]="user.name" [phone]="user.phone"
+              (deleteUser)="toDeleteUser(user.id)"></hz-user-item>
+          </div>
+          <p class="no-user" *ngIf="(users$ | async)?.length === 0">还没有可登录用户</p>
+
+          <div class="user-action">
+            <div class="user-prompt">
+              用户最多可添加{{ maxCount$ | async }}个
+            </div>
+            <div class="user-add" (click)="toAddUser()">
+              <ion-icon name="add-circle" color="primary"></ion-icon>
+              <span class="user-add-text">添加用户</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

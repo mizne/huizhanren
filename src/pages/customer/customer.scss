@@ -1,0 +1,197 @@
+page-customer {
+  ion-header {
+    .bar-button-md {
+      color: white;
+      font-size: 2rem;
+    }
+  }
+
+  ion-content {
+    background: url(../assets/images/bg-huizhanren-pure.png) no-repeat;
+    // background-color: #282c34 !important;
+    background-size: cover;
+    display: flex;
+
+    .hz-customer-container {
+      display: flex;
+      height: calc(100vh - 90px);
+      position: relative;
+
+      .hz-toggle-log {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: -124px;
+        z-index: 200;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        background-color: rgba(26, 27, 29, 0.8);
+
+        .iconfont {
+          position: absolute;
+          top: 50%;
+          left: 10px;
+          transform: translateY(-50%);
+          font-size: 30px;
+          color: map-get($colors, primary);
+        }
+      }
+
+      .hz-customer-left {
+        flex: 1;
+        position: fixed;
+        width: calc(33% - 16px);
+
+        .no-customer {
+          color: white;
+          text-align: center;
+        }
+      }
+      .hz-customer-right {
+        flex: 2;
+        margin-left: 33%;
+        width: 66%;
+
+        .hz-customer-editable {
+          display: flex;
+          background-color: #fff;
+          flex-direction: column;
+
+          .hz-customer-input-area {
+            display: flex;
+            .hz-customer-center {
+              flex: 1;
+              padding: 16px 15px 16px 36px;
+              .hz-card-container {
+                height: 200px;
+                // background-size: cover;
+                // background-image: url(../../assets/images/card.jpg);
+                img {
+                  width: 100%;
+                  max-height: 100%;
+                  max-width: 100%;
+                }
+              }
+            }
+
+            .hz-customer-input-area-right {
+              flex: 1;
+              padding: 16px 36px 16px 15px;
+
+              .hz-card-behind-container {
+                height: 200px;
+                border: 1px solid #e6e6e6;
+                // background-size: cover;
+                // background-image: url(../assets/images/card.jpg);
+                @include flexboxCenter;
+                flex-direction: column;
+
+                img {
+                  width: 100%;
+                  max-height: 100%;
+                }
+
+                .hz-card-box {
+                  width: 70px;
+                  height: 70px;
+                  line-height: 70px;
+                  border-radius: 50%;
+                  background-color: #aaaaa9;
+                  color: #fff;
+
+                  @include flexboxCenter;
+
+                  .hz-icon {
+                    font-size: 2.5rem;
+                  }
+                }
+              }
+            }
+          }
+
+          .hz-customer-btn-wrapper {
+            display: flex;
+            margin-bottom: 10px;
+            justify-content: space-around;
+            padding: 0 150px;
+            button {
+              width: 80px;
+              height: 36px;
+            }
+          }
+        }
+
+        .hz-customer-detail {
+          // display: flex;
+
+          hz-card-detail,
+          hz-card-log,
+          hz-card-notification {
+            transition: all ease .8s;
+          }
+
+          hz-card-detail {
+            float: left;
+          }
+
+          hz-card-detail.close {
+            // flex: 1;
+            display: inline-block;
+            width: 50%;
+          }
+
+          hz-card-detail.open {
+            width: 100%;
+          }
+
+          hz-card-log.close,
+          hz-card-notification.close {
+            width: 0;
+            // -webkit-animation: fadeOutRight .6s 0.2s ease both;
+            // animation: fadeOutRight .6s 0.2s ease both;
+          }
+
+          hz-card-log.open,
+          hz-card-notification.open {
+            // flex: 1;
+            display: inline-block;
+            width: 50%;
+            // -webkit-animation: fadeInRight .6s 0.2s ease both;
+            // animation: fadeInRight .6s 0.2s ease both;
+          }
+        }
+
+        .hz-customer-manage-container {
+          display: flex;
+          background-color: white;
+        }
+      }
+    }
+  }
+}
+
+@-webkit-keyframes fadeInRight { 0% { opacity: 0;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px); }
+100% { opacity: 1;
+  -webkit-transform: translateX(0);
+          transform: translateX(0); } }
+@keyframes fadeInRight { 0% { opacity: 0;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px); }
+100% { opacity: 1;
+  -webkit-transform: translateX(0);
+          transform: translateX(0); } }
+@-webkit-keyframes fadeOutRight { 0% { opacity: 1;
+  -webkit-transform: translateX(0);
+          transform: translateX(0); }
+100% { opacity: 0;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px); } }
+@keyframes fadeOutRight { 0% { opacity: 1;
+  -webkit-transform: translateX(0);
+          transform: translateX(0); }
+100% { opacity: 0;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px); } }

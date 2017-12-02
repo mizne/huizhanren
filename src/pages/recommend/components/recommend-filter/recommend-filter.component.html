@@ -1,0 +1,8 @@
+<div class="recommend-filter-container">
+  <div class="selectors">
+    <hz-selector [options]="areaOptions" [selectedValueSub]="areaSelectSub"></hz-selector>
+    <hz-selector [options]="typeOptions" [selectedValueSub]="typeSelectSub"></hz-selector>
+  </div>
+
+  <hz-search-input [searchSub]="searchSub" [debounceTime]="300"></hz-search-input>
+</div>
