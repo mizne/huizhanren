@@ -1,15 +1,15 @@
 <div class="grid-header-container">
   <div class="grid-header left-header" (clickOutside)="closeLeftMore()" (click)="activeHeader(0)" [class.active]="activeIndex === 0">
-    <div class="text">推荐买家</div>
+    <div class="text">{{type === 'recommend' ? '推荐买家' : '本届展商'}}</div>
     <div class="icon-wrapper" (click)="showLeftMore($event)">
-      <ion-icon name="more" *ngIf="activeIndex === 0"></ion-icon>
+      <i class="iconfont icon-more" *ngIf="activeIndex === 0"></i>
     </div>
     <div class="hz-popover-wrapper" [@collapseState]="activeLeftMore ? 'active' : 'inactive'">
       <div class="hz-popover-item" (click)="batchInvite($event)">
-        <ion-icon name="chatbubbles"></ion-icon>批量约请
+        <i class="iconfont icon-yuyue"></i> 批量约请
       </div>
       <div class="hz-popover-item" (click)="batchHidden($event)">
-        <ion-icon name="people"></ion-icon>批量隐藏
+        <i class="iconfont icon-yincang"></i> 批量隐藏
       </div>
     </div>
   </div>
@@ -17,20 +17,20 @@
   <div class="grid-header right-header" (clickOutside)="closeRigthMore()" (click)="activeHeader(1)" [class.active]="activeIndex === 1">
     <div class="text">约请信息</div>
     <div class="icon-wrapper" (click)="showRightMore($event)">
-      <ion-icon name="more" *ngIf="activeIndex === 1"></ion-icon>
+      <i class="iconfont icon-more" *ngIf="activeIndex === 1"></i>
     </div>
     <div class="hz-popover-wrapper" [@collapseState]="activeRightMore ? 'active' : 'inactive'">
       <div class="hz-popover-item" (click)="batchAccept($event)">
-        <ion-icon name="chatbubbles"></ion-icon>批量接受
+        <i class="iconfont icon-jieshou"></i>批量接受
       </div>
       <div class="hz-popover-item" (click)="batchRefuse($event)">
-        <ion-icon name="people"></ion-icon>批量拒绝
+        <i class="iconfont icon-jujue"></i>批量拒绝
       </div>
       <div class="hz-popover-item" (click)="batchCancel($event)">
-        <ion-icon name="people"></ion-icon>批量取消
+        <i class="iconfont icon-quxiao"></i>批量取消
       </div>
       <div class="hz-popover-item" (click)="batchDelete($event)">
-        <ion-icon name="people"></ion-icon>批量删除
+        <i class="iconfont icon-shanchu"></i>批量删除
       </div>
     </div>
   </div>

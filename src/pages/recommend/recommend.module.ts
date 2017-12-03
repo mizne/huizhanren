@@ -3,13 +3,11 @@ import { IonicPageModule } from 'ionic-angular'
 import { RecommendPage } from './recommend'
 
 import { RecommendGridComponent } from './components/recommend-grid/recommend-grid.component'
-import { GridHeaderComponent } from './components/grid-header/grid-header.component'
-import { RecommendFilterComponent } from './components/recommend-filter/recommend-filter.component'
 import { RecommendDetailComponent } from './components/recommend-detail/recommend-detail.component'
-import { MatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 import { HzCustomerAbstractComponent } from './components/customer-abstract/customer-abstract.component'
 import { HzCustomerStatusComponent } from './components/customer-status/customer-status.component'
 import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
+import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
@@ -29,13 +27,11 @@ const effects = [RecommendEffects, MatcherEffects]
   declarations: [
     RecommendPage,
     RecommendGridComponent,
-    GridHeaderComponent,
-    RecommendFilterComponent,
     RecommendDetailComponent,
-    MatcherFilterComponent,
     HzCustomerAbstractComponent,
     HzCustomerStatusComponent,
     HzCustomerPortrayComponent,
+    HzMatcherFilterComponent,
   ],
   imports: [
     SharedModule,

@@ -4,25 +4,22 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import { Matcher } from '../models/matcher.model'
-import { fakeJson } from '../../../fake/fake';
+import { Exhibitor } from '../models/exhibitor.model'
 
-const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
+const fakeExhibitors: Exhibitor[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
   name: `testName${i}`,
   logo: './assets/images/card.jpg',
   booth: `testBooth${i}`,
   industry: `testIndustry${i}`,
   area: `testArea${i}`,
-  heat: i,
-  status: 0
+  heat: i
 }))
 
 @Injectable()
-export class MatcherService {
+export class ExhibitorService {
   private fetchUrl: string = '/data/querybycondition/User'
-  private agreeUrl: string = '/data/insert/User'
-  private refuseUrl: string = '/data/insert/User'
+  private inviteUrl: string = '/data/insert/User'
 
   constructor(
     private http: HttpClient,
@@ -30,14 +27,14 @@ export class MatcherService {
   ) {}
 
   /**
-   * 获取 发出的或收到的约请记录
+   * 获取推荐展商 分页请求
    *
    * @param {number} pageIndex
    * @param {number} pageSize
-   * @returns {Observable<Matcher[]>}
-   * @memberof MatcherService
+   * @returns {Observable<Recommend[]>}
+   * @memberof RecommendService
    */
-  fetchMatchers(pageIndex: number, pageSize: number): Observable<Matcher[]> {
+  fetchExhibitors(pageIndex: number, pageSize: number): Observable<Exhibitor[]> {
     // return this.tenantService
     //   .getTenantIdAndUserId()
     //   .mergeMap(([tenantId, userId]) => {
@@ -45,37 +42,20 @@ export class MatcherService {
     //   })
     //   .catch(this.handleError)
 
-    return Observable.of(fakeMatchers)
+    return Observable.of(fakeExhibitors)
   }
-
   /**
-   * 同意约请
+   * 约请某个推荐展商
    *
-   * @param {string} matcherId
+   * @param {string} exhibitorID
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof RecommendService
    */
-  agreeMatcher(matcherId: string): Observable<any> {
+  inviteExhibitor(exhibitorID: string): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.agreeUrl + `/${tenantId}/${userId}`, {})
-      })
-      .catch(this.handleError)
-  }
-
-  /**
-   * 拒绝约请
-   *
-   * @param {string} matcherId
-   * @returns {Observable<any>}
-   * @memberof MatcherService
-   */
-  refuseMatcher(matcherId: string): Observable<any> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.refuseUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(this.inviteUrl + `/${tenantId}/${userId}`, {})
       })
       .catch(this.handleError)
   }

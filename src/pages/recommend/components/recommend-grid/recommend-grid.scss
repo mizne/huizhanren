@@ -1,4 +1,6 @@
 .recommend-grid-container {
+  max-height: calc(100vh - 220px);
+  overflow: auto;
   .header {
     color: #6288d5;
   }

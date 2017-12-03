@@ -7,10 +7,14 @@
 <ion-content padding>
   <div class="recommend-container">
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
-      <grid-header [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></grid-header>
+      <hz-grid-header type="recommend" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
-      <hz-recommend-filter *ngIf="(listStatus$ | async) === 0" [filterSub]="recommendFilterSub"></hz-recommend-filter>
-      <hz-matcher-filter *ngIf="(listStatus$ | async) === 1" [filterSub]="matcherFilterSub"></hz-matcher-filter>
+      <hz-grid-filter *ngIf="(listStatus$ | async) === 0"
+        [filterSub]="recommendFilterSub" [filterOptions]="filterOptions">
+      </hz-grid-filter>
+      <hz-matcher-filter *ngIf="(listStatus$ | async) === 1"
+        [filterSub]="matcherFilterSub">
+      </hz-matcher-filter>
 
       <recommend-grid *ngIf="(listStatus$ | async) === 0" type="recommend" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="recommends$ | async"></recommend-grid>
       <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async"></recommend-grid>

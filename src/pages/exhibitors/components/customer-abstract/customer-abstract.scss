@@ -1,0 +1,61 @@
+.customer-abstract-container {
+  height: 180px;
+  margin-bottom: 5px;
+  padding: 20px;
+  background-color: #fff;
+  color: map-get($map: $colors, $key: grey);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .customer-header {
+    display: flex;
+    justify-content: space-between;
+    .customer-name {
+      color: map-get($map: $colors, $key: dark);
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .customer-rate {
+      width: 30%;
+      hz-rate {
+        width: 100%;
+      }
+    }
+  }
+
+  .customer-company {
+    margin-top: 10px;
+  }
+
+  .customer-industry {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .industry {
+      border: 1px solid map-get($map: $colors, $key: primary);
+      color: map-get($map: $colors, $key: primary);
+      padding:1px 3px;
+    }
+  }
+
+  .customer-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+
+    hz-customer-status {
+      width: 25%;
+    }
+
+    .invite {
+      button {
+        width: 100px;
+        height: 30px;
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<div class="customer-status-container">
+  <div class="icon-wrapper" [class.active]="helpActive">
+    <i class="iconfont icon-help"></i>
+  </div>
+  <div class="icon-wrapper" [class.active]="inviteCount > 0">
+    <i class="iconfont icon-doc"></i>
+    <div class="icon-number">{{inviteCount}}</div>
+  </div>
+  <div class="icon-wrapper" [class.active]="presentActive">
+    <i class="iconfont icon-dao"></i>
+  </div>
+</div>

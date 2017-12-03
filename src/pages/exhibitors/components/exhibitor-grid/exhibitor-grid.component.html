@@ -1,0 +1,75 @@
+<div class="exhibitor-grid-container">
+  <div class="exhibitor-item" *ngFor="let item of dataItems" (click)="ensureShow(item.id)">
+    <div class="logo">
+      <img [src]="item.logo" alt="">
+    </div>
+
+    <div class="desc">
+      <div class="header">{{item.name}}</div>
+
+      <div class="center">
+        <div class="area">
+          {{item.booth + ' | ' + item.area}}
+        </div>
+
+        <div class="matcher-dest" *ngIf="type === 'matcher'">
+          收
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="industry">
+          {{item.industry}}
+        </div>
+
+        <div class="right-area">
+          <div class="heat" *ngIf="type === 'exhibitor'; else matcherBlock;">
+            <i class="iconfont icon-view"></i> {{item.heat}}
+          </div>
+          <ng-template #matcherBlock>
+            <div class="matcher-status">已同意</div>
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--
+<ion-grid *ngIf="expand; else noExpand;" class="exhibitor-grid-container">
+  <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
+    <ion-col col-1>{{item.name}}</ion-col>
+    <ion-col col-1>{{item.title}}</ion-col>
+
+  </ion-row>
+</ion-grid>
+
+
+<ng-template #noExpand>
+  <ion-grid class="recommend-grid-container">
+    <ion-row class="header">
+      <ion-col col-2>姓名</ion-col>
+      <ion-col col-2>职务</ion-col>
+      <ion-col col-5>公司</ion-col>
+      <ion-col col-3></ion-col>
+    </ion-row>
+
+    <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
+      <ion-col col-2>{{item.name}}</ion-col>
+      <ion-col col-2>{{item.title}}</ion-col>
+      <ion-col col-5>{{item.company}}</ion-col>
+      <ion-col col-3>
+        <div class="icon-wrapper">
+          <i class="iconfont icon-help"></i>
+        </div>
+        <div class="icon-wrapper">
+          <i class="iconfont icon-doc"></i>
+        </div>
+        <div class="icon-wrapper">
+          <i class="iconfont icon-dao"></i>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ng-template> -->

@@ -1,0 +1,13 @@
+<div class="matcher-filter-container">
+  <label class="first" for="">筛选:</label>
+  <ion-checkbox [formControl]="allowControl"></ion-checkbox>
+  <label for="">已同意</label>
+  <ion-checkbox [formControl]="refuseControl"></ion-checkbox>
+  <label>被拒绝</label>
+  <ion-checkbox [formControl]="unAuditControl"></ion-checkbox>
+  <label for="">未审核</label>
+  <ion-checkbox [formControl]="notAllowAuditControl"></ion-checkbox>
+  <label for="">审核未通过</label>
+  <ion-checkbox [formControl]="unReplyControl"></ion-checkbox>
+  <label for="">未答复</label>
+</div>

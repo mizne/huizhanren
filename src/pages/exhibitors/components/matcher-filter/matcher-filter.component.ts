@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { MatcherStatus } from '../../models/matcher.model'
 
 @Component({
-  selector: 'hz-matcher-filter',
+  selector: 'exhibitor-matcher-filter',
   templateUrl: 'matcher-filter.component.html',
 })
 export class HzMatcherFilterComponent implements OnInit {

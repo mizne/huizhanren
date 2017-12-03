@@ -4,7 +4,8 @@ import {
   ToastController,
   ModalController,
   LoadingController,
-  App
+  App,
+  IonicPage,
 } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -42,42 +43,14 @@ import { Logger, LoggerLevel } from '../customer/models/logger.model'
 import { Customer } from './models/recommend.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
 
-export interface RecommendFilter {
-  area: string,
-  type: string,
-  key: string
-}
 
+@IonicPage()
 @Component({
   selector: 'page-recommend',
   templateUrl: 'recommend.html',
   providers: [DestroyService]
 })
 export class RecommendPage implements OnInit, OnDestroy {
-  recommends = [
-    {
-      name: 'testName1',
-      title: 'testTitle1',
-      company: 'testCompany1',
-      industry: 'testIndustry1',
-      area: 'testArea1'
-    },
-    {
-      name: 'testName2',
-      title: 'testTitle2',
-      company: 'testCompany2',
-      industry: 'testIndustry2',
-      area: 'testArea2'
-    },
-    {
-      name: 'testName3',
-      title: 'testTitle3',
-      company: 'testCompany3',
-      industry: 'testIndustry3',
-      area: 'testArea3'
-    }
-  ]
-
   recommends$: Observable<Recommend[]>
   matchers$: Observable<Matcher[]>
 
@@ -90,9 +63,46 @@ export class RecommendPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<RecommendFilter> = new Subject<RecommendFilter>()
+  recommendFilterSub: Subject<any> = new Subject<any>()
   matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
+
+  filterOptions = [
+    [
+      {
+        label: '不限区域',
+        value: '0'
+      },
+      {
+        label: '区域一',
+        value: '1'
+      },
+      {
+        label: '区域二',
+        value: '2'
+      }
+    ],
+    [
+      {
+        label: '不限分类',
+        value: '0'
+      },
+      {
+        label: '分类一',
+        value: '1'
+      },
+      {
+        label: '分类二',
+        value: '2'
+      }
+    ],
+    [
+      {
+        label: '默认排序',
+        value: '0'
+      }
+    ]
+  ]
 
   constructor(
     public navCtrl: NavController,

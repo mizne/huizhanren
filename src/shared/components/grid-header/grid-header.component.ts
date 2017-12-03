@@ -2,13 +2,12 @@ import { Component, OnInit, Input } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 import { trigger, state, style, animate, transition } from '@angular/animations'
 
-import { ListHeaderEvent } from '../../models/recommend.model'
+import { ListHeaderEvent, ListStatus } from '../../../pages/recommend/models/recommend.model'
 import { ListHeader } from 'ionic-angular/components/list/list-header';
 
-import { ListStatus } from '../../models/recommend.model'
 
 @Component({
-  selector: 'grid-header',
+  selector: 'hz-grid-header',
   templateUrl: 'grid-header.component.html',
   animations: [
     trigger('collapseState', [
@@ -29,7 +28,7 @@ import { ListStatus } from '../../models/recommend.model'
     ])
   ]
 })
-export class GridHeaderComponent implements OnInit {
+export class HzGridHeaderComponent implements OnInit {
   activeLeftMore: boolean = false
   activeRightMore: boolean = false
 

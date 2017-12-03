@@ -5,6 +5,38 @@
 </ion-header> -->
 
 <ion-content padding>
+  <div class="exhibitors-container">
+    <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
+      <hz-grid-header type="exhibitors" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
-  <p>展商</p>
+      <hz-grid-filter *ngIf="(listStatus$ | async) === 0"
+        [filterSub]="recommendFilterSub" [filterOptions]="filterOptions">
+      </hz-grid-filter>
+      <exhibitor-matcher-filter *ngIf="(listStatus$ | async) === 1"
+        [filterSub]="matcherFilterSub">
+      </exhibitor-matcher-filter>
+
+      <exhibitor-grid *ngIf="(listStatus$ | async) === 0"
+        type="exhibitor" (showDetail)="updateDetailID($event)"
+        [expand]="(pageStatus$ | async) === 0" [dataItems]="exhibitors$ | async">
+      </exhibitor-grid>
+      <exhibitor-grid *ngIf="(listStatus$ | async) === 1" type="matcher"
+        (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
+        [dataItems]="matchers$ | async">
+      </exhibitor-grid>
+
+      <p class="load-more" (click)="loadMore()">加载更多</p>
+    </div>
+
+    <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
+      <exhibitor-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
+        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async">
+      </exhibitor-detail>
+    </div>
+
+    <div class="hz-toggle-log" *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
+      <i *ngIf="(pageStatus$ | async) === 1" class="iconfont icon-right"></i>
+      <i *ngIf="(pageStatus$ | async) === 0" class="iconfont icon-left"></i>
+    </div>
+  </div>
 </ion-content>
