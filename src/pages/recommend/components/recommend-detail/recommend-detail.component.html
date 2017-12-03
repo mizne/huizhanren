@@ -1,3 +1,37 @@
 <div class="recommend-detail-container">
-  recommend detail
+  <div class="left-area">
+    <div class="card-container">
+      <div class="card-info">
+        <div class="title">名片信息</div>
+        <div class="desc">约请同意后可显示具体名片</div>
+      </div>
+    </div>
+
+    <div class="customer-container">
+      <hz-customer-abstract></hz-customer-abstract>
+      <div class="customer-detail">
+        <div class="headers">
+          <div class="header-item logger" [class.active]="activeHeaderIndex === 0" (click)="activeHeader(0)">日志</div>
+          <div class="header-item portray" [class.active]="activeHeaderIndex === 1" (click)="activeHeader(1)">用户画像</div>
+        </div>
+
+        <div class="content">
+          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal" [logs]="logs"></hz-logger-list>
+          <hz-customer-portray *ngIf="activeHeaderIndex === 1" [portray]="portray"></hz-customer-portray>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-area" *ngIf="expand">
+    <div class="headers">
+      <div class="header-item logger" [class.active]="activeDetailHeaderIndex === 0" (click)="activeDetailHeader(0)">日志</div>
+      <div class="header-item portray" [class.active]="activeDetailHeaderIndex === 1" (click)="activeDetailHeader(1)">用户画像</div>
+    </div>
+
+    <div class="content">
+      <hz-logger-list *ngIf="activeDetailHeaderIndex === 0" theme="primary" [logs]="logs"></hz-logger-list>
+      <hz-customer-portray *ngIf="activeDetailHeaderIndex === 1" [portray]="portray"></hz-customer-portray>
+    </div>
+  </div>
 </div>

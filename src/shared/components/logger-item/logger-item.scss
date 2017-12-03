@@ -1,0 +1,83 @@
+.hz-logger-item {
+  position: relative;
+  min-height: 57px;
+  padding-bottom: 20px;
+  padding-left: 35px;
+
+  &:before {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    box-sizing: content-box;
+    width: 13px;
+    height: 13px;
+    content: '';
+    border-radius: 50%;
+  }
+
+  &.normal:before {
+    background: map-get($map: $normalLogger, $key: primary);
+  }
+  &.primary:before {
+    background: map-get($map: $primaryLogger, $key: primary);
+  }
+
+  &:after {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+    width: 1px;
+    height: 100%;
+    content: '';
+
+  }
+
+  &.normal:after {
+    background: map-get($map: $normalLogger, $key: primary);
+  }
+  &.primary:after {
+    background: map-get($map: $primaryLogger, $key: primary);
+  }
+
+  .hz-logger-time {
+    margin-bottom: 5px;
+    font-size: 12px;
+
+  }
+  &.normal .hz-logger-time {
+    color: map-get($map: $normalLogger, $key: timeText);
+  }
+  &.primary .hz-logger-time {
+    color: map-get($map: $primaryLogger, $key: timeText);
+  }
+
+  .hz-logger-content {
+    display: inline-block;
+    min-height: 42px;
+    padding: 12px 15px 8px;
+    border-radius: 4px;
+    background: #6190ec;
+  }
+  &.normal .hz-logger-content {
+    color: map-get($map: $normalLogger, $key: contentText);
+  }
+  &.primary .hz-logger-content {
+    color: map-get($map: $primaryLogger, $key: contentText);
+  }
+
+  .hz-logger-content.info {
+    background-color: #a66cb9;
+  }
+
+  .hz-logger-content.warn {
+    background-color: #0ec5a9;
+  }
+
+  .hz-logger-content.error {
+    background-color: #ef9c64;
+  }
+
+  .hz-logger-content.sys {
+    background-color: #2f5ebd;
+  }
+}

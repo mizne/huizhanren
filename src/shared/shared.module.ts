@@ -5,6 +5,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { HzSearchInputComponent } from './components/search-input/search-input.component'
 import { HzSelectorComponent } from './components/selector/selector.component'
+import { HzRateComponent } from './components/rate/rate.component'
+
+import { HzLoggerItemComponent } from './components/logger-item/logger-item.component'
+import { HzLoggerItemAddComponent } from './components/logger-item-add/logger-item-add.component'
+import { HzLoggerListComponent } from './components/logger-list/logger-list.component'
 
 import { ClickOutSideDirective } from './directives/click-outside.directive'
 
@@ -14,6 +19,10 @@ const pipes = [
 const components = [
   HzSearchInputComponent,
   HzSelectorComponent,
+  HzRateComponent,
+  HzLoggerItemComponent,
+  HzLoggerItemAddComponent,
+  HzLoggerListComponent
 ]
 
 const directives = [

@@ -13,8 +13,20 @@ export class RecommendDetailComponent implements OnInit {
   @Input() logs: Logger[]
   @Input() detail: Customer
   @Input() portray: Portray
+  @Input() expand: boolean
+
+  activeHeaderIndex: number = 0
+  activeDetailHeaderIndex: number = 0
 
   constructor() {}
 
   ngOnInit() {}
+
+  activeHeader(index: number) {
+    this.activeHeaderIndex = index
+  }
+
+  activeDetailHeader(index: number) {
+    this.activeDetailHeaderIndex = index
+  }
 }

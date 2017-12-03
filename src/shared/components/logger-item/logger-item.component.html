@@ -1,0 +1,8 @@
+<div [ngClass]="['hz-logger-item', theme]">
+  <div class="hz-logger-time">
+    {{log.time}}
+  </div>
+  <div class="hz-logger-content" [ngClass]="log.level">
+    {{log.content}}
+  </div>
+</div>

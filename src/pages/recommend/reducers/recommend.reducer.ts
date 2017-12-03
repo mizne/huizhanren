@@ -48,6 +48,15 @@ export function reducer(
         pageStatus: action.pageStatus
       }
 
+    case fromRecommend.TOGGLE_PAGE_STATUS:
+      return {
+        ...state,
+        pageStatus:
+          state.pageStatus === PageStatus.LIST
+            ? PageStatus.DETAIL
+            : PageStatus.LIST
+      }
+
     case fromRecommend.UPDATE_DETAIL_ID:
       return {
         ...state,

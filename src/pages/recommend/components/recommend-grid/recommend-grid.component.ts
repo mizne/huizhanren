@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Recommend } from '../../models/recommend.model'
 
@@ -14,7 +14,13 @@ export class RecommendGridComponent implements OnInit {
 
   @Input() dataItems: Recommend[]
 
+  @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
+
   constructor() {}
 
   ngOnInit() {}
+
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
+  }
 }

@@ -1,0 +1,57 @@
+.hz-logger-item-add {
+  position: relative;
+  display: flex;
+  min-height: 57px;
+  padding-bottom: 20px;
+  padding-left: 35px;
+
+  &.normal {
+    color: map-get($map: $normalLogger, $key: primary);
+  }
+  &.primary {
+    color: map-get($map: $primaryLogger, $key: primary);
+  }
+
+  &:before {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    box-sizing: content-box;
+    width: 13px;
+    height: 13px;
+    content: '';
+    border-radius: 50%;
+  }
+
+  &.normal:before {
+    background: map-get($map: $normalLogger, $key: primary);
+    border: 3px solid map-get($map: $normalLogger, $key: addBorderColor);
+  }
+
+  &.primary:before {
+    background: map-get($map: $primaryLogger, $key: primary);
+    border: 3px solid map-get($map: $primaryLogger, $key: addBorderColor);
+  }
+
+  &:after {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+    width: 1px;
+    height: 100%;
+    content: '';
+  }
+
+  &.normal:after {
+    background: map-get($map: $normalLogger, $key: primary);
+  }
+
+  &.primary:after {
+    background: map-get($map: $primaryLogger, $key: primary);
+  }
+
+  .iconfont {
+    font-size: 20px;
+    margin-left: 7px;
+  }
+}

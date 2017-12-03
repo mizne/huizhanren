@@ -22,8 +22,10 @@ import {
 import {
   ToCreateLoggerAction,
   ChangePageStatusAction,
+  TogglePageStatusAction,
   ChangeListStatusAction,
-  FetchRecommendAction
+  FetchRecommendAction,
+  UpdateDetailIDAction,
 } from './actions/recommend.action'
 import { FetchMatchersAction } from './actions/matcher.action'
 
@@ -36,7 +38,7 @@ import {
 } from './models/recommend.model'
 import { DestroyService } from '../../providers/destroy.service'
 
-import { Logger } from '../customer/models/logger.model'
+import { Logger, LoggerLevel } from '../customer/models/logger.model'
 import { Customer } from './models/recommend.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
 
@@ -114,6 +116,14 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.loadMoreSub.next()
   }
 
+  updateDetailID(id: string) {
+    this.store.dispatch(new UpdateDetailIDAction(id))
+  }
+
+  toggleLog() {
+    this.store.dispatch(new TogglePageStatusAction())
+  }
+
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
@@ -122,6 +132,81 @@ export class RecommendPage implements OnInit, OnDestroy {
 
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
+
+    this.currentLogs$ = Observable.of([
+      {
+        id: '0',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '1',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      },
+      {
+        id: '2',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '3',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      },
+      {
+        id: '4',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '5',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      },
+      {
+        id: '0',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '1',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      },
+      {
+        id: '2',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '3',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      },
+      {
+        id: '4',
+        time: '2017-12-11',
+        content: 'test Logger1',
+        level: 'sys' as LoggerLevel
+      },
+      {
+        id: '5',
+        time: '2017-12-14',
+        content: 'test Logger2',
+        level: 'info' as LoggerLevel
+      }
+    ])
   }
 
   private initCurrentDetail(): void {

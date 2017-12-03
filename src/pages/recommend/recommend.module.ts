@@ -1,12 +1,15 @@
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { RecommendPage } from './recommend';
+import { NgModule } from '@angular/core'
+import { IonicPageModule } from 'ionic-angular'
+import { RecommendPage } from './recommend'
 
 import { RecommendGridComponent } from './components/recommend-grid/recommend-grid.component'
 import { GridHeaderComponent } from './components/grid-header/grid-header.component'
 import { RecommendFilterComponent } from './components/recommend-filter/recommend-filter.component'
 import { RecommendDetailComponent } from './components/recommend-detail/recommend-detail.component'
 import { MatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
+import { HzCustomerAbstractComponent } from './components/customer-abstract/customer-abstract.component'
+import { HzCustomerStatusComponent } from './components/customer-status/customer-status.component'
+import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
 
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
@@ -18,15 +21,9 @@ import { MatcherEffects } from './effects/matcher.effects'
 import { RecommendService } from './services/recommend.service'
 import { MatcherService } from './services/matcher.service'
 
-const services = [
-  RecommendService,
-  MatcherService,
-]
+const services = [RecommendService, MatcherService]
 
-const effects = [
-  RecommendEffects,
-  MatcherEffects,
-]
+const effects = [RecommendEffects, MatcherEffects]
 
 @NgModule({
   declarations: [
@@ -36,15 +33,16 @@ const effects = [
     RecommendFilterComponent,
     RecommendDetailComponent,
     MatcherFilterComponent,
+    HzCustomerAbstractComponent,
+    HzCustomerStatusComponent,
+    HzCustomerPortrayComponent,
   ],
   imports: [
     SharedModule,
     StoreModule.forFeature('recommendModule', reducers),
     EffectsModule.forFeature(effects),
-    IonicPageModule.forChild(RecommendPage),
+    IonicPageModule.forChild(RecommendPage)
   ],
-  providers: [
-    ...services
-  ]
+  providers: [...services]
 })
 export class RecommendPageModule {}

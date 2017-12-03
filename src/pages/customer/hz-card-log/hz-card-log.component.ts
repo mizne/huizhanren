@@ -19,7 +19,6 @@ import { Logger } from '../models/logger.model'
       </div>
 
       <div class="hz-log-container">
-        <hz-card-log-item-add></hz-card-log-item-add>
         <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
         <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
       </div>
@@ -54,7 +53,7 @@ export class HzCardLogComponent implements OnInit {
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(private store: Store<State>) { 
+  constructor(private store: Store<State>) {
     this.logs$ = store.select(getLogs)
 
     this.showLog$ = store.select(getShowLog)

@@ -12,16 +12,21 @@
       <hz-recommend-filter *ngIf="(listStatus$ | async) === 0" [filterSub]="recommendFilterSub"></hz-recommend-filter>
       <hz-matcher-filter *ngIf="(listStatus$ | async) === 1" [filterSub]="matcherFilterSub"></hz-matcher-filter>
 
-      <recommend-grid *ngIf="(listStatus$ | async) === 0" type="recommend" [expand]="(pageStatus$ | async) === 0" [dataItems]="recommends$ | async"></recommend-grid>
-      <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async"></recommend-grid>
+      <recommend-grid *ngIf="(listStatus$ | async) === 0" type="recommend" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="recommends$ | async"></recommend-grid>
+      <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async"></recommend-grid>
 
       <p class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <recommend-detail [detail]="currentDetail$ | async"
+      <recommend-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async" [portray]="currentPortray$ | async">
       </recommend-detail>
     </div>
+
+    <div class="hz-toggle-log" *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
+        <i *ngIf="(pageStatus$ | async) === 1" class="iconfont icon-right"></i>
+        <i *ngIf="(pageStatus$ | async) === 0" class="iconfont icon-left"></i>
+      </div>
   </div>
 </ion-content>

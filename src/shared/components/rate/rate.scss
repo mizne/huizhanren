@@ -1,0 +1,12 @@
+.hz-rate-container {
+  display: flex;
+  background-color: transparent;
+  justify-content: space-between;
+
+  .iconfont {
+    &.active {
+      color: map-get($map: $colors, $key: golden);
+    }
+  }
+}
+

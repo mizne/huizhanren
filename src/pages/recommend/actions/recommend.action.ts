@@ -12,6 +12,7 @@ export const INVITE_RECOMMEND_FAILURE = '[Recommend] Invite Recommend Failure'
 
 export const CHANGE_LIST_STATUS = '[Recommend] Change List Status'
 export const CHANGE_PAGE_STATUS = '[Recommend] Change Page Status'
+export const TOGGLE_PAGE_STATUS = '[Recommend] Toggle Page Status'
 export const UPDATE_DETAIL_ID = '[Recommend] Update Detail ID'
 
 export const TO_CREATE_LOGGER = '[Recommend] To Create Logger'
@@ -72,6 +73,9 @@ export class ChangePageStatusAction implements Action {
   readonly type = CHANGE_PAGE_STATUS
   constructor(public pageStatus: PageStatus) {}
 }
+export class TogglePageStatusAction implements Action {
+  readonly type = TOGGLE_PAGE_STATUS
+}
 export class UpdateDetailIDAction implements Action {
   readonly type = UPDATE_DETAIL_ID
   constructor(public detailID: string) {}
@@ -123,6 +127,7 @@ InviteRecommendFailureAction |
 
 ChangeListStatusAction |
 ChangePageStatusAction |
+TogglePageStatusAction |
 UpdateDetailIDAction |
 
 ToCreateLoggerAction |

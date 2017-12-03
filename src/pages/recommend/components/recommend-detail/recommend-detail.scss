@@ -1,3 +1,79 @@
 .recommend-detail-container {
+  display: flex;
+  .left-area {
+    flex: 1;
+    .card-container {
+      background-color: #6287d5;
+      height: 200px;
+      padding: 10px 20px;
 
+      .card-info {
+        @include flexboxCenter;
+        height: 100%;
+        background-color: #efeef4;
+        color: map-get($map: $colors, $key: primary);
+        flex-direction: column;
+        .title {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    .customer-container {
+      background-color: #efeff4;
+
+      .customer-detail {
+        background-color: #fff;
+        padding: 30px 10px;
+        .headers {
+          display: flex;
+          justify-content: space-around;
+          padding: 0 50px;
+
+          .header-item {
+            font-size: 1.8rem;
+            color: map-get($map: $colors, $key: grey);
+            &.active {
+              color: map-get($map: $colors, $key: primary);
+              border-bottom: 2px solid map-get($map: $colors, $key: primary);
+            }
+          }
+        }
+
+        .content {
+          margin-top: 20px;
+          height: calc(100vh - 580px);
+          overflow: auto;
+        }
+      }
+    }
+  }
+
+  .right-area {
+    flex: 1;
+    background-color: #264073;
+    .headers {
+      display: flex;
+      justify-content: space-around;
+      .header-item {
+        flex: 1;
+        @include flexboxCenter;
+        color: #fff;
+        height: 40px;
+        font-size: 1.8rem;
+        background-color: #6287D5;
+
+        &.active {
+          background-color: #305EBC;
+        }
+      }
+
+    }
+
+    .content {
+      padding: 30px 30px;
+      height: calc(100vh - 130px);
+      overflow: auto;
+    }
+  }
 }
