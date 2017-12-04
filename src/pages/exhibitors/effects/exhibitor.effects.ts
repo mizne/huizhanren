@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import { ModalController, ToastController } from 'ionic-angular'
+import {
+  ModalController,
+  ToastController,
+  LoadingController
+} from 'ionic-angular'
 import * as fromExhibitor from '../actions/exhibitor.action'
 import * as fromMatcher from '../actions/matcher.action'
 
@@ -26,17 +30,24 @@ export class ExhibitorEffects {
   fetchExhibitors$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
     .map((action: fromExhibitor.FetchExhibitorsAction) => action.payload)
-    .mergeMap(({ pageIndex, pageSize }) =>
-      this.exhibitorService
+    .mergeMap(({ pageIndex, pageSize }) => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取展商信息中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+
+      return this.exhibitorService
         .fetchExhibitors(pageIndex, pageSize)
-        .map(
-          exhibitors =>
-            new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
-        )
-        .catch(err =>
-          Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
-        )
-    )
+        .map(exhibitors => {
+          loadingCtrl.dismiss()
+          return new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
+        })
+        .catch(err => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
+        })
+    })
 
   @Effect()
   toInviteExhibitor$ = this.actions$
@@ -208,6 +219,7 @@ export class ExhibitorEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
+    private loadCtrl: LoadingController,
     private exhibitorService: ExhibitorService,
     private loggerService: LoggerService,
     private store: Store<State>

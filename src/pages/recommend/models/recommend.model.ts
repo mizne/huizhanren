@@ -5,6 +5,9 @@ export class Customer {
   company?: string
   industry?: string
   area?: string
+  organizer?: string
+  organizerId?: string
+  mobile?: string
 }
 
 export class Recommend extends Customer {
@@ -17,7 +20,22 @@ export class Recommend extends Customer {
       title: resp.JobTitle,
       company: resp.CompName,
       industry: resp.Industry,
-      area: resp.Area
+      area: resp.Province,
+      organizer: resp.Organizer,
+      organizerId: resp.OrganizerId,
+      mobile: resp.Mob
+    }
+  }
+
+  static convertFromModel(model: Recommend): RecommendResp {
+    return {
+      Organizer: model.organizer,
+      OrganizerId: model.organizerId,
+      Name: model.name,
+      CompName: model.company,
+      Mob: model.mobile,
+      JobTitle: model.title,
+      Province: model.area,
     }
   }
 }
@@ -29,7 +47,10 @@ export class RecommendResp {
   JobTitle?: string
   CompName?: string
   Industry?: string
-  Area?: string
+  Organizer?: string
+  OrganizerId?: string
+  Mob?: string
+  Province?: string
 }
 
 export interface RecommendFilter {

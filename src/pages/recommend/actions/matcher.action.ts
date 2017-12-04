@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Matcher } from '../models/matcher.model'
+import { Matcher, MatcherStatus, FetchMatcherParams } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Recommend] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Recommend] Fetch Matchers Success'
@@ -22,12 +22,10 @@ export const REFUSE_MATCHER_FAILURE = '[Recommend] Refuse Matcher Failure'
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
+
 export class FetchMatchersAction implements Action {
   readonly type = FETCH_MATCHERS
-  constructor(public payload: {
-    pageSize: number,
-    pageIndex: number
-  } = {
+  constructor(public payload: FetchMatcherParams = {
     pageIndex: 1,
     pageSize: 10
   }) {}

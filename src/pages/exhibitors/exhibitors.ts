@@ -253,7 +253,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   private initLoadMoreRecommend(loadMore: Observable<ListStatus>) {
     loadMore.filter(e => e === ListStatus.EXHIBITOR)
     .withLatestFrom(this.recommendFilterSub.startWith({
-      type: '',
+      acreage: '',
       area: '',
       key: ''
     }), (_, recommendFilter) => recommendFilter)

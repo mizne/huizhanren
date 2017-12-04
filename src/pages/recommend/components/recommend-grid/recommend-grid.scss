@@ -30,6 +30,12 @@
     }
   }
 
+  .no-data {
+    @include flexboxCenter;
+    height: 50px;
+    color: map-get($map: $colors, $key: grey);
+  }
+
   hz-customer-status.no-expand {
     width: 100%;
   }

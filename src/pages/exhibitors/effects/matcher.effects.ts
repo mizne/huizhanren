@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable'
 
-import { ModalController, ToastController } from 'ionic-angular'
+import {
+  ModalController,
+  ToastController,
+  LoadingController
+} from 'ionic-angular'
 
 import * as fromMatcher from '../actions/matcher.action'
 
@@ -18,22 +22,35 @@ export class MatcherEffects {
       this.matcherService
         .fetchMatchers(pageIndex, pageSize)
         .map(matchers => new fromMatcher.FetchMatchersSuccessAction(matchers))
-        .catch(err => Observable.of(new fromMatcher.FetchMatchersFailureAction()))
+        .catch(err =>
+          Observable.of(new fromMatcher.FetchMatchersFailureAction())
+        )
     )
 
   @Effect()
   agreeMatcher$ = this.actions$
     .ofType(fromMatcher.AGREE_MATCHER)
     .map((action: fromMatcher.AgreeMatcherAction) => action.matcherId)
-    .mergeMap(matcherId =>
-      this.matcherService
+    .mergeMap(matcherId => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取约请信息中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+      return this.matcherService
         .agreeMatcher(matcherId)
-        .concatMap(() => [
-          new fromMatcher.AgreeMatcherSuccessAction(),
-          new fromMatcher.FetchMatchersAction()
-        ])
-        .catch(() => Observable.of(new fromMatcher.AgreeMatcherFailureAction()))
-    )
+        .concatMap(() => {
+          loadingCtrl.dismiss()
+          return [
+            new fromMatcher.AgreeMatcherSuccessAction(),
+            new fromMatcher.FetchMatchersAction()
+          ]
+        })
+        .catch(() => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromMatcher.AgreeMatcherFailureAction())
+        })
+    })
 
   @Effect({ dispatch: false })
   agreeMatcherSuccess$ = this.actions$
@@ -72,7 +89,9 @@ export class MatcherEffects {
           new fromMatcher.RefuseMatcherSuccessAction(),
           new fromMatcher.FetchMatchersAction()
         ])
-        .catch(() => Observable.of(new fromMatcher.RefuseMatcherFailureAction()))
+        .catch(() =>
+          Observable.of(new fromMatcher.RefuseMatcherFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -105,6 +124,7 @@ export class MatcherEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
+    private loadCtrl: LoadingController,
     private matcherService: MatcherService
   ) {}
 }

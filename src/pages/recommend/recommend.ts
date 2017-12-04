@@ -230,7 +230,6 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.recommendFilterSub
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
-        console.log(recommendFilter)
         const params: FetchRecommendParams = {
           ...recommendFilter,
           pageIndex: 1,
@@ -244,7 +243,11 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.matcherFilterSub
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        console.log(matcherFilter)
+        this.store.dispatch(new FetchMatchersAction({
+          pageIndex: 1,
+          pageSize: 10,
+          statuses: matcherFilter
+        }))
       })
   }
 

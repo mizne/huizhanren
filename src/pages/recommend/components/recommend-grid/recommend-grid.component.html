@@ -13,25 +13,33 @@
     <ion-col col-1></ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let item of dataItems; even as even" class="row-item"
-  [class.even]="even" [class.active]="activeId === item.id" (click)="ensureShow(item.id)">
-    <ion-col col-1 class="checkbox-col">
-      <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
-    </ion-col>
-    <ion-col col-1>{{item.name}}</ion-col>
-    <ion-col col-1>{{item.title}}</ion-col>
-    <ion-col col-2>{{item.company}}</ion-col>
-    <ion-col col-2>{{item.industry}}</ion-col>
+  <div *ngIf="dataItems.length > 0; else noData;">
+    <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
+      (click)="ensureShow(item.id)">
+      <ion-col col-1 class="checkbox-col">
+        <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+      </ion-col>
+      <ion-col col-1>{{item.name}}</ion-col>
+      <ion-col col-1>{{item.title}}</ion-col>
+      <ion-col col-2>{{item.company}}</ion-col>
+      <ion-col col-2>{{item.industry}}</ion-col>
 
-    <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>
+      <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>
 
-    <ion-col col-1 *ngIf="type === 'matcher'">{{item.area}}</ion-col>
-    <ion-col col-2 *ngIf="type === 'matcher'">{{item.status}}</ion-col>
+      <ion-col col-1 *ngIf="type === 'matcher'">{{item.area}}</ion-col>
+      <ion-col col-2 *ngIf="type === 'matcher'">{{item.status | matcherStatus}}</ion-col>
 
-    <ion-col col-2>
-      <hz-customer-status class="expand"></hz-customer-status>
-    </ion-col>
-  </ion-row>
+      <ion-col col-2>
+        <hz-customer-status class="expand"></hz-customer-status>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ng-template #noData>
+    <div class="no-data">
+      没有数据
+    </div>
+  </ng-template>
 </ion-grid>
 
 <ng-template #noExpand>
@@ -43,13 +51,22 @@
       <ion-col col-3></ion-col>
     </ion-row>
 
-    <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
-      <ion-col col-2>{{item.name}}</ion-col>
-      <ion-col col-2>{{item.title}}</ion-col>
-      <ion-col col-5>{{item.company}}</ion-col>
-      <ion-col col-3>
-        <hz-customer-status class="no-expand"></hz-customer-status>
-      </ion-col>
-    </ion-row>
+    <div *ngIf="dataItems.length > 0; else noData;">
+      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
+        <ion-col col-2>{{item.name}}</ion-col>
+        <ion-col col-2>{{item.title}}</ion-col>
+        <ion-col col-5>{{item.company}}</ion-col>
+        <ion-col col-3>
+          <hz-customer-status class="no-expand"></hz-customer-status>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ng-template #noData>
+      <div class="no-data">
+        没有数据
+      </div>
+    </ng-template>
+
   </ion-grid>
 </ng-template>

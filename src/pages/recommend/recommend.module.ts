@@ -9,7 +9,6 @@ import { HzCustomerStatusComponent } from './components/customer-status/customer
 import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
-
 import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
 
 import { SharedModule } from '../../shared/shared.module'
@@ -19,12 +18,16 @@ import { reducers } from './reducers'
 import { RecommendEffects } from './effects/recommend.effects'
 import { MatcherEffects } from './effects/matcher.effects'
 
+import { MatcherStatusPipe } from './pipes/matcher-status.pipe'
+
 import { RecommendService } from './services/recommend.service'
 import { MatcherService } from './services/matcher.service'
 
 const services = [RecommendService, MatcherService]
 
 const effects = [RecommendEffects, MatcherEffects]
+
+const pipes = [MatcherStatusPipe]
 
 @NgModule({
   declarations: [
@@ -37,6 +40,7 @@ const effects = [RecommendEffects, MatcherEffects]
     HzMatcherFilterComponent,
 
     ToInviteCustomerModal,
+    ...pipes
   ],
   imports: [
     SharedModule,
@@ -45,8 +49,6 @@ const effects = [RecommendEffects, MatcherEffects]
     IonicPageModule.forChild(RecommendPage)
   ],
   providers: [...services],
-  entryComponents: [
-    ToInviteCustomerModal
-  ]
+  entryComponents: [ToInviteCustomerModal]
 })
 export class RecommendPageModule {}

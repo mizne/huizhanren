@@ -5,29 +5,26 @@ import { Observable } from 'rxjs/Observable'
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { Matcher } from '../models/matcher.model'
-import { fakeJson } from '../../../fake/fake';
+import { Exhibitor } from '../models/exhibitor.model'
 
 const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
   name: `testName${i}`,
-  logo: './assets/images/card.jpg',
-  booth: `testBooth${i}`,
+  title: `testTitle${i}`,
+  company: `testCompany${i}`,
   industry: `testIndustry${i}`,
   area: `testArea${i}`,
-  heat: i,
   status: 0
 }))
 
 @Injectable()
 export class MatcherService {
-  private fetchUrl: string = '/data/querybycondition/User'
+  private fetchUrl: string = '/data/ExhibitionInvitationInfo'
+  private insertUrl = '/data/insert/ExhibitionInvitationInfo'
   private agreeUrl: string = '/data/insert/User'
   private refuseUrl: string = '/data/insert/User'
 
-  constructor(
-    private http: HttpClient,
-    private tenantService: TenantService
-  ) {}
+  constructor(private http: HttpClient, private tenantService: TenantService) {}
 
   /**
    * 获取 发出的或收到的约请记录
@@ -38,18 +35,48 @@ export class MatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(pageIndex: number, pageSize: number): Observable<Matcher[]> {
-    // return this.tenantService
-    //   .getTenantIdAndUserId()
-    //   .mergeMap(([tenantId, userId]) => {
-    //     return this.http.post(this.fetchUrl + `/${tenantId}/${userId}`, {})
-    //   })
-    //   .catch(this.handleError)
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}`)
+      })
+      .map(e => (e as APIResponse).result)
+      .map(e => e.map(Matcher.convertFromResp))
+      .catch(this.handleError)
 
-    return Observable.of(fakeMatchers)
+    // return Observable.of(fakeMatchers)
   }
 
+  // createMatcher(
+  //   recommend: Exhibitor,
+  //   boothArea: string,
+  //   tenantId: string,
+  //   customerId: string
+  // ): Observable<any> {
+  //   const params = Recommend.convertFromModel(recommend)
+  //   Object.assign(params, {
+  //     Place: boothArea,
+  //     State: '未审核',
+  //     Initator: tenantId,
+  //     Receiver: customerId
+  //   })
+
+  //   console.log(params)
+
+  //   return this.tenantService
+  //     .getTenantIdAndUserId()
+  //     .mergeMap(([tenantId, userId]) => {
+  //       return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+  //         params: {
+  //           record: params
+  //         }
+  //       })
+  //     })
+  //     .catch(this.handleError)
+  // }
+
   /**
-   * 同意约请
+   * 同意约请 TODO
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
@@ -65,7 +92,7 @@ export class MatcherService {
   }
 
   /**
-   * 拒绝约请
+   * 拒绝约请 TODO
    *
    * @param {string} matcherId
    * @returns {Observable<any>}

@@ -12,6 +12,7 @@ import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-moda
 import { Logger } from '../../customer/models/logger.model'
 
 import { RecommendService } from '../services/recommend.service'
+import { MatcherService } from '../services/matcher.service'
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
 
@@ -23,6 +24,7 @@ import {
   getCompanyName,
   getSelectedExhibitionAddress
 } from '../../login/reducers'
+import { getTenantId } from '../../login/reducers'
 
 @Injectable()
 export class RecommendEffects {
@@ -93,9 +95,19 @@ export class RecommendEffects {
   inviteRecommend$ = this.actions$
     .ofType(fromRecommend.INVITE_RECOMMEND)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .mergeMap(recommendID =>
-      this.recommendService
-        .InviteRecommend(recommendID)
+    .withLatestFrom(this.store.select(getRecommends), (id, recommends) => recommends.find(e => e.id === id))
+    .withLatestFrom(this.store.select(getSelectedExhibitionAddress), (recommend, boothArea) => ({
+      recommend, boothArea
+    }))
+    .withLatestFrom(this.store.select(getTenantId), ({recommend, boothArea}, tenantId) => ({
+      recommend, boothArea, tenantId
+    }))
+    .withLatestFrom(this.store.select(getShowDetailID), ({ recommend, boothArea, tenantId }, customerId) => ({
+      recommend, boothArea, tenantId, customerId
+    }))
+    .mergeMap(({ recommend, boothArea, tenantId, customerId }) =>
+      this.matcherService
+        .createMatcher(recommend, boothArea, tenantId, customerId)
         .concatMap(() => [
           new fromRecommend.InviteRecommendSuccessAction(),
           new fromMatcher.FetchMatchersAction()
@@ -221,6 +233,7 @@ export class RecommendEffects {
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
     private recommendService: RecommendService,
+    private matcherService: MatcherService,
     private loggerService: LoggerService,
     private store: Store<State>
   ) {}

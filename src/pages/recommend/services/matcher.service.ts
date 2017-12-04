@@ -4,8 +4,12 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import { Matcher } from '../models/matcher.model'
-import { fakeJson } from '../../../fake/fake';
+import {
+  Matcher,
+  FetchMatcherParams,
+  convertMatcherStatusFromModel
+} from '../models/matcher.model'
+import { Recommend } from '../models/recommend.model'
 
 const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
@@ -19,14 +23,12 @@ const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
 
 @Injectable()
 export class MatcherService {
-  private fetchUrl: string = '/data/querybycondition/User'
+  private fetchUrl: string = '/data/InvitationInfo'
+  private insertUrl = '/data/insert/InvitationInfo'
   private agreeUrl: string = '/data/insert/User'
   private refuseUrl: string = '/data/insert/User'
 
-  constructor(
-    private http: HttpClient,
-    private tenantService: TenantService
-  ) {}
+  constructor(private http: HttpClient, private tenantService: TenantService) {}
 
   /**
    * 获取 发出的或收到的约请记录
@@ -36,19 +38,57 @@ export class MatcherService {
    * @returns {Observable<Matcher[]>}
    * @memberof MatcherService
    */
-  fetchMatchers(pageIndex: number, pageSize: number): Observable<Matcher[]> {
-    // return this.tenantService
-    //   .getTenantIdAndUserId()
-    //   .mergeMap(([tenantId, userId]) => {
-    //     return this.http.post(this.fetchUrl + `/${tenantId}/${userId}`, {})
-    //   })
-    //   .catch(this.handleError)
+  fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        let query = `?role=E&tenantId=${tenantId}`
+        if (params.pageIndex) {
+          query += `&pageIndex=${params.pageIndex}`
+        }
+        if (params.pageSize) {
+          query += `&pageSize=${params.pageSize}`
+        }
+        if (params.statuses) {
+          query += `&state=${params.statuses.map(convertMatcherStatusFromModel)}`
+        }
+        return this.http.get(this.fetchUrl + query)
+      })
+      .map(e => (e as APIResponse).result)
+      .map(e => e.map(Matcher.convertFromResp))
+      .catch(this.handleError)
 
-    return Observable.of(fakeMatchers)
+    // return Observable.of(fakeMatchers)
+  }
+
+  createMatcher(
+    recommend: Recommend,
+    boothArea: string,
+    tenantId: string,
+    customerId: string
+  ): Observable<any> {
+    const params = Recommend.convertFromModel(recommend)
+    Object.assign(params, {
+      Place: boothArea,
+      State: '未审核',
+      Initator: tenantId,
+      Receiver: customerId
+    })
+
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+          params: {
+            record: params
+          }
+        })
+      })
+      .catch(this.handleError)
   }
 
   /**
-   * 同意约请
+   * 同意约请 TODO
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
@@ -64,7 +104,7 @@ export class MatcherService {
   }
 
   /**
-   * 拒绝约请
+   * 拒绝约请 TODO
    *
    * @param {string} matcherId
    * @returns {Observable<any>}

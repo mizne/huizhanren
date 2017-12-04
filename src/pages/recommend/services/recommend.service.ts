@@ -22,7 +22,6 @@ const fakeRecommends: Recommend[] = Array.from({ length: 10 }, (_, i) => ({
 @Injectable()
 export class RecommendService {
   private fetchUrl: string = '/data/VisiterInfo'
-  private inviteUrl: string = '/data/insert/User'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -63,21 +62,6 @@ export class RecommendService {
       .catch(this.handleError)
 
     // return Observable.of(fakeRecommends)
-  }
-  /**
-   * 约请某个推荐客户
-   *
-   * @param {string} recommendId
-   * @returns {Observable<any>}
-   * @memberof RecommendService
-   */
-  InviteRecommend(recommendId: string): Observable<any> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.inviteUrl + `/${tenantId}/${userId}`, {})
-      })
-      .catch(this.handleError)
   }
 
   private handleError(error: any): Observable<any> {
