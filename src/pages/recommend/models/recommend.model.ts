@@ -38,6 +38,14 @@ export interface RecommendFilter {
   key: string
 }
 
+export interface FetchRecommendParams {
+  pageSize?: number
+  pageIndex?: number
+  key?: string
+  area?: string
+  type?: string
+}
+
 export interface Portray {
   id?: string
   name?: string
@@ -61,3 +69,42 @@ export enum ListHeaderEvent {
   BATCH_CANCEL,
   BATCH_DELETE
 }
+
+export const AREA_OPTIONS = [
+  {
+    label: '不限区域',
+    value:　''
+  },
+  {
+    label: '北京市',
+    value: 'beijing'
+  },
+  {
+    label: '天津市',
+    value: 'tianjin'
+  },
+  {
+    label: '上海市',
+    value: 'shanghai'
+  },
+  {
+    label: '江苏省',
+    value: 'jiangsu'
+  },
+  {
+    label: '浙江省',
+    value: 'zhejiang'
+  },
+  {
+    label: '山东省',
+    value: 'shandong'
+  },
+  {
+    label: '湖北省',
+    value: 'hubei'
+  },
+  {
+    label: '安徽省',
+    value: 'anhui'
+  }
+]

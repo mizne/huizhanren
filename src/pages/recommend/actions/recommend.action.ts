@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Recommend, ListStatus, PageStatus } from '../models/recommend.model'
+import { Recommend, ListStatus, PageStatus, FetchRecommendParams } from '../models/recommend.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_RECOMMEND = '[Recommend] Fetch Recommend'
@@ -36,12 +36,10 @@ export const FETCH_LOGGER_FAILURE = '[Recommend] Fetch Logger Failure'
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
+
 export class FetchRecommendAction implements Action {
   readonly type = FETCH_RECOMMEND
-  constructor(public payload: {
-    pageSize: number,
-    pageIndex: number
-  } = {
+  constructor(public payload: FetchRecommendParams = {
     pageIndex: 1,
     pageSize: 10
   }) {}

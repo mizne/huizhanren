@@ -14,7 +14,11 @@ import { Observable } from 'rxjs/Observable'
 import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID } from '../reducers'
+import { State, getShowDetailID, getExhibitors } from '../reducers'
+import {
+  getCompanyName,
+  getSelectedExhibitionAddress
+} from '../../login/reducers'
 
 @Injectable()
 export class ExhibitorEffects {
@@ -29,22 +33,37 @@ export class ExhibitorEffects {
           exhibitors =>
             new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
         )
-        .catch(err => Observable.of(new fromExhibitor.FetchExhibitorsFailureAction()))
+        .catch(err =>
+          Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
+        )
     )
 
-    @Effect()
-    toInviteExhibitor$ = this.actions$.ofType(fromExhibitor.TO_INVITE_EXHIBITOR)
-    .map((action: fromExhibitor.ToInviteExhibitorAction) => action.exhibitorID)
-    .mergeMap(exhibitorID => {
+  @Effect()
+  toInviteExhibitor$ = this.actions$
+    .ofType(fromExhibitor.TO_INVITE_EXHIBITOR)
+    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getExhibitors), (id, exhibitors) =>
+      exhibitors.find(e => e.id === id)
+    )
+    .withLatestFrom(
+      this.store.select(getCompanyName),
+      (exhibitor, srcCompanyName) => ({
+        destName: exhibitor.name,
+        srcName: srcCompanyName,
+        destAddress: exhibitor.booth
+      })
+    )
+    .withLatestFrom(
+      this.store.select(getSelectedExhibitionAddress),
+      (params, exhibitionAddress) => ({
+        ...params,
+        srcAddress: exhibitionAddress
+      })
+    )
+    .mergeMap(params => {
       return Observable.fromPromise(
         new Promise((res, rej) => {
-          const modal = this.modalCtrl.create(ToInviteExhibitorModal, {
-            srcName: '某某某公司',
-            destName: '上海联展软件技术有限公司',
-            srcAddress: 'N-101',
-            destAddress: 'D-506',
-            destID: exhibitorID
-          })
+          const modal = this.modalCtrl.create(ToInviteExhibitorModal, params)
           modal.onDidDismiss(ok => {
             res(ok)
           })
@@ -52,7 +71,7 @@ export class ExhibitorEffects {
         })
       ).map((ok: string) => {
         if (ok) {
-          return new fromExhibitor.InviteExhibitorAction(exhibitorID)
+          return new fromExhibitor.InviteExhibitorAction()
         } else {
           return new fromExhibitor.CancelInviteExhibitorAction()
         }
@@ -62,7 +81,7 @@ export class ExhibitorEffects {
   @Effect()
   inviteExhibitor$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
-    .map((action: fromExhibitor.InviteExhibitorAction) => action.exhibitorID)
+    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
     .mergeMap(exhibitorID =>
       this.exhibitorService
         .inviteExhibitor(exhibitorID)
@@ -70,7 +89,9 @@ export class ExhibitorEffects {
           new fromExhibitor.InviteExhibitorSuccessAction(),
           new fromMatcher.FetchMatchersAction()
         ])
-        .catch(() => Observable.of(new fromExhibitor.InviteExhibitorFailureAction()))
+        .catch(() =>
+          Observable.of(new fromExhibitor.InviteExhibitorFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -141,7 +162,9 @@ export class ExhibitorEffects {
             ]
           }
         })
-        .catch(error => Observable.of(new fromExhibitor.CreateLoggerFailureAction()))
+        .catch(error =>
+          Observable.of(new fromExhibitor.CreateLoggerFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -167,6 +190,19 @@ export class ExhibitorEffects {
       })
       toast.present()
     })
+
+  @Effect()
+  fetchLogger$ = this.actions$
+    .ofType(fromExhibitor.FETCH_LOGGER)
+    .map((action: fromExhibitor.FetchLoggerAction) => action.exhibitionID)
+    .mergeMap(exhibitionID =>
+      this.loggerService
+        .fetchLogger(exhibitionID)
+        .map(logs => new fromExhibitor.FetchLoggerSuccessAction(logs))
+        .catch(error =>
+          Observable.of(new fromExhibitor.FetchLoggerFailureAction())
+        )
+    )
 
   constructor(
     private actions$: Actions,

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 
 import { Logger } from '../logger-item/logger-item.component'
@@ -12,7 +12,14 @@ export class HzLoggerListComponent {
 
   @Input() theme: string
 
+  @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
+
   constructor() {}
   ngOnInit() {
+  }
+
+  ensureCreateLog() {
+    console.log('ensure create log')
+    this.createLog.emit()
   }
 }

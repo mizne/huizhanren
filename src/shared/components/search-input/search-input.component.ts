@@ -13,6 +13,7 @@ export class HzSearchInputComponent implements OnInit {
 
   @Input() searchSub: Subject<string>
   @Input() debounceTime: number
+  @Input() placeholder: string
 
   private ensureSearchSub: Subject<void> = new Subject<void>()
 

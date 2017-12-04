@@ -5,7 +5,7 @@ import {
   ModalController,
   LoadingController,
   App,
-  IonicPage,
+  IonicPage
 } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -29,7 +29,7 @@ import {
   FetchRecommendAction,
   UpdateDetailIDAction,
   ToInviteRecommendAction,
-  FetchLoggerAction,
+  FetchLoggerAction
 } from './actions/recommend.action'
 import { FetchMatchersAction } from './actions/matcher.action'
 
@@ -38,15 +38,17 @@ import {
   ListStatus,
   ListHeaderEvent,
   Recommend,
-  Portray
+  Portray,
+  FetchRecommendParams,
+  RecommendFilter,
+  AREA_OPTIONS
 } from './models/recommend.model'
 import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger, LoggerLevel } from '../customer/models/logger.model'
 import { Customer } from './models/recommend.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
-import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component';
-
+import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
 
 @IonicPage()
 @Component({
@@ -67,37 +69,24 @@ export class RecommendPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<any> = new Subject<any>()
+  recommendFilterSub: Subject<RecommendFilter> = new Subject<RecommendFilter>()
   matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   filterOptions = [
-    [
-      {
-        label: '不限区域',
-        value: '0'
-      },
-      {
-        label: '区域一',
-        value: '1'
-      },
-      {
-        label: '区域二',
-        value: '2'
-      }
-    ],
+    AREA_OPTIONS,
     [
       {
         label: '不限分类',
-        value: '0'
+        value: ''
       },
       {
-        label: '分类一',
-        value: '1'
+        label: '自行车整车',
+        value: 'zixingchezhengche'
       },
       {
-        label: '分类二',
-        value: '2'
+        label: '零配件',
+        value: 'lingpeijian'
       }
     ],
     [
@@ -141,6 +130,11 @@ export class RecommendPage implements OnInit, OnDestroy {
   ensureInvite() {
     console.log('ensure invite')
     this.store.dispatch(new ToInviteRecommendAction())
+  }
+
+  ensureCreateLog() {
+    console.log('ensure create log')
+    this.store.dispatch(new ToCreateLoggerAction())
   }
 
   private initDataSource() {
@@ -221,58 +215,83 @@ export class RecommendPage implements OnInit, OnDestroy {
             console.warn(`Unknown recommend header event: ${headerEvent}`)
             break
         }
+
+        this.toastCtrl
+          .create({
+            message: '吐血研发中...',
+            position: 'top',
+            duration: 3e3
+          })
+          .present()
       })
   }
 
   private initRecommendFilter(): void {
-    this.recommendFilterSub.takeUntil(this.destroyService)
-    .subscribe((recommendFilter) => {
-      console.log(recommendFilter)
-    })
+    this.recommendFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(recommendFilter => {
+        console.log(recommendFilter)
+        const params: FetchRecommendParams = {
+          ...recommendFilter,
+          pageIndex: 1,
+          pageSize: 10
+        }
+        this.store.dispatch(new FetchRecommendAction(params))
+      })
   }
 
   private initMatcherFilter(): void {
-    this.matcherFilterSub.takeUntil(this.destroyService)
-    .subscribe((matcherFilter) => {
-      console.log(matcherFilter)
-    })
+    this.matcherFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        console.log(matcherFilter)
+      })
   }
 
   private initLoadMore(): void {
-    const loadMore$ = this.loadMoreSub.asObservable()
-    .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
+    const loadMore$ = this.loadMoreSub
+      .asObservable()
+      .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreRecommend(loadMore$)
     this.initLoadMoreMatcher(loadMore$)
   }
 
   private initLoadMoreRecommend(loadMore: Observable<ListStatus>) {
-    loadMore.filter(e => e === ListStatus.RECOMMEND)
-    .withLatestFrom(this.recommendFilterSub.startWith({
-      type: '',
-      area: '',
-      key: ''
-    }), (_, recommendFilter) => recommendFilter)
-    .takeUntil(this.destroyService)
-    .subscribe((recommendFilter) => {
-      console.log('to load more with recommend filter, ', recommendFilter)
-    })
+    loadMore
+      .filter(e => e === ListStatus.RECOMMEND)
+      .withLatestFrom(
+        this.recommendFilterSub.startWith({
+          type: '',
+          area: '',
+          key: ''
+        }),
+        (_, recommendFilter) => recommendFilter
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(recommendFilter => {
+        console.log('to load more with recommend filter, ', recommendFilter)
+      })
   }
 
   private initLoadMoreMatcher(loadMore: Observable<ListStatus>) {
-    loadMore.filter(e => e === ListStatus.MATCHER)
-    .withLatestFrom(this.matcherFilterSub, (_, matcherFilter) => matcherFilter)
-    .takeUntil(this.destroyService)
-    .subscribe((matcherFilter) => {
-      console.log('to load more with matcher filter, ', matcherFilter)
-    })
+    loadMore
+      .filter(e => e === ListStatus.MATCHER)
+      .withLatestFrom(
+        this.matcherFilterSub,
+        (_, matcherFilter) => matcherFilter
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        console.log('to load more with matcher filter, ', matcherFilter)
+      })
   }
 
   private initFetchLogger(): void {
-    this.showDetailID$
-    .takeUntil(this.destroyService)
-    .subscribe((customerId) => {
-      this.store.dispatch(new FetchLoggerAction(customerId))
+    this.showDetailID$.takeUntil(this.destroyService).subscribe(customerId => {
+      if (customerId) {
+        this.store.dispatch(new FetchLoggerAction(customerId))
+      }
     })
   }
 

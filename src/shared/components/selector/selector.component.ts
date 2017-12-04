@@ -29,8 +29,8 @@ export class HzSelectorComponent {
       const option = this.options.find(e => e.value === value)
       this.selectedLabel = option.label
     })
-
-    this.selectedValueSub.next(this.options[0].value)
+    this.selectedLabel = this.options[0].label
+    // this.selectedValueSub.next(this.options[0].value)
   }
 
   ensureSelect(option: SelectOption) {

@@ -1,6 +1,8 @@
 import * as fromExhibitor from '../actions/exhibitor.action'
 import { Exhibitor, ListStatus, PageStatus } from '../models/exhibitor.model'
 
+import { Logger } from '../../customer/models/logger.model'
+
 export interface State {
   exhibitors: Exhibitor[]
   exhibitorsTotalCount: number
@@ -8,6 +10,9 @@ export interface State {
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
   showDetailID: string // 表明 右边显示详细信息的 id
+
+
+  logs: Logger[]
 }
 
 export const initialState: State = {
@@ -16,7 +21,9 @@ export const initialState: State = {
 
   listStatus: ListStatus.EXHIBITOR,
   pageStatus: PageStatus.LIST,
-  showDetailID: ''
+  showDetailID: '',
+
+  logs: []
 }
 
 export function reducer(
@@ -62,6 +69,12 @@ export function reducer(
         showDetailID: action.detailID
       }
 
+    case fromExhibitor.FETCH_LOGGER_SUCCESS:
+      return {
+        ...state,
+        logs: action.logs
+      }
+
     default: {
       return state
     }
@@ -75,3 +88,5 @@ export const getExhibitorsTotalCount = (state: State) =>
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
+
+export const getLogs = (state: State) => state.logs

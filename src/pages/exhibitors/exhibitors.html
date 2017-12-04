@@ -10,7 +10,7 @@
       <hz-grid-header type="exhibitors" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
       <hz-grid-filter *ngIf="(listStatus$ | async) === 0" [showSearch]="(pageStatus$ | async) === 0"
-        [filterSub]="recommendFilterSub" [filterOptions]="filterOptions">
+        [filterSub]="recommendFilterSub" [filterOptions]="filterOptions" placeholder="请输入展商名">
       </hz-grid-filter>
       <exhibitor-matcher-filter *ngIf="(listStatus$ | async) === 1" [expand]="(pageStatus$ | async) === 0"
         [filterSub]="matcherFilterSub">
@@ -30,7 +30,7 @@
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
       <exhibitor-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
-        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()">
+        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (createLog)="ensureCreateLogger()">
       </exhibitor-detail>
     </div>
 

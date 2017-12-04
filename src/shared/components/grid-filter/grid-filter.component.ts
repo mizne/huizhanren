@@ -1,14 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 
+import { DestroyService } from '../../../providers/destroy.service'
 
 @Component({
   selector: 'hz-grid-filter',
   templateUrl: 'grid-filter.component.html',
+  providers: [DestroyService]
 })
 export class HzGridFilterComponent implements OnInit {
   @Input() filterSub: Subject<any>
   @Input() showSearch: boolean
+  @Input() placeholder: string
 
   areaSelectSub: Subject<string> = new Subject<string>()
   typeSelectSub: Subject<string> = new Subject<string>()
@@ -27,31 +30,38 @@ export class HzGridFilterComponent implements OnInit {
     this.sortOptions = options[2]
   }
 
-  constructor() {}
+  constructor(private destroyService: DestroyService) {}
 
   ngOnInit() {
-    this.searchSub.asObservable()
-    .do(() => {
-      // 初始化 多个下拉框的选中值
-      this.areaSelectSub.next(this.areaOptions[0].value)
-      this.typeSelectSub.next(this.typeOptions[0].value)
-      this.sortSelectSub.next(this.typeOptions[0].value)
-    })
-    .withLatestFrom(
-      this.areaSelectSub,
-      (searchText, selectArea) => ({
-        key: searchText,
-        area: selectArea
-      })
-    )
-    .withLatestFrom(
-      this.typeSelectSub,
-      ({key, area}, selectedType) => ({
-        key,
+    this.initAreaSelectorChange()
+    this.initTypeSelectorChange()
+    this.initSearchChange()
+  }
+
+  private initAreaSelectorChange(): void {
+    this.areaSelectSub
+      .takeUntil(this.destroyService)
+      .withLatestFrom(this.typeSelectSub.startWith(''), (area, type) => ({
         area,
-        type: selectedType
-      })
-    )
-    .subscribe(this.filterSub)
+        type
+      }))
+      .subscribe(this.filterSub)
+  }
+
+  private initTypeSelectorChange(): void {
+    this.typeSelectSub
+      .takeUntil(this.destroyService)
+      .withLatestFrom(this.areaSelectSub.startWith(''), (type, area) => ({
+        area,
+        type
+      }))
+      .subscribe(this.filterSub)
+  }
+
+  private initSearchChange(): void {
+    this.searchSub
+      .asObservable()
+      .map(searchText => ({ key: searchText }))
+      .subscribe(this.filterSub)
   }
 }

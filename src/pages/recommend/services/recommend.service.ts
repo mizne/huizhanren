@@ -4,7 +4,11 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import { Recommend, RecommendResp } from '../models/recommend.model'
+import {
+  Recommend,
+  RecommendResp,
+  FetchRecommendParams
+} from '../models/recommend.model'
 
 const fakeRecommends: Recommend[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
@@ -12,7 +16,7 @@ const fakeRecommends: Recommend[] = Array.from({ length: 10 }, (_, i) => ({
   title: `testTitle${i}`,
   company: `testCompany${i}`,
   industry: `testIndustry${i}`,
-  area: `testArea${i}`,
+  area: `testArea${i}`
 }))
 
 @Injectable()
@@ -20,24 +24,39 @@ export class RecommendService {
   private fetchUrl: string = '/data/VisiterInfo'
   private inviteUrl: string = '/data/insert/User'
 
-  constructor(
-    private http: HttpClient,
-    private tenantService: TenantService
-  ) {}
+  constructor(private http: HttpClient, private tenantService: TenantService) {}
 
-/**
- * 获取推荐观众信息
- *
- * @param {number} pageIndex
- * @param {number} pageSize
- * @returns {Observable<Recommend[]>}
- * @memberof RecommendService
- */
-fetchRecommend(pageIndex: number, pageSize: number): Observable<Recommend[]> {
+  /**
+   * 获取推荐观众信息
+   *
+   * @param {FetchRecommendParams} params
+   * @returns {Observable<Recommend[]>}
+   * @memberof RecommendService
+   */
+  fetchRecommend(params: FetchRecommendParams): Observable<Recommend[]> {
     return this.tenantService
       .getTenantIdAndExhibitionId()
       .mergeMap(([tenantId, exhibitionId]) => {
-        return this.http.get(this.fetchUrl + `?exhibitorId=${exhibitionId}&itemId=${tenantId}`)
+        let query = `?exhibitorId=${exhibitionId}&itemId=${tenantId}`
+        if (params.area) {
+          query += `&province=${params.area}`
+        }
+        if (params.key) {
+          query += `&search=${params.key}`
+        }
+        if (params.type) {
+          query += `&objective=${params.type}`
+        }
+        if (params.pageIndex) {
+          query += `&pageIndex=${params.pageIndex}`
+        }
+        if (params.pageSize) {
+          query += `&pageSize=${params.pageSize}`
+        }
+
+        return this.http.get(
+          this.fetchUrl + query
+        )
       })
       .map(e => (e as APIResponse).result)
       .map(e => e.map(Recommend.convertFromResp))

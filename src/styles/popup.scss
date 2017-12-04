@@ -1,0 +1,45 @@
+.hz-popover-wrapper {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: 35px;
+  min-width: 100px;
+  border-radius: 3px;
+  background: #fff;
+  z-index: 200;
+  max-height: 300px;
+  overflow: auto;
+
+  &:before {
+    position: absolute;
+    top: -5px;
+    right: 13px;
+    content: '';
+    height: 0;
+    width: 0;
+    border-bottom: 6px solid #fff;
+    border-left: 6px dashed transparent;
+    border-right: 6px dashed transparent;
+  }
+
+  .hz-popover-item {
+    height: 37px;
+    padding-right: 25px;
+    padding-left: 15px;
+    color: map-get($colors, primary);
+    font-size: 14px;
+    line-height: 37px;
+    min-width: 120px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .iconfont {
+      margin-right: 14px;
+      margin-left: 4px;
+      color: map-get($colors, primary);
+      font-size: 18px;
+    }
+  }
+}

@@ -30,14 +30,14 @@ export class RecommendEffects {
   fetchRecommend$ = this.actions$
     .ofType(fromRecommend.FETCH_RECOMMEND)
     .map((action: fromRecommend.FetchRecommendAction) => action.payload)
-    .mergeMap(({ pageIndex, pageSize }) => {
+    .mergeMap((params) => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取推荐买家信息中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
       return this.recommendService
-        .fetchRecommend(pageIndex, pageSize)
+        .fetchRecommend(params)
         .map(recommends => {
           loadingCtrl.dismiss()
           return new fromRecommend.FetchRecommendSuccessAction(recommends)

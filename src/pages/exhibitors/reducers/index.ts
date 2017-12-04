@@ -17,11 +17,11 @@ export const reducers = {
   matcher: fromMatcher.reducer
 }
 
-export const selectRecommendModuleState = createFeatureSelector<ExhibitorState>('exhibitorsModule')
+export const selectExhibitorModuleState = createFeatureSelector<ExhibitorState>('exhibitorsModule')
 
 
 export const selectExhibitorState = createSelector(
-  selectRecommendModuleState,
+  selectExhibitorModuleState,
   (state: ExhibitorState) => state.exhibitor
 )
 export const getExhibitors = createSelector(selectExhibitorState, fromExhibitor.getExhibitors)
@@ -29,13 +29,13 @@ export const getExhibitorsTotalCount = createSelector(selectExhibitorState, from
 export const getListStatus = createSelector(selectExhibitorState, fromExhibitor.getListStatus)
 export const getPageStatus = createSelector(selectExhibitorState, fromExhibitor.getPageStatus)
 export const getShowDetailID = createSelector(selectExhibitorState, fromExhibitor.getShowDetailID)
+export const getCurrentLogs = createSelector(selectExhibitorState, fromExhibitor.getLogs)
 
 
 export const selectMatcherState = createSelector(
-  selectRecommendModuleState,
+  selectExhibitorModuleState,
   (state: ExhibitorState) => state.matcher
 )
 export const getMatchers = createSelector(selectMatcherState, fromMatcher.getMatchers)
 export const getMatcherTotalCount = createSelector(selectMatcherState, fromMatcher.getMatcherTotalCount)
-
 

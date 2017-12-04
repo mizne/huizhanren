@@ -57,14 +57,12 @@ export class FetchExhibitorsFailureAction implements Action {
 
 export class ToInviteExhibitorAction implements Action {
   readonly type = TO_INVITE_EXHIBITOR
-  constructor(public exhibitorID: string) {}
 }
 export class CancelInviteExhibitorAction implements Action {
   readonly type = CANCEL_INVITE_EXHIBITOR
 }
 export class InviteExhibitorAction implements Action {
   readonly type = INVITE_EXHIBITOR
-  constructor(public exhibitorID: string) {}
 }
 export class InviteExhibitorSuccessAction implements Action {
   readonly type = INVITE_EXHIBITOR_SUCCESS
@@ -111,7 +109,7 @@ export class CreateLoggerFailureAction implements Action {
 
 export class FetchLoggerAction implements Action {
   readonly type = FETCH_LOGGER
-  constructor(public customerID: string) {}
+  constructor(public exhibitionID: string) {}
 }
 export class FetchLoggerSuccessAction implements Action {
   readonly type = FETCH_LOGGER_SUCCESS

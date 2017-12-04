@@ -7,11 +7,11 @@
 
   <div class="exhibitor-abstract">
     <div class="exhibitor-name">
-      上海联展软件科技有限公司
+      {{detail.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="area">N-101 | 上海</span>
-      <span class="industry">互联网/大数据</span>
+      <span class="area">{{detail.booth}} | {{detail.area}}</span>
+      <span class="industry">{{detail.industry}}</span>
     </div>
 
     <div class="invite" (click)="ensureInvite()">
@@ -23,17 +23,22 @@
   <div class="exhibitor-product">
     <div class="header">产品</div>
     <div class="content">
-      <div class="product-item" *ngFor="let item of productItems">
-        <img src="./assets/images/card.jpg" alt="">
-        <div class="product-name">产品名称</div>
+      <div *ngIf="detail.products.length > 0; else noProduct;">
+        <div class="product-item" *ngFor="let item of detail.products">
+          <img src="./assets/images/card.jpg" alt="">
+          <div class="product-name">{{item.name}}</div>
+        </div>
       </div>
+      <ng-template #noProduct>
+        <div class="no-product">还没有产品</div>
+      </ng-template>
     </div>
   </div>
 
   <div class="exhibitor-jianjie">
     <div class="header">简介</div>
     <div class="content">
-      {{description}}
+      {{detail.description}}
     </div>
   </div>
 </div>

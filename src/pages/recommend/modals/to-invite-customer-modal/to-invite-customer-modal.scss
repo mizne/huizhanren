@@ -16,12 +16,15 @@
 
       span {
         flex: 4;
+        color: #333333;
       }
     }
 
     .content {
       span {
         line-height: 2.2rem;
+        border: 1px solid #e6e6e6;
+        padding: 5px 10px 15px 10px;
       }
     }
 

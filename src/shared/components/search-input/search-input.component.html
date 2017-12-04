@@ -1,6 +1,7 @@
 <div class="hz-search-input">
   <div class="input-wrapper">
-    <input class="search-input" [formControl]="searchControl" type="text" placeholder="请输入公司名/客户名/电话">
+    <input class="search-input" [formControl]="searchControl"
+     type="text" [placeholder]="[placeholder]">
     <i class="iconfont icon-search" (click)="enterSearch()"></i>
   </div>
 </div>

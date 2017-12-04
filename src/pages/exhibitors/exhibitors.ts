@@ -18,7 +18,8 @@ import {
   getPageStatus,
   getShowDetailID,
   getExhibitors,
-  getMatchers
+  getMatchers,
+  getCurrentLogs
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -36,13 +37,15 @@ import {
   ListStatus,
   ListHeaderEvent,
   Exhibitor,
-  Portray
+  Portray,
+  ExhibitorFilter
 } from './models/exhibitor.model'
 import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger, LoggerLevel } from '../customer/models/logger.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
 
+import { AREA_OPTIONS } from '../recommend/models/recommend.model'
 
 @IonicPage()
 @Component({
@@ -63,37 +66,32 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<any> = new Subject<any>()
+  recommendFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
   matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   filterOptions = [
+    AREA_OPTIONS,
     [
       {
-        label: '不限区域',
+        label: '不限面积',
+        value: ''
+      },
+      {
+        label: '9-18m2',
         value: '0'
       },
       {
-        label: '区域一',
+        label: '18-27m2',
         value: '1'
       },
       {
-        label: '区域二',
+        label: '27-54m2',
         value: '2'
-      }
-    ],
-    [
-      {
-        label: '不限分类',
-        value: '0'
       },
       {
-        label: '分类一',
-        value: '1'
-      },
-      {
-        label: '分类二',
-        value: '2'
+        label: '>54m2',
+        value: '3'
       }
     ],
     [
@@ -136,7 +134,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   ensureInvite(){
     console.log('ensure invite exhibitor')
-    this.store.dispatch(new ToInviteExhibitorAction('11'))
+    this.store.dispatch(new ToInviteExhibitorAction())
+  }
+
+  ensureCreateLogger() {
+    console.log('ensure create logger')
+    this.store.dispatch(new ToCreateLoggerAction())
   }
 
   private initDataSource() {
@@ -148,80 +151,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    this.currentLogs$ = Observable.of([
-      {
-        id: '0',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '1',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '2',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '3',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '4',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '5',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '0',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '1',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '2',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '3',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '4',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '5',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      }
-    ])
+    this.currentLogs$ = this.store.select(getCurrentLogs)
   }
 
   private initCurrentDetail(): void {
@@ -289,6 +219,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
             console.warn(`Unknown recommend header event: ${headerEvent}`)
             break
         }
+
+        this.toastCtrl.create({
+          message: '吐血研发中...',
+          position: 'top',
+          duration: 3e3
+        }).present()
       })
   }
 

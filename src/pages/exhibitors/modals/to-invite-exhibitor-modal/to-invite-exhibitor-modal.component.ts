@@ -47,8 +47,6 @@ export class ToInviteExhibitorModal implements OnInit {
     .takeUntil(this.destroyService)
     .subscribe((address) => {
       this.content = this.computeTpl(address)
-
-      console.log(this.content)
     })
   }
 

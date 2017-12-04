@@ -17,6 +17,7 @@ export class ExhibitorDetailComponent implements OnInit {
   @Input() expand: boolean
 
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
+  @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
 
   activeHeaderIndex: number = 0
   activeDetailHeaderIndex: number = 0
@@ -50,5 +51,9 @@ export class ExhibitorDetailComponent implements OnInit {
 
   ensureInvite() {
     this.invite.emit()
+  }
+
+  ensureCreateLogger() {
+    this.createLog.emit()
   }
 }
