@@ -1,0 +1,41 @@
+<div class="hz-modal invite-exhibitor-modal">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        约 TA
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="modal-body">
+      <div class="field-item contact">
+        <label for="">联系人:</label>
+        <span>{{destName}}</span>
+      </div>
+
+      <div class="field-item address" radio-group [formControl]="addressCtrl">
+        <label for="">预约地点:</label>
+        <span>
+          <!-- <ion-checkbox checked="true"></ion-checkbox> -->
+          <ion-radio id="first" [value]="srcAddress"></ion-radio>
+          <label for="first">{{srcAddress}}</label>
+          <!-- <ion-checkbox checked="true"></ion-checkbox> -->
+          <ion-radio id="second" [value]="destAddress"></ion-radio>
+          <label for="second">{{destAddress}}</label>
+        </span>
+      </div>
+
+      <div class="field-item content">
+        <label for="">通知内容:</label>
+        <span>
+          {{content}}
+        </span>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="hz-btn" (click)="cancel()">取消</button>
+      <button type="button" class="hz-btn" (click)="complete()">确定</button>
+    </div>
+  </ion-content>
+</div>

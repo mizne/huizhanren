@@ -1,5 +1,5 @@
 .recommend-grid-container {
-  max-height: calc(100vh - 220px);
+  max-height: calc(100vh - 270px);
   overflow: auto;
   .header {
     color: #6288d5;
@@ -11,6 +11,10 @@
       background-color: #27272a;
     }
 
+    &.active {
+      background-color: map-get($map: $colors, $key: activeRow);
+    }
+
     ion-col {
       display: flex;
       height: 50px;
@@ -19,10 +23,18 @@
       &:last-child {
         justify-content: space-evenly;
       }
-
-      hz-customer-status {
-        width: 70%;
-      }
     }
+
+    .checkbox-col {
+      @include flexboxCenter;
+    }
+  }
+
+  hz-customer-status.no-expand {
+    width: 100%;
+  }
+
+  hz-customer-status.expand {
+    width: 70%;
   }
 }

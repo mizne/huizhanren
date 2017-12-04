@@ -1,0 +1,61 @@
+<!-- <ion-header>
+  <ion-navbar>
+    <ion-title>
+      服 务
+    </ion-title>
+  </ion-navbar>
+</ion-header> -->
+
+<ion-content>
+  <div class="hz-more-container">
+    <div class="hz-module-box1">
+      <a href="javascript:;" (click)="showQRCode($event, 0)">
+        <img src="./assets/images/icon-rent.png">
+        <p>展具租赁</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 0)">
+        <img src="./assets/images/icon-file.png">
+        <p>下届参展</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 0)">
+        <img src="./assets/images/icon-construct.png">
+        <p>预约搭建</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 0)">
+        <img src="./assets/images/icon-fun.png">
+        <p>吃喝玩乐</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 0)">
+        <img src="./assets/images/icon-turntable.png">
+        <p>大转盘</p>
+      </a>
+    </div>
+    <div class="hz-module-box2">
+      <a href="javascript:;" (click)="showQRCode($event, 1)">
+        <img src="./assets/images/icon-shark.png">
+        <p>摇一摇</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 2)">
+        <img src="./assets/images/icon-date.png">
+        <p>签到</p>
+      </a>
+      <a href="javascript:;" (click)="toSettings()">
+        <img src="./assets/images/icon-settings.png">
+        <p>设置</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 2)">
+        <img src="./assets/images/icon-media.png">
+        <p>预约媒体</p>
+      </a>
+      <a href="javascript:;" (click)="showQRCode($event, 2)">
+        <img src="./assets/images/icon-msg.png">
+        <p>消息通知</p>
+      </a>
+
+      <div class="qrcode-container" [class.active]="activeQRCode">
+        <ngx-qrcode [qrc-element-type]="'img'" [qrc-value]="url" [qrc-version]="'15'" [qrc-errorCorrectionLevel]="'L'">
+        </ngx-qrcode>
+      </div>
+    </div>
+  </div>
+</ion-content>

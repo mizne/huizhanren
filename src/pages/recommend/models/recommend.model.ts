@@ -8,6 +8,28 @@ export class Customer {
 }
 
 export class Recommend extends Customer {
+  selected?: boolean
+
+  static convertFromResp(resp: RecommendResp): Recommend {
+    return {
+      id: resp.RecordId,
+      name: resp.Name,
+      title: resp.JobTitle,
+      company: resp.CompName,
+      industry: resp.Industry,
+      area: resp.Area
+    }
+  }
+}
+
+export class RecommendResp {
+  TenantId?: string
+  RecordId?: string
+  Name?: string
+  JobTitle?: string
+  CompName?: string
+  Industry?: string
+  Area?: string
 }
 
 export interface RecommendFilter {

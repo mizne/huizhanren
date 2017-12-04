@@ -11,6 +11,8 @@ import { ExhibitorService } from '../services/exhibitor.service'
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
 
+import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
+
 import { Store } from '@ngrx/store'
 import { State, getShowDetailID } from '../reducers'
 
@@ -30,8 +32,35 @@ export class ExhibitorEffects {
         .catch(err => Observable.of(new fromExhibitor.FetchExhibitorsFailureAction()))
     )
 
+    @Effect()
+    toInviteExhibitor$ = this.actions$.ofType(fromExhibitor.TO_INVITE_EXHIBITOR)
+    .map((action: fromExhibitor.ToInviteExhibitorAction) => action.exhibitorID)
+    .mergeMap(exhibitorID => {
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToInviteExhibitorModal, {
+            srcName: '某某某公司',
+            destName: '上海联展软件技术有限公司',
+            srcAddress: 'N-101',
+            destAddress: 'D-506',
+            destID: exhibitorID
+          })
+          modal.onDidDismiss(ok => {
+            res(ok)
+          })
+          modal.present()
+        })
+      ).map((ok: string) => {
+        if (ok) {
+          return new fromExhibitor.InviteExhibitorAction(exhibitorID)
+        } else {
+          return new fromExhibitor.CancelInviteExhibitorAction()
+        }
+      })
+    })
+
   @Effect()
-  inviteRecommend$ = this.actions$
+  inviteExhibitor$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
     .map((action: fromExhibitor.InviteExhibitorAction) => action.exhibitorID)
     .mergeMap(exhibitorID =>
@@ -45,7 +74,7 @@ export class ExhibitorEffects {
     )
 
   @Effect({ dispatch: false })
-  inviteRecommendSuccess$ = this.actions$
+  inviteExhibitorSuccess$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR_SUCCESS)
     .do(() => {
       this.toastCtrl
@@ -58,7 +87,7 @@ export class ExhibitorEffects {
     })
 
   @Effect({ dispatch: false })
-  inviteRecommendFailure$ = this.actions$
+  inviteExhibitorFailure$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR_FAILURE)
     .do(() => {
       this.toastCtrl

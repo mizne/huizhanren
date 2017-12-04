@@ -6,6 +6,7 @@ export class Exhibitor {
   industry?: string
   area?: string
   heat?: number
+  active?: boolean
 }
 
 export interface ExhibitorFilter {

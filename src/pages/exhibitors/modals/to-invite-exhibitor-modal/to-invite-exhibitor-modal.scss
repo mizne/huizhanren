@@ -1,0 +1,28 @@
+.invite-exhibitor-modal {
+  height: 410px;
+
+  .modal-body {
+    padding: 20px 34px;
+
+    .field-item {
+      display: flex;
+      margin-top: 15px;
+      font-size: 1.8rem;
+
+      label {
+        flex: 1;
+        color: map-get($map: $colors, $key: grey);
+      }
+
+      span {
+        flex: 4;
+      }
+    }
+
+    .content {
+      span {
+        line-height: 2.2rem;
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@
     </div>
 
     <div class="customer-container">
-      <hz-customer-abstract></hz-customer-abstract>
+      <hz-customer-abstract [detail]="detail" (invite)="ensureInvite()"></hz-customer-abstract>
       <div class="customer-detail">
         <div class="headers">
           <div class="header-item logger" [class.active]="activeHeaderIndex === 0" (click)="activeHeader(0)">日志</div>

@@ -1,8 +1,9 @@
 <ion-grid *ngIf="expand; else noExpand;" class="recommend-grid-container">
   <ion-row class="header">
+    <ion-col col-1></ion-col>
     <ion-col col-1>姓名</ion-col>
     <ion-col col-1>职务</ion-col>
-    <ion-col col-3>公司</ion-col>
+    <ion-col col-2>公司</ion-col>
     <ion-col col-2>行业</ion-col>
     <ion-col col-3 *ngIf="type === 'recommend'">地区</ion-col>
 
@@ -12,10 +13,14 @@
     <ion-col col-1></ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
+  <ion-row *ngFor="let item of dataItems; even as even" class="row-item"
+  [class.even]="even" [class.active]="activeId === item.id" (click)="ensureShow(item.id)">
+    <ion-col col-1 class="checkbox-col">
+      <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+    </ion-col>
     <ion-col col-1>{{item.name}}</ion-col>
     <ion-col col-1>{{item.title}}</ion-col>
-    <ion-col col-3>{{item.company}}</ion-col>
+    <ion-col col-2>{{item.company}}</ion-col>
     <ion-col col-2>{{item.industry}}</ion-col>
 
     <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>
@@ -24,7 +29,7 @@
     <ion-col col-2 *ngIf="type === 'matcher'">{{item.status}}</ion-col>
 
     <ion-col col-2>
-      <hz-customer-status></hz-customer-status>
+      <hz-customer-status class="expand"></hz-customer-status>
     </ion-col>
   </ion-row>
 </ion-grid>
@@ -43,15 +48,7 @@
       <ion-col col-2>{{item.title}}</ion-col>
       <ion-col col-5>{{item.company}}</ion-col>
       <ion-col col-3>
-        <div class="icon-wrapper">
-          <i class="iconfont icon-help"></i>
-        </div>
-        <div class="icon-wrapper">
-          <i class="iconfont icon-doc"></i>
-        </div>
-        <div class="icon-wrapper">
-          <i class="iconfont icon-dao"></i>
-        </div>
+        <hz-customer-status class="no-expand"></hz-customer-status>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core'
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Recommend, Portray, Customer } from '../../models/recommend.model'
 import { Matcher } from '../../models/matcher.model'
@@ -15,6 +15,8 @@ export class RecommendDetailComponent implements OnInit {
   @Input() portray: Portray
   @Input() expand: boolean
 
+  @Output() invite: EventEmitter<void> = new EventEmitter<void>()
+
   activeHeaderIndex: number = 0
   activeDetailHeaderIndex: number = 0
 
@@ -28,5 +30,9 @@ export class RecommendDetailComponent implements OnInit {
 
   activeDetailHeader(index: number) {
     this.activeDetailHeaderIndex = index
+  }
+
+  ensureInvite() {
+    this.invite.emit()
   }
 }

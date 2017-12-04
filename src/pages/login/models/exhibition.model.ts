@@ -4,4 +4,5 @@ export interface Exhibition {
   startTime: string
   endTime: string
   companyName: string
+  boothNo: string
 }

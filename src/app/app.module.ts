@@ -24,6 +24,9 @@ import { ContactPage } from '../pages/contact/contact'
 import { HomePage } from '../pages/home/home'
 import { TabsPage } from '../pages/tabs/tabs'
 import { ServicePage } from '../pages/service/service'
+
+import { MorePage } from '../pages/more/more'
+
 import { UserManagementPage, HzAdminItemComponent, HzUserItemComponent } from '../pages/settings/user-management/user-management'
 import { SmsTemplatePage, SmsTemplateDetailComponent } from '../pages/settings/sms-template/sms-template'
 import { HzAboutPage } from '../pages/settings/about/about'
@@ -77,6 +80,7 @@ import { DurationPipe } from '../pipes/duration.pipe'
     HomePage,
     TabsPage,
     ServicePage,
+    MorePage,
     UserManagementPage,
     HzAboutPage,
     SmsTemplatePage,
@@ -133,6 +137,7 @@ import { DurationPipe } from '../pipes/duration.pipe'
     HomePage,
     TabsPage,
     ServicePage,
+    MorePage,
     UserManagementPage,
     HzAboutPage,
     SmsTemplatePage,

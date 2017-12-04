@@ -9,6 +9,9 @@ import { HzCustomerStatusComponent } from './components/customer-status/customer
 import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
+
+import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
+
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
@@ -32,6 +35,8 @@ const effects = [RecommendEffects, MatcherEffects]
     HzCustomerStatusComponent,
     HzCustomerPortrayComponent,
     HzMatcherFilterComponent,
+
+    ToInviteCustomerModal,
   ],
   imports: [
     SharedModule,
@@ -39,6 +44,9 @@ const effects = [RecommendEffects, MatcherEffects]
     EffectsModule.forFeature(effects),
     IonicPageModule.forChild(RecommendPage)
   ],
-  providers: [...services]
+  providers: [...services],
+  entryComponents: [
+    ToInviteCustomerModal
+  ]
 })
 export class RecommendPageModule {}

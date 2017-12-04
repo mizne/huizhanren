@@ -11,6 +11,7 @@ import { MatcherStatus } from '../../models/matcher.model'
 })
 export class HzMatcherFilterComponent implements OnInit {
   @Input() filterSub: Subject<MatcherStatus[]>
+  @Input() expand: boolean
 
   allowControl: FormControl = new FormControl(false)
   refuseControl: FormControl = new FormControl(false)

@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/Subject'
 })
 export class HzGridFilterComponent implements OnInit {
   @Input() filterSub: Subject<any>
+  @Input() showSearch: boolean
 
   areaSelectSub: Subject<string> = new Subject<string>()
   typeSelectSub: Subject<string> = new Subject<string>()

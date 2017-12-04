@@ -9,6 +9,7 @@ import { CustomerPage } from '../customer/customer'
 
 import { RecommendPage } from '../recommend/recommend'
 import { ExhibitorsPage } from '../exhibitors/exhibitors'
+import { MorePage } from '../more/more'
 
 import { Camera, CameraOptions } from '@ionic-native/camera'
 import { fakeJson } from '../../fake/fake'
@@ -41,7 +42,7 @@ export class TabsPage {
   tab2Root = RecommendPage
   // tab3Root = ContactPage
   tab4Root = ExhibitorsPage
-  tab5Root = SettingsPage
+  tab5Root = MorePage
 
 
   options: CameraOptions = {

@@ -6,6 +6,8 @@ export const FETCH_RECOMMEND = '[Recommend] Fetch Recommend'
 export const FETCH_RECOMMEND_SUCCESS = '[Recommend] Fetch Recommend Success'
 export const FETCH_RECOMMEND_FAILURE = '[Recommend] Fetch Recommend Failure'
 
+export const TO_INVITE_RECOMMEND = '[Recommend] To Invite Recommend'
+export const CANCEL_INVITE_RECOMMEND = '[Recommend] Cancel Invite Recommend'
 export const INVITE_RECOMMEND = '[Recommend] Invite Recommend'
 export const INVITE_RECOMMEND_SUCCESS = '[Recommend] Invite Recommend Success'
 export const INVITE_RECOMMEND_FAILURE = '[Recommend] Invite Recommend Failure'
@@ -53,9 +55,14 @@ export class FetchRecommendFailureAction implements Action {
 }
 
 
+export class ToInviteRecommendAction implements Action {
+  readonly type = TO_INVITE_RECOMMEND
+}
+export class CancelInviteRecommendAction implements Action {
+  readonly type = CANCEL_INVITE_RECOMMEND
+}
 export class InviteRecommendAction implements Action {
   readonly type = INVITE_RECOMMEND
-  constructor(public recommendID: string) {}
 }
 export class InviteRecommendSuccessAction implements Action {
   readonly type = INVITE_RECOMMEND_SUCCESS
@@ -121,6 +128,8 @@ FetchRecommendAction |
 FetchRecommendSuccessAction |
 FetchRecommendFailureAction |
 
+ToInviteRecommendAction |
+CancelInviteRecommendAction |
 InviteRecommendAction |
 InviteRecommendSuccessAction |
 InviteRecommendFailureAction |

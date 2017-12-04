@@ -18,7 +18,8 @@ import {
   getPageStatus,
   getShowDetailID,
   getRecommends,
-  getMatchers
+  getMatchers,
+  getLogs
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -27,6 +28,8 @@ import {
   ChangeListStatusAction,
   FetchRecommendAction,
   UpdateDetailIDAction,
+  ToInviteRecommendAction,
+  FetchLoggerAction,
 } from './actions/recommend.action'
 import { FetchMatchersAction } from './actions/matcher.action'
 
@@ -42,6 +45,7 @@ import { DestroyService } from '../../providers/destroy.service'
 import { Logger, LoggerLevel } from '../customer/models/logger.model'
 import { Customer } from './models/recommend.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
+import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component';
 
 
 @IonicPage()
@@ -134,6 +138,11 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.store.dispatch(new TogglePageStatusAction())
   }
 
+  ensureInvite() {
+    console.log('ensure invite')
+    this.store.dispatch(new ToInviteRecommendAction())
+  }
+
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
@@ -143,80 +152,7 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    this.currentLogs$ = Observable.of([
-      {
-        id: '0',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '1',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '2',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '3',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '4',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '5',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '0',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '1',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '2',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '3',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      },
-      {
-        id: '4',
-        time: '2017-12-11',
-        content: 'test Logger1',
-        level: 'sys' as LoggerLevel
-      },
-      {
-        id: '5',
-        time: '2017-12-14',
-        content: 'test Logger2',
-        level: 'info' as LoggerLevel
-      }
-    ])
+    this.currentLogs$ = this.store.select(getLogs)
   }
 
   private initCurrentDetail(): void {
@@ -246,6 +182,7 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.initRecommendFilter()
     this.initMatcherFilter()
     this.initLoadMore()
+    this.initFetchLogger()
   }
   private initListHeaderChange(): void {
     this.listStatusChangeSub
@@ -328,6 +265,14 @@ export class RecommendPage implements OnInit, OnDestroy {
     .takeUntil(this.destroyService)
     .subscribe((matcherFilter) => {
       console.log('to load more with matcher filter, ', matcherFilter)
+    })
+  }
+
+  private initFetchLogger(): void {
+    this.showDetailID$
+    .takeUntil(this.destroyService)
+    .subscribe((customerId) => {
+      this.store.dispatch(new FetchLoggerAction(customerId))
     })
   }
 

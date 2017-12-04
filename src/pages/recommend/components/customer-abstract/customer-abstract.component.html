@@ -1,9 +1,9 @@
 <div class="customer-abstract-container">
   <div class="customer-header">
     <div class="customer-title">
-      <span class="customer-name">王涛</span>
+      <span class="customer-name">{{detail.name}}</span>
       (
-      <span class="customer-title">总经理</span> )
+      <span class="customer-title">{{detail.title}}</span> )
     </div>
 
     <div class="customer-rate">
@@ -12,19 +12,19 @@
   </div>
 
   <div class="customer-company">
-    上海联展软件科技有限公司
+    {{detail.company || '未填写'}}
   </div>
 
   <div class="customer-industry">
-    <span class="industry">互联网/大数据</span>
-    <span class="area">上海</span>
+    <span class="industry">{{detail.industry || '未填写'}}</span>
+    <span class="area">{{detail.area || '未填写'}}</span>
   </div>
 
   <div class="customer-status">
     <hz-customer-status></hz-customer-status>
 
     <div class="invite">
-      <button ion-button>约 TA</button>
+      <button ion-button (click)="ensureInvite()">约 TA</button>
     </div>
   </div>
 </div>

@@ -37,5 +37,5 @@ export const selectMatcherState = createSelector(
 )
 export const getMatchers = createSelector(selectMatcherState, fromMatcher.getMatchers)
 export const getMatcherTotalCount = createSelector(selectMatcherState, fromMatcher.getMatcherTotalCount)
-
+export const getLogs = createSelector(selectRecommendState, fromRecommend.getLogs)
 

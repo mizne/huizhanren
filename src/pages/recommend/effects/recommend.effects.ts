@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import { ModalController, ToastController } from 'ionic-angular'
+import {
+  ModalController,
+  ToastController,
+  LoadingController
+} from 'ionic-angular'
 import * as fromRecommend from '../actions/recommend.action'
 import * as fromMatcher from '../actions/matcher.action'
 
@@ -11,8 +15,14 @@ import { RecommendService } from '../services/recommend.service'
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
 
+import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
+
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID } from '../reducers'
+import { State, getShowDetailID, getRecommends } from '../reducers'
+import {
+  getCompanyName,
+  getSelectedExhibitionAddress
+} from '../../login/reducers'
 
 @Injectable()
 export class RecommendEffects {
@@ -20,20 +30,69 @@ export class RecommendEffects {
   fetchRecommend$ = this.actions$
     .ofType(fromRecommend.FETCH_RECOMMEND)
     .map((action: fromRecommend.FetchRecommendAction) => action.payload)
-    .mergeMap(({ pageIndex, pageSize }) =>
-      this.recommendService
+    .mergeMap(({ pageIndex, pageSize }) => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取推荐买家信息中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+      return this.recommendService
         .fetchRecommend(pageIndex, pageSize)
-        .map(
-          recommends =>
-            new fromRecommend.FetchRecommendSuccessAction(recommends)
-        )
-        .catch(err => Observable.of(new fromRecommend.FetchRecommendFailureAction()))
+        .map(recommends => {
+          loadingCtrl.dismiss()
+          return new fromRecommend.FetchRecommendSuccessAction(recommends)
+        })
+        .catch(err => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromRecommend.FetchRecommendFailureAction())
+        })
+    })
+
+  @Effect()
+  toInviteRecommend$ = this.actions$
+    .ofType(fromRecommend.TO_INVITE_RECOMMEND)
+    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getRecommends), (id, recommends) =>
+      recommends.find(e => e.id === id)
     )
+    .withLatestFrom(
+      this.store.select(getCompanyName),
+      (recommend, srcCompanyName) => ({
+        destName: recommend.name,
+        destTitle: recommend.title,
+        destCompany: recommend.company,
+        srcCompany: srcCompanyName
+      })
+    )
+    .withLatestFrom(
+      this.store.select(getSelectedExhibitionAddress),
+      (params, exhibitionAddress) => ({
+        ...params,
+        srcAddress: exhibitionAddress
+      })
+    )
+    .mergeMap(params => {
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToInviteCustomerModal, params)
+          modal.onDidDismiss(ok => {
+            res(ok)
+          })
+          modal.present()
+        })
+      ).map((ok: string) => {
+        if (ok) {
+          return new fromRecommend.InviteRecommendAction()
+        } else {
+          return new fromRecommend.CancelInviteRecommendAction()
+        }
+      })
+    })
 
   @Effect()
   inviteRecommend$ = this.actions$
     .ofType(fromRecommend.INVITE_RECOMMEND)
-    .map((action: fromRecommend.InviteRecommendAction) => action.recommendID)
+    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
     .mergeMap(recommendID =>
       this.recommendService
         .InviteRecommend(recommendID)
@@ -41,7 +100,9 @@ export class RecommendEffects {
           new fromRecommend.InviteRecommendSuccessAction(),
           new fromMatcher.FetchMatchersAction()
         ])
-        .catch(() => Observable.of(new fromRecommend.InviteRecommendFailureAction()))
+        .catch(() =>
+          Observable.of(new fromRecommend.InviteRecommendFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -112,7 +173,9 @@ export class RecommendEffects {
             ]
           }
         })
-        .catch(error => Observable.of(new fromRecommend.CreateLoggerFailureAction()))
+        .catch(error =>
+          Observable.of(new fromRecommend.CreateLoggerFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -139,10 +202,24 @@ export class RecommendEffects {
       toast.present()
     })
 
+  @Effect()
+  fetchLogger$ = this.actions$
+    .ofType(fromRecommend.FETCH_LOGGER)
+    .map((action: fromRecommend.FetchLoggerAction) => action.customerID)
+    .mergeMap(customerId =>
+      this.loggerService
+        .fetchLogger(customerId)
+        .map(logs => new fromRecommend.FetchLoggerSuccessAction(logs))
+        .catch(error =>
+          Observable.of(new fromRecommend.FetchLoggerFailureAction())
+        )
+    )
+
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
+    private loadCtrl: LoadingController,
     private recommendService: RecommendService,
     private loggerService: LoggerService,
     private store: Store<State>

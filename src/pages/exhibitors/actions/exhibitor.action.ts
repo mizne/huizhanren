@@ -6,6 +6,8 @@ export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
 export const FETCH_EXHIBITORS_SUCCESS = '[Exhibitor] Fetch Exhibitors Success'
 export const FETCH_EXHIBITORS_FAILURE = '[Exhibitor] Fetch Exhibitors Failure'
 
+export const TO_INVITE_EXHIBITOR = '[Exhibitor] To Invite Exhibitor'
+export const CANCEL_INVITE_EXHIBITOR = '[Exhibitor] Cancel Invite Exhibitor'
 export const INVITE_EXHIBITOR = '[Exhibitor] Invite Exhibitor'
 export const INVITE_EXHIBITOR_SUCCESS = '[Exhibitor] Invite Exhibitor Success'
 export const INVITE_EXHIBITOR_FAILURE = '[Exhibitor] Invite Exhibitor Failure'
@@ -53,6 +55,13 @@ export class FetchExhibitorsFailureAction implements Action {
 }
 
 
+export class ToInviteExhibitorAction implements Action {
+  readonly type = TO_INVITE_EXHIBITOR
+  constructor(public exhibitorID: string) {}
+}
+export class CancelInviteExhibitorAction implements Action {
+  readonly type = CANCEL_INVITE_EXHIBITOR
+}
 export class InviteExhibitorAction implements Action {
   readonly type = INVITE_EXHIBITOR
   constructor(public exhibitorID: string) {}
@@ -121,6 +130,8 @@ FetchExhibitorsAction |
 FetchExhibitorsSuccessAction |
 FetchExhibitorsFailureAction |
 
+ToInviteExhibitorAction |
+CancelInviteExhibitorAction |
 InviteExhibitorAction |
 InviteExhibitorSuccessAction |
 InviteExhibitorFailureAction |

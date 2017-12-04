@@ -56,35 +56,18 @@ export class LoginService {
    * @memberof LoginServiceProvider
    */
   fetchExhibitionsAndLogin(phone): Observable<FetchExhibitionsAndLoginResp> {
-    // return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
-    //   .map(([exhibitons, loginResp]) => {
-    //     return {
-    //       adminName: loginResp.adminName,
-    //       userName: loginResp.userName,
-    //       tenantId: loginResp.tenantId,
-    //       userId: loginResp.userId,
-    //       companyName: exhibitons[0].companyName,
-    //       exhibitions: exhibitons
-    //     }
-    //   })
-    //   .catch(this.handleError)
-
-      return Observable.of({
-        companyName: 'string',
-        exhibitions: [
-          {
-            id: 'string',
-            name: 'string',
-            startTime: '2017-11-3',
-            endTime: '2017-11-14',
-            companyName: 'string'
-          }
-        ],
-        adminName: 'string',
-        userName: 'string',
-        tenantId: 'string',
-        userId: 'string'
+    return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
+      .map(([exhibitons, loginResp]) => {
+        return {
+          adminName: loginResp.adminName,
+          userName: loginResp.userName,
+          tenantId: loginResp.tenantId,
+          userId: loginResp.userId,
+          companyName: exhibitons[0].companyName,
+          exhibitions: exhibitons
+        }
       })
+      .catch(this.handleError)
   }
 
   /**
@@ -95,7 +78,7 @@ export class LoginService {
    * @returns {Observable<Exhibition[]>}
    * @memberof LoginServiceProvider
    */
-  private fetchExhibitions(phone): Observable<Exhibition[]> {
+  private fetchExhibitions(phone): Observable<any[]> {
     return this.http
       .post(this.exhibitionsUrl, {
         params: {
@@ -112,7 +95,8 @@ export class LoginService {
           name: e.ItemName,
           startTime: e.startTime,
           endTime: e.endTime,
-          companyName: e.companyName
+          companyName: e.companyName,
+          boothNo: e.BoothNo
         }))
       })
       .retryWhen(errStream => errStream.scan((errCount, err) => {

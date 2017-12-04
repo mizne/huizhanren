@@ -9,8 +9,8 @@ import {
 
 import { Observable } from 'rxjs/Observable'
 
-export const HOST = 'http://huizhanren.xiaovbao.cn'
-// export const HOST = 'http://192.168.1.122:3012'
+// export const HOST = 'http://huizhanren.xiaovbao.cn'
+export const HOST = 'http://192.168.0.129:3012'
 
 
 export const API_VERSION ='v1'

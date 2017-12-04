@@ -1,0 +1,39 @@
+<div class="exhibitor-abstract-container">
+  <div class="exhibitor-logo">
+    <div class="logo-wrapper">
+      <img src="./assets/images/card.jpg" alt="">
+    </div>
+  </div>
+
+  <div class="exhibitor-abstract">
+    <div class="exhibitor-name">
+      上海联展软件科技有限公司
+    </div>
+    <div class="exhibitor-area">
+      <span class="area">N-101 | 上海</span>
+      <span class="industry">互联网/大数据</span>
+    </div>
+
+    <div class="invite" (click)="ensureInvite()">
+      <button ion-button>约 TA</button>
+    </div>
+
+  </div>
+
+  <div class="exhibitor-product">
+    <div class="header">产品</div>
+    <div class="content">
+      <div class="product-item" *ngFor="let item of productItems">
+        <img src="./assets/images/card.jpg" alt="">
+        <div class="product-name">产品名称</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exhibitor-jianjie">
+    <div class="header">简介</div>
+    <div class="content">
+      {{description}}
+    </div>
+  </div>
+</div>

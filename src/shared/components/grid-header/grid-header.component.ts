@@ -36,6 +36,7 @@ export class HzGridHeaderComponent implements OnInit {
 
   @Input() activeIndexSub: Subject<ListStatus>
   @Input() headerEventSub: Subject<ListHeaderEvent>
+  @Input() type: string
 
   constructor() {}
 

@@ -1,5 +1,6 @@
 <div class="exhibitor-grid-container">
-  <div class="exhibitor-item" *ngFor="let item of dataItems" (click)="ensureShow(item.id)">
+  <div class="exhibitor-item" [class.expand]="expand" [class.active]="item.active"
+    *ngFor="let item of dataItems" (click)="ensureShow(item)">
     <div class="logo">
       <img [src]="item.logo" alt="">
     </div>
@@ -32,6 +33,10 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="active-icon" *ngIf="item.active">
+      <i class="iconfont icon-check"></i>
     </div>
   </div>
 </div>

@@ -9,10 +9,10 @@
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
       <hz-grid-header type="recommend" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
-      <hz-grid-filter *ngIf="(listStatus$ | async) === 0"
+      <hz-grid-filter *ngIf="(listStatus$ | async) === 0" [showSearch]="(pageStatus$ | async) === 0"
         [filterSub]="recommendFilterSub" [filterOptions]="filterOptions">
       </hz-grid-filter>
-      <hz-matcher-filter *ngIf="(listStatus$ | async) === 1"
+      <hz-matcher-filter *ngIf="(listStatus$ | async) === 1" [expand]="(pageStatus$ | async) === 0"
         [filterSub]="matcherFilterSub">
       </hz-matcher-filter>
 
@@ -24,7 +24,7 @@
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
       <recommend-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
-        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async">
+        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()">
       </recommend-detail>
     </div>
 

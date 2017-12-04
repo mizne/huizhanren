@@ -36,5 +36,7 @@ export const isAdmin = createSelector(selectExhibitionsState, fromExhibitions.is
 export const getCompanyName = createSelector(selectExhibitionsState, fromExhibitions.getCompanyName)
 export const getExhibitions = createSelector(selectExhibitionsState, fromExhibitions.getExhibitions)
 export const getSelectedExhibitionId = createSelector(selectExhibitionsState, fromExhibitions.getSelectedExhibitionId)
+export const getSelectedExhibitionAddress = createSelector(selectExhibitionsState, fromExhibitions.getSelectedExhibitionAddress)
+
 export const getTenantId = createSelector(selectExhibitionsState, fromExhibitions.getTenantId)
 export const getUserId = createSelector(selectExhibitionsState, fromExhibitions.getUserId)

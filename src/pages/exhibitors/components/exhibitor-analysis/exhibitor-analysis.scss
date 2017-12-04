@@ -1,0 +1,6 @@
+.exhibitor-analysis-container {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  color: map-get($map: $colors, $key: grey);
+}

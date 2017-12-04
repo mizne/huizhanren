@@ -7,6 +7,7 @@ import { Recommend } from '../../models/recommend.model'
   templateUrl: 'recommend-grid.component.html'
 })
 export class RecommendGridComponent implements OnInit {
+  activeId: string
 
   @Input() expand: boolean
 
@@ -22,5 +23,7 @@ export class RecommendGridComponent implements OnInit {
 
   ensureShow(id: string) {
     this.showDetail.emit(id)
+
+    this.activeId = id
   }
 }

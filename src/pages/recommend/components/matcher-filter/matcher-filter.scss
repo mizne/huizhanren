@@ -6,14 +6,25 @@
 
   label {
     color: #999999;
-    margin-right: 10px;
+    margin-right: 2px;
 
     &.first {
       color: #666666;
     }
   }
 
-  ion-checkbox {
-    margin-right: 10px;
+  &.expand {
+    label {
+      margin-right: 10px;
+    }
+
+    ion-checkbox {
+      margin-right: 10px;
+    }
   }
+
+  ion-checkbox {
+    margin-left: 3px;
+  }
+
 }

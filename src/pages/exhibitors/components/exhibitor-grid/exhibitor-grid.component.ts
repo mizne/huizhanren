@@ -20,7 +20,8 @@ export class ExhibitorGridComponent implements OnInit {
 
   ngOnInit() {}
 
-  ensureShow(id: string) {
-    this.showDetail.emit(id)
+  ensureShow(item: Exhibitor) {
+    item.active = !item.active
+    this.showDetail.emit(item.id)
   }
 }

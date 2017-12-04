@@ -4,10 +4,11 @@ import { ExhibitorsPage } from './exhibitors'
 
 import { ExhibitorGridComponent } from './components/exhibitor-grid/exhibitor-grid.component'
 import { ExhibitorDetailComponent } from './components/exhibitor-detail/exhibitor-detail.component'
-import { HzCustomerAbstractComponent } from './components/customer-abstract/customer-abstract.component'
-import { HzCustomerStatusComponent } from './components/customer-status/customer-status.component'
-import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
+import { HzExhibitorAbstractComponent } from './components/exhibitor-abstract/exhibitor-abstract.component'
+import { HzExhibitorAnalysisComponent } from './components/exhibitor-analysis/exhibitor-analysis.component'
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
+
+import { ToInviteExhibitorModal } from './modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
 
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
@@ -28,10 +29,11 @@ const effects = [ExhibitorEffects, MatcherEffects]
     ExhibitorsPage,
     ExhibitorGridComponent,
     ExhibitorDetailComponent,
-    HzCustomerAbstractComponent,
-    HzCustomerStatusComponent,
-    HzCustomerPortrayComponent,
+    HzExhibitorAbstractComponent,
+    HzExhibitorAnalysisComponent,
     HzMatcherFilterComponent,
+
+    ToInviteExhibitorModal,
   ],
   imports: [
     SharedModule,
@@ -39,6 +41,9 @@ const effects = [ExhibitorEffects, MatcherEffects]
     EffectsModule.forFeature(effects),
     IonicPageModule.forChild(ExhibitorsPage)
   ],
-  providers: [...services]
+  providers: [...services],
+  entryComponents: [
+    ToInviteExhibitorModal
+  ]
 })
 export class ExhibitorsPageModule {}

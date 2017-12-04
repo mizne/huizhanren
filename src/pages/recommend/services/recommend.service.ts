@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import { Recommend } from '../models/recommend.model'
+import { Recommend, RecommendResp } from '../models/recommend.model'
 
 const fakeRecommends: Recommend[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
@@ -17,7 +17,7 @@ const fakeRecommends: Recommend[] = Array.from({ length: 10 }, (_, i) => ({
 
 @Injectable()
 export class RecommendService {
-  private fetchUrl: string = '/data/querybycondition/User'
+  private fetchUrl: string = '/data/VisiterInfo'
   private inviteUrl: string = '/data/insert/User'
 
   constructor(
@@ -25,23 +25,25 @@ export class RecommendService {
     private tenantService: TenantService
   ) {}
 
-  /**
-   * 获取推荐客户 分页请求
-   *
-   * @param {number} pageIndex
-   * @param {number} pageSize
-   * @returns {Observable<Recommend[]>}
-   * @memberof RecommendService
-   */
-  fetchRecommend(pageIndex: number, pageSize: number): Observable<Recommend[]> {
-    // return this.tenantService
-    //   .getTenantIdAndUserId()
-    //   .mergeMap(([tenantId, userId]) => {
-    //     return this.http.post(this.fetchUrl + `/${tenantId}/${userId}`, {})
-    //   })
-    //   .catch(this.handleError)
+/**
+ * 获取推荐观众信息
+ *
+ * @param {number} pageIndex
+ * @param {number} pageSize
+ * @returns {Observable<Recommend[]>}
+ * @memberof RecommendService
+ */
+fetchRecommend(pageIndex: number, pageSize: number): Observable<Recommend[]> {
+    return this.tenantService
+      .getTenantIdAndExhibitionId()
+      .mergeMap(([tenantId, exhibitionId]) => {
+        return this.http.get(this.fetchUrl + `?exhibitorId=${exhibitionId}&itemId=${tenantId}`)
+      })
+      .map(e => (e as APIResponse).result)
+      .map(e => e.map(Recommend.convertFromResp))
+      .catch(this.handleError)
 
-    return Observable.of(fakeRecommends)
+    // return Observable.of(fakeRecommends)
   }
   /**
    * 约请某个推荐客户

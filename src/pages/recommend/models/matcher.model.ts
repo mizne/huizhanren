@@ -2,6 +2,7 @@ import { Customer } from './recommend.model'
 
 export class Matcher extends Customer {
   status?: MatcherStatus
+  selected?: boolean
 }
 
 export enum MatcherStatus {

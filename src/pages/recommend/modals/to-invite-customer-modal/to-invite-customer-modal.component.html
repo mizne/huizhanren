@@ -1,0 +1,40 @@
+<div class="hz-modal invite-customer-modal">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        约 TA
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="modal-body">
+      <div class="field-item contact">
+        <label for="">联系人:</label>
+        <span>{{destName}}( {{destTitle}} ) {{destCompany}}</span>
+      </div>
+
+      <div class="field-item address">
+        <label for="">预约地点:</label>
+        <span>{{srcAddress}}</span>
+      </div>
+
+      <div class="field-item content">
+        <label for="">通知内容:</label>
+        <span>{{content}}</span>
+      </div>
+
+      <div class="field-item fee">
+        <label for="">扣费说明:</label>
+        <span>本次约请扣费
+          <span class="money">0.1</span>
+          元
+        </span>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="hz-btn" (click)="cancel()">取消</button>
+      <button type="button" class="hz-btn" (click)="complete()">确定</button>
+    </div>
+  </ion-content>
+</div>

@@ -1,5 +1,5 @@
-import { 
-  Actions, 
+import {
+  Actions,
   FETCH_ALL_EXHIBITIONS_SUCCESS,
   SELECT_EXHIBITION
  } from '../actions/exhibitions.action'
@@ -14,6 +14,7 @@ export interface State {
   companyName: string
   exhibitions: Exhibition[]
   selectedExhibitionId: string
+  selectedExhibitionAddress: string
 }
 
 export const initialState: State = {
@@ -23,7 +24,8 @@ export const initialState: State = {
   userId: '',
   companyName: '',
   exhibitions: [],
-  selectedExhibitionId: ''
+  selectedExhibitionId: '',
+  selectedExhibitionAddress: '' // 参展的展台位置
 }
 
 export function reducer(
@@ -37,10 +39,11 @@ export function reducer(
         ...action.payload
       }
 
-    case SELECT_EXHIBITION: 
+    case SELECT_EXHIBITION:
       return {
         ...state,
-        selectedExhibitionId: action.exhibitionId
+        selectedExhibitionId: action.exhibitionId,
+        selectedExhibitionAddress: state.exhibitions.find(e => e.id === action.exhibitionId).boothNo
       }
     default: {
       return state
@@ -53,7 +56,8 @@ export const getUserName = (state: State) => state.userName
 export const isAdmin = (state: State) => state.adminName === state.userName
 export const getCompanyName = (state: State) => state.companyName
 export const getExhibitions = (state: State) => state.exhibitions
-export const getSelectedExhibitionId = (state: State) => state.selectedExhibitionId 
+export const getSelectedExhibitionId = (state: State) => state.selectedExhibitionId
+export const getSelectedExhibitionAddress = (state: State) => state.selectedExhibitionAddress
 
 export const getTenantId = (state: State) => state.tenantId
 export const getUserId = (state: State) => state.userId

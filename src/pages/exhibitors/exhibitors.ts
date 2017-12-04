@@ -27,6 +27,7 @@ import {
   ChangeListStatusAction,
   FetchExhibitorsAction,
   UpdateDetailIDAction,
+  ToInviteExhibitorAction,
 } from './actions/exhibitor.action'
 import { FetchMatchersAction } from './actions/matcher.action'
 
@@ -131,6 +132,11 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   toggleLog() {
     this.store.dispatch(new TogglePageStatusAction())
+  }
+
+  ensureInvite(){
+    console.log('ensure invite exhibitor')
+    this.store.dispatch(new ToInviteExhibitorAction('11'))
   }
 
   private initDataSource() {

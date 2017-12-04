@@ -5,5 +5,5 @@
     <hz-selector [options]="sortOptions" [selectedValueSub]="sortSelectSub"></hz-selector>
   </div>
 
-  <hz-search-input [searchSub]="searchSub" [debounceTime]="300"></hz-search-input>
+  <hz-search-input *ngIf="showSearch" [searchSub]="searchSub" [debounceTime]="300"></hz-search-input>
 </div>

@@ -6,6 +6,7 @@ import { State } from '../pages/customer/reducers/index'
 import {
   getTenantId,
   getUserId,
+  getSelectedExhibitionId
  } from '../pages/login/reducers/index'
 
 @Injectable()
@@ -16,5 +17,9 @@ export class TenantService {
 
   getTenantIdAndUserId(): Observable<[string, string]> {
     return Observable.zip(this.store.select(getTenantId), this.store.select(getUserId))
+  }
+
+  getTenantIdAndExhibitionId(): Observable<[string, string]> {
+    return Observable.zip(this.store.select(getTenantId), this.store.select(getSelectedExhibitionId))
   }
 }

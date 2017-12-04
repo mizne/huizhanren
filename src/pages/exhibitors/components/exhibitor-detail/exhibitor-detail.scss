@@ -19,10 +19,10 @@
       }
     }
 
-    .customer-container {
+    .exhibitor-container {
       background-color: #efeff4;
 
-      .customer-detail {
+      .exhibitor-detail {
         background-color: #fff;
         padding: 30px 10px;
         .headers {
@@ -42,7 +42,7 @@
 
         .content {
           margin-top: 20px;
-          height: calc(100vh - 570px);
+          height: calc(100vh - 730px);
           overflow: auto;
         }
       }
@@ -72,7 +72,7 @@
 
     .content {
       padding: 30px 30px;
-      height: calc(100vh - 130px);
+      height: calc(100vh - 140px);
       overflow: auto;
     }
   }
