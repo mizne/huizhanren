@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Matcher } from '../models/matcher.model'
+import { ExhibitorMatcher } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Exhibitor] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Exhibitor] Fetch Matchers Success'
@@ -34,7 +34,7 @@ export class FetchMatchersAction implements Action {
 }
 export class FetchMatchersSuccessAction implements Action {
   readonly type = FETCH_MATCHERS_SUCCESS
-  constructor(public matchers: Matcher[]) {}
+  constructor(public matchers: ExhibitorMatcher[]) {}
 }
 export class FetchMatchersFailureAction implements Action {
   readonly type = FETCH_MATCHERS_FAILURE

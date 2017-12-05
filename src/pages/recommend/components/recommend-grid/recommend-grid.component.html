@@ -30,11 +30,16 @@
       <ion-col col-1 *ngIf="type === 'matcher'">{{item.area}}</ion-col>
       <ion-col col-2 *ngIf="type === 'matcher'" [ngClass]="['matcher-status', 'matcher-status-' + item.status]">
         <span *ngIf="item.isSender; else receiver;">
-          {{item.status | matcherStatus}}
+          {{item.status | customerMatcherStatus}}
         </span>
         <ng-template #receiver>
-          <button ion-button class="agree-btn">接受</button>
-          <button ion-button class="refuse-btn">拒绝</button>
+          <span *ngIf="item.status !== 2; else auditSuccess;">
+            {{item.status | customerMatcherStatus}}
+          </span>
+          <ng-template #auditSuccess>
+            <button ion-button class="agree-btn">接受</button>
+            <button ion-button class="refuse-btn">拒绝</button>
+          </ng-template>
         </ng-template>
       </ion-col>
 
@@ -61,7 +66,7 @@
     </ion-row>
 
     <div *ngIf="dataItems.length > 0; else noData;">
-      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" (click)="ensureShow(item.id)">
+      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id" (click)="ensureShow(item.id)">
         <ion-col col-2>{{item.name}}</ion-col>
         <ion-col col-2>{{item.title}}</ion-col>
         <ion-col col-5>{{item.company}}</ion-col>

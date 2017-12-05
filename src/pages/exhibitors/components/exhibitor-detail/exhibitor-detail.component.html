@@ -1,7 +1,7 @@
 <div class="exhibitor-detail-container">
   <div class="left-area">
     <div class="exhibitor-container">
-      <hz-exhibitor-abstract [detail]="detail" (invite)="ensureInvite()"></hz-exhibitor-abstract>
+      <hz-exhibitor-abstract (showProduct)="ensureShowProduct($event)" [detail]="detail" (invite)="ensureInvite()"></hz-exhibitor-abstract>
       <div class="exhibitor-detail">
         <div class="headers">
           <div class="header-item logger"

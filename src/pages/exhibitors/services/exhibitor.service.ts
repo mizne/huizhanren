@@ -4,9 +4,9 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import { Exhibitor } from '../models/exhibitor.model'
+import { RecommendExhibitor } from '../models/exhibitor.model'
 
-const fakeExhibitors: Exhibitor[] = Array.from({ length: 10 }, (_, i) => ({
+const fakeExhibitors: RecommendExhibitor[] = Array.from({ length: 10 }, (_, i) => ({
   id: String(i),
   name: `testName${i}`,
   logo: './assets/images/card.jpg',
@@ -42,7 +42,7 @@ export class ExhibitorService {
    * @returns {Observable<Recommend[]>}
    * @memberof RecommendService
    */
-  fetchExhibitors(pageIndex: number, pageSize: number): Observable<Exhibitor[]> {
+  fetchExhibitors(pageIndex: number, pageSize: number): Observable<RecommendExhibitor[]> {
     return this.tenantService
       .getTenantIdAndItemName()
       .mergeMap(([tenantId, itemName]) => {
@@ -50,29 +50,12 @@ export class ExhibitorService {
         return this.http.get(this.fetchUrl + query)
       })
       .map(e => (e as APIResponse).result)
-      .map(e => e.map(Exhibitor.convertFromResp))
-      .do(result => {
-        console.log(result)
-      })
+      .map(e => e.map(RecommendExhibitor.convertFromResp))
       .catch(this.handleError)
 
     // return Observable.of(fakeExhibitors)
   }
-  /**
-   * 约请某个推荐展商
-   *
-   * @param {string} exhibitorID
-   * @returns {Observable<any>}
-   * @memberof RecommendService
-   */
-  inviteExhibitor(exhibitorID: string): Observable<any> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.inviteUrl + `/${tenantId}/${userId}`, {})
-      })
-      .catch(this.handleError)
-  }
+
 
   private handleError(error: any): Observable<any> {
     console.error(error)

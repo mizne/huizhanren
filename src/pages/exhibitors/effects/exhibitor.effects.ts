@@ -12,17 +12,22 @@ import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-moda
 import { Logger } from '../../customer/models/logger.model'
 
 import { ExhibitorService } from '../services/exhibitor.service'
+import { MatcherService } from '../services/matcher.service'
+
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
 
 import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
+import { ToShowProductModal } from '../modals/to-show-product-modal/to-show-product-modal.component'
 
 import { Store } from '@ngrx/store'
 import { State, getShowDetailID, getExhibitors } from '../reducers'
 import {
+  getTenantId,
   getCompanyName,
   getSelectedExhibitionAddress
 } from '../../login/reducers'
+import { ToShowProcuctAction } from '../actions/exhibitor.action';
 
 @Injectable()
 export class ExhibitorEffects {
@@ -75,27 +80,58 @@ export class ExhibitorEffects {
       return Observable.fromPromise(
         new Promise((res, rej) => {
           const modal = this.modalCtrl.create(ToInviteExhibitorModal, params)
-          modal.onDidDismiss(ok => {
-            res(ok)
+          modal.onDidDismiss(boothNo => {
+            res(boothNo)
           })
           modal.present()
         })
-      ).map((ok: string) => {
-        if (ok) {
-          return new fromExhibitor.InviteExhibitorAction()
+      ).map((boothNo: string) => {
+        if (boothNo) {
+          return new fromExhibitor.InviteExhibitorAction(boothNo)
         } else {
           return new fromExhibitor.CancelInviteExhibitorAction()
         }
       })
     })
 
+  // @Effect()
+  // inviteExhibitor$ = this.actions$
+  //   .ofType(fromExhibitor.INVITE_EXHIBITOR)
+  //   .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+  //   .mergeMap(exhibitorID =>
+  //     this.exhibitorService
+  //       .inviteExhibitor(exhibitorID)
+  //       .concatMap(() => [
+  //         new fromExhibitor.InviteExhibitorSuccessAction(),
+  //         new fromMatcher.FetchMatchersAction()
+  //       ])
+  //       .catch(() =>
+  //         Observable.of(new fromExhibitor.InviteExhibitorFailureAction())
+  //       )
+  //   )
+
   @Effect()
-  inviteExhibitor$ = this.actions$
+  inviteRecommend$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
-    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .mergeMap(exhibitorID =>
-      this.exhibitorService
-        .inviteExhibitor(exhibitorID)
+    .map((action: fromExhibitor.InviteExhibitorAction) => action.boothNo)
+    .withLatestFrom(this.store.select(getShowDetailID), (boothNo, id) => ({
+      boothNo,
+      id
+    }))
+    .withLatestFrom(this.store.select(getExhibitors), ({ boothNo, id }, exhibitors) => ({
+      boothNo,
+      exhibitor: exhibitors.find(e => e.id === id)
+    })
+    )
+
+    .withLatestFrom(this.store.select(getTenantId), ({ boothNo, exhibitor }, tenantId) => ({
+      exhibitor,
+      tenantId,
+      boothNo
+    }))
+    .mergeMap(({ exhibitor, boothNo, tenantId }) =>
+      this.matcherService
+        .createMatcher(exhibitor, boothNo, tenantId)
         .concatMap(() => [
           new fromExhibitor.InviteExhibitorSuccessAction(),
           new fromMatcher.FetchMatchersAction()
@@ -215,12 +251,20 @@ export class ExhibitorEffects {
         )
     )
 
+    @Effect({ dispatch: false })
+    toShowProduct$ = this.actions$.ofType(fromExhibitor.TO_SHOW_PRODUCT)
+    .map((action: fromExhibitor.ToShowProcuctAction) => action.product)
+    .do((product) => {
+      this.modalCtrl.create(ToShowProductModal, product).present()
+    })
+
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
     private exhibitorService: ExhibitorService,
+    private matcherService: MatcherService,
     private loggerService: LoggerService,
     private store: Store<State>
   ) {}

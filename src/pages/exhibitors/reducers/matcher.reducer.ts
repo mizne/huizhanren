@@ -1,8 +1,8 @@
 import * as fromMatcher from '../actions/matcher.action'
-import { Matcher } from '../models/matcher.model'
+import { ExhibitorMatcher } from '../models/matcher.model'
 
 export interface State {
-  matchers: Matcher[],
+  matchers: ExhibitorMatcher[],
   matcherTotalCount: number
 }
 

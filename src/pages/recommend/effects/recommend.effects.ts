@@ -34,7 +34,7 @@ export class RecommendEffects {
     .map((action: fromRecommend.FetchRecommendAction) => action.payload)
     .mergeMap((params) => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取推荐买家信息中...',
+        content: '获取数据中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()

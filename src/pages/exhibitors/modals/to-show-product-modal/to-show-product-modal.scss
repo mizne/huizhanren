@@ -1,0 +1,32 @@
+.show-product-modal {
+  height: 300px;
+
+  .modal-body {
+    padding: 20px 34px;
+    display: flex;
+
+    .left-area {
+      width: 40%;
+    }
+
+    .right-area {
+      margin-left: 5%;
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .header {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: map-get($map: $colors, $key: dark);
+      }
+      .content {
+        margin-top: 20px;
+        font-size: 1.5rem;
+        line-height: 2.5rem;
+        color: map-get($map: $colors, $key: grey);
+      }
+    }
+  }
+}

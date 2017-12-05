@@ -1,15 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
 import {
-  MatcherStatus,
+  ExhibitorMatcherStatus,
   convertMatcherStatusFromModel
 } from '../models/matcher.model'
 
 @Pipe({
-  name: 'customerMatcherStatus'
+  name: 'exhibitorMatcherStatus'
 })
-export class CustomerMatcherStatusPipe implements PipeTransform {
-  transform(value: MatcherStatus): string {
+export class ExhibitorMatcherStatusPipe implements PipeTransform {
+  transform(value: ExhibitorMatcherStatus): string {
     return convertMatcherStatusFromModel(value)
   }
 }

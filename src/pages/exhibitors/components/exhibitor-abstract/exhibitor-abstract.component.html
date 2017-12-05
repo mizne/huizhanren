@@ -14,17 +14,38 @@
       <span class="industry">{{detail.industry}}</span>
     </div>
 
-    <div class="invite" (click)="ensureInvite()">
-      <button ion-button>约 TA</button>
+    <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
+      <span *ngIf="detail.isSender; else receiver;" class="send-dir">
+        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status' + detail.status]">
+          {{detail.status | exhibitorMatcherStatus}}
+        </span>
+        <ng-template #sendAuditSuccess>
+          <span>{{detail.status | exhibitorMatcherStatus}}</span>
+          <button ion-button class="cancel-btn">取消</button>
+        </ng-template>
+      </span>
+      <ng-template #receiver>
+        <span *ngIf="detail.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
+          {{detail.status | exhibitorMatcherStatus}}
+        </span>
+        <ng-template #receiveAuditSuccess>
+          <button ion-button class="agree-btn">接受</button>
+          <button ion-button class="refuse-btn">拒绝</button>
+        </ng-template>
+      </ng-template>
     </div>
-
+    <ng-template #recommend>
+      <div class="invite">
+        <button ion-button (click)="ensureInvite()">约 TA</button>
+      </div>
+    </ng-template>
   </div>
 
   <div class="exhibitor-product">
     <div class="header">产品</div>
     <div class="content">
-      <div *ngIf="detail.products.length > 0; else noProduct;">
-        <div class="product-item" *ngFor="let item of detail.products">
+      <div class="products" *ngIf="detail.products.length > 0; else noProduct;">
+        <div class="product-item" *ngFor="let item of detail.products" (click)="ensureShowProduct(item)">
           <img src="./assets/images/card.jpg" alt="">
           <div class="product-name">{{item.name}}</div>
         </div>

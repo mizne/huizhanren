@@ -1,0 +1,21 @@
+<div class="hz-modal show-product-modal">
+  <ion-content>
+    <div class="modal-body">
+      <div class="left-area">
+        <ion-slides>
+          <ion-slide *ngFor="let pic of pictures">
+            <img [src]="pic" alt="">
+          </ion-slide>
+        </ion-slides>
+      </div>
+
+      <div class="right-area">
+        <div class="header">{{name}}</div>
+        <div class="content">{{remark}}</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="hz-btn" (click)="cancel()">我知道了</button>
+    </div>
+  </ion-content>
+</div>

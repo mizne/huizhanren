@@ -141,7 +141,14 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.recommends$ = this.store.select(getRecommends)
-    this.matchers$ = this.store.select(getMatchers)
+    this.matchers$ = Observable.combineLatest(
+      this.store.select(getMatchers),
+      this.matcherFilterSub.startWith([])
+    ).map(([matchers, matcherFilter]) => {
+      return matcherFilter.length === 0
+        ? matchers
+        : matchers.filter(e => matcherFilter.indexOf(e.status) >= 0)
+    })
 
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
@@ -164,7 +171,9 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.currentDetail$ = this.showDetailID$.withLatestFrom(
       items$,
       (showDetailID, items) => {
-        return items.find(e => e.id === showDetailID)
+        const detail = items.find(e => e.id === showDetailID)
+        console.log(detail)
+        return detail
       }
     )
   }
@@ -174,7 +183,7 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.initListHeaderEvent()
 
     this.initRecommendFilter()
-    this.initMatcherFilter()
+    // this.initMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
   }
@@ -239,17 +248,19 @@ export class RecommendPage implements OnInit, OnDestroy {
       })
   }
 
-  private initMatcherFilter(): void {
-    this.matcherFilterSub
-      .takeUntil(this.destroyService)
-      .subscribe(matcherFilter => {
-        this.store.dispatch(new FetchMatchersAction({
-          pageIndex: 1,
-          pageSize: 10,
-          statuses: matcherFilter
-        }))
-      })
-  }
+  // private initMatcherFilter(): void {
+  //   this.matcherFilterSub
+  //     .takeUntil(this.destroyService)
+  //     .subscribe(matcherFilter => {
+  //       this.store.dispatch(
+  //         new FetchMatchersAction({
+  //           pageIndex: 1,
+  //           pageSize: 10,
+  //           statuses: matcherFilter
+  //         })
+  //       )
+  //     })
+  // }
 
   private initLoadMore(): void {
     const loadMore$ = this.loadMoreSub

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Exhibitor, ListStatus, PageStatus } from '../models/exhibitor.model'
+import { Exhibitor, ListStatus, PageStatus, Product } from '../models/exhibitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
@@ -26,6 +26,9 @@ export const CREATE_LOGGER_FAILURE = '[Exhibitor] Create Logger Failure'
 export const FETCH_LOGGER = '[Exhibitor] Fetch Logger'
 export const FETCH_LOGGER_SUCCESS = '[Exhibitor] Fetch Logger Success'
 export const FETCH_LOGGER_FAILURE = '[Exhibitor] Fetch Logger Failure'
+
+export const TO_SHOW_PRODUCT = '[Exhibitor] To Show Product'
+export const CANCEL_SHOW_PRODUCT = '[Exhibitor] Cancel Show Product'
 
 
 /**
@@ -63,6 +66,7 @@ export class CancelInviteExhibitorAction implements Action {
 }
 export class InviteExhibitorAction implements Action {
   readonly type = INVITE_EXHIBITOR
+  constructor(public boothNo: string) {}
 }
 export class InviteExhibitorSuccessAction implements Action {
   readonly type = INVITE_EXHIBITOR_SUCCESS
@@ -119,6 +123,15 @@ export class FetchLoggerFailureAction implements Action {
   readonly type = FETCH_LOGGER_FAILURE
 }
 
+
+export class ToShowProcuctAction implements Action {
+  readonly type = TO_SHOW_PRODUCT
+  constructor(public product: Product)　{}
+}
+export class CancelShowProductAction implements Action {
+  readonly type = CANCEL_SHOW_PRODUCT
+}
+
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
@@ -147,4 +160,7 @@ CreateLoggerFailureAction |
 
 FetchLoggerAction |
 FetchLoggerSuccessAction |
-FetchLoggerFailureAction
+FetchLoggerFailureAction |
+
+ToShowProcuctAction |
+CancelShowProductAction

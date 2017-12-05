@@ -5,7 +5,7 @@ import {
   ModalController,
   LoadingController,
   App,
-  IonicPage,
+  IonicPage
 } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -29,6 +29,7 @@ import {
   FetchExhibitorsAction,
   UpdateDetailIDAction,
   ToInviteExhibitorAction,
+  ToShowProcuctAction
 } from './actions/exhibitor.action'
 import { FetchMatchersAction } from './actions/matcher.action'
 
@@ -38,14 +39,18 @@ import {
   ListHeaderEvent,
   Exhibitor,
   Portray,
-  ExhibitorFilter
+  ExhibitorFilter,
+  RecommendExhibitor,
+  Product
 } from './models/exhibitor.model'
-import { DestroyService } from '../../providers/destroy.service'
-
 import { Logger, LoggerLevel } from '../customer/models/logger.model'
-import { Matcher, MatcherStatus } from './models/matcher.model'
-
+import {
+  ExhibitorMatcher,
+  ExhibitorMatcherStatus
+} from './models/matcher.model'
 import { AREA_OPTIONS } from '../recommend/models/recommend.model'
+
+import { DestroyService } from '../../providers/destroy.service'
 
 @IonicPage()
 @Component({
@@ -54,8 +59,8 @@ import { AREA_OPTIONS } from '../recommend/models/recommend.model'
   providers: [DestroyService]
 })
 export class ExhibitorsPage implements OnInit, OnDestroy {
-  exhibitors$: Observable<Exhibitor[]>
-  matchers$: Observable<Matcher[]>
+  exhibitors$: Observable<RecommendExhibitor[]>
+  matchers$: Observable<ExhibitorMatcher[]>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
@@ -67,7 +72,9 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
   recommendFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
-  matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
+  matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
+    ExhibitorMatcherStatus[]
+  >()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   filterOptions = [
@@ -132,7 +139,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.store.dispatch(new TogglePageStatusAction())
   }
 
-  ensureInvite(){
+  ensureInvite() {
     console.log('ensure invite exhibitor')
     this.store.dispatch(new ToInviteExhibitorAction())
   }
@@ -142,11 +149,23 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
+  ensureShowProduct(product: Product) {
+    console.log('ensure show product: ', product)
+    this.store.dispatch(new ToShowProcuctAction(product))
+  }
+
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
-    this.matchers$ = this.store.select(getMatchers)
+    this.matchers$ = Observable.combineLatest(
+      this.store.select(getMatchers),
+      this.matcherFilterSub.startWith([])
+    ).map(([matchers, matcherFilter]) => {
+      return matcherFilter.length === 0
+        ? matchers
+        : matchers.filter(e => matcherFilter.indexOf(e.status) >= 0)
+    })
 
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
@@ -169,7 +188,9 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.currentDetail$ = this.showDetailID$.withLatestFrom(
       items$,
       (showDetailID, items) => {
-        return items.find(e => e.id === showDetailID)
+        const detail = items.find(e => e.id === showDetailID)
+        console.log(detail)
+        return detail
       }
     )
   }
@@ -178,7 +199,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initListHeaderChange()
     this.initListHeaderEvent()
 
-    this.initRecommendFilter()
+    // this.initRecommendFilter()
     this.initMatcherFilter()
     this.initLoadMore()
   }
@@ -220,56 +241,68 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
             break
         }
 
-        this.toastCtrl.create({
-          message: '吐血研发中...',
-          position: 'top',
-          duration: 3e3
-        }).present()
+        this.toastCtrl
+          .create({
+            message: '吐血研发中...',
+            position: 'top',
+            duration: 3e3
+          })
+          .present()
       })
   }
 
-  private initRecommendFilter(): void {
-    this.recommendFilterSub.takeUntil(this.destroyService)
-    .subscribe((recommendFilter) => {
-      console.log(recommendFilter)
-    })
-  }
+  // private initRecommendFilter(): void {
+  //   this.recommendFilterSub.takeUntil(this.destroyService)
+  //   .subscribe((recommendFilter) => {
+  //     console.log(recommendFilter)
+  //   })
+  // }
 
   private initMatcherFilter(): void {
-    this.matcherFilterSub.takeUntil(this.destroyService)
-    .subscribe((matcherFilter) => {
-      console.log(matcherFilter)
-    })
+    this.matcherFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        console.log(matcherFilter)
+      })
   }
 
   private initLoadMore(): void {
-    const loadMore$ = this.loadMoreSub.asObservable()
-    .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
+    const loadMore$ = this.loadMoreSub
+      .asObservable()
+      .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreRecommend(loadMore$)
     this.initLoadMoreMatcher(loadMore$)
   }
 
   private initLoadMoreRecommend(loadMore: Observable<ListStatus>) {
-    loadMore.filter(e => e === ListStatus.EXHIBITOR)
-    .withLatestFrom(this.recommendFilterSub.startWith({
-      acreage: '',
-      area: '',
-      key: ''
-    }), (_, recommendFilter) => recommendFilter)
-    .takeUntil(this.destroyService)
-    .subscribe((recommendFilter) => {
-      console.log('to load more with recommend filter, ', recommendFilter)
-    })
+    loadMore
+      .filter(e => e === ListStatus.EXHIBITOR)
+      .withLatestFrom(
+        this.recommendFilterSub.startWith({
+          acreage: '',
+          area: '',
+          key: ''
+        }),
+        (_, recommendFilter) => recommendFilter
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(recommendFilter => {
+        console.log('to load more with recommend filter, ', recommendFilter)
+      })
   }
 
   private initLoadMoreMatcher(loadMore: Observable<ListStatus>) {
-    loadMore.filter(e => e === ListStatus.MATCHER)
-    .withLatestFrom(this.matcherFilterSub, (_, matcherFilter) => matcherFilter)
-    .takeUntil(this.destroyService)
-    .subscribe((matcherFilter) => {
-      console.log('to load more with matcher filter, ', matcherFilter)
-    })
+    loadMore
+      .filter(e => e === ListStatus.MATCHER)
+      .withLatestFrom(
+        this.matcherFilterSub,
+        (_, matcherFilter) => matcherFilter
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        console.log('to load more with matcher filter, ', matcherFilter)
+      })
   }
 
   private initDispatch(): void {

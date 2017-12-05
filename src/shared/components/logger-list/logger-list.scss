@@ -1,6 +1,7 @@
 .hz-logger-list {
   .no-log {
     text-align: center;
+    color: map-get($map: $colors, $key: grey);
   }
 }
 

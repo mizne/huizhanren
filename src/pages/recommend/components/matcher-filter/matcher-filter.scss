@@ -1,20 +1,25 @@
 .matcher-filter-container {
   height: 82px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   padding-left: 10px;
+  color: map-get($map: $gridColors, $key: grey);
+
+  .first {
+    display: none;
+  }
 
   label {
-    color: #999999;
     margin-right: 2px;
-
-    &.first {
-      color: #666666;
-    }
   }
 
   &.expand {
+    justify-content: flex-start;
+    .first {
+      display: block;
+    }
+
     label {
       margin-right: 10px;
     }
@@ -27,5 +32,4 @@
   ion-checkbox {
     margin-left: 3px;
   }
-
 }

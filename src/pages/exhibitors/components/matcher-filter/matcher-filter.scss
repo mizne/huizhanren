@@ -4,14 +4,10 @@
   justify-content: flex-start;
   align-items: center;
   padding-left: 10px;
+  color: map-get($map: $gridColors, $key: grey);
 
   label {
-    color: #999999;
     margin-right: 2px;
-
-    &.first {
-      color: #666666;
-    }
   }
 
   &.expand {
@@ -27,5 +23,4 @@
   ion-checkbox {
     margin-left: 3px;
   }
-
 }

@@ -57,7 +57,6 @@
     }
   }
 
-
   .exhibitor-product {
     padding: 0 10px;
     .header {
@@ -68,21 +67,24 @@
 
     .content {
       margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      max-height: 100px;
-      overflow: auto;
-      .product-item {
-        margin: 0 20px;
-        flex: 1;
+
+      .products {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-width: 80px;
-        max-width: 80px;
-        height: 100px;
-        .product-name {
-          margin-top: 10px;
+        flex-wrap: wrap;
+        max-height: 100px;
+        overflow: auto;
+        .product-item {
+          margin: 0 20px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 80px;
+          max-width: 80px;
+          height: 100px;
+          .product-name {
+            margin-top: 10px;
+          }
         }
       }
 

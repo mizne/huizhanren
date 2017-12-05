@@ -20,20 +20,20 @@ export class MatcherEffects {
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
     .mergeMap(params => {
-      const loadingCtrl = this.loadCtrl.create({
-        content: '获取约请信息中...',
-        spinner: 'bubbles'
-      })
-      loadingCtrl.present()
+      // const loadingCtrl = this.loadCtrl.create({
+      //   content: '获取约请信息中...',
+      //   spinner: 'bubbles'
+      // })
+      // loadingCtrl.present()
 
       return this.matcherService
         .fetchMatchers(params)
         .map(matchers => {
-          loadingCtrl.dismiss()
+          // loadingCtrl.dismiss()
           return new fromMatcher.FetchMatchersSuccessAction(matchers)
         })
         .catch(err => {
-          loadingCtrl.dismiss()
+          // loadingCtrl.dismiss()
           return Observable.of(new fromMatcher.FetchMatchersFailureAction())
         })
     })

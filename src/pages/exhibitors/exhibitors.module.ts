@@ -9,6 +9,7 @@ import { HzExhibitorAnalysisComponent } from './components/exhibitor-analysis/ex
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
 import { ToInviteExhibitorModal } from './modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
+import { ToShowProductModal } from './modals/to-show-product-modal/to-show-product-modal.component'
 
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
@@ -20,9 +21,15 @@ import { MatcherEffects } from './effects/matcher.effects'
 import { ExhibitorService } from './services/exhibitor.service'
 import { MatcherService } from './services/matcher.service'
 
-const services = [ExhibitorService, MatcherService]
+import { ExhibitorMatcherStatusPipe } from './pipes/exhibitor-matcher-status.pipe'
 
+const services = [ExhibitorService, MatcherService]
 const effects = [ExhibitorEffects, MatcherEffects]
+const pipes = [ExhibitorMatcherStatusPipe]
+const modals = [
+  ToInviteExhibitorModal,
+  ToShowProductModal,
+]
 
 @NgModule({
   declarations: [
@@ -33,7 +40,8 @@ const effects = [ExhibitorEffects, MatcherEffects]
     HzExhibitorAnalysisComponent,
     HzMatcherFilterComponent,
 
-    ToInviteExhibitorModal,
+    ...modals,
+    ...pipes
   ],
   imports: [
     SharedModule,
@@ -43,7 +51,7 @@ const effects = [ExhibitorEffects, MatcherEffects]
   ],
   providers: [...services],
   entryComponents: [
-    ToInviteExhibitorModal
+    ...modals
   ]
 })
 export class ExhibitorsPageModule {}

@@ -18,7 +18,7 @@ import { reducers } from './reducers'
 import { RecommendEffects } from './effects/recommend.effects'
 import { MatcherEffects } from './effects/matcher.effects'
 
-import { MatcherStatusPipe } from './pipes/matcher-status.pipe'
+import { CustomerMatcherStatusPipe } from './pipes/matcher-status.pipe'
 
 import { RecommendService } from './services/recommend.service'
 import { MatcherService } from './services/matcher.service'
@@ -27,7 +27,7 @@ const services = [RecommendService, MatcherService]
 
 const effects = [RecommendEffects, MatcherEffects]
 
-const pipes = [MatcherStatusPipe]
+const pipes = [CustomerMatcherStatusPipe]
 
 @NgModule({
   declarations: [

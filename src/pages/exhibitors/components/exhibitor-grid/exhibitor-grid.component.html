@@ -1,6 +1,5 @@
 <div class="exhibitor-grid-container">
-  <div class="exhibitor-item" [class.expand]="expand" [class.active]="item.active"
-    *ngFor="let item of dataItems" (click)="ensureShow(item)">
+  <div class="exhibitor-item" [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
     <div class="logo">
       <img [src]="item.logo" alt="">
     </div>
@@ -14,7 +13,9 @@
         </div>
 
         <div class="matcher-dest" *ngIf="type === 'matcher'">
-          收
+          <span [ngClass]="{'is-sender': item.isSender, 'is-receiver': item.isReceiver, 'send-dir': true}">
+            {{item.isSender ? '发' : '收'}}
+          </span>
         </div>
       </div>
 
@@ -28,14 +29,34 @@
             <i class="iconfont icon-view"></i> {{item.heat}}
           </div>
           <ng-template #matcherBlock>
-            <div class="matcher-status">已同意</div>
+            <div class="matcher-status" *ngIf="item.senderId">
+              <span *ngIf="item.isSender; else receiver;" class="send-dir">
+                <span *ngIf="item.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status' + item.status]">
+                  {{item.status | exhibitorMatcherStatus}}
+                </span>
+                <ng-template #sendAuditSuccess>
+                  <span>{{item.status | exhibitorMatcherStatus}}</span>
+                  <button ion-button class="cancel-btn">取消</button>
+                </ng-template>
+              </span>
+              <ng-template #receiver>
+                <span *ngIf="item.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + item.status]">
+                  {{item.status | exhibitorMatcherStatus}}
+                </span>
+                <ng-template #receiveAuditSuccess>
+                  <button ion-button class="agree-btn">接受</button>
+                  <button ion-button class="refuse-btn">拒绝</button>
+                </ng-template>
+              </ng-template>
+            </div>
+
           </ng-template>
         </div>
       </div>
 
     </div>
 
-    <div class="active-icon" *ngIf="item.active">
+    <div class="active-icon" *ngIf="item.selected">
       <i class="iconfont icon-check"></i>
     </div>
   </div>

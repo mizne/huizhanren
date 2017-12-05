@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { ToastController } from 'ionic-angular'
 
-import { Portray, Exhibitor } from '../../models/exhibitor.model'
-import { Matcher } from '../../models/matcher.model'
+import { Portray, Exhibitor, Product } from '../../models/exhibitor.model'
+import { ExhibitorMatcher } from '../../models/matcher.model'
 import { Logger } from '../../../customer/models/logger.model'
 
 @Component({
@@ -18,6 +18,7 @@ export class ExhibitorDetailComponent implements OnInit {
 
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
+  @Output() showProduct: EventEmitter<Product> = new EventEmitter<Product>()
 
   activeHeaderIndex: number = 0
   activeDetailHeaderIndex: number = 0
@@ -55,5 +56,9 @@ export class ExhibitorDetailComponent implements OnInit {
 
   ensureCreateLogger() {
     this.createLog.emit()
+  }
+
+  ensureShowProduct(product: Product) {
+    this.showProduct.emit(product)
   }
 }
