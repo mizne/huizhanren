@@ -29,13 +29,22 @@ $app-direction: ltr;
 
 $colors: (
   primary: #6288d5,
-  secondary: #32db64,
-  danger: #f53d3d,
+  secondary: #54A574,
+  danger: #D5626D,
   light: #f4f4f4,
   dark: #222,
   grey: #666,
-  golden: #ef9c64,
-  activeRow: #524e4e
+  golden: #ef9c64
+);
+
+$gridColors: (
+  header: #6288d5,
+  grey: #aaa,
+  sender: #0EC5A9,
+  receiver: #A66CB9,
+  activeRow: #524e4e,
+  secondary: #54A574,
+  danger: #D5626D
 );
 
 // App iOS Variables

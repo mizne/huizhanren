@@ -16,6 +16,10 @@ export class TenantService {
     private store: Store<State>,
   ) {}
 
+  getTenantId(): Observable<string> {
+    return this.store.select(getTenantId)
+  }
+
   getTenantIdAndUserId(): Observable<[string, string]> {
     return Observable.zip(this.store.select(getTenantId), this.store.select(getUserId))
   }

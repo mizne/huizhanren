@@ -18,7 +18,9 @@ const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
   company: `testCompany${i}`,
   industry: `testIndustry${i}`,
   area: `testArea${i}`,
-  status: 0
+  status: i % 5,
+  senderId: i % 2 === 0 ? '1aed77d156448e784da0affd6eda84e1' : '',
+  receiverId: i % 2 === 1 ? '1aed77d156448e784da0affd6eda84e1' : '',
 }))
 
 @Injectable()
@@ -39,26 +41,31 @@ export class MatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        let query = `?role=E&tenantId=${tenantId}`
-        if (params.pageIndex) {
-          query += `&pageIndex=${params.pageIndex}`
-        }
-        if (params.pageSize) {
-          query += `&pageSize=${params.pageSize}`
-        }
-        if (params.statuses) {
-          query += `&state=${params.statuses.map(convertMatcherStatusFromModel)}`
-        }
-        return this.http.get(this.fetchUrl + query)
-      })
-      .map(e => (e as APIResponse).result)
-      .map(e => e.map(Matcher.convertFromResp))
-      .catch(this.handleError)
+    // return this.tenantService
+    //   .getTenantIdAndUserId()
+    //   .mergeMap(([tenantId, userId]) => {
+    //     let query = `?role=E&tenantId=${tenantId}`
+    //     if (params.pageIndex) {
+    //       query += `&pageIndex=${params.pageIndex}`
+    //     }
+    //     if (params.pageSize) {
+    //       query += `&pageSize=${params.pageSize}`
+    //     }
+    //     if (params.statuses) {
+    //       query += `&state=${params.statuses.map(convertMatcherStatusFromModel)}`
+    //     }
+    //     return this.http.get(this.fetchUrl + query)
+    //   })
+    //   .map(e => (e as APIResponse).result)
+    //   .map(e => e.map(Matcher.convertFromResp))
+    //   .catch(this.handleError)
 
-    // return Observable.of(fakeMatchers)
+    return Observable.of(fakeMatchers)
+    .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
+      ...e,
+      isSender: e.senderId === tenantId,
+      isReceiver: e.receiverId === tenantId
+    })))
   }
 
   createMatcher(

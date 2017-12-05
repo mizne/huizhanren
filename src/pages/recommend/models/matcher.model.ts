@@ -3,6 +3,10 @@ import { Customer } from './recommend.model'
 export class Matcher extends Customer {
   status?: MatcherStatus
   selected?: boolean
+  senderId?: string
+  receiverId?: string
+  isSender?: boolean
+  isReceiver?: boolean
 
   static convertFromResp(resp: MatcherResp): Matcher {
     return {
@@ -15,7 +19,9 @@ export class Matcher extends Customer {
       organizer: resp.Organizer,
       organizerId: resp.OrganizerId,
       mobile: resp.Mob,
-      status: convertMatcherStatusFromResp(resp.State)
+      status: convertMatcherStatusFromResp(resp.State),
+      senderId: resp.Initator,
+      receiverId: resp.Receiver
     }
   }
 }
@@ -31,6 +37,8 @@ export class MatcherResp {
   Province?: string
   State?: string
   Industry?: string
+  Initator?: string
+  Receiver?: string
 }
 
 // export interface

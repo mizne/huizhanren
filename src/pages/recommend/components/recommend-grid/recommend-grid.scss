@@ -2,17 +2,21 @@
   max-height: calc(100vh - 270px);
   overflow: auto;
   .header {
-    color: #6288d5;
+    color: map-get($map: $gridColors, $key: header);
+    .status-header {
+      justify-content: flex-end;
+      display: flex;
+    }
   }
 
   .row-item {
-    color: #aaa;
+    color: map-get($map: $gridColors, $key: grey);
     &.even {
       background-color: #27272a;
     }
 
     &.active {
-      background-color: map-get($map: $colors, $key: activeRow);
+      background-color: map-get($map: $gridColors, $key: activeRow);
     }
 
     ion-col {
@@ -26,14 +30,58 @@
     }
 
     .checkbox-col {
-      @include flexboxCenter;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .send-dir {
+        color: #fff;
+        padding: 3px;
+        border-radius: 50%;
+        width: 25px;
+        @include flexboxCenter;
+      }
+      .sender {
+        background-color: map-get($map: $gridColors, $key: sender);
+      }
+      .receiver {
+        background-color: map-get($map: $gridColors, $key: receiver);
+      }
+    }
+
+    .matcher-status {
+      justify-content: flex-end;
+      button {
+        height: 70%;
+        background-color: transparent;
+        padding: 3px 5px;
+        &.agree-btn {
+          color: map-get($map: $colors, $key: primary);
+          border: 1px solid map-get($map: $colors, $key: primary);
+        }
+        &.refuse-btn {
+          color: map-get($map: $colors, $key: danger);
+          border: 1px solid map-get($map: $colors, $key: danger);
+        }
+      }
+    }
+
+    .matcher-status-0,
+    .matcher-status-2 {
+      color: map-get($map: $gridColors, $key: grey);
+    }
+    .matcher-status-1,
+    .matcher-status-4 {
+      color: map-get($map: $gridColors, $key: danger);
+    }
+    .matcher-status-3 {
+      color: map-get($map: $gridColors, $key: secondary);
     }
   }
 
   .no-data {
     @include flexboxCenter;
     height: 50px;
-    color: map-get($map: $colors, $key: grey);
+    color: map-get($map: $gridColors, $key: grey);
   }
 
   hz-customer-status.no-expand {

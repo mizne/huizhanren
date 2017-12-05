@@ -29,6 +29,7 @@ export class HzMatcherFilterComponent implements OnInit {
       this.allowControl.valueChanges.startWith(false),
       this.refuseControl.valueChanges.startWith(false),
     )
+    .skip(1)
     .map((args) => {
       return args.map((e, i) => ({
         matcherStatus: i,
