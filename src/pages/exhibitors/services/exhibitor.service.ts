@@ -6,7 +6,7 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
-const fakeExhibitors: RecommendExhibitor[] = Array.from({ length: 10 }, (_, i) => ({
+const fakeExhibitors: RecommendExhibitor[] = Array.from({ length: 100 }, (_, i) => ({
   id: String(i),
   name: `testName${i}`,
   logo: './assets/images/card.jpg',
@@ -43,17 +43,17 @@ export class ExhibitorService {
    * @memberof RecommendService
    */
   fetchExhibitors(pageIndex: number, pageSize: number): Observable<RecommendExhibitor[]> {
-    return this.tenantService
-      .getTenantIdAndItemName()
-      .mergeMap(([tenantId, itemName]) => {
-        let query = `?itemName=${itemName}`
-        return this.http.get(this.fetchUrl + query)
-      })
-      .map(e => (e as APIResponse).result)
-      .map(e => e.map(RecommendExhibitor.convertFromResp))
-      .catch(this.handleError)
+    // return this.tenantService
+    //   .getTenantIdAndItemName()
+    //   .mergeMap(([tenantId, itemName]) => {
+    //     let query = `?itemName=${itemName}`
+    //     return this.http.get(this.fetchUrl + query)
+    //   })
+    //   .map(e => (e as APIResponse).result)
+    //   .map(e => e.map(RecommendExhibitor.convertFromResp))
+    //   .catch(this.handleError)
 
-    // return Observable.of(fakeExhibitors)
+    return Observable.of(fakeExhibitors)
   }
 
 

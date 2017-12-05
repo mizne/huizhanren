@@ -1,5 +1,9 @@
 .exhibitor-detail-container {
   display: flex;
+  min-height: calc(100vh - 90px);
+  max-height: calc(100vh - 90px);
+  background-color: #fff;
+  overflow: auto;
   .left-area {
     flex: 1;
     .card-container {
@@ -23,8 +27,8 @@
       background-color: #dadae2;
 
       .exhibitor-detail {
-        background-color: #fff;
         padding: 30px 10px;
+        background-color: #fff;
         .headers {
           display: flex;
           justify-content: space-around;
@@ -42,8 +46,6 @@
 
         .content {
           margin-top: 20px;
-          height: calc(100vh - 730px);
-          overflow: auto;
         }
       }
     }

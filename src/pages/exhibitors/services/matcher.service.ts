@@ -7,7 +7,7 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ExhibitorMatcher } from '../models/matcher.model'
 import { Exhibitor, RecommendExhibitor } from '../models/exhibitor.model'
 
-const fakeMatchers: ExhibitorMatcher[] = Array.from({ length: 10 }, (_, i) => ({
+const fakeMatchers: ExhibitorMatcher[] = Array.from({ length: 100 }, (_, i) => ({
   id: String(i),
   name: `testName${i}`,
   title: `testTitle${i}`,
@@ -31,6 +31,7 @@ export class MatcherService {
   private insertUrl = '/data/insert/ExhibitionInvitationInfo'
   private agreeUrl: string = '/data/insert/User'
   private refuseUrl: string = '/data/insert/User'
+  private cancelUrl: string = '/data/insert/User'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -43,26 +44,26 @@ export class MatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(pageIndex: number, pageSize: number): Observable<ExhibitorMatcher[]> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}`)
-      })
-      .map(e => (e as APIResponse).result)
-      .map(e => e.map(ExhibitorMatcher.convertFromResp))
-      .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
-        ...e,
-        isSender: e.senderId === tenantId,
-        isReceiver: e.receiverId === tenantId
-      })))
-      .catch(this.handleError)
+    // return this.tenantService
+    //   .getTenantIdAndUserId()
+    //   .mergeMap(([tenantId, userId]) => {
+    //     return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}`)
+    //   })
+    //   .map(e => (e as APIResponse).result)
+    //   .map(e => e.map(ExhibitorMatcher.convertFromResp))
+    //   .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
+    //     ...e,
+    //     isSender: e.senderId === tenantId,
+    //     isReceiver: e.receiverId === tenantId
+    //   })))
+    //   .catch(this.handleError)
 
-    // return Observable.of(fakeMatchers)
-    // .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
-    //   ...e,
-    //   isSender: e.senderId === tenantId,
-    //   isReceiver: e.receiverId === tenantId
-    // })))
+    return Observable.of(fakeMatchers)
+    .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
+      ...e,
+      isSender: e.senderId === tenantId,
+      isReceiver: e.receiverId === tenantId
+    })))
   }
 
   createMatcher(
@@ -91,6 +92,22 @@ export class MatcherService {
       })
       .catch(this.handleError)
   }
+
+  /**
+ * 取消约请
+ *
+ * @param {string} matcherId
+ * @returns {Observable<any>}
+ * @memberof MatcherService
+ */
+cancelMatcher(matcherId: string): Observable<any> {
+  return this.tenantService
+  .getTenantIdAndUserId()
+  .mergeMap(([tenantId, userId]) => {
+    return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
+  })
+  .catch(this.handleError)
+}
 
   /**
    * 同意约请 TODO

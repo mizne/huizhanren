@@ -22,3 +22,13 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+@mixin confirmModal {
+  height: 300px;
+  .modal-body {
+    padding: 20px 34px;
+    @include flexboxCenter;
+    font-size: 1.8rem !important;
+    color: map-get($map: $colors, $key: grey);
+  }
+}

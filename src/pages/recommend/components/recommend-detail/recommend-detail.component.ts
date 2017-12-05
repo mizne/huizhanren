@@ -17,6 +17,9 @@ export class RecommendDetailComponent implements OnInit {
 
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
+  @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   activeHeaderIndex: number = 0
   activeDetailHeaderIndex: number = 0
@@ -40,5 +43,17 @@ export class RecommendDetailComponent implements OnInit {
   ensureCreateLog() {
     console.log('ensure create log')
     this.createLog.emit()
+  }
+
+  ensureCancelMatcher(id: string) {
+    this.cancelMatcher.emit(id)
+  }
+
+  ensureAgreeMatcher(id: string) {
+    this.agreeMatcher.emit(id)
+  }
+
+  ensureRefuseMatcher(id: string) {
+    this.refuseMatcher.emit(id)
   }
 }

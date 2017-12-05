@@ -17,14 +17,28 @@
       </hz-matcher-filter>
 
       <recommend-grid *ngIf="(listStatus$ | async) === 0" type="recommend" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="recommends$ | async"></recommend-grid>
-      <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async"></recommend-grid>
+      <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher"
+      (showDetail)="updateDetailID($event)"
+      (agreeMatcher)="ensureAgreeMatcher($event)"
+      (refuseMatcher)="ensureRefuseMatcher($event)"
+      [expand]="(pageStatus$ | async) === 0"
+      [dataItems]="matchers$ | async">
+    </recommend-grid>
 
       <p class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <recommend-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
-        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (createLog)="ensureCreateLog()">
+      <recommend-detail
+      *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async"
+      [expand]="(pageStatus$ | async) === 1"
+        [logs]="currentLogs$ | async"
+        [portray]="currentPortray$ | async"
+        (invite)="ensureInvite()"
+        (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)"
+        (createLog)="ensureCreateLog()">
       </recommend-detail>
     </div>
 

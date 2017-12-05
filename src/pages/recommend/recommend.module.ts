@@ -10,6 +10,9 @@ import { HzCustomerPortrayComponent } from './components/customer-portray/custom
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
 import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
+import { ToCancelMatcherModal } from './modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
+import { ToAgreeMatcherModal } from './modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
+import { ToRefuseMatcherModal } from './modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
@@ -24,10 +27,14 @@ import { RecommendService } from './services/recommend.service'
 import { MatcherService } from './services/matcher.service'
 
 const services = [RecommendService, MatcherService]
-
 const effects = [RecommendEffects, MatcherEffects]
-
 const pipes = [CustomerMatcherStatusPipe]
+const modals = [
+  ToInviteCustomerModal,
+  ToCancelMatcherModal,
+  ToAgreeMatcherModal,
+  ToRefuseMatcherModal
+]
 
 @NgModule({
   declarations: [
@@ -39,7 +46,7 @@ const pipes = [CustomerMatcherStatusPipe]
     HzCustomerPortrayComponent,
     HzMatcherFilterComponent,
 
-    ToInviteCustomerModal,
+    ...modals,
     ...pipes
   ],
   imports: [
@@ -49,6 +56,6 @@ const pipes = [CustomerMatcherStatusPipe]
     IonicPageModule.forChild(RecommendPage)
   ],
   providers: [...services],
-  entryComponents: [ToInviteCustomerModal]
+  entryComponents: [...modals]
 })
 export class RecommendPageModule {}

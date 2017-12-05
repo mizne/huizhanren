@@ -21,7 +21,11 @@
         [expand]="(pageStatus$ | async) === 0" [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
       <exhibitor-grid *ngIf="(listStatus$ | async) === 1" type="matcher"
-        (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
+        (showDetail)="updateDetailID($event)"
+        (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)"
+        [expand]="(pageStatus$ | async) === 0"
         [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
@@ -34,6 +38,9 @@
         [logs]="currentLogs$ | async" [portray]="currentPortray$ | async"
         (invite)="ensureInvite()" (createLog)="ensureCreateLogger()"
         (showProduct)="ensureShowProduct($event)"
+        (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)"
         >
       </exhibitor-detail>
     </div>

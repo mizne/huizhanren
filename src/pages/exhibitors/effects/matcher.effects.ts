@@ -12,6 +12,10 @@ import * as fromMatcher from '../actions/matcher.action'
 
 import { MatcherService } from '../services/matcher.service'
 
+import { ToCancelMatcherModal } from '../../recommend/modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
+import { ToAgreeMatcherModal } from '../../recommend/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
+import { ToRefuseMatcherModal } from '../../recommend/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
+
 @Injectable()
 export class MatcherEffects {
   @Effect()
@@ -26,6 +30,92 @@ export class MatcherEffects {
           Observable.of(new fromMatcher.FetchMatchersFailureAction())
         )
     )
+
+  @Effect()
+  toCancelMatcher$ = this.actions$
+    .ofType(fromMatcher.TO_CANCEL_MATCHER)
+    .map((action: fromMatcher.ToCancelMatcherAction) => action.matcherId)
+    .mergeMap(matcherId => {
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToCancelMatcherModal)
+          modal.onDidDismiss(ok => {
+            res(ok)
+          })
+          modal.present()
+        })
+      ).map((ok: string) => {
+        if (ok) {
+          return new fromMatcher.CancelMatcherAction(matcherId)
+        } else {
+          return new fromMatcher.CancelCancelMatcherAction()
+        }
+      })
+    })
+
+  @Effect()
+  cancelMatcher$ = this.actions$
+    .ofType(fromMatcher.CANCEL_MATCHER)
+    .map((action: fromMatcher.CancelMatcherAction) => action.matcherId)
+    .mergeMap(matcherId =>
+      this.matcherService
+        .cancelMatcher(matcherId)
+        .concatMap(() => [
+          new fromMatcher.CancelMatcherSuccessAction(),
+          new fromMatcher.FetchMatchersAction()
+        ])
+        .catch(() =>
+          Observable.of(new fromMatcher.CancelMatcherFailureAction())
+        )
+    )
+
+  @Effect({ dispatch: false })
+  cancelMatcherSuccess$ = this.actions$
+    .ofType(fromMatcher.CANCEL_MATCHER_SUCCESS)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '取消约请成功',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  cancelMatcherFailure$ = this.actions$
+    .ofType(fromMatcher.CANCEL_MATCHER_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '取消约请失败',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect()
+  toAgreeMatcher$ = this.actions$
+    .ofType(fromMatcher.TO_AGREE_MATCHER)
+    .map((action: fromMatcher.ToAgreeMatcherAction) => action.matcherId)
+    .mergeMap(matcherId => {
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToAgreeMatcherModal)
+          modal.onDidDismiss(ok => {
+            res(ok)
+          })
+          modal.present()
+        })
+      ).map((ok: string) => {
+        if (ok) {
+          return new fromMatcher.AgreeMatcherAction(matcherId)
+        } else {
+          return new fromMatcher.CancelAgreeMatcherAction()
+        }
+      })
+    })
 
   @Effect()
   agreeMatcher$ = this.actions$
@@ -76,6 +166,28 @@ export class MatcherEffects {
           position: 'top'
         })
         .present()
+    })
+
+  @Effect()
+  toRefuseMatcher$ = this.actions$
+    .ofType(fromMatcher.TO_REFUSE_MATCHER)
+    .map((action: fromMatcher.ToRefuseMatcherAction) => action.matcherId)
+    .mergeMap(matcherId => {
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToRefuseMatcherModal)
+          modal.onDidDismiss(ok => {
+            res(ok)
+          })
+          modal.present()
+        })
+      ).map((ok: string) => {
+        if (ok) {
+          return new fromMatcher.RefuseMatcherAction(matcherId)
+        } else {
+          return new fromMatcher.CancelRefuseMatcherAction()
+        }
+      })
     })
 
   @Effect()

@@ -1,19 +1,21 @@
-<ion-grid *ngIf="expand; else noExpand;" class="recommend-grid-container">
-  <ion-row class="header">
-    <ion-col col-1></ion-col>
-    <ion-col col-1>姓名</ion-col>
-    <ion-col col-1>职务</ion-col>
-    <ion-col col-2>公司</ion-col>
-    <ion-col col-2>行业</ion-col>
-    <ion-col col-3 *ngIf="type === 'recommend'">地区</ion-col>
+<div *ngIf="expand; else noExpand;" class="recommend-grid-container">
+  <ion-grid class="header">
+    <ion-row>
+      <ion-col col-1></ion-col>
+      <ion-col col-1>姓名</ion-col>
+      <ion-col col-1>职务</ion-col>
+      <ion-col col-2>公司</ion-col>
+      <ion-col col-2>行业</ion-col>
+      <ion-col col-3 *ngIf="type === 'recommend'">地区</ion-col>
 
-    <ion-col col-1 *ngIf="type === 'matcher'">地区</ion-col>
-    <ion-col col-2 *ngIf="type === 'matcher'" class="status-header">状态</ion-col>
+      <ion-col col-1 *ngIf="type === 'matcher'">地区</ion-col>
+      <ion-col col-2 *ngIf="type === 'matcher'" class="status-header">状态</ion-col>
 
-    <ion-col col-1></ion-col>
-  </ion-row>
+      <ion-col col-1></ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <div *ngIf="dataItems.length > 0; else noData;">
+  <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
     <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
       (click)="ensureShow(item.id)">
       <ion-col col-1 class="checkbox-col">
@@ -37,8 +39,8 @@
             {{item.status | customerMatcherStatus}}
           </span>
           <ng-template #auditSuccess>
-            <button ion-button class="agree-btn">接受</button>
-            <button ion-button class="refuse-btn">拒绝</button>
+            <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(item.id)">接受</button>
+            <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(item.id)">拒绝</button>
           </ng-template>
         </ng-template>
       </ion-col>
@@ -47,14 +49,14 @@
         <hz-customer-status class="expand"></hz-customer-status>
       </ion-col>
     </ion-row>
-  </div>
+  </ion-grid>
 
   <ng-template #noData>
     <div class="no-data">
       没有数据
     </div>
   </ng-template>
-</ion-grid>
+</div>
 
 <ng-template #noExpand>
   <ion-grid class="recommend-grid-container">
@@ -66,7 +68,8 @@
     </ion-row>
 
     <div *ngIf="dataItems.length > 0; else noData;">
-      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id" (click)="ensureShow(item.id)">
+      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
+        (click)="ensureShow(item.id)">
         <ion-col col-2>{{item.name}}</ion-col>
         <ion-col col-2>{{item.title}}</ion-col>
         <ion-col col-5>{{item.company}}</ion-col>

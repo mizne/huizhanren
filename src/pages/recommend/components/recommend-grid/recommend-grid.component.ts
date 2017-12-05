@@ -16,6 +16,8 @@ export class RecommendGridComponent implements OnInit {
   @Input() dataItems: Recommend[]
 
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
+  @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   constructor() {}
 
@@ -23,7 +25,14 @@ export class RecommendGridComponent implements OnInit {
 
   ensureShow(id: string) {
     this.showDetail.emit(id)
-
     this.activeId = id
+  }
+
+  ensureAgreeMatcher(id: string) {
+    this.agreeMatcher.emit(id)
+  }
+
+  ensureRefuseMatcher(id: string) {
+    this.refuseMatcher.emit(id)
   }
 }

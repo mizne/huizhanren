@@ -12,6 +12,9 @@ export class HzExhibitorAbstractComponent implements OnInit {
   @Input() detail: Exhibitor
 
   @Output() showProduct: EventEmitter<Product> = new EventEmitter<Product>()
+  @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   ngOnInit() {}
 
@@ -21,5 +24,17 @@ export class HzExhibitorAbstractComponent implements OnInit {
 
   ensureShowProduct(product: Product) {
     this.showProduct.emit(product)
+  }
+
+  ensureCancelMatcher(id: string) {
+    this.cancelMatcher.emit(id)
+  }
+
+  ensureAgreeMatcher(id: string) {
+    this.agreeMatcher.emit(id)
+  }
+
+  ensureRefuseMatcher(id: string) {
+    this.refuseMatcher.emit(id)
   }
 }

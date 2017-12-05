@@ -31,7 +31,12 @@ import {
   ToInviteExhibitorAction,
   ToShowProcuctAction
 } from './actions/exhibitor.action'
-import { FetchMatchersAction } from './actions/matcher.action'
+import {
+  FetchMatchersAction,
+  ToAgreeMatcherAction,
+  ToCancelMatcherAction,
+  ToRefuseMatcherAction,
+ } from './actions/matcher.action'
 
 import {
   PageStatus,
@@ -154,6 +159,21 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.store.dispatch(new ToShowProcuctAction(product))
   }
 
+  ensureCancelMatcher(id: string) {
+    console.log(`ensure cancel matcher id: ${id}`)
+    this.store.dispatch(new ToCancelMatcherAction(id))
+  }
+
+  ensureAgreeMatcher(id: string) {
+    console.log(`ensure agree matcher id: ${id}`)
+    this.store.dispatch(new ToAgreeMatcherAction(id))
+  }
+
+  ensureRefuseMatcher(id: string) {
+    console.log(`ensure refuse matcher id: ${id}`)
+    this.store.dispatch(new ToRefuseMatcherAction(id))
+  }
+
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
@@ -170,7 +190,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    this.currentLogs$ = this.store.select(getCurrentLogs)
+    // this.currentLogs$ = this.store.select(getCurrentLogs)
+
+    this.currentLogs$ = Observable.of(Array.from({ length: 100 }, (_, i) => ({
+      id: `id${i}`,
+      time: `time${i}`,
+      level: `info` as LoggerLevel,
+      content: `testContent${i}`
+    })))
   }
 
   private initCurrentDetail(): void {

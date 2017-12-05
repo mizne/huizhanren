@@ -31,7 +31,12 @@ import {
   ToInviteRecommendAction,
   FetchLoggerAction
 } from './actions/recommend.action'
-import { FetchMatchersAction } from './actions/matcher.action'
+import {
+  FetchMatchersAction,
+  ToCancelMatcherAction,
+  ToAgreeMatcherAction,
+  ToRefuseMatcherAction,
+ } from './actions/matcher.action'
 
 import {
   PageStatus,
@@ -128,13 +133,26 @@ export class RecommendPage implements OnInit, OnDestroy {
   }
 
   ensureInvite() {
-    console.log('ensure invite')
     this.store.dispatch(new ToInviteRecommendAction())
   }
 
   ensureCreateLog() {
-    console.log('ensure create log')
     this.store.dispatch(new ToCreateLoggerAction())
+  }
+
+  ensureCancelMatcher(id: string) {
+    console.log(`ensure cancel matcher id: ${id}`)
+    this.store.dispatch(new ToCancelMatcherAction(id))
+  }
+
+  ensureAgreeMatcher(id: string) {
+    console.log(`ensure agree matcher id: ${id}`)
+    this.store.dispatch(new ToAgreeMatcherAction(id))
+  }
+
+  ensureRefuseMatcher(id: string) {
+    console.log(`ensure refuse matcher id: ${id}`)
+    this.store.dispatch(new ToRefuseMatcherAction(id))
   }
 
   private initDataSource() {
@@ -153,7 +171,13 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    this.currentLogs$ = this.store.select(getLogs)
+    // this.currentLogs$ = this.store.select(getLogs)
+    this.currentLogs$ = Observable.of(Array.from({ length: 100 }, (_, i) => ({
+      id: `id${i}`,
+      time: `time${i}`,
+      level: `info` as LoggerLevel,
+      content: `testContent${i}`
+    })))
   }
 
   private initCurrentDetail(): void {
@@ -172,7 +196,6 @@ export class RecommendPage implements OnInit, OnDestroy {
       items$,
       (showDetailID, items) => {
         const detail = items.find(e => e.id === showDetailID)
-        console.log(detail)
         return detail
       }
     )
@@ -191,7 +214,6 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.listStatusChangeSub
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
-        console.log(`list status: ${listStatus}`)
         this.store.dispatch(new ChangeListStatusAction(listStatus))
       })
   }

@@ -11,7 +11,7 @@ import {
 } from '../models/matcher.model'
 import { Recommend } from '../models/recommend.model'
 
-const fakeMatchers: Matcher[] = Array.from({ length: 10 }, (_, i) => ({
+const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'matcher-' + String(i),
   name: `testName${i}`,
   title: `testTitle${i}`,
@@ -29,6 +29,7 @@ export class MatcherService {
   private insertUrl = '/data/insert/InvitationInfo'
   private agreeUrl: string = '/data/insert/User'
   private refuseUrl: string = '/data/insert/User'
+  private cancelUrl: string = '/data/insert/User'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -41,43 +42,52 @@ export class MatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        let query = `?role=E&tenantId=${tenantId}`
-        if (params.pageIndex) {
-          query += `&pageIndex=${params.pageIndex}`
-        }
-        if (params.pageSize) {
-          query += `&pageSize=${params.pageSize}`
-        }
-        if (params.statuses) {
-          query += `&state=${params.statuses.map(
-            convertMatcherStatusFromModel
-          )}`
-        }
-        return this.http.get(this.fetchUrl + query)
-      })
-      .map(e => (e as APIResponse).result)
-      .map(e => e.map(Matcher.convertFromResp))
-      .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) =>
-        matchers.map(e => ({
-          ...e,
-          isSender: e.senderId === tenantId,
-          isReceiver: e.receiverId === tenantId
-        }))
-      )
-      .catch(this.handleError)
+    // return this.tenantService
+    //   .getTenantIdAndUserId()
+    //   .mergeMap(([tenantId, userId]) => {
+    //     let query = `?role=E&tenantId=${tenantId}`
+    //     if (params.pageIndex) {
+    //       query += `&pageIndex=${params.pageIndex}`
+    //     }
+    //     if (params.pageSize) {
+    //       query += `&pageSize=${params.pageSize}`
+    //     }
+    //     if (params.statuses) {
+    //       query += `&state=${params.statuses.map(
+    //         convertMatcherStatusFromModel
+    //       )}`
+    //     }
+    //     return this.http.get(this.fetchUrl + query)
+    //   })
+    //   .map(e => (e as APIResponse).result)
+    //   .map(e => e.map(Matcher.convertFromResp))
+    //   .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) =>
+    //     matchers.map(e => ({
+    //       ...e,
+    //       isSender: e.senderId === tenantId,
+    //       isReceiver: e.receiverId === tenantId
+    //     }))
+    //   )
+    //   .catch(this.handleError)
 
-    // return Observable.of(fakeMatchers)
-    // .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
-    //   ...e,
-    //   isSender: e.senderId === tenantId,
-    //   isReceiver: e.receiverId === tenantId
-    // })))
+    return Observable.of(fakeMatchers)
+    .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
+      ...e,
+      isSender: e.senderId === tenantId,
+      isReceiver: e.receiverId === tenantId
+    })))
   }
-
-  createMatcher(
+/**
+ * 新建约请
+ *
+ * @param {Recommend} recommend
+ * @param {string} boothArea
+ * @param {string} tenantId
+ * @param {string} customerId
+ * @returns {Observable<any>}
+ * @memberof MatcherService
+ */
+createMatcher(
     recommend: Recommend,
     boothArea: string,
     tenantId: string,
@@ -101,6 +111,21 @@ export class MatcherService {
         })
       })
       .catch(this.handleError)
+  }
+/**
+ * 取消约请
+ *
+ * @param {string} matcherId
+ * @returns {Observable<any>}
+ * @memberof MatcherService
+ */
+cancelMatcher(matcherId: string): Observable<any> {
+    return this.tenantService
+    .getTenantIdAndUserId()
+    .mergeMap(([tenantId, userId]) => {
+      return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
+    })
+    .catch(this.handleError)
   }
 
   /**
