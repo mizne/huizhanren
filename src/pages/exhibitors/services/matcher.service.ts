@@ -14,7 +14,9 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
   (_, i) => ({
     id: String(i),
     name: `testName${i}`,
+    logo: './assets/images/card.jpg',
     title: `testTitle${i}`,
+    booth: `testBooth${i}`,
     company: `testCompany${i}`,
     industry: `testIndustry${i}`,
     area: `testArea${i}`,
@@ -34,9 +36,7 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
 export class MatcherService {
   private fetchUrl: string = '/data/ExhibitionInvitationInfo'
   private insertUrl = '/data/insert/ExhibitionInvitationInfo'
-  private agreeUrl: string = '/data/insert/User'
-  private refuseUrl: string = '/data/insert/User'
-  private cancelUrl: string = '/data/insert/User'
+  private updateUrl: string = '/data/update/ExhibitionInvitationInfo'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -80,7 +80,15 @@ export class MatcherService {
             }))
         )
   }
-
+  /**
+   * 新建约请
+   *
+   * @param {RecommendExhibitor} exhibitor
+   * @param {string} boothNo
+   * @param {string} tenantId
+   * @returns {Observable<any>}
+   * @memberof MatcherService
+   */
   createMatcher(
     exhibitor: RecommendExhibitor,
     boothNo: string,
@@ -91,7 +99,7 @@ export class MatcherService {
       BoothNo: boothNo,
       State: '未审核',
       Initator: tenantId,
-      Receiver: exhibitor.id,
+      Receiver: exhibitor.id
     })
 
     return this.tenantService
@@ -119,42 +127,72 @@ export class MatcherService {
    * @memberof MatcherService
    */
   cancelMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已取消'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }
 
   /**
-   * 同意约请 TODO
+   * 同意约请
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
   agreeMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已同意'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.agreeUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }
 
   /**
-   * 拒绝约请 TODO
+   * 拒绝约请
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
   refuseMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已拒绝'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.refuseUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }

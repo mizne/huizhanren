@@ -31,7 +31,7 @@
           <ng-template #matcherBlock>
             <div class="matcher-status" *ngIf="item.senderId">
               <span *ngIf="item.isSender; else receiver;" class="send-dir">
-                <span *ngIf="item.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status' + item.status]">
+                <span *ngIf="item.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + item.status]">
                   {{item.status | exhibitorMatcherStatus}}
                 </span>
                 <ng-template #sendAuditSuccess>

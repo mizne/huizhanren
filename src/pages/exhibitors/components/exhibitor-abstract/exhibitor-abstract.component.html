@@ -1,7 +1,7 @@
 <div class="exhibitor-abstract-container">
   <div class="exhibitor-logo">
     <div class="logo-wrapper">
-      <img src="./assets/images/card.jpg" alt="">
+      <img [src]="detail.logo" alt="">
     </div>
   </div>
 
@@ -16,7 +16,7 @@
 
     <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
       <span *ngIf="detail.isSender; else receiver;" class="send-dir">
-        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status' + detail.status]">
+        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
           {{detail.status | exhibitorMatcherStatus}}
         </span>
         <ng-template #sendAuditSuccess>

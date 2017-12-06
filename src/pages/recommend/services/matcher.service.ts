@@ -29,9 +29,7 @@ const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
 export class MatcherService {
   private fetchUrl: string = '/data/InvitationInfo'
   private insertUrl = '/data/insert/InvitationInfo'
-  private agreeUrl: string = '/data/insert/User'
-  private refuseUrl: string = '/data/insert/User'
-  private cancelUrl: string = '/data/insert/User'
+  private updateUrl: string = '/data/update/InvitationInfo'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -127,42 +125,72 @@ export class MatcherService {
    * @memberof MatcherService
    */
   cancelMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已取消'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }
 
   /**
-   * 同意约请 TODO
+   * 同意约请
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
   agreeMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已同意'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.agreeUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }
 
   /**
-   * 拒绝约请 TODO
+   * 拒绝约请
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
   refuseMatcher(matcherId: string): Observable<any> {
+    const params = {
+      params: {
+        setValue: {
+          State: '已拒绝'
+        }
+      }
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.refuseUrl + `/${tenantId}/${userId}`, {})
+        return this.http.post(
+          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          params
+        )
       })
       .catch(this.handleError)
   }

@@ -25,7 +25,7 @@
 
     <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
       <span *ngIf="detail.isSender; else receiver;" class="send-dir">
-        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status' + detail.status]">
+        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
           {{detail.status | customerMatcherStatus}}
         </span>
         <ng-template #sendAuditSuccess>

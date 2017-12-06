@@ -17,7 +17,7 @@ const fakeExhibitors: RecommendExhibitor[] = Array.from(
     booth: `testBooth${i}`,
     industry: `testIndustry${i}`,
     area: `testArea${i}`,
-    heat: i,
+    heat: Math.round(Math.random() * 1000),
     description:
       '上海联展软件技术有限公司是会展互联网、信息化及营销解决方案的领先服务商' +
       '。成立于2004年，总部位于上海，在长沙、广州等设有分支或代理机构。',
