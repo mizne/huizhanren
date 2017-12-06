@@ -6,9 +6,9 @@
 
   .exhibitor-item {
     position: relative;
-    flex: 1;
-    min-width: 300px;
-    // max-width: 300px;
+    // flex: 1;
+    width: 100%;
+    // // max-width: 300px;
     display: flex;
     height: 100px;
     background-color: #252429;
@@ -17,7 +17,11 @@
     border: 1px solid #252429;
 
     &.expand:nth-child(2n) {
-      margin-left: 10px;
+      margin-left: 2%;
+    }
+
+    &.expand {
+      width: 49%;
     }
 
     &.active {

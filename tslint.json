@@ -1,11 +1,9 @@
 {
   "rules": {
     "no-duplicate-variable": true,
-    "no-unused-variable": [
-      true
-    ]
+    "no-unused-variable": [true],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
   },
-  "extends": [
-    "tslint-eslint-rules"
-  ]
+  "extends": ["tslint-eslint-rules"]
 }

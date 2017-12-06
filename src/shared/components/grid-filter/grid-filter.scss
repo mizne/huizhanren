@@ -1,7 +1,9 @@
 .grid-filter-container {
   display: flex;
+  height: 82px;
 
   .selectors {
+    position: relative;
     flex: 1;
     display: flex;
     border: 1px solid #27272A;
@@ -9,6 +11,13 @@
 
     hz-selector {
       flex: 1;
+
+      &:not(:first-child):after {
+        content: '|';
+        color: map-get($map: $gridColors, $key: grey);
+        position: absolute;
+        top: 33%;
+      }
     }
   }
 

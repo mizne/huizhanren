@@ -42,8 +42,11 @@
   </div>
 
   <div class="exhibitor-product">
-    <div class="header">产品</div>
-    <div class="content">
+    <div class="header" (click)="toggleViewProduct()">
+      <span>产品</span>
+      <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+    </div>
+    <div class="content" *ngIf="viewProduct">
       <div class="products" *ngIf="detail.products.length > 0; else noProduct;">
         <div class="product-item" *ngFor="let item of detail.products" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures[0]" alt="">
@@ -57,8 +60,11 @@
   </div>
 
   <div class="exhibitor-jianjie">
-    <div class="header">简介</div>
-    <div class="content">
+    <div class="header" (click)="toggleViewDescription()">
+      <span>简介</span>
+      <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+    </div>
+    <div class="content" *ngIf="viewDescription">
       {{detail.description}}
     </div>
   </div>

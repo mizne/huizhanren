@@ -36,6 +36,7 @@ import {
   ToCancelMatcherAction,
   ToAgreeMatcherAction,
   ToRefuseMatcherAction,
+  AgreeMatcherAction,
  } from './actions/matcher.action'
 
 import {

@@ -22,9 +22,9 @@ import { Store } from '@ngrx/store'
 import { State, getShowDetailID, getRecommends } from '../reducers'
 import {
   getCompanyName,
-  getSelectedExhibitionAddress
+  getSelectedExhibitionAddress,
+  getTenantId,
 } from '../../login/reducers'
-import { getTenantId } from '../../login/reducers'
 
 @Injectable()
 export class RecommendEffects {

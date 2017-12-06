@@ -52,7 +52,8 @@ export enum ExhibitorMatcherStatus {
   AUDIT_SUCCESS, // 审核通过 未答复
   AGREE, // 同意
   REFUSE, // 拒绝
-  DELETED // 已删除
+  DELETED, // 已删除
+  CANCEL // 已取消
 }
 
 function convertMatcherStatus(status: string): ExhibitorMatcherStatus {
@@ -69,6 +70,8 @@ function convertMatcherStatus(status: string): ExhibitorMatcherStatus {
       return ExhibitorMatcherStatus.REFUSE
     case '已删除':
       return ExhibitorMatcherStatus.DELETED
+    case '已取消':
+      return ExhibitorMatcherStatus.CANCEL
 
     default:
       console.warn(`Unknown matcher status: ${status}`)
@@ -92,7 +95,8 @@ export function convertMatcherStatusFromModel(
       return '已拒绝'
     case ExhibitorMatcherStatus.DELETED:
       return '已删除'
-
+    case ExhibitorMatcherStatus.CANCEL:
+      return '已取消'
     default:
       console.warn(`Unknown matcher status: ${status}`)
       break

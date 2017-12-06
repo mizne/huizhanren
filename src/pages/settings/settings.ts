@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import {
   NavController,
   ToastController,
   ModalController,
   LoadingController,
   App
-} from 'ionic-angular';
+} from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
@@ -26,10 +26,9 @@ import { ToDownloadModal } from './to-download-modal.component'
 
 @Component({
   selector: 'page-settings',
-  templateUrl: 'settings.html',
+  templateUrl: 'settings.html'
 })
 export class SettingsPage implements OnInit, OnDestroy {
-
   isAdmin$: Observable<boolean>
 
   private subscription1: Subscription
@@ -167,25 +166,24 @@ export class SettingsPage implements OnInit, OnDestroy {
     private loadCtrl: LoadingController,
     private app: App,
     private store: Store<State>
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.isAdmin$ = this.store.select(isAdmin)
 
     this.subscription1 = Observable.combineLatest(
       this.store.select(getAdminName),
       this.store.select(getUserName)
-    )
-    .subscribe(([adminName, userName]) => {
+    ).subscribe(([adminName, userName]) => {
       this.items2[1].items[0].value = adminName
       this.items2[1].items[1].value = userName
     })
 
-    this.subscription2 = this.store.select(getUpdateText)
-    .subscribe((updateText) => {
-      this.items3[1].items[0].value = updateText
-    })
-  }
-
-  ngOnInit() {
+    this.subscription2 = this.store
+      .select(getUpdateText)
+      .subscribe(updateText => {
+        this.items3[1].items[0].value = updateText
+      })
   }
 
   ngOnDestroy() {
@@ -198,19 +196,20 @@ export class SettingsPage implements OnInit, OnDestroy {
     this.navCtrl.push(SmsTemplatePage)
   }
 
-  toTagManagement() {
-  }
+  toTagManagement() {}
 
   toUserManage() {
-    this.subscription3 = this.isAdmin$.subscribe((isAdmin) => {
+    this.subscription3 = this.isAdmin$.subscribe(isAdmin => {
       if (isAdmin) {
         this.navCtrl.push(UserManagementPage)
       } else {
-        this.toastCtrl.create({
-          message: '您还不是管理员',
-          duration: 3e3,
-          position: 'top'
-        }).present()
+        this.toastCtrl
+          .create({
+            message: '您还不是管理员',
+            duration: 3e3,
+            position: 'top'
+          })
+          .present()
       }
     })
   }
@@ -218,7 +217,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   toLogout() {
     const logoutModal = this.modalCtrl.create(LogoutModal)
 
-    logoutModal.onDidDismiss((ensure) => {
+    logoutModal.onDidDismiss(ensure => {
       if (ensure) {
         // this.app.getRootNav().setRoot(LoginPage)
 

@@ -8,6 +8,7 @@ import { ExhibitorMatcher } from '../models/matcher.model'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
+import { ExhibitorService } from './exhibitor.service'
 
 const fakeMatchers: ExhibitorMatcher[] = Array.from(
   { length: 100 },

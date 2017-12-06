@@ -15,7 +15,21 @@ export class HzExhibitorAbstractComponent implements OnInit {
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
-  ngOnInit() {}
+  viewProduct: boolean
+  viewDescription: boolean
+
+  ngOnInit() {
+    this.viewProduct = false
+    this.viewDescription = false
+  }
+
+  toggleViewProduct() {
+    this.viewProduct = !this.viewProduct
+  }
+
+  toggleViewDescription() {
+    this.viewDescription = !this.viewDescription
+  }
 
   ensureInvite() {
     this.invite.emit()
