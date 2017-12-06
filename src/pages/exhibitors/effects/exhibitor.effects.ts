@@ -27,7 +27,6 @@ import {
   getCompanyName,
   getSelectedExhibitionAddress
 } from '../../login/reducers'
-import { ToShowProcuctAction } from '../actions/exhibitor.action';
 
 @Injectable()
 export class ExhibitorEffects {

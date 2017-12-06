@@ -15,10 +15,10 @@
       color: white;
       border: 1px #18181a solid;
       padding-left: 12px;
-      transition: all .5s;
+      transition: all 0.5s;
 
       &:focus {
-        border: 1px #6190ec solid;
+        border: 1px solid map-get($map: $colors, $key: primary);
       }
     }
 
@@ -26,12 +26,11 @@
       position: absolute;
       right: 15px;
       top: 10px;
-      font-size: 30px;
+      font-size: 2.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
+      color: map-get($map: $colors, $key: primary);
     }
   }
 }
-

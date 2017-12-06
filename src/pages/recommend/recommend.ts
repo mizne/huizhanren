@@ -301,6 +301,7 @@ export class RecommendPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with recommend filter, ', recommendFilter)
+        this.store.dispatch(new FetchRecommendAction())
       })
   }
 
@@ -308,12 +309,13 @@ export class RecommendPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.MATCHER)
       .withLatestFrom(
-        this.matcherFilterSub,
+        this.matcherFilterSub.startWith([]),
         (_, matcherFilter) => matcherFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
         console.log('to load more with matcher filter, ', matcherFilter)
+        this.store.dispatch(new FetchMatchersAction())
       })
   }
 

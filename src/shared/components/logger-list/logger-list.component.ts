@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
-import { Subject } from 'rxjs/Subject'
 
-import { Logger } from '../logger-item/logger-item.component'
+import { Logger } from '../../../pages/customer/models/logger.model'
 
 @Component({
   selector: 'hz-logger-list',
@@ -9,17 +8,11 @@ import { Logger } from '../logger-item/logger-item.component'
 })
 export class HzLoggerListComponent {
   @Input() logs: Logger[]
-
   @Input() theme: string
 
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
 
-  constructor() {}
-  ngOnInit() {
-  }
-
   ensureCreateLog() {
-    console.log('ensure create log')
     this.createLog.emit()
   }
 }

@@ -1,9 +1,13 @@
 import { Action } from '@ngrx/store'
-import { ExhibitorMatcher } from '../models/matcher.model'
+import { ExhibitorMatcher, FetchMatcherParams } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Exhibitor] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Exhibitor] Fetch Matchers Success'
 export const FETCH_MATCHERS_FAILURE = '[Exhibitor] Fetch Matchers Failure'
+
+export const LOAD_MORE_MATCHERS = '[Exhibitor] Load More Matchers'
+export const LOAD_MORE_MATCHERS_SUCCESS = '[Exhibitor] Load More Matchers Success'
+export const LOAD_MORE_MATCHERS_FAILURE = '[Exhibitor] Load More Matchers Failure'
 
 export const TO_AGREE_MATCHER = '[Exhibitor] To Agree Matcher'
 export const CANCEL_AGREE_MATCHER = '[Exhibitor] Cancel Agree Matcher'
@@ -34,10 +38,7 @@ export const CANCEL_MATCHER_FAILURE = '[Exhibitor] Cancel Matcher Failure'
 
 export class FetchMatchersAction implements Action {
   readonly type = FETCH_MATCHERS
-  constructor(public payload: {
-    pageSize: number,
-    pageIndex: number
-  } = {
+  constructor(public payload: FetchMatcherParams = {
     pageIndex: 1,
     pageSize: 10
   }) {}
@@ -48,6 +49,18 @@ export class FetchMatchersSuccessAction implements Action {
 }
 export class FetchMatchersFailureAction implements Action {
   readonly type = FETCH_MATCHERS_FAILURE
+}
+
+export class LoadMoreMatchersAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS
+  constructor(public count?: number) {}
+}
+export class LoadMoreMatchersSuccessAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS_SUCCESS
+  constructor(public matchers: ExhibitorMatcher[]) {}
+}
+export class LoadMoreMatchersFailureAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS_FAILURE
 }
 
 
@@ -115,6 +128,10 @@ export type Actions =
 FetchMatchersAction |
 FetchMatchersSuccessAction |
 FetchMatchersFailureAction |
+
+LoadMoreMatchersAction |
+LoadMoreMatchersSuccessAction |
+LoadMoreMatchersFailureAction |
 
 ToAgreeMatcherAction |
 CancelAgreeMatcherAction |

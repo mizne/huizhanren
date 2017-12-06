@@ -56,6 +56,7 @@ import {
 import { AREA_OPTIONS } from '../recommend/models/recommend.model'
 
 import { DestroyService } from '../../providers/destroy.service'
+import { FetchRecommendAction } from '../recommend/actions/recommend.action';
 
 @IonicPage()
 @Component({
@@ -145,17 +146,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   }
 
   ensureInvite() {
-    console.log('ensure invite exhibitor')
     this.store.dispatch(new ToInviteExhibitorAction())
   }
 
   ensureCreateLogger() {
-    console.log('ensure create logger')
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
   ensureShowProduct(product: Product) {
-    console.log('ensure show product: ', product)
     this.store.dispatch(new ToShowProcuctAction(product))
   }
 
@@ -307,6 +305,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with recommend filter, ', recommendFilter)
+        this.store.dispatch(new FetchRecommendAction())
       })
   }
 
@@ -314,12 +313,13 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.MATCHER)
       .withLatestFrom(
-        this.matcherFilterSub,
+        this.matcherFilterSub.startWith([]),
         (_, matcherFilter) => matcherFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
         console.log('to load more with matcher filter, ', matcherFilter)
+        this.store.dispatch(new FetchMatchersAction())
       })
   }
 

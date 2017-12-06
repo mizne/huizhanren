@@ -46,7 +46,7 @@
     <div class="content">
       <div class="products" *ngIf="detail.products.length > 0; else noProduct;">
         <div class="product-item" *ngFor="let item of detail.products" (click)="ensureShowProduct(item)">
-          <img src="./assets/images/card.jpg" alt="">
+          <img [src]="item.pictures[0]" alt="">
           <div class="product-name">{{item.name}}</div>
         </div>
       </div>

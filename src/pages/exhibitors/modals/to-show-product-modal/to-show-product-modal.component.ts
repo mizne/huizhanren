@@ -24,7 +24,6 @@ export class ToShowProductModal implements OnInit {
     this.name = this.params.get('name')
     this.remark = this.params.get('remark')
     this.pictures = this.params.get('pictures')
-    console.log(this.pictures)
   }
 
 

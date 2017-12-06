@@ -38,8 +38,4 @@ export class HzMatcherFilterComponent implements OnInit {
     })
     .subscribe(this.filterSub)
   }
-
-  ensureSearch(searchText: string) {
-    console.log(searchText)
-  }
 }

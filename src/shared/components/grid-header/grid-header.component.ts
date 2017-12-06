@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject'
 import { trigger, state, style, animate, transition } from '@angular/animations'
 
 import { ListHeaderEvent, ListStatus } from '../../../pages/recommend/models/recommend.model'
-import { ListHeader } from 'ionic-angular/components/list/list-header';
 
 
 @Component({
@@ -31,14 +30,11 @@ import { ListHeader } from 'ionic-angular/components/list/list-header';
 export class HzGridHeaderComponent implements OnInit {
   activeLeftMore: boolean = false
   activeRightMore: boolean = false
-
   activeIndex: number
 
   @Input() activeIndexSub: Subject<ListStatus>
   @Input() headerEventSub: Subject<ListHeaderEvent>
   @Input() type: string
-
-  constructor() {}
 
   ngOnInit() {
     this.activeIndex = 0

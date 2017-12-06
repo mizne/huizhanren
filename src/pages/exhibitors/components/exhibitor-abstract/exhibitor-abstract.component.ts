@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
-import { Subject } from 'rxjs/Subject'
 
 import { Exhibitor, Product } from '../../models/exhibitor.model'
 

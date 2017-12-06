@@ -15,7 +15,6 @@ export interface SelectOption {
 })
 export class HzSelectorComponent {
   selectedLabel: string
-
   showPopover: boolean = false
 
   @Input() options: SelectOption[]

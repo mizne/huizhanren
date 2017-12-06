@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable'
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ExhibitorMatcher } from '../models/matcher.model'
-import { Exhibitor, RecommendExhibitor } from '../models/exhibitor.model'
+import { RecommendExhibitor } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
 
@@ -109,7 +109,6 @@ export class MatcherService {
           ContactExhibitionReceiver: exhibitor.recordId,
           ContactExhibitionInitator: exhibitionId
         })
-        console.log(params)
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
             record: params

@@ -54,11 +54,12 @@ export class ExhibitorService {
           .getTenantIdAndItemName()
           .mergeMap(([tenantId, itemName]) => {
             let query = `?itemName=${itemName}`
-            return this.http.get(this.fetchUrl + query)
+            return this.http
+              .get(this.fetchUrl + query)
+              .map(e => (e as APIResponse).result)
+              .map(e => e.filter(e => e.TenantId !== tenantId).map(RecommendExhibitor.convertFromResp))
+              .catch(this.handleError)
           })
-          .map(e => (e as APIResponse).result)
-          .map(e => e.map(RecommendExhibitor.convertFromResp))
-          .catch(this.handleError)
       : Observable.of(fakeExhibitors)
   }
 

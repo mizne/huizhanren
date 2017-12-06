@@ -48,8 +48,6 @@ export class ContactPage implements OnInit, OnChanges {
   ionViewDidEnter() {
     // this.fakeTakeCamera()
     // this.takeCamera()
-
-    console.log('contact ion view did enter')
   }
 
   ngOnInit() {

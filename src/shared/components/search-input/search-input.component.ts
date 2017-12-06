@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
@@ -16,8 +16,6 @@ export class HzSearchInputComponent implements OnInit {
   @Input() placeholder: string
 
   private ensureSearchSub: Subject<void> = new Subject<void>()
-
-  constructor() {}
 
   ngOnInit() {
     Observable.merge(

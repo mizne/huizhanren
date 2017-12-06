@@ -6,6 +6,10 @@ export const FETCH_RECOMMEND = '[Recommend] Fetch Recommend'
 export const FETCH_RECOMMEND_SUCCESS = '[Recommend] Fetch Recommend Success'
 export const FETCH_RECOMMEND_FAILURE = '[Recommend] Fetch Recommend Failure'
 
+export const LOAD_MORE_RECOMMEND = '[Recommend] Load More Recommend'
+export const LOAD_MORE_RECOMMEND_SUCCESS = '[Recommend] Load More Recommend Success'
+export const LOAD_MORE_RECOMMEND_FAILURE = '[Recommend] Load More Recommend Failure'
+
 export const TO_INVITE_RECOMMEND = '[Recommend] To Invite Recommend'
 export const CANCEL_INVITE_RECOMMEND = '[Recommend] Cancel Invite Recommend'
 export const INVITE_RECOMMEND = '[Recommend] Invite Recommend'
@@ -50,6 +54,19 @@ export class FetchRecommendSuccessAction implements Action {
 }
 export class FetchRecommendFailureAction implements Action {
   readonly type = FETCH_RECOMMEND_FAILURE
+}
+
+
+export class LoadMoreRecommendAction implements Action {
+  readonly type = LOAD_MORE_RECOMMEND
+  constructor(public count: number = 10) {}
+}
+export class LoadMoreRecommendSuccessAction implements Action {
+  readonly type = LOAD_MORE_RECOMMEND_SUCCESS
+  constructor(public recommends: Recommend[]) {}
+}
+export class LoadMoreRecommendFailureAction implements Action {
+  readonly type = LOAD_MORE_RECOMMEND_FAILURE
 }
 
 
@@ -125,6 +142,10 @@ export type Actions =
 FetchRecommendAction |
 FetchRecommendSuccessAction |
 FetchRecommendFailureAction |
+
+LoadMoreRecommendAction |
+LoadMoreRecommendSuccessAction |
+LoadMoreRecommendFailureAction |
 
 ToInviteRecommendAction |
 CancelInviteRecommendAction |

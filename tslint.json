@@ -5,7 +5,7 @@
       true
     ]
   },
-  "rulesDirectory": [
-    "node_modules/tslint-eslint-rules/dist/rules"
+  "extends": [
+    "tslint-eslint-rules"
   ]
 }

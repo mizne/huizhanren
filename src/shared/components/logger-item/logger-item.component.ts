@@ -1,13 +1,6 @@
 import { Component, Input } from '@angular/core'
-import { Subject } from 'rxjs/Subject'
 
-export interface Logger {
-  id?: string
-  time?: string
-  level: LoggerLevel
-  content: string
-}
-export type LoggerLevel = 'info' | 'warn' | 'error' | 'sys'
+import { Logger } from '../../../pages/customer/models/logger.model'
 
 @Component({
   selector: 'hz-logger-item',
@@ -15,10 +8,5 @@ export type LoggerLevel = 'info' | 'warn' | 'error' | 'sys'
 })
 export class HzLoggerItemComponent {
   @Input() log: Logger
-
   @Input() theme: string
-
-  constructor() {}
-  ngOnInit() {
-  }
 }

@@ -41,7 +41,6 @@ export class RecommendDetailComponent implements OnInit {
   }
 
   ensureCreateLog() {
-    console.log('ensure create log')
     this.createLog.emit()
   }
 

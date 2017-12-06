@@ -6,6 +6,7 @@ import { Logger } from '../../customer/models/logger.model'
 export interface State {
   recommends: Recommend[]
   recommendTotalCount: number
+  currentRecommendTotalCount: number
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
@@ -17,6 +18,7 @@ export interface State {
 export const initialState: State = {
   recommends: [],
   recommendTotalCount: 0,
+  currentRecommendTotalCount: 0,
 
   listStatus: ListStatus.RECOMMEND,
   pageStatus: PageStatus.LIST,
