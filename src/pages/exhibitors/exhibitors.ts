@@ -190,14 +190,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    // this.currentLogs$ = this.store.select(getCurrentLogs)
-
-    this.currentLogs$ = Observable.of(Array.from({ length: 100 }, (_, i) => ({
-      id: `id${i}`,
-      time: `time${i}`,
-      level: `info` as LoggerLevel,
-      content: `testContent${i}`
-    })))
+    this.currentLogs$ = this.store.select(getCurrentLogs)
   }
 
   private initCurrentDetail(): void {
@@ -216,7 +209,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       items$,
       (showDetailID, items) => {
         const detail = items.find(e => e.id === showDetailID)
-        console.log(detail)
         return detail
       }
     )
@@ -234,7 +226,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.listStatusChangeSub
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
-        console.log(`list status: ${listStatus}`)
         this.store.dispatch(new ChangeListStatusAction(listStatus))
       })
   }

@@ -4,7 +4,9 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from './interceptor'
 import { TenantService } from './tenant.service'
-import { Logger, LoggerLevel }from '../pages/customer/models/logger.model'
+import { Logger, LoggerLevel } from '../pages/customer/models/logger.model'
+
+import { environment } from '../environments/environment'
 
 const levelStrings: LoggerLevel[] = ['info', 'warn', 'error', 'sys']
 
@@ -28,54 +30,59 @@ export class LoggerService {
   createLog(log: Logger, customerId): Observable<any> {
     const level = levelStrings.indexOf(log.level)
 
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
-        params: {
-          record: {
-            info: log.content,
-            level,
-            ContactInfo: customerId
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+          params: {
+            record: {
+              info: log.content,
+              level,
+              ContactInfo: customerId
+            }
           }
-        }
+        })
       })
-    })
-    .catch(this.handleError)
+      .catch(this.handleError)
   }
 
   batchCreateLog(customerIds: string[], log: Logger): Observable<any> {
     const level = levelStrings.indexOf(log.level)
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.insertListUrl + `/${tenantId}/${userId}`, {
-        params: {
-          recordlist: customerIds.map(e => ({
-            info: log.content,
-            level,
-            ContactInfo: e
-          }))
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.insertListUrl + `/${tenantId}/${userId}`, {
+          params: {
+            recordlist: customerIds.map(e => ({
+              info: log.content,
+              level,
+              ContactInfo: e
+            }))
+          }
+        })
       })
-    })
-    .catch(this.handleError)
+      .catch(this.handleError)
   }
-
 
   editLog(log: Logger): Observable<any> {
     const level = levelStrings.indexOf(log.level)
 
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.updateUrl + `/${log.id}/${tenantId}/${userId}`, {
-        params: {
-          setValue: {
-            level,
-            info: log.content
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl + `/${log.id}/${tenantId}/${userId}`,
+          {
+            params: {
+              setValue: {
+                level,
+                info: log.content
+              }
+            }
           }
-        }
+        )
       })
-    })
-    .catch(this.handleError)
+      .catch(this.handleError)
   }
 
   /**
@@ -85,31 +92,40 @@ export class LoggerService {
    * @memberof LoggerService
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) =>
-      this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-        params: {
-          condition: {
-            ContactInfo: customerId
-          }
-        }
-      })
-    )
-    .map(res => {
-      const results = (res as APIResponse).result
-      return results.map(e => ({
-        id: e.RecordId,
-        time: e.CreatedAt,
-        level: levelStrings[e.level],
-        content: e.info
-      }))
-    })
-    .catch(this.handleError)
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserId()
+          .mergeMap(([tenantId, userId]) =>
+            this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+              params: {
+                condition: {
+                  ContactInfo: customerId
+                }
+              }
+            })
+          )
+          .map(res => {
+            const results = (res as APIResponse).result
+            return results.map(e => ({
+              id: e.RecordId,
+              time: e.CreatedAt,
+              level: levelStrings[e.level],
+              content: e.info
+            }))
+          })
+          .catch(this.handleError)
+      : Observable.of(
+          Array.from({ length: 100 }, (_, i) => ({
+            id: `id${i}`,
+            time: `time${i}`,
+            level: `info` as LoggerLevel,
+            content: `testContent${i}`
+          }))
+        )
   }
 
   private handleError(error: any): Observable<any> {
     console.error(error)
     return Observable.throw(error)
   }
-
 }

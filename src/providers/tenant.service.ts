@@ -24,6 +24,14 @@ export class TenantService {
     return Observable.zip(this.store.select(getTenantId), this.store.select(getUserId))
   }
 
+  getTenantIdAndUserIdAndSelectedExhibitionId(): Observable<[string, string, string]> {
+    return Observable.zip(
+      this.store.select(getTenantId),
+      this.store.select(getUserId),
+      this.store.select(getSelectedExhibitionId)
+    )
+  }
+
   getTenantIdAndExhibitionId(): Observable<[string, string]> {
     return Observable.zip(this.store.select(getTenantId), this.store.select(getSelectedExhibitionId))
   }

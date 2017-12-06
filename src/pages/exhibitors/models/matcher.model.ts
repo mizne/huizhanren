@@ -13,9 +13,17 @@ export class ExhibitorMatcher extends Exhibitor {
       name: resp.companyName,
       logo: resp.logo,
       booth: resp.BoothNo,
-      industry: resp.industry,
+      industry: resp.Industry,
       area: resp.city,
-      heat: resp.heat
+      heat: resp.heat,
+      status: convertMatcherStatus(resp.State),
+      senderId: resp.Initator,
+      receiverId: resp.Receiver,
+      products: [],
+      description: resp.website,
+      organizer: resp.Organizer,
+      organizerId: resp.OrganizerId,
+      selected: false
     }
   }
 }
@@ -31,8 +39,11 @@ export interface ExhibitorMatcherResp {
   BoothNo?: string
   State?: string
   logo?: string
-  industry?: string
+  Industry?: string
   heat?: number
+  Initator?: string
+  Receiver?: string
+  website?: string
 }
 
 export enum ExhibitorMatcherStatus {

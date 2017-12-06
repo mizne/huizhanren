@@ -1,5 +1,6 @@
 export class Exhibitor {
   id?: string
+  recordId?: string
   name?: string
   logo?: string
   booth?: string
@@ -20,12 +21,13 @@ export class RecommendExhibitor extends Exhibitor {
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
     return {
       id: resp.TenantId,
+      recordId: resp._id,
       name: resp.companyName,
       logo: resp.logo,
       booth: resp.boothArea,
       boothNo: resp.BoothNo,
       exHall: resp.ExHall,
-      industry: resp.categories2,
+      industry: resp.Industry,
       area: resp.province,
       city: resp.city,
       heat: resp.heat || Math.round(Math.random() * 1000),
@@ -77,6 +79,7 @@ export interface RecommendExhibitorResp {
   ProductList?: ProductResp[]
   Organizer?: string
   OrganizerId?: string
+  Industry?: string
   website?: string
 }
 

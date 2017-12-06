@@ -59,15 +59,17 @@
 </div>
 
 <ng-template #noExpand>
-  <ion-grid class="recommend-grid-container">
-    <ion-row class="header">
-      <ion-col col-2>姓名</ion-col>
-      <ion-col col-2>职务</ion-col>
-      <ion-col col-5>公司</ion-col>
-      <ion-col col-3></ion-col>
-    </ion-row>
+  <div class="recommend-grid-container">
+    <ion-grid class="header">
+      <ion-row class="header">
+        <ion-col col-2>姓名</ion-col>
+        <ion-col col-2>职务</ion-col>
+        <ion-col col-5>公司</ion-col>
+        <ion-col col-3></ion-col>
+      </ion-row>
+    </ion-grid>
 
-    <div *ngIf="dataItems.length > 0; else noData;">
+    <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
       <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
         (click)="ensureShow(item.id)">
         <ion-col col-2>{{item.name}}</ion-col>
@@ -77,7 +79,7 @@
           <hz-customer-status class="no-expand"></hz-customer-status>
         </ion-col>
       </ion-row>
-    </div>
+    </ion-grid>
 
     <ng-template #noData>
       <div class="no-data">
@@ -85,5 +87,5 @@
       </div>
     </ng-template>
 
-  </ion-grid>
+  </div>
 </ng-template>

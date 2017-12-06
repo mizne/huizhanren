@@ -21,7 +21,7 @@
 
       <div class="footer">
         <div class="industry">
-          {{item.industry}}
+          {{item.industry || '未填写'}}
         </div>
 
         <div class="right-area">
@@ -40,7 +40,7 @@
                 </ng-template>
               </span>
               <ng-template #receiver>
-                <span *ngIf="item.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + item.status]">
+                <span *ngIf="item.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status', 'matcher-status-' + item.status]">
                   {{item.status | exhibitorMatcherStatus}}
                 </span>
                 <ng-template #receiveAuditSuccess>

@@ -47,6 +47,8 @@
 
         .content {
           margin-top: 20px;
+          height: calc(100vh - 590px);
+          overflow: auto;
         }
       }
     }
@@ -70,7 +72,6 @@
           background-color: #305EBC;
         }
       }
-
     }
 
     .content {

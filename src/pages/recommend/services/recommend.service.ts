@@ -10,6 +10,8 @@ import {
   FetchRecommendParams
 } from '../models/recommend.model'
 
+import { environment } from '../../../environments/environment'
+
 const fakeRecommends: Recommend[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'recommend-' + String(i),
   name: `testName${i}`,
@@ -33,35 +35,33 @@ export class RecommendService {
    * @memberof RecommendService
    */
   fetchRecommend(params: FetchRecommendParams): Observable<Recommend[]> {
-    // return this.tenantService
-    //   .getTenantIdAndExhibitionId()
-    //   .mergeMap(([tenantId, exhibitionId]) => {
-    //     let query = `?exhibitorId=${exhibitionId}&itemId=${tenantId}`
-    //     if (params.area) {
-    //       query += `&province=${params.area}`
-    //     }
-    //     if (params.key) {
-    //       query += `&search=${params.key}`
-    //     }
-    //     if (params.type) {
-    //       query += `&objective=${params.type}`
-    //     }
-    //     if (params.pageIndex) {
-    //       query += `&pageIndex=${params.pageIndex}`
-    //     }
-    //     if (params.pageSize) {
-    //       query += `&pageSize=${params.pageSize}`
-    //     }
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndExhibitionId()
+          .mergeMap(([tenantId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitionId}&itemId=${tenantId}`
+            if (params.area) {
+              query += `&province=${params.area}`
+            }
+            if (params.key) {
+              query += `&search=${params.key}`
+            }
+            if (params.type) {
+              query += `&objective=${params.type}`
+            }
+            if (params.pageIndex) {
+              query += `&pageIndex=${params.pageIndex}`
+            }
+            if (params.pageSize) {
+              query += `&pageSize=${params.pageSize}`
+            }
 
-    //     return this.http.get(
-    //       this.fetchUrl + query
-    //     )
-    //   })
-    //   .map(e => (e as APIResponse).result)
-    //   .map(e => e.map(Recommend.convertFromResp))
-    //   .catch(this.handleError)
-
-    return Observable.of(fakeRecommends)
+            return this.http.get(this.fetchUrl + query)
+          })
+          .map(e => (e as APIResponse).result)
+          .map(e => e.map(Recommend.convertFromResp))
+          .catch(this.handleError)
+      : Observable.of(fakeRecommends)
   }
 
   private handleError(error: any): Observable<any> {

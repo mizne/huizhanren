@@ -11,6 +11,8 @@ import {
 } from '../models/matcher.model'
 import { Recommend } from '../models/recommend.model'
 
+import { environment } from '../../../environments/environment'
+
 const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'matcher-' + String(i),
   name: `testName${i}`,
@@ -42,52 +44,57 @@ export class MatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
-    // return this.tenantService
-    //   .getTenantIdAndUserId()
-    //   .mergeMap(([tenantId, userId]) => {
-    //     let query = `?role=E&tenantId=${tenantId}`
-    //     if (params.pageIndex) {
-    //       query += `&pageIndex=${params.pageIndex}`
-    //     }
-    //     if (params.pageSize) {
-    //       query += `&pageSize=${params.pageSize}`
-    //     }
-    //     if (params.statuses) {
-    //       query += `&state=${params.statuses.map(
-    //         convertMatcherStatusFromModel
-    //       )}`
-    //     }
-    //     return this.http.get(this.fetchUrl + query)
-    //   })
-    //   .map(e => (e as APIResponse).result)
-    //   .map(e => e.map(Matcher.convertFromResp))
-    //   .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) =>
-    //     matchers.map(e => ({
-    //       ...e,
-    //       isSender: e.senderId === tenantId,
-    //       isReceiver: e.receiverId === tenantId
-    //     }))
-    //   )
-    //   .catch(this.handleError)
-
-    return Observable.of(fakeMatchers)
-    .withLatestFrom(this.tenantService.getTenantId(), (matchers, tenantId) => matchers.map(e => ({
-      ...e,
-      isSender: e.senderId === tenantId,
-      isReceiver: e.receiverId === tenantId
-    })))
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserId()
+          .mergeMap(([tenantId, userId]) => {
+            let query = `?role=E&tenantId=${tenantId}`
+            if (params.pageIndex) {
+              query += `&pageIndex=${params.pageIndex}`
+            }
+            if (params.pageSize) {
+              query += `&pageSize=${params.pageSize}`
+            }
+            if (params.statuses) {
+              query += `&state=${params.statuses.map(
+                convertMatcherStatusFromModel
+              )}`
+            }
+            return this.http.get(this.fetchUrl + query)
+          })
+          .map(e => (e as APIResponse).result)
+          .map(e => e.map(Matcher.convertFromResp))
+          .withLatestFrom(
+            this.tenantService.getTenantId(),
+            (matchers, tenantId) =>
+              matchers.map(e => ({
+                ...e,
+                isSender: e.senderId === tenantId,
+                isReceiver: e.receiverId === tenantId
+              }))
+          )
+          .catch(this.handleError)
+      : Observable.of(fakeMatchers).withLatestFrom(
+          this.tenantService.getTenantId(),
+          (matchers, tenantId) =>
+            matchers.map(e => ({
+              ...e,
+              isSender: e.senderId === tenantId,
+              isReceiver: e.receiverId === tenantId
+            }))
+        )
   }
-/**
- * 新建约请
- *
- * @param {Recommend} recommend
- * @param {string} boothArea
- * @param {string} tenantId
- * @param {string} customerId
- * @returns {Observable<any>}
- * @memberof MatcherService
- */
-createMatcher(
+  /**
+   * 新建约请
+   *
+   * @param {Recommend} recommend
+   * @param {string} boothArea
+   * @param {string} tenantId
+   * @param {string} customerId
+   * @returns {Observable<any>}
+   * @memberof MatcherService
+   */
+  createMatcher(
     recommend: Recommend,
     boothArea: string,
     tenantId: string,
@@ -112,20 +119,20 @@ createMatcher(
       })
       .catch(this.handleError)
   }
-/**
- * 取消约请
- *
- * @param {string} matcherId
- * @returns {Observable<any>}
- * @memberof MatcherService
- */
-cancelMatcher(matcherId: string): Observable<any> {
+  /**
+   * 取消约请
+   *
+   * @param {string} matcherId
+   * @returns {Observable<any>}
+   * @memberof MatcherService
+   */
+  cancelMatcher(matcherId: string): Observable<any> {
     return this.tenantService
-    .getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
-    })
-    .catch(this.handleError)
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.cancelUrl + `/${tenantId}/${userId}`, {})
+      })
+      .catch(this.handleError)
   }
 
   /**

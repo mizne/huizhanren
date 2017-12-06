@@ -171,13 +171,7 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.initCurrentDetail()
 
-    // this.currentLogs$ = this.store.select(getLogs)
-    this.currentLogs$ = Observable.of(Array.from({ length: 100 }, (_, i) => ({
-      id: `id${i}`,
-      time: `time${i}`,
-      level: `info` as LoggerLevel,
-      content: `testContent${i}`
-    })))
+    this.currentLogs$ = this.store.select(getLogs)
   }
 
   private initCurrentDetail(): void {
