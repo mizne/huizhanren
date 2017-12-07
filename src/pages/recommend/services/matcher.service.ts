@@ -61,7 +61,7 @@ export class MatcherService {
             return this.http.get(this.fetchUrl + query)
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(Matcher.convertFromResp))
+          .map(e => e.filter(f => f.State !== '已取消').map(Matcher.convertFromResp))
           .withLatestFrom(
             this.tenantService.getTenantId(),
             (matchers, tenantId) =>
