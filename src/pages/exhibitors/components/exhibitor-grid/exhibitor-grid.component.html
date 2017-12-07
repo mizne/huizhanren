@@ -20,8 +20,8 @@
       </div>
 
       <div class="footer">
-        <div class="industry">
-          {{item.industry || '未填写'}}
+        <div class="industry" *ngIf="item.industry">
+          {{item.industry}}
         </div>
 
         <div class="right-area">
