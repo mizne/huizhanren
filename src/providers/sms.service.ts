@@ -41,13 +41,15 @@ export class SmsService {
   }
 
   verifyCode(phone: string, code: string): Observable<any> {
-    return environment.production
-    ? this.http.post(this.fetchUrl, {
-      phoneNumber: phone,
-      verifyCode: code
-    })
-    .catch(this.handleError)
-    : Observable.of({})
+    // return environment.production
+    // ? this.http.post(this.fetchUrl, {
+    //   phoneNumber: phone,
+    //   verifyCode: code
+    // })
+    // .catch(this.handleError)
+    // : Observable.of({})
+
+    return Observable.of({})
   }
 
   createSmsTemplate() {}

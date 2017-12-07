@@ -1,11 +1,9 @@
 .hz-selector {
   position: relative;
-  flex: 1;
   color: #666666;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   height: 100%;
+  padding-top: 15px;
 
   &:not(:last-child) {
     border-right: 1px solid #27272A;
