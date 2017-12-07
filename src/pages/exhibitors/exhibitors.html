@@ -29,7 +29,7 @@
         [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
-      <p class="load-more" (click)="loadMore()">加载更多</p>
+      <p *ngIf="showLoadMore$ | async" class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">

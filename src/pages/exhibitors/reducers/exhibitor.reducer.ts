@@ -6,6 +6,7 @@ import { Logger } from '../../customer/models/logger.model'
 export interface State {
   exhibitors: Exhibitor[]
   exhibitorsTotalCount: number
+  currentExhibitorsTotalCount: number
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
@@ -17,7 +18,8 @@ export interface State {
 
 export const initialState: State = {
   exhibitors: [],
-  exhibitorsTotalCount: 0,
+  exhibitorsTotalCount: 1,
+  currentExhibitorsTotalCount: 0,
 
   listStatus: ListStatus.EXHIBITOR,
   pageStatus: PageStatus.LIST,
@@ -90,3 +92,4 @@ export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
+export const getShowLoadMore = (state: State) => state.exhibitorsTotalCount > state.currentExhibitorsTotalCount

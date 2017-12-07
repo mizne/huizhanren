@@ -10,8 +10,11 @@
       {{detail.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="area">{{detail.booth}} | {{detail.area}}</span>
-      <span class="industry">{{detail.industry || '未填写'}}</span>
+      <span class="area">
+        <span *ngIf="detail.booth">{{detail.booth}}</span>
+        <span *ngIf="detail.area"> | {{detail.area}}</span>
+      </span>
+      <span class="industry" *ngIf="detail.industry">{{detail.industry}}</span>
     </div>
 
     <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
@@ -41,25 +44,25 @@
     </ng-template>
   </div>
 
-  <div class="exhibitor-product">
+  <div class="exhibitor-product" *ngIf="detail.products.length > 0">
     <div class="header" (click)="toggleViewProduct()">
       <span>产品</span>
       <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
     <div class="content" *ngIf="viewProduct">
-      <div class="products" *ngIf="detail.products.length > 0; else noProduct;">
+      <div class="products">
         <div class="product-item" *ngFor="let item of detail.products" (click)="ensureShowProduct(item)">
-          <img [src]="item.pictures[0]" alt="">
+          <img [src]="item.pictures && item.pictures[0]" alt="">
           <div class="product-name">{{item.name}}</div>
         </div>
       </div>
-      <ng-template #noProduct>
+      <!-- <ng-template #noProduct>
         <div class="no-product">还没有产品</div>
-      </ng-template>
+      </ng-template> -->
     </div>
   </div>
 
-  <div class="exhibitor-jianjie">
+  <div class="exhibitor-jianjie" *ngIf="detail.description">
     <div class="header" (click)="toggleViewDescription()">
       <span>简介</span>
       <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i>

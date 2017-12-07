@@ -91,3 +91,4 @@ export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
+export const getShowLoadMore = (state: State) => state.recommendTotalCount > state.currentRecommendTotalCount

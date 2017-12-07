@@ -2,8 +2,7 @@
   <div class="customer-header">
     <div class="customer-title">
       <span class="customer-name">{{detail.name}}</span>
-      (
-      <span class="customer-title">{{detail.title}}</span> )
+      <span class="customer-title">( {{detail.title}} )</span>
     </div>
 
     <div class="customer-rate">
@@ -11,13 +10,13 @@
     </div>
   </div>
 
-  <div class="customer-company">
-    {{detail.company || '未填写'}}
+  <div class="customer-company" *ngIf="detail.company">
+    {{detail.company}}
   </div>
 
   <div class="customer-industry">
-    <span class="industry">{{detail.industry || '未填写'}}</span>
-    <span class="area">{{detail.area || '未填写'}}</span>
+    <span class="industry" *ngIf="detail.industry">{{detail.industry}}</span>
+    <span class="area" *ngIf="detail.area">{{detail.area}}</span>
   </div>
 
   <div class="customer-status">
@@ -48,5 +47,20 @@
         <button ion-button (click)="ensureInvite()">约 TA</button>
       </div>
     </ng-template>
+  </div>
+
+  <div class="customer-private" *ngIf="detail.status === 3">
+    <div class="customer-mobile field-item" *ngIf="detail.mobile">
+      <span>电话:</span>
+      <span class="info">{{detail.mobile}}</span>
+    </div>
+    <div class="customer-email field-item" *ngIf="detail.email">
+      <span>邮箱:</span>
+      <span class="info">{{detail.email}}</span>
+    </div>
+    <div class="customer-address field-item" *ngIf="detail.visitorAddr">
+      <span>地址:</span>
+      <span class="info">{{detail.visitorAddr}}</span>
+    </div>
   </div>
 </div>

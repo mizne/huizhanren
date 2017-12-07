@@ -19,7 +19,9 @@ import {
   getShowDetailID,
   getExhibitors,
   getMatchers,
-  getCurrentLogs
+  getCurrentLogs,
+  getShowExhibitorLoadMore,
+  getShowMatcherLoadMore,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -29,7 +31,8 @@ import {
   FetchExhibitorsAction,
   UpdateDetailIDAction,
   ToInviteExhibitorAction,
-  ToShowProcuctAction
+  ToShowProcuctAction,
+  FetchLoggerAction,
 } from './actions/exhibitor.action'
 import {
   FetchMatchersAction,
@@ -74,6 +77,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   currentDetail$: Observable<Exhibitor>
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
+  showLoadMore$: Observable<boolean>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -189,6 +193,10 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initCurrentDetail()
 
     this.currentLogs$ = this.store.select(getCurrentLogs)
+    this.showLoadMore$ = Observable.merge(
+      this.listStatus$.filter(e => e === ListStatus.EXHIBITOR).mergeMap(() => this.store.select(getShowExhibitorLoadMore)),
+      this.listStatus$.filter(e => e === ListStatus.MATCHER).mergeMap(() => this.store.select(getShowMatcherLoadMore)),
+    )
   }
 
   private initCurrentDetail(): void {
@@ -219,6 +227,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     // this.initRecommendFilter()
     this.initMatcherFilter()
     this.initLoadMore()
+    this.initFetchLogger()
   }
   private initListHeaderChange(): void {
     this.listStatusChangeSub
@@ -321,6 +330,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         console.log('to load more with matcher filter, ', matcherFilter)
         this.store.dispatch(new FetchMatchersAction())
       })
+  }
+
+  private initFetchLogger(): void {
+    this.showDetailID$.takeUntil(this.destroyService).subscribe(exhibitorId => {
+      if (exhibitorId) {
+        this.store.dispatch(new FetchLoggerAction(exhibitorId))
+      }
+    })
   }
 
   private initDispatch(): void {

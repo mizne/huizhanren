@@ -29,6 +29,10 @@ export const getRecommendTotalCount = createSelector(selectRecommendState, fromR
 export const getListStatus = createSelector(selectRecommendState, fromRecommend.getListStatus)
 export const getPageStatus = createSelector(selectRecommendState, fromRecommend.getPageStatus)
 export const getShowDetailID = createSelector(selectRecommendState, fromRecommend.getShowDetailID)
+export const getShowRecommendLoadMore = createSelector(
+  selectRecommendState,
+  fromRecommend.getShowLoadMore
+)
 
 
 export const selectMatcherState = createSelector(
@@ -38,4 +42,8 @@ export const selectMatcherState = createSelector(
 export const getMatchers = createSelector(selectMatcherState, fromMatcher.getMatchers)
 export const getMatcherTotalCount = createSelector(selectMatcherState, fromMatcher.getMatcherTotalCount)
 export const getLogs = createSelector(selectRecommendState, fromRecommend.getLogs)
+export const getShowMatcherLoadMore = createSelector(
+  selectMatcherState,
+  fromMatcher.getShowLoadMore
+)
 

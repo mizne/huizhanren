@@ -29,6 +29,9 @@
       .exhibitor-detail {
         padding: 30px 10px;
         background-color: #fff;
+        min-height: calc(100vh - 720px);
+        max-height: calc(100vh - 400px);
+        overflow: auto;
         .headers {
           display: flex;
           justify-content: space-around;
@@ -46,8 +49,6 @@
 
         .content {
           margin-top: 20px;
-          height: calc(100vh - 720px);
-          overflow: auto;
         }
       }
     }
@@ -65,13 +66,12 @@
         color: #fff;
         height: 50px;
         font-size: 1.8rem;
-        background-color: #6287D5;
+        background-color: #6287d5;
 
         &.active {
-          background-color: #305EBC;
+          background-color: #305ebc;
         }
       }
-
     }
 
     .content {

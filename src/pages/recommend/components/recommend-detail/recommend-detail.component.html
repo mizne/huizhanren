@@ -1,20 +1,23 @@
 <div class="recommend-detail-container">
   <div class="left-area">
     <div class="card-container">
-      <div class="card-info">
-        <div class="title">名片信息</div>
-        <div class="desc">约请同意后可显示具体名片</div>
+      <div class="card-info" *ngIf="detail.status === 3; else notAllow;">
+        <img *ngIf="detail.cardImg; else noCardImg;" src="./assets/images/card.jpg" alt="">
+        <ng-template #noCardImg>
+          <p class="no-cardimg">还没上传名片</p>
+        </ng-template>
       </div>
+      <ng-template #notAllow>
+        <div class="card-info">
+          <div class="title">名片信息</div>
+          <div class="desc">约请同意后可显示具体名片</div>
+        </div>
+      </ng-template>
     </div>
 
     <div class="customer-container">
-      <hz-customer-abstract
-      [detail]="detail"
-      (invite)="ensureInvite()"
-      (cancelMatcher)="ensureCancelMatcher($event)"
-      (agreeMatcher)="ensureAgreeMatcher($event)"
-      (refuseMatcher)="ensureRefuseMatcher($event)"
-      ></hz-customer-abstract>
+      <hz-customer-abstract [detail]="detail" (invite)="ensureInvite()" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)"></hz-customer-abstract>
       <div class="customer-detail">
         <div class="headers">
           <div class="header-item logger" [class.active]="activeHeaderIndex === 0" (click)="activeHeader(0)">日志</div>

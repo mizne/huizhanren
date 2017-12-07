@@ -1,5 +1,5 @@
 .customer-abstract-container {
-  height: 180px;
+  height: 200px;
   margin-bottom: 5px;
   padding: 20px;
   background-color: #fff;
@@ -93,6 +93,27 @@
       }
       .matcher-status-3 {
         color: map-get($map: $gridColors, $key: secondary);
+      }
+    }
+  }
+
+  .customer-private {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .field-item {
+      flex: 1;
+      display: flex;
+      min-width: 150px;
+      justify-content: flex-start;
+      align-items: center;
+
+      .info {
+        margin-left: 5px;
+        color: map-get($map: $colors, $key: primary);
       }
     }
   }

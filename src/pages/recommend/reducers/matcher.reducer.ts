@@ -3,12 +3,14 @@ import { Matcher } from '../models/matcher.model'
 
 export interface State {
   matchers: Matcher[],
-  matcherTotalCount: number
+  matcherTotalCount: number,
+  currentMatcherTotalCount: number
 }
 
 export const initialState: State = {
   matchers: [],
-  matcherTotalCount: 0
+  matcherTotalCount: 0,
+  currentMatcherTotalCount: 0
 }
 
 export function reducer(
@@ -35,3 +37,4 @@ export function reducer(
 
 export const getMatchers = (state: State) => state.matchers
 export const getMatcherTotalCount = (state: State) => state.matcherTotalCount
+export const getShowLoadMore = (state: State) => state.matcherTotalCount > state.currentMatcherTotalCount

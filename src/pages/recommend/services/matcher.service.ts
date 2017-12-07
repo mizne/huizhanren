@@ -107,8 +107,11 @@ export class MatcherService {
     })
 
     return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .getTenantIdAndUserIdAndCompanyName()
+      .mergeMap(([tenantId, userId, companyName]) => {
+        Object.assign(params, {
+          ExhibitionName: companyName
+        })
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
             record: params

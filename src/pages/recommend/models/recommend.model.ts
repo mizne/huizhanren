@@ -3,11 +3,14 @@ export class Customer {
   name?: string
   title?: string
   company?: string
+  companyAddr?: string
   industry?: string
   area?: string
   organizer?: string
   organizerId?: string
   mobile?: string
+  cardImg?: string
+  email?: string
 }
 
 export class Recommend extends Customer {
@@ -23,11 +26,13 @@ export class Recommend extends Customer {
       area: resp.Province,
       organizer: resp.Organizer,
       organizerId: resp.OrganizerId,
-      mobile: resp.Mob
+      mobile: resp.Mob,
+      cardImg: resp.Card,
+      email: resp.Email
     }
   }
 
-  static convertFromModel(model: Recommend): RecommendResp {
+  static convertFromModel(model: Recommend): CreateMatcherParams {
     return {
       Organizer: model.organizer,
       OrganizerId: model.organizerId,
@@ -36,6 +41,8 @@ export class Recommend extends Customer {
       Mob: model.mobile,
       JobTitle: model.title,
       Province: model.area,
+      Email: model.email,
+      VisitorAddr: model.companyAddr
     }
   }
 }
@@ -46,11 +53,14 @@ export class RecommendResp {
   Name?: string
   JobTitle?: string
   CompName?: string
+  CompAddr?: string
   Industry?: string
   Organizer?: string
   OrganizerId?: string
   Mob?: string
   Province?: string
+  Card?: string
+  Email?: string
 }
 
 export interface RecommendFilter {
@@ -65,6 +75,18 @@ export interface FetchRecommendParams {
   key?: string
   area?: string
   type?: string
+}
+
+export interface CreateMatcherParams {
+  Organizer?: string,
+  OrganizerId?: string,
+  Name?: string,
+  CompName?: string,
+  Mob?: string,
+  JobTitle?: string,
+  Province?: string,
+  Email?: string,
+  VisitorAddr?: string
 }
 
 export interface Portray {

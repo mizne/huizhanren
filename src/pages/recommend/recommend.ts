@@ -19,7 +19,9 @@ import {
   getShowDetailID,
   getRecommends,
   getMatchers,
-  getLogs
+  getLogs,
+  getShowMatcherLoadMore,
+  getShowRecommendLoadMore,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -72,6 +74,7 @@ export class RecommendPage implements OnInit, OnDestroy {
   currentDetail$: Observable<Customer>
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
+  showLoadMore$: Observable<boolean>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -173,6 +176,11 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.initCurrentDetail()
 
     this.currentLogs$ = this.store.select(getLogs)
+
+    this.showLoadMore$ = Observable.merge(
+      this.listStatus$.filter(e => e === ListStatus.RECOMMEND).mergeMap(() => this.store.select(getShowRecommendLoadMore)),
+      this.listStatus$.filter(e => e === ListStatus.MATCHER).mergeMap(() => this.store.select(getShowMatcherLoadMore)),
+    )
   }
 
   private initCurrentDetail(): void {

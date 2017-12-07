@@ -30,6 +30,10 @@ export const getListStatus = createSelector(selectExhibitorState, fromExhibitor.
 export const getPageStatus = createSelector(selectExhibitorState, fromExhibitor.getPageStatus)
 export const getShowDetailID = createSelector(selectExhibitorState, fromExhibitor.getShowDetailID)
 export const getCurrentLogs = createSelector(selectExhibitorState, fromExhibitor.getLogs)
+export const getShowExhibitorLoadMore = createSelector(
+  selectExhibitorState,
+  fromExhibitor.getShowLoadMore
+)
 
 
 export const selectMatcherState = createSelector(
@@ -38,4 +42,7 @@ export const selectMatcherState = createSelector(
 )
 export const getMatchers = createSelector(selectMatcherState, fromMatcher.getMatchers)
 export const getMatcherTotalCount = createSelector(selectMatcherState, fromMatcher.getMatcherTotalCount)
-
+export const getShowMatcherLoadMore = createSelector(
+  selectMatcherState,
+  fromMatcher.getShowLoadMore
+)

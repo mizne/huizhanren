@@ -4,13 +4,13 @@ import { ExhibitorMatcher } from '../models/matcher.model'
 export interface State {
   matchers: ExhibitorMatcher[],
   matcherTotalCount: number
-  currentTotalCount: number
+  currentMatcherTotalCount: number
 }
 
 export const initialState: State = {
   matchers: [],
   matcherTotalCount: 0,
-  currentTotalCount: 0
+  currentMatcherTotalCount: 0
 }
 
 export function reducer(
@@ -22,20 +22,20 @@ export function reducer(
       return {
         ...state,
         matchers: action.matchers,
-        currentTotalCount: action.matchers.length
+        currentMatcherTotalCount: action.matchers.length
       }
     case fromMatcher.FETCH_MATCHERS_FAILURE:
       return {
         ...state,
         matchers: [],
-        currentTotalCount: 0
+        currentMatcherTotalCount: 0
       }
 
     case fromMatcher.LOAD_MORE_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: state.matchers.concat(action.matchers),
-        currentTotalCount: state.currentTotalCount + action.matchers.length
+        currentMatcherTotalCount: state.currentMatcherTotalCount + action.matchers.length
       }
 
     default: {
@@ -46,3 +46,4 @@ export function reducer(
 
 export const getMatchers = (state: State) => state.matchers
 export const getMatcherTotalCount = (state: State) => state.matcherTotalCount
+export const getShowLoadMore = (state: State) => state.matcherTotalCount > state.currentMatcherTotalCount
