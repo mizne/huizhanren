@@ -43,7 +43,7 @@ hz-card-detail {
         max-width: 100%;
       }
     }
-    
+
   }
 
   &.open .hz-card-box {
@@ -71,16 +71,16 @@ hz-card-detail {
     top: 30px;
     right: 30px;
     width: 317px;
-    height: 230px;
+    height: 210px;
     padding: 10px 15px;
     color: #fff;
     background: rgba(47, 94, 189, 0.8);
-    
     z-index: 100;
+    transition: none;
 
 
     &.close {
-      // width: calc(100% - 30px);
+      width: calc(100% - 30px);
     }
 
     .hz-person-info {
@@ -129,7 +129,7 @@ hz-card-detail {
       }
     }
   }
-  
+
 
   .hz-field-container {
     padding: 10px 50px;
