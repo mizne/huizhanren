@@ -1,7 +1,7 @@
 .matcher-filter-container {
   height: 82px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   padding-left: 10px;
   color: map-get($map: $gridColors, $key: grey);

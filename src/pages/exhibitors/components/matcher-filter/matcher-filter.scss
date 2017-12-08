@@ -1,16 +1,25 @@
 .matcher-filter-container {
   height: 82px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
   padding-left: 10px;
   color: map-get($map: $gridColors, $key: grey);
+
+  .first {
+    display: none;
+  }
 
   label {
     margin-right: 2px;
   }
 
   &.expand {
+    justify-content: flex-start;
+    .first {
+      display: block;
+    }
+
     label {
       margin-right: 10px;
     }
@@ -24,3 +33,4 @@
     margin-left: 3px;
   }
 }
+

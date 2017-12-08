@@ -1,4 +1,4 @@
-<div [ngClass]="['hz-logger-item-add', theme]">
-  添加
+<div [ngClass]="['hz-logger-item-add', theme, hasLog ? 'has-log' : '']">
+  <span class="text">添加</span>
   <i class="iconfont icon-add-circle" (click)="createLogger()"></i>
 </div>

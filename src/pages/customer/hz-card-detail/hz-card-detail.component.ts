@@ -306,7 +306,7 @@ export class HzCardDetailFieldItemComponent implements OnInit {
   }
 
   get telHref(): string {
-    return phoneRe.test(this.field.value) ? `tel:${this.field.value}` : 'tel:'
+    return phoneRe.test(this.field.value) ? `tel:${this.field.value}` : 'javascript:;'
   }
 
   constructor(private store: Store<State>) { }

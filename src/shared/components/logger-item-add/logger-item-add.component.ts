@@ -6,6 +6,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
 })
 export class HzLoggerItemAddComponent {
   @Input() theme: string
+  @Input() hasLog: boolean
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
 
   createLogger() {
