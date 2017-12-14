@@ -23,13 +23,9 @@ import { FormGroup, FormBuilder } from '@angular/forms'
 })
 export class HomePage implements OnInit, OnDestroy {
   myForm: FormGroup
-
   abstractForm: FormGroup
-
   fromCamera: boolean = false
-
   cardImg: string
-
   cardInfo: any = null
 
   // cardInfo: any = {
@@ -72,7 +68,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   /**
    * 构造 表单模型
-   * 
+   *
    * @memberof LoginPage
    */
   private buildForm(): void {
