@@ -4,11 +4,10 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
-import { 
-  CancelDiscardAction, 
+import {
+  CancelDiscardAction,
   EnsureDiscardAction
  } from '../actions/customer.action'
 
@@ -20,7 +19,7 @@ import {
     <ion-title>
       放弃客户
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -49,9 +48,8 @@ styles: [`
 `]
 })
 export class ToDiscardModal {
-  private deleteMulti: boolean
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>
   ) {

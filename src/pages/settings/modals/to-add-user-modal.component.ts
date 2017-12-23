@@ -5,10 +5,9 @@ import {
   ToastController
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
 import { Store } from '@ngrx/store'
-import { State } from './reducers/index'
-import { FetchSMSCodeAction, EnsureAddUserAction, CancelAddUserAction } from './actions/user-management.action'
+import { State } from '../reducers/index'
+import { FetchSMSCodeAction, EnsureAddUserAction, CancelAddUserAction } from '../actions/user-management.action'
 
 @Component({
   template: `
@@ -18,7 +17,7 @@ import { FetchSMSCodeAction, EnsureAddUserAction, CancelAddUserAction } from './
     <ion-title>
       添加用户
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -65,7 +64,7 @@ export class ToAddUserModal {
   private code: string
 
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>,
     private toastCtrl: ToastController

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core'
+import { Component } from '@angular/core'
 import {
   NavParams,
   ViewController,
@@ -13,7 +13,7 @@ import {
       <ion-title>
         创建标签
       </ion-title>
-      
+
     </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -44,11 +44,11 @@ styles: [`
 
 `]
 })
-export class CreateGroupModal {
+export class ToCreateGroupModal {
   private groupName: string
 
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private toastCtrl: ToastController
   ) {

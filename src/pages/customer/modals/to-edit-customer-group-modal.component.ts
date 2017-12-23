@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core'
+import { Component } from '@angular/core'
 import {
   NavParams,
   ViewController,
@@ -37,7 +37,7 @@ import { SingleEditGroupAction } from '../actions/customer.action'
       </div>
 
       <div class="show-group-area">
-        <div class="group-item" *ngFor="let group of groups$ | async" [class.active]="selectedGroup === group" 
+        <div class="group-item" *ngFor="let group of groups$ | async" [class.active]="selectedGroup === group"
           (click)="selectGroup(group)">
           {{group.name}}
         </div>
@@ -106,15 +106,13 @@ styles: [`
 })
 export class ToEditCustomerGroupModal {
 
-  private selectedGroup: Group
-
-  private groupName: string
-
-  private groups$: Observable<Group[]>
+  selectedGroup: Group
+  groupName: string
+  groups$: Observable<Group[]>
 
   constructor(
-    public params: NavParams, 
-    public viewCtrl: ViewController, 
+    public params: NavParams,
+    public viewCtrl: ViewController,
     private toastCtrl: ToastController,
     private store: Store<State>,
   ) {

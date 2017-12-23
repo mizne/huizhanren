@@ -13,11 +13,23 @@ import { OtherService } from './services/other.service'
 
 import { HzSettingItemComponent } from './hz-setting-item/hz-setting-item.component'
 
+import { LogoutModal } from './modals/logout-modal.component'
+import { ToAddUserModal } from './modals/to-add-user-modal.component'
+import { ToDeleteUserModal } from './modals/to-delete-user-modal.component'
+import { ToDownloadModal } from './modals/to-download-modal.component'
+
+const modals = [
+  LogoutModal,
+  ToAddUserModal,
+  ToDeleteUserModal,
+  ToDownloadModal
+]
 
 @NgModule({
   declarations: [
     SettingsPage,
     HzSettingItemComponent,
+    ...modals,
   ],
   imports: [
     StoreModule.forFeature('settings', reducers),
@@ -27,6 +39,9 @@ import { HzSettingItemComponent } from './hz-setting-item/hz-setting-item.compon
   providers: [
     UserService,
     OtherService
+  ],
+  entryComponents: [
+    ...modals,
   ]
 })
 export class SettingsPageModule {}

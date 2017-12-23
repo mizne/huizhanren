@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
 import { State, getSmsTemplates } from '../../customer/reducers/index'
 import { FetchAllTemplateAction } from '../../customer/actions/sms.action'
-import { UserManagementPage } from '../user-management/user-management'
 
 import { SmsTemplate } from '../../customer/models/sms.model'
 
@@ -21,14 +20,14 @@ export class SmsTemplatePage implements OnInit {
 
   private subscription: Subscription
 
-  constructor(private store: Store<State>) { 
+  constructor(private store: Store<State>) {
     this.smsTemplates$ = store.select(getSmsTemplates)
     this.subscription = this.smsTemplates$.subscribe((tmps) => {
       this.selectedTemplate = tmps[0]
     })
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.store.dispatch(new FetchAllTemplateAction())
   }
 
@@ -66,12 +65,12 @@ export class SmsTemplatePage implements OnInit {
     </div>
 
     <div class="hz-template-prompt">
-      1、不支持营销短信、全变量短信模板。例如：您好，$(msg)<br> 
-      2、变量格式如$(name),不能使用$(email),$(mobile),$(id),$(nick),$(site)<br> 
-      3、请勿在变量中添加特殊符号，如：,.#/:。<br> 
-      4、如有链接，请将链接地址写入模板内容中，便于核实<br> 
-      5、模板内容无需添加签名，内容首尾不能添加[],【】符号，调用接口时传入签名即可<br> 
-      6、短信字数&lt;=70个字数，按照70个字数一条短信计算<br> 
+      1、不支持营销短信、全变量短信模板。例如：您好，$(msg)<br>
+      2、变量格式如$(name),不能使用$(email),$(mobile),$(id),$(nick),$(site)<br>
+      3、请勿在变量中添加特殊符号，如：,.#/:。<br>
+      4、如有链接，请将链接地址写入模板内容中，便于核实<br>
+      5、模板内容无需添加签名，内容首尾不能添加[],【】符号，调用接口时传入签名即可<br>
+      6、短信字数&lt;=70个字数，按照70个字数一条短信计算<br>
       7、短信字数&gt;70个字数，即为长短信，按照67个字数为一条短信计算<br>
     </div>
   </div>
@@ -119,7 +118,7 @@ export class SmsTemplatePage implements OnInit {
   `]
 })
 export class SmsTemplateDetailComponent implements OnInit {
-  @Input() 
+  @Input()
   set label(s: string) {
     this._name = s
   }

@@ -10,7 +10,7 @@ import { Group } from '../models/group.model'
         <li class="hz-manage-nav-item" [class.active]="_activeIndex === 0" (click)="tabClick(0)">
           <span>发短信</span>
         </li>
-        
+
         <li class="hz-manage-nav-item" [class.active]="_activeIndex === 1" (click)="tabClick(1)">
           <span>设置标签</span>
         </li>
@@ -25,7 +25,7 @@ import { Group } from '../models/group.model'
 })
 export class HzCustomerManageComponent implements OnInit {
 
-  @Input() 
+  @Input()
   set active(str: string) {
     this._activeIndex = str === 'group' ? 1 : 0
   }
@@ -107,14 +107,14 @@ export class HzCustomerManageContentItem implements OnInit {
             <span class="rename" *ngIf="type === 'group' && validSelected" (click)="toRename()">重命名</span>
             <span class="delete" *ngIf="type === 'group' && validSelected" (click)="toDel()">删除</span>
           </span>
-          
+
           <span class="action" *ngIf="type === 'group'" (click)="toCreateTemplate(type)">
             <ion-icon name="add-circle" color="primary"></ion-icon>
             <span class="text">{{type === 'group' ? '新建标签' : '添加模板'}}</span>
           </span>
         </div>
         <div class="content">
-          <div class="template-item" *ngFor="let template of _templates; let i = index;" [class.active]="selectedTemplate === template" 
+          <div class="template-item" *ngFor="let template of _templates; let i = index;" [class.active]="selectedTemplate === template"
             (click)="selectTemplate(template, i)">{{template.label}}</div>
         </div>
       </div>
@@ -140,9 +140,9 @@ export class HzCustomerManageTemplate implements OnInit {
   selectedTemplate: any
   _templates: any
 
-  private validSelected: boolean = false
+  validSelected: boolean = false
 
-  @Input() 
+  @Input()
   set templates(tmps) {
     this.selectedTemplate = tmps[0]
     this._templates = tmps

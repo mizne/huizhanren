@@ -4,8 +4,8 @@ import * as group from '../actions/group.action'
 
 import { remain, phoneRe } from '../services/utils'
 
-import { 
-  Customer, 
+import {
+  Customer,
 } from '../models/customer.model'
 import { Group } from '../models/group.model'
 
@@ -49,7 +49,7 @@ export function reducer(
   action: Action
 ): State {
   switch (action.type) {
-    case customer.ENSURE_GROUP_SCROLL_TOP: 
+    case customer.ENSURE_GROUP_SCROLL_TOP:
       return {
         ...state,
         groups: state.groups.map((e) => {
@@ -63,7 +63,7 @@ export function reducer(
           }
         })
       }
-    case customer.TOGGLE_SHOW_LOG: 
+    case customer.TOGGLE_SHOW_LOG:
       return {
         ...state,
         showLog: action.flag ? true : !state.showLog,
@@ -77,7 +77,7 @@ export function reducer(
         showNotification: action.flag ? true : !state.showNotification
       }
 
-    case group.TOGGLE_ACTIVE_GROUP: 
+    case group.TOGGLE_ACTIVE_GROUP:
       return {
         ...state,
         groups: state.groups.map(e => {
@@ -91,7 +91,7 @@ export function reducer(
         })
       }
 
-    case group.TOGGLE_SELECT_GROUP: 
+    case group.TOGGLE_SELECT_GROUP:
       const newGroups = state.groups.map(e => {
         if (e.id === action.groupId) {
           return {
@@ -126,7 +126,7 @@ export function reducer(
         })
       }
 
-    case group.FETCH_ALL_SUCCESS: 
+    case group.FETCH_ALL_SUCCESS:
       return {
         ...state,
         groups: remain(state.groups, action.groups, ['active', 'selected'])
@@ -137,7 +137,7 @@ export function reducer(
         ...state,
         customers: remain(state.customers, action.customers, ['selected'])
       }
-    
+
     case customer.INITIAL_SUCCESS:
       return {
         ...state,
@@ -146,15 +146,12 @@ export function reducer(
       }
 
     case customer.TO_EDITABLE_STATUS:
-      const customers = state.customers
-      const customerId = state.showDetailCustomerId
-
       return {
         ...state,
         pageStatus: 'editable',
       }
 
-    case customer.TO_CREATEABLE_STATUS: 
+    case customer.TO_CREATEABLE_STATUS:
       return {
         ...state,
         pageStatus: 'createable'
@@ -197,7 +194,7 @@ export function reducer(
     case customer.SELECT_CUSTOMER:
       return {
         ...state,
-        customers: state.customers.map((e, i) => {
+        customers: state.customers.map((e) => {
           if (e.id === action.id) {
             return {
               ...e,
@@ -212,7 +209,7 @@ export function reducer(
     case group.CANCEL_SELECT_CUSTOMER:
       return {
         ...state,
-        customers: state.customers.map((e, i) => {
+        customers: state.customers.map((e) => {
           if (e.id === action.id) {
             return {
               ...e,
@@ -267,7 +264,7 @@ export function reducer(
           })
         }
 
-      case sms.SELECT_ALL_PHONE: 
+      case sms.SELECT_ALL_PHONE:
         return {
           ...state,
           customers: state.customers.map((customer) => {
@@ -285,7 +282,7 @@ export function reducer(
           })
         }
 
-      case sms.CANCEL_SELECT_ALL_PHONE: 
+      case sms.CANCEL_SELECT_ALL_PHONE:
         return {
           ...state,
           customers: state.customers.map((customer) => {

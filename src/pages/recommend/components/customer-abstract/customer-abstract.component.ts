@@ -1,22 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
-import { Subject } from 'rxjs/Subject'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 
 @Component({
   selector: 'hz-customer-abstract',
   templateUrl: 'customer-abstract.component.html',
 })
-export class HzCustomerAbstractComponent implements OnInit {
+export class HzCustomerAbstractComponent {
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   @Input() detail: any
-
-  constructor() {}
-
-  ngOnInit() {
-  }
 
   ensureInvite() {
     this.invite.emit()

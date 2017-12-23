@@ -1,4 +1,4 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   NavParams,
   ViewController,
@@ -6,9 +6,6 @@ import {
 } from 'ionic-angular'
 
 import * as fecha from 'fecha'
-
-import { Store } from '@ngrx/store'
-import { State } from '../../../reducers/index'
 
 import { Notification } from '../models/notification.model';
 
@@ -33,7 +30,7 @@ import { Notification } from '../models/notification.model';
           <div class="input-group">
             <ion-item>
               <ion-label>提醒时间</ion-label>
-              <ion-datetime displayFormat="YYYY/MM/DD HH:mm" 
+              <ion-datetime displayFormat="YYYY/MM/DD HH:mm"
               pickerFormat="YYYY MM DD HH mm" [(ngModel)]="time"
               cancelText="取消" doneText="确定"
               ></ion-datetime>
@@ -85,11 +82,9 @@ export class ToEditNotificationModal {
   @ViewChild('text') el: ElementRef
 
   constructor(
-    public params: NavParams, 
-    public viewCtrl: ViewController, 
+    public params: NavParams,
+    public viewCtrl: ViewController,
     private toastCtrl: ToastController,
-    private store: Store<State>,
-    private rd: Renderer2
   ) {
     this.time = (new Date(new Date(params.get('time')).getTime() + this.EIGHT_HOURS)).toISOString()
     this.content = params.get('content')
@@ -124,5 +119,5 @@ export class ToEditNotificationModal {
       })
     }
   }
-  
+
 }

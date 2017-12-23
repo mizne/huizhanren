@@ -4,50 +4,47 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
-import { Store } from '@ngrx/store'
-
-
 @Component({
   template: `
-<div class="hz-modal hz-logout-modal">
+<div class="hz-modal hz-add-user-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
-      退出
+      数据导出
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
   <div class="modal-body">
-    确定退出此账户?
+    请移步i-rdesk官网下载（www.i-rdesk.com）
   </div>
   <div class="modal-footer">
-    <button type="button" class="hz-btn" (click)="cancel()">取消</button>
-    <button type="button" class="hz-btn" (click)="complete()">确认</button>
+    <button type="button" class="hz-btn" (click)="ensure()">确定</button>
   </div>
   </ion-content>
 </div>
 `,
 styles: [`
-  .modal-wrapper {
-    height: 300px;
+  .hz-add-user-modal {
+    height: 400px;
   }
-  .hz-logout-modal {
-    height: 300px;
-  }
-  .hz-logout-modal .modal-body {
-    display: flex;
-    align-items: center;
+  .hz-add-user-modal .modal-body {
     font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hz-add-user-modal .modal-body .input-group {
+    margin-bottom: 20px;
+    margin-top: 10px;
   }
 `]
 })
-export class LogoutModal {
-
+export class ToDownloadModal {
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
   ) {
   }
@@ -56,11 +53,7 @@ export class LogoutModal {
     this.viewCtrl.dismiss(data)
   }
 
-  cancel() {
+  ensure() {
     this.dismiss()
-  }
-
-  complete() {
-    this.dismiss(true)
   }
 }

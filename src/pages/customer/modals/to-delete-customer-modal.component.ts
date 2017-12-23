@@ -4,12 +4,11 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
-import { 
-  CancelDeleteAction, 
+import {
+  CancelDeleteAction,
   EnsureDeleteAction
  } from '../actions/customer.action'
 
@@ -23,7 +22,7 @@ import {
     <ion-title>
       {{ deleteMulti ? '批量删除客户' : '删除客户' }}
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -52,12 +51,12 @@ styles: [`
 `]
 })
 export class ToDeleteCustomerModal implements OnDestroy {
-  private deleteMulti: boolean
-  private count: number
+  deleteMulti: boolean
+  count: number
 
   private subscription: Subscription
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>
   ) {

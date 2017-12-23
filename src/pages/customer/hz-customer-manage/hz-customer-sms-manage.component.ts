@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 import { State, getSelectedCustomers, getSmsTemplates } from '../reducers/index'
-import { 
-  PreSendSMSAction, 
-  SelectPhoneAction, 
+import {
+  PreSendSMSAction,
+  SelectPhoneAction,
   CancelSelectPhoneAction,
   FetchAllTemplateAction,
   SelectAllPhoneAction,
@@ -26,7 +26,7 @@ import { ToListableStatusAction } from '../actions/customer.action'
       <div class="hz-customer-sms-content">
         <hz-customer-manage-content-item *ngFor="let item of (contentItems$ | async)">
           <div class="name">{{item.name}}</div>
-        
+
           <div class="content" *ngFor="let value of item.items; trackBy: trackByFn">
             <div class="value">
               <span>{{value.value}}</span>
@@ -37,7 +37,7 @@ import { ToListableStatusAction } from '../actions/customer.action'
         </hz-customer-manage-content-item>
       </div>
 
-      <hz-customer-manage-template type="sms" [templates]="smsTemplates$ | async" 
+      <hz-customer-manage-template type="sms" [templates]="smsTemplates$ | async"
       (sendSms)="send($event)" (cancelSms)="cancelSms()"></hz-customer-manage-template>
     </div>
   `,
@@ -74,11 +74,11 @@ export class HzCustomerSmsManageComponent implements OnInit {
     this.smsTemplates$ = this.store.select(getSmsTemplates)
   }
 
-  trackByFn(index, item) {
+  trackByFn(_, item) {
     return item.value
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.store.dispatch(new FetchAllTemplateAction())
   }
 

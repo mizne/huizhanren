@@ -7,17 +7,17 @@ import {
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
-import { ToTabsPageAction } from '../../app/app.action'
-import { 
-  State, 
-  getPhone, 
-  getAdminName, 
-  getUserName, 
-  getCompanyName, 
-  getExhibitions 
-} from './reducers/index'
-import { SelectExhibitionAction } from './actions/exhibitions.action'
-import { Exhibition } from './models/exhibition.model'
+import { ToTabsPageAction } from '../../../app/app.action'
+import {
+  State,
+  getPhone,
+  getAdminName,
+  getUserName,
+  getCompanyName,
+  getExhibitions
+} from '../reducers/index'
+import { SelectExhibitionAction } from '../actions/exhibitions.action'
+import { Exhibition } from '../models/exhibition.model'
 
 @Component({
   template: `
@@ -27,7 +27,7 @@ import { Exhibition } from './models/exhibition.model'
     <ion-title>
       欢迎您 {{companyName$ | async}}
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -85,8 +85,8 @@ export class WelcomeModal implements OnDestroy {
   private subscription: Subscription
 
   constructor(
-    public params: NavParams, 
-    public viewCtrl: ViewController, 
+    public params: NavParams,
+    public viewCtrl: ViewController,
     private store: Store<State>
   ) {
     this.phone$ = store.select(getPhone)

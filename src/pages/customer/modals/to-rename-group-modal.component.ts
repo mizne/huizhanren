@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core'
+import { Component } from '@angular/core'
 import {
   NavParams,
   ViewController,
@@ -6,10 +6,8 @@ import {
 } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
-import { Observable } from 'rxjs/Observable'
-import { State, getGroups } from '../reducers'
-import { Group } from '../models/group.model'
-import { CreateAction, EnsureRenameGroupAction } from '../actions/group.action'
+import { State } from '../reducers'
+import { EnsureRenameGroupAction } from '../actions/group.action'
 
 @Component({
   template: `
@@ -65,12 +63,12 @@ styles: [`
 })
 export class ToRenameGroupModal {
 
-  private groupName: string
+  groupName: string
   private originalName: string
 
   constructor(
-    public params: NavParams, 
-    public viewCtrl: ViewController, 
+    public params: NavParams,
+    public viewCtrl: ViewController,
     private toastCtrl: ToastController,
     private store: Store<State>,
   ) {

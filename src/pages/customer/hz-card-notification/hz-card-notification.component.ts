@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { State, getNotifications, getShowLog, getShowNotification } from '../reducers'
@@ -54,7 +54,7 @@ export class HzCardNotificationComponent implements OnInit {
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(private store: Store<State>) { 
+  constructor(private store: Store<State>) {
     this.notifications$ = store.select(getNotifications)
     this.showLog$ = store.select(getShowLog)
     this.showNotification$ = store.select(getShowNotification)

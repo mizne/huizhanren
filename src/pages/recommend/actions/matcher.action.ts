@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Matcher, MatcherStatus, FetchMatcherParams } from '../models/matcher.model'
+import { Matcher, FetchMatcherParams } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Recommend] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Recommend] Fetch Matchers Success'

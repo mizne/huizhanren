@@ -3,7 +3,7 @@ import {
   ViewEncapsulation,
   Input,
   ElementRef,
-  Host, 
+  Host,
   HostBinding,
   Output,
   EventEmitter
@@ -78,7 +78,6 @@ export class HzCollapseComponent {
   _selected;
 
   private timeId: number
-  private lastScrollTop: number
 
   @Input() nzActive: boolean;
 
@@ -109,11 +108,11 @@ export class HzCollapseComponent {
     return `${this.nzTitle}(${this.num})`
   }
 
-  change(ev) {
+  change() {
     this.toggleSelect.emit()
   }
 
-  clickHeader($event) {
+  clickHeader() {
     this.toggleActive.emit()
   }
 
@@ -123,12 +122,6 @@ export class HzCollapseComponent {
 
   scrollHandler(ev: Event) {
     const scrollTop = (ev.target as HTMLDivElement).scrollTop
-
-    // if (this.lastScrollTop === scrollTop) {
-    //   return 
-    // }
-
-    // this.lastScrollTop = scrollTop
 
     if (this.timeId) {
       window.clearTimeout(this.timeId)

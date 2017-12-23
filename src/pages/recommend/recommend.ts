@@ -2,9 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 import {
   NavController,
   ToastController,
-  ModalController,
-  LoadingController,
-  App,
   IonicPage
 } from 'ionic-angular'
 
@@ -25,7 +22,6 @@ import {
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
-  ChangePageStatusAction,
   TogglePageStatusAction,
   ChangeListStatusAction,
   FetchRecommendAction,
@@ -38,7 +34,6 @@ import {
   ToCancelMatcherAction,
   ToAgreeMatcherAction,
   ToRefuseMatcherAction,
-  AgreeMatcherAction,
  } from './actions/matcher.action'
 
 import {
@@ -53,10 +48,9 @@ import {
 } from './models/recommend.model'
 import { DestroyService } from '../../providers/destroy.service'
 
-import { Logger, LoggerLevel } from '../customer/models/logger.model'
+import { Logger } from '../customer/models/logger.model'
 import { Customer } from './models/recommend.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
-import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
 
 @IonicPage()
 @Component({
@@ -109,9 +103,6 @@ export class RecommendPage implements OnInit, OnDestroy {
   constructor(
     public navCtrl: NavController,
     private toastCtrl: ToastController,
-    private modalCtrl: ModalController,
-    private loadCtrl: LoadingController,
-    private app: App,
     private store: Store<State>,
     private destroyService: DestroyService
   ) {}

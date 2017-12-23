@@ -1,4 +1,4 @@
-import { Component, VERSION } from '@angular/core'
+import { Component } from '@angular/core'
 import { IonicPage } from 'ionic-angular'
 import { FormControl } from '@angular/forms'
 
@@ -10,17 +10,14 @@ import { Store } from '@ngrx/store'
 
 import {
   InitialAction,
-  CreateAction,
   ToDetailableStatusAction,
   ToEditableStatusAction,
   ToListableStatusAction,
-  ToCreateableStatusAction,
   SelectCustomerAction,
   CancelSelectCustomerAction,
   ToggleShowLogAction,
   ToggleShowNotificationAction,
   ToDeleteAction,
-  ToDiscardAction,
   PreCreateAction,
   PreDeleteAction,
   EnsureGroupScrollTopAction
@@ -38,7 +35,6 @@ import {
   State,
   getCustomers,
   getCustomerPageStatus,
-  getShowDetailCustomerId,
   getGroups,
   getManageableStatus,
   getShowLog,
@@ -51,7 +47,7 @@ import {
 } from './reducers/index'
 import { CustomerPateStatus } from './reducers/customer.reducer'
 import { NestGroup } from './models/group.model'
-import { CustomField, FieldItem } from './models/card.model'
+import { CustomField } from './models/card.model'
 
 import { fakeJson } from '../../fake/fake'
 import { environment } from '../../environments/environment'
@@ -179,10 +175,6 @@ export class CustomerPage {
 
     return findCompany || findCustomerName || findPhone
   }
-
-  ionViewDidLoad() {}
-
-  ionViewDidEnter() {}
 
   onSelectCustomer(ev) {
     if (ev.selected) {

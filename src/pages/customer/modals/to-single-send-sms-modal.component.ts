@@ -9,8 +9,8 @@ import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
 import { State, getSmsTemplates } from '../reducers/index'
-import { 
-  CancelSingleSendSMSAction, 
+import {
+  CancelSingleSendSMSAction,
   EnsureSingleSendSMSAction,
   FetchAllTemplateAction
  } from '../actions/sms.action'
@@ -24,14 +24,14 @@ import {
     <ion-title>
       发送短信
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
   <div class="modal-body">
     <div class="select-template">请选择模板</div>
     <div *ngIf="(templates$ | async)?.length > 0" class="show-template-area">
-      <div class="template-item" *ngFor="let template of templates$ | async" [class.active]="selectedTemplate === template" 
+      <div class="template-item" *ngFor="let template of templates$ | async" [class.active]="selectedTemplate === template"
         (click)="selectTemplate(template)">
         {{template.label}}
       </div>
@@ -94,13 +94,13 @@ styles: [`
 })
 export class ToSingleSendSMSModal implements OnInit, OnDestroy {
   private phone: string
-  private selectedTemplate: SmsTemplate
+  selectedTemplate: SmsTemplate
 
   private subscription: Subscription
-  private templates$: Observable<SmsTemplate[]>
+  templates$: Observable<SmsTemplate[]>
 
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>,
     private toastCtrl: ToastController

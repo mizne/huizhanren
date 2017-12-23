@@ -7,7 +7,6 @@ import { APIResponse } from './interceptor'
 import { TenantService } from './tenant.service'
 import { SmsTemplate, SmsContent } from '../pages/customer/models/sms.model'
 
-import { phoneRe } from '../pages/customer/services/utils'
 import { environment } from '../environments/environment'
 
 /*
@@ -41,15 +40,15 @@ export class SmsService {
   }
 
   verifyCode(phone: string, code: string): Observable<any> {
-    // return environment.production
-    // ? this.http.post(this.fetchUrl, {
-    //   phoneNumber: phone,
-    //   verifyCode: code
-    // })
-    // .catch(this.handleError)
-    // : Observable.of({})
+    return environment.production
+    ? this.http.post(this.fetchUrl, {
+      phoneNumber: phone,
+      verifyCode: code
+    })
+    .catch(this.handleError)
+    : Observable.of({})
 
-    return Observable.of({})
+    // return Observable.of({})
   }
 
   createSmsTemplate() {}

@@ -1,10 +1,6 @@
 import { Component } from '@angular/core'
-import { NavController, LoadingController, ToastController } from 'ionic-angular'
+import { LoadingController, ToastController } from 'ionic-angular'
 
-import { InteractivePage } from '../interactive/interactive'
-// import { ContactPage } from '../contact/contact'
-import { ServicePage } from '../service/service'
-import { SettingsPage } from '../settings/settings'
 import { CustomerPage } from '../customer/customer'
 
 import { RecommendPage } from '../recommend/recommend'
@@ -40,7 +36,6 @@ import { ToCreateableStatusAction } from '../customer/actions/customer.action'
 export class TabsPage {
   tab1Root = CustomerPage
   tab2Root = RecommendPage
-  // tab3Root = ContactPage
   tab4Root = ExhibitorsPage
   tab5Root = MorePage
 
@@ -57,7 +52,6 @@ export class TabsPage {
   }
 
   constructor(
-    private navCtrl: NavController,
     private camera: Camera,
     private ocrService: OcrService,
     private loadingCtrl: LoadingController,
@@ -117,13 +111,13 @@ export class TabsPage {
               this.parseCardFailed()
             }
           },
-          err => {
+          () => {
             loading.dismiss()
             this.parseCardFailed()
           }
         )
       })
-      .catch(e => {
+      .catch(() => {
         this.cancelTakeCamera()
       })
   }

@@ -7,24 +7,24 @@ import {
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
 import {
-  CancelSendSMSAction,
-  EnsureSendSMSAction
- } from '../actions/sms.action'
+  CancelDeleteUserAction,
+  EnsureDeleteUserAction
+ } from '../actions/user-management.action'
 
 @Component({
   template: `
-<div class="hz-modal to-send-sms-modal">
+<div class="hz-modal to-delete-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
-      发送短信
+      删除用户
     </ion-title>
 
   </ion-toolbar>
   </ion-header>
   <ion-content>
   <div class="modal-body">
-    确定要给选择的 {{count}} 个号码群发短信吗？
+    确定删除此用户么?
   </div>
   <div class="modal-footer">
     <button type="button" class="hz-btn" (click)="cancel()">取消</button>
@@ -37,26 +37,22 @@ styles: [`
   .modal-wrapper {
     height: 300px;
   }
-  .to-send-sms-modal {
+  .to-delete-modal {
     height: 300px;
   }
-  .to-send-sms-modal .modal-body {
+  .to-delete-modal .modal-body {
     display: flex;
     align-items: center;
     font-size: 18px;
   }
 `]
 })
-export class ToSendSMSModal {
-  private templateId: string
-  count: string
+export class ToDeleteUserModal {
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>
   ) {
-    this.templateId = params.get('templateId')
-    this.count = params.get('count')
   }
 
   private dismiss(data?): void {
@@ -65,11 +61,11 @@ export class ToSendSMSModal {
 
   cancel() {
     this.dismiss()
-    this.store.dispatch(new CancelSendSMSAction())
+    this.store.dispatch(new CancelDeleteUserAction())
   }
 
   complete() {
     this.dismiss(true)
-    this.store.dispatch(new EnsureSendSMSAction(this.templateId))
+    this.store.dispatch(new EnsureDeleteUserAction(this.params.get('userId')))
   }
 }

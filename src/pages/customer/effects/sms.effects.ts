@@ -5,7 +5,6 @@ import { Observable } from 'rxjs/Observable'
 import {
   ModalController,
   ToastController,
-  LoadingController
 } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
@@ -88,7 +87,7 @@ export class SmsEffects {
 
     return this.smsService
     .sendMessage(template.id, smsContents)
-    .concatMap(res => {
+    .concatMap(() => {
 
       return [
         new fromSms.SendSMSSuccessAction(),
@@ -100,7 +99,7 @@ export class SmsEffects {
         new fromCustomer.ToListableStatusAction()
       ]
     })
-    .catch(err => Observable.of(new fromSms.SendSMSFailureAction()))
+    .catch(() => Observable.of(new fromSms.SendSMSFailureAction()))
   }
   )
 
@@ -110,8 +109,8 @@ export class SmsEffects {
   .withLatestFrom(this.store.select(getSelectedExhibitionId))
   .mergeMap(([customerIds, exhibitionId]) => {
     return this.customerService.markCustomersHasSendSms(customerIds, exhibitionId)
-    .map(e => new fromSms.MarkCustomerHasSendSMSSuccessAction())
-    .catch(e => Observable.of(new fromSms.MarkCustomerHasSendSMSFailureAction()))
+    .map(() => new fromSms.MarkCustomerHasSendSMSSuccessAction())
+    .catch(() => Observable.of(new fromSms.MarkCustomerHasSendSMSFailureAction()))
   })
 
   @Effect()
@@ -180,7 +179,7 @@ export class SmsEffects {
       content: [customer.name, `${SMS_TEMPLATE_BASE_URL}/${exhibitionId}`]
     }]
     return this.smsService.sendMessage(template.id, smsContents)
-    .concatMap(e => [
+    .concatMap(() => [
       new fromSms.SingleSendSMSSuccessAction(),
       new fromLogger.CreateLoggerAction({
         level: 'sys',
@@ -188,7 +187,7 @@ export class SmsEffects {
       }),
       new fromSms.MarkCustomerHasSendSMSAction([customer.id])
     ])
-    .catch(e => Observable.of(new fromSms.SingleSendSMSFailureAction()))
+    .catch(() => Observable.of(new fromSms.SingleSendSMSFailureAction()))
   })
 
 
@@ -199,7 +198,7 @@ export class SmsEffects {
     this.smsService
       .fetchAllTemplate()
       .map(res => new fromSms.FetchAllTemplateSuccessAction(res))
-      .catch(err => Observable.of(new fromSms.FetchAllTemplateFailureAction()))
+      .catch(() => Observable.of(new fromSms.FetchAllTemplateFailureAction()))
   )
 
   @Effect({ dispatch: false })
@@ -228,7 +227,6 @@ export class SmsEffects {
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private smsService: SmsService,
-    private loadCtrl: LoadingController,
     private store: Store<State>,
     private customerService: CustomerService
   ) {}

@@ -26,7 +26,7 @@ export class MatcherEffects {
       this.matcherService
         .fetchMatchers(pageIndex, pageSize)
         .map(matchers => new fromMatcher.FetchMatchersSuccessAction(matchers))
-        .catch(err =>
+        .catch(() =>
           Observable.of(new fromMatcher.FetchMatchersFailureAction())
         )
     )
@@ -37,7 +37,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToCancelMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToCancelMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -101,7 +101,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToAgreeMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToAgreeMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -174,7 +174,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToRefuseMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToRefuseMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)

@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Exhibition } from '../pages/login/models/exhibition.model'
+import { Exhibition } from '../models/exhibition.model'
 
 @Pipe({
   name: 'duration'
 })
 export class DurationPipe implements PipeTransform {
-  transform(exhibition: Exhibition, group: string): any {
+  transform(exhibition: Exhibition): any {
 
     return DurationPipe.convertDate(exhibition.startTime) + ' - ' + DurationPipe.convertDate(exhibition.endTime)
   }

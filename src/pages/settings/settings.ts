@@ -3,8 +3,6 @@ import {
   NavController,
   ToastController,
   ModalController,
-  LoadingController,
-  App
 } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -18,11 +16,10 @@ import { isAdmin, getAdminName, getUserName } from '../login/reducers'
 import { UserManagementPage } from './user-management/user-management'
 import { SmsTemplatePage } from './sms-template/sms-template'
 
-import { LogoutModal } from './logout-modal.component'
-import { LoginPage } from '../login/login'
+import { LogoutModal } from './modals/logout-modal.component'
 import { HzAboutPage } from './about/about'
 
-import { ToDownloadModal } from './to-download-modal.component'
+import { ToDownloadModal } from './modals/to-download-modal.component'
 
 @Component({
   selector: 'page-settings',
@@ -163,8 +160,6 @@ export class SettingsPage implements OnInit, OnDestroy {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private modalCtrl: ModalController,
-    private loadCtrl: LoadingController,
-    private app: App,
     private store: Store<State>
   ) {}
 
@@ -219,8 +214,6 @@ export class SettingsPage implements OnInit, OnDestroy {
 
     logoutModal.onDidDismiss(ensure => {
       if (ensure) {
-        // this.app.getRootNav().setRoot(LoginPage)
-
         this.store.dispatch(new ToLoginPageAction())
       }
     })

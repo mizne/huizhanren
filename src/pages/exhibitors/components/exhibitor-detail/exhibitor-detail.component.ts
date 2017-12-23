@@ -2,7 +2,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { ToastController } from 'ionic-angular'
 
 import { Portray, Exhibitor, Product } from '../../models/exhibitor.model'
-import { ExhibitorMatcher } from '../../models/matcher.model'
 import { Logger } from '../../../customer/models/logger.model'
 
 @Component({

@@ -44,7 +44,7 @@ export class RecommendEffects {
           loadingCtrl.dismiss()
           return new fromRecommend.FetchRecommendSuccessAction(recommends)
         })
-        .catch(err => {
+        .catch(() => {
           loadingCtrl.dismiss()
           return Observable.of(new fromRecommend.FetchRecommendFailureAction())
         })
@@ -75,7 +75,7 @@ export class RecommendEffects {
     )
     .mergeMap(params => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToInviteCustomerModal, params)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -148,7 +148,7 @@ export class RecommendEffects {
     .ofType(fromRecommend.TO_CREATE_LOGGER)
     .mergeMap(() => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
           loggerModal.onDidDismiss((log: Logger) => {
@@ -174,7 +174,7 @@ export class RecommendEffects {
     .mergeMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
-        .concatMap(res => {
+        .concatMap(() => {
           // 系统日志 不弹出toast
           if (log.level === 'sys') {
             return [new fromRecommend.FetchLoggerAction(customerId)]
@@ -185,7 +185,7 @@ export class RecommendEffects {
             ]
           }
         })
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromRecommend.CreateLoggerFailureAction())
         )
     )
@@ -222,7 +222,7 @@ export class RecommendEffects {
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromRecommend.FetchLoggerSuccessAction(logs))
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromRecommend.FetchLoggerFailureAction())
         )
     )

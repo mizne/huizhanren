@@ -47,7 +47,7 @@ export class ExhibitorEffects {
           loadingCtrl.dismiss()
           return new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
         })
-        .catch(err => {
+        .catch(() => {
           loadingCtrl.dismiss()
           return Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
         })
@@ -77,7 +77,7 @@ export class ExhibitorEffects {
     )
     .mergeMap(params => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToInviteExhibitorModal, params)
           modal.onDidDismiss(boothNo => {
             res(boothNo)
@@ -171,7 +171,7 @@ export class ExhibitorEffects {
     .ofType(fromExhibitor.TO_CREATE_LOGGER)
     .mergeMap(() => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
           loggerModal.onDidDismiss((log: Logger) => {
@@ -197,7 +197,7 @@ export class ExhibitorEffects {
     .mergeMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
-        .concatMap(res => {
+        .concatMap(() => {
           // 系统日志 不弹出toast
           if (log.level === 'sys') {
             return [new fromExhibitor.FetchLoggerAction(customerId)]
@@ -208,7 +208,7 @@ export class ExhibitorEffects {
             ]
           }
         })
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromExhibitor.CreateLoggerFailureAction())
         )
     )
@@ -245,7 +245,7 @@ export class ExhibitorEffects {
       this.loggerService
         .fetchLogger(exhibitionID)
         .map(logs => new fromExhibitor.FetchLoggerSuccessAction(logs))
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromExhibitor.FetchLoggerFailureAction())
         )
     )

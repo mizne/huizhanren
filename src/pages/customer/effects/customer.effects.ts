@@ -24,7 +24,6 @@ import { isAdmin, getSelectedExhibitionId } from '../../login/reducers'
 
 import * as fromCustomer from '../actions/customer.action'
 import * as fromCard from '../actions/card.action'
-import * as fromLogger from '../actions/logger.action'
 
 import { CustomerService } from '../services/customer.service'
 import { LoggerService } from '../../../providers/logger.service'
@@ -52,7 +51,7 @@ export class CustomerEffects {
         loadingCtrl.dismiss()
         return new fromCustomer.InitialSuccessAction(res)
       })
-      .catch(err => {
+      .catch(() => {
         loadingCtrl.dismiss()
         return Observable.of(new fromCustomer.InitialFailureAction())
       })
@@ -88,7 +87,7 @@ export class CustomerEffects {
     .withLatestFrom(this.store.select(getFields1))
     .withLatestFrom(
       this.store.select(getCustomerPageStatus),
-      ([action, fields1], pageStatus) => ({ fields1, pageStatus })
+      ([_, fields1], pageStatus) => ({ fields1, pageStatus })
     )
     .map(({ fields1, pageStatus }) => {
       if (!fields1[0].value) {
@@ -175,8 +174,8 @@ export class CustomerEffects {
     .mergeMap(({ log, customerId }) => {
       return this.loggerService
         .createLog(log, customerId)
-        .map(e => new fromCustomer.CreateSysLoggerSuccessAction())
-        .catch(e => Observable.of(new fromCustomer.CreateSysLoggerFailureAction()))
+        .map(() => new fromCustomer.CreateSysLoggerSuccessAction())
+        .catch(() => Observable.of(new fromCustomer.CreateSysLoggerFailureAction()))
     })
 
   @Effect({ dispatch: false })
@@ -264,12 +263,12 @@ export class CustomerEffects {
     .mergeMap(({ customers, groupId, exhibitionId }) => {
       return this.customerService
         .batchEditCustomerGroupId(customers, groupId, exhibitionId)
-        .concatMap(res => [
+        .concatMap(() => [
           new fromCustomer.BatchEditGroupSuccessAction(),
           new fromCustomer.ToListableStatusAction(),
           new fromCustomer.FetchAllAction()
         ])
-        .catch(error => Observable.of(new fromCustomer.BatchEditGroupFailureAction()))
+        .catch(() => Observable.of(new fromCustomer.BatchEditGroupFailureAction()))
     })
 
   @Effect({ dispatch: false })
@@ -329,14 +328,14 @@ export class CustomerEffects {
     .mergeMap(({ groupId, customer, exhibitionId }) => {
       return this.customerService
         .singleEditCustomerGroupId(customer, groupId, exhibitionId)
-        .concatMap(res => {
+        .concatMap(() => {
           return [
             new fromCustomer.SingleEditGroupSuccessAction(),
             new fromCustomer.ToListableStatusAction(),
             new fromCustomer.FetchAllAction()
           ]
         })
-        .catch(error => Observable.of(new fromCustomer.SingleEditGroupFailureAction()))
+        .catch(() => Observable.of(new fromCustomer.SingleEditGroupFailureAction()))
     })
 
   @Effect({ dispatch: false })
@@ -371,7 +370,7 @@ export class CustomerEffects {
     .withLatestFrom(this.store.select(getCustomerPageStatus))
     .withLatestFrom(
       this.store.select(getShowDetailCustomerId),
-      ([action, pageStatus], customerId) => ({ pageStatus, customerId })
+      ([_, pageStatus], customerId) => ({ pageStatus, customerId })
     )
     .withLatestFrom(
       this.store.select(getShowDetailGroupId),
@@ -450,12 +449,12 @@ export class CustomerEffects {
         ? this.customerService.batchDeleteCustomer(customerIds)
         : this.customerService.singleDeleteCustomer(showDetailCustomerId)
       )
-        .concatMap(res => [
+        .concatMap(() => [
           new fromCustomer.DeleteSuccessAction(),
           new fromCustomer.ToListableStatusAction(),
           new fromCustomer.FetchAllAction()
         ])
-        .catch(error => Observable.of(new fromCustomer.DeleteFailureAction()))
+        .catch(() => Observable.of(new fromCustomer.DeleteFailureAction()))
     })
 
   @Effect({ dispatch: false })
@@ -481,7 +480,7 @@ export class CustomerEffects {
   })
 
   @Effect({ dispatch: false })
-  toDiscard$ = this.actions$.ofType(fromCustomer.TO_DISCARD).do(multi => {
+  toDiscard$ = this.actions$.ofType(fromCustomer.TO_DISCARD).do(() => {
     this.modalCtrl.create(ToDiscardModal).present()
   })
 
@@ -496,7 +495,7 @@ export class CustomerEffects {
     .withLatestFrom(this.store.select(getCardInfo))
     .withLatestFrom(
       this.store.select(getShowDetailCustomerId),
-      ([action, cardInfo], customerId) => ({ cardInfo, customerId })
+      ([_, cardInfo], customerId) => ({ cardInfo, customerId })
     )
     .withLatestFrom(
       this.store.select(getCardBehindImg),
@@ -542,7 +541,7 @@ export class CustomerEffects {
           )
         : this.customerService.editCustomer(customer, customerId, exhibitionId)
       )
-        .concatMap(res => {
+        .concatMap(() => {
           loadingCtrl.dismiss()
           return [
             new fromCustomer.EditCustomerSuccessAction(),
@@ -550,7 +549,7 @@ export class CustomerEffects {
             new fromCustomer.FetchAllAction()
           ]
         })
-        .catch(error => {
+        .catch(() => {
           loadingCtrl.dismiss()
           return Observable.of(new fromCustomer.EditCustomerFailureAction())
         })
@@ -588,7 +587,7 @@ export class CustomerEffects {
     .withLatestFrom(this.store.select(getCustomers))
     .withLatestFrom(
       this.store.select(getShowDetailCustomerId),
-      ([action, customers], customerId) => ({ customers, customerId })
+      ([_, customers], customerId) => ({ customers, customerId })
     )
     .map(({ customers, customerId }) => {
       return new fromCard.InitialEditCardAction(
@@ -619,7 +618,7 @@ export class CustomerEffects {
           new fromCustomer.RemoveCustomerGroupIdSuccessAction(),
           new fromCustomer.FetchAllAction()
         ])
-        .catch(e => Observable.of(new fromCustomer.RemoveCustomerGroupIdFailureAction()))
+        .catch(() => Observable.of(new fromCustomer.RemoveCustomerGroupIdFailureAction()))
     })
 
   constructor(

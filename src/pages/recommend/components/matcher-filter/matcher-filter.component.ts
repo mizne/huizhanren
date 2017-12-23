@@ -19,8 +19,6 @@ export class HzMatcherFilterComponent implements OnInit {
   notAllowAuditControl: FormControl = new FormControl(false)
   unReplyControl: FormControl = new FormControl(false)
 
-  constructor() {}
-
   ngOnInit() {
     Observable.combineLatest(
       this.unAuditControl.valueChanges.startWith(false),

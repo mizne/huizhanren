@@ -4,28 +4,20 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
-import { Store } from '@ngrx/store'
-import { State } from './reducers/index'
-import { 
-  CancelDeleteUserAction, 
-  EnsureDeleteUserAction
- } from './actions/user-management.action'
-
 @Component({
   template: `
-<div class="hz-modal to-delete-modal">
+<div class="hz-modal hz-logout-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
-      删除用户
+      退出
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
   <div class="modal-body">
-    确定删除此用户么?
+    确定退出此账户?
   </div>
   <div class="modal-footer">
     <button type="button" class="hz-btn" (click)="cancel()">取消</button>
@@ -38,21 +30,21 @@ styles: [`
   .modal-wrapper {
     height: 300px;
   }
-  .to-delete-modal {
+  .hz-logout-modal {
     height: 300px;
   }
-  .to-delete-modal .modal-body {
+  .hz-logout-modal .modal-body {
     display: flex;
     align-items: center;
     font-size: 18px;
   }
 `]
 })
-export class ToDeleteUserModal {
+export class LogoutModal {
+
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
-    private store: Store<State>
   ) {
   }
 
@@ -62,11 +54,9 @@ export class ToDeleteUserModal {
 
   cancel() {
     this.dismiss()
-    this.store.dispatch(new CancelDeleteUserAction())
   }
 
   complete() {
     this.dismiss(true)
-    this.store.dispatch(new EnsureDeleteUserAction(this.params.get('userId')))
   }
 }

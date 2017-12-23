@@ -1,12 +1,9 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import {
   NavParams,
   ViewController,
   ToastController
 } from 'ionic-angular'
-
-import { Store } from '@ngrx/store'
-import { State } from '../../../reducers/index'
 
 import { Logger, LoggerLevel } from '../models/logger.model';
 
@@ -141,11 +138,9 @@ export class ToCreateLoggerModal {
   @ViewChild('text') el: ElementRef
 
   constructor(
-    public params: NavParams, 
-    public viewCtrl: ViewController, 
+    public params: NavParams,
+    public viewCtrl: ViewController,
     private toastCtrl: ToastController,
-    private store: Store<State>,
-    private rd: Renderer2
   ) {
 
   }
@@ -179,6 +174,6 @@ export class ToCreateLoggerModal {
         position: 'top'
       }).present()
     }
-    
+
   }
 }

@@ -3,16 +3,16 @@ import {
   IonicPage,
   ToastController,
 } from 'ionic-angular'
-import { Storage } from '@ionic/storage'
 
 import { Store } from '@ngrx/store'
 import { State } from './reducers/index'
-import { 
-  ToVerifyCodeAction, 
+import {
+  ToVerifyCodeAction,
   VerifyCodeSuccessAction
 } from './actions/verify-code.action'
 
 import { FetchAllExhibitionsAction } from './actions/exhibitions.action'
+import { TenantService } from '../../providers/tenant.service'
 /**
  * Generated class for the LoginPage page.
  *
@@ -27,20 +27,19 @@ import { FetchAllExhibitionsAction } from './actions/exhibitions.action'
 })
 export class LoginPage {
 
-  // private phone: string = '13585130223'
-  private phone: string = ''
+  phone: string = ''
 
   constructor(
-    private storage: Storage,
     private toastCtrl: ToastController,
     private store: Store<State>,
+    private tenantService: TenantService
   ) {}
 
   ionViewDidLoad() {
-    this.storage.get('loginName')
-    .then(s => {
-      if (s) {
-        this.phone = s
+    this.tenantService.getLoginName()
+    .then((name) => {
+      if (name) {
+        this.phone = name
       }
     })
   }
@@ -55,7 +54,7 @@ export class LoginPage {
     }
 
     // 如果此手机号已验证过 则直接登录 无需再次验证
-    this.storage.get(this.phone)
+    this.tenantService.hasVerify(this.phone)
     .then(hasVerify => {
       if (hasVerify) {
         this.store.dispatch(new VerifyCodeSuccessAction({

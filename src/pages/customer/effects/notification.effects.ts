@@ -17,7 +17,7 @@ export class NotificationEffects {
   @Effect()
   toCreateNotification$ = this.actions$.ofType(fromNotification.TO_CREATE_NOTIFICATION)
   .mergeMap(() => {
-    return Observable.fromPromise(new Promise((res, rej) => {
+    return Observable.fromPromise(new Promise((res, _) => {
       const notificationModal = this.modalCtrl.create(ToCreateNotificationModal, {})
 
       notificationModal.onDidDismiss((notification: Notification) => {
@@ -40,11 +40,11 @@ export class NotificationEffects {
   .withLatestFrom(this.store.select(getShowDetailCustomerId))
   .mergeMap(([notification, customerId]) =>
     this.notificationService.createNotification(notification, customerId)
-    .concatMap(res => [
+    .concatMap(() => [
       new fromNotification.CreateNotificationSuccessAction(),
       new fromNotification.FetchNotificationAction()
     ])
-    .catch(error => Observable.of(new fromNotification.CreateNotificationFailureAction()))
+    .catch(() => Observable.of(new fromNotification.CreateNotificationFailureAction()))
   )
 
   @Effect({ dispatch: false })
@@ -74,7 +74,7 @@ export class NotificationEffects {
   toEditNotification$ = this.actions$.ofType(fromNotification.TO_EDIT_NOTIFICATION)
   .map((action: fromNotification.ToEditNotificationAction) => action.notification)
   .mergeMap((notification: Notification) => {
-    return Observable.fromPromise(new Promise((res, rej) => {
+    return Observable.fromPromise(new Promise((res, _) => {
       const notificationModal = this.modalCtrl.create(ToEditNotificationModal, notification)
 
       notificationModal.onDidDismiss((notification: Notification) => {
@@ -97,11 +97,11 @@ export class NotificationEffects {
   .map((action: fromNotification.EditNotificationAction) => action.notification)
   .mergeMap(notification =>
     this.notificationService.editNotification(notification)
-    .concatMap(res => [
+    .concatMap(() => [
       new fromNotification.EditNotificationSuccessAction(),
       new fromNotification.FetchNotificationAction()
     ])
-    .catch(error => Observable.of(new fromNotification.EditNotificationFailureAction()))
+    .catch(() => Observable.of(new fromNotification.EditNotificationFailureAction()))
   )
 
   @Effect({ dispatch: false })
@@ -135,7 +135,7 @@ export class NotificationEffects {
   .mergeMap(([_, customerId]) =>
     this.notificationService.fetchNotifications(customerId)
     .map(notifications => new fromNotification.FetchNotificationSuccessAction(notifications))
-    .catch(error => Observable.of(new fromNotification.FetchNotificationFailureAction()))
+    .catch(() => Observable.of(new fromNotification.FetchNotificationFailureAction()))
   )
 
   @Effect({ dispatch: false })

@@ -1,6 +1,5 @@
 import * as fromRecommend from '../actions/recommend.action'
 import { Recommend, ListStatus, PageStatus } from '../models/recommend.model'
-import { CHANGE_PAGE_STATUS } from '../actions/recommend.action'
 import { Logger } from '../../customer/models/logger.model'
 
 export interface State {

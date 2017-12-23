@@ -3,15 +3,13 @@ import { Store } from '@ngrx/store'
 import { Effect, Actions, toPayload } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
-import { Storage } from '@ionic/storage'
 import { ModalController, ToastController } from 'ionic-angular'
 
 import * as fromVerifyCode from '../actions/verify-code.action'
 import * as fromExhibitions from '../actions/exhibitions.action'
-import { VerifyCodeModal } from '../verify-code-modal.component'
-import { WelcomeModal } from '../welcome-modal.component'
-import { LoginService } from '../../../providers/login.service'
+import { VerifyCodeModal } from '../modals/verify-code-modal.component'
 import { SmsService } from '../../../providers/sms.service'
+import { TenantService } from '../../../providers/tenant.service'
 
 import { State, getPhone } from '../reducers/index'
 
@@ -21,9 +19,9 @@ export class VerifyCodeEffects {
   toVerifyCode$ = this.actions$
     .ofType(fromVerifyCode.TO_VERIFY_CODE)
     .map(toPayload)
-    .mergeMap(phone => {
+    .mergeMap(() => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const verifyCodeModal = this.modalCtrl.create(VerifyCodeModal, {})
           verifyCodeModal.onDidDismiss((data) => {
             res(data)
@@ -43,11 +41,11 @@ export class VerifyCodeEffects {
   fetchCode$ = this.actions$
     .ofType(fromVerifyCode.FETCH_CODE)
     .withLatestFrom(this.store.select(getPhone))
-    .mergeMap(([action, phone]) =>
+    .mergeMap(([_, phone]) =>
       this.smsService
       .fetchVerifyCode(phone)
-      .map(res => new fromVerifyCode.FetchCodeSuccessAction())
-      .catch(err => Observable.of(new fromVerifyCode.FetchCodeFailureAction()))
+      .map(() => new fromVerifyCode.FetchCodeSuccessAction())
+      .catch(() => Observable.of(new fromVerifyCode.FetchCodeFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -87,7 +85,7 @@ export class VerifyCodeEffects {
           new fromVerifyCode.VerifyCodeSuccessAction({ phone, code }),
           new fromExhibitions.FetchAllExhibitionsAction(phone)
         ])
-        .catch(err => Observable.of(new fromVerifyCode.VerifyCodeFailureAction()))
+        .catch(() => Observable.of(new fromVerifyCode.VerifyCodeFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -95,8 +93,7 @@ export class VerifyCodeEffects {
     .ofType(fromVerifyCode.VERIFY_CODE_SUCCESS)
     .map(toPayload)
     .do(({ phone }) => {
-      this.storage.set(phone, true)
-      this.storage.set('loginName', phone)
+      this.tenantService.setLoginName(phone)
     })
 
   @Effect({ dispatch: false })
@@ -116,9 +113,8 @@ export class VerifyCodeEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private loginService: LoginService,
     private smsService: SmsService,
-    private storage: Storage,
+    private tenantService: TenantService,
     private store: Store<State>
   ) {}
 }

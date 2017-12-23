@@ -6,8 +6,6 @@ import { Store } from '@ngrx/store'
 import { State, getShowDetailCustomerId } from '../reducers'
 import { Observable } from 'rxjs/Observable'
 
-import { phoneRe } from '../services/utils'
-
 @Component({
   selector: 'hz-customer-item',
   template: `
@@ -39,15 +37,15 @@ export class HzCustomerItemComponent implements OnInit {
   @Input() customer: Customer
 
   @Output() select: EventEmitter<any> = new EventEmitter<any>()
-  
+
   @Output() toShowDetail: EventEmitter<string> = new EventEmitter<string>()
 
   selected: boolean
 
   hasChoosed$: Observable<boolean>
 
-  constructor(private store: Store<State>) { 
-    this.hasChoosed$ = store.select(getShowDetailCustomerId)
+  constructor(private store: Store<State>) {
+    this.hasChoosed$ = this.store.select(getShowDetailCustomerId)
     .map(e => e === this.customer.id)
   }
 
@@ -55,7 +53,7 @@ export class HzCustomerItemComponent implements OnInit {
     this.selected = this.customer.selected
   }
 
-  change(ev) {
+  change() {
     this.select.emit({
       id: this.customer.id,
       selected: this.selected

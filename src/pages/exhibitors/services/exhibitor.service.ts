@@ -33,7 +33,6 @@ const fakeExhibitors: RecommendExhibitor[] = Array.from(
 @Injectable()
 export class ExhibitorService {
   private fetchUrl: string = '/data/ExhibitionInfo'
-  private inviteUrl: string = '/data/insert/User'
 
   constructor(private http: HttpClient, private tenantService: TenantService) {}
 
@@ -53,7 +52,7 @@ export class ExhibitorService {
       ? this.tenantService
           .getTenantIdAndItemName()
           .mergeMap(([tenantId, itemName]) => {
-            let query = `?itemName=${itemName}`
+            const query = `?itemName=${itemName}&pageIndex=${pageIndex}&pageSize=${pageSize}`
             return this.http
               .get(this.fetchUrl + query)
               .map(e => (e as APIResponse).result)

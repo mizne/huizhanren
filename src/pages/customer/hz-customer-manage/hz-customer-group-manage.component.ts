@@ -21,8 +21,8 @@ import { Group } from '../models/group.model'
         </div>
       </div>
 
-      <hz-customer-manage-template type="group" [templates]="groups$ | async" 
-      (createTemplate)="toCreateTemplate($event)" (saveTemplate)="saveGroup($event)" 
+      <hz-customer-manage-template type="group" [templates]="groups$ | async"
+      (createTemplate)="toCreateTemplate($event)" (saveTemplate)="saveGroup($event)"
       (renameGroup)="toRenameGroup($event)" (delGroup)="toDelGroup($event)"
       (cancelGroup)="cancelGroup()"></hz-customer-manage-template>
     </div>
@@ -34,7 +34,7 @@ export class HzCustomerGroupManageComponent implements OnInit {
   headerItem$: Observable<any>
   groups$: Observable<any>
 
-  constructor(private store: Store<State>) { 
+  constructor(private store: Store<State>) {
     this.item$ = this.store.select(getSelectedCustomers)
     .map((customers) => {
       return {
@@ -59,7 +59,7 @@ export class HzCustomerGroupManageComponent implements OnInit {
     .map(groups => groups.map(e => ({id: e.id, label: e.name, preview: ''})))
   }
 
-  ngOnInit() { 
+  ngOnInit() {
   }
 
   close(id: string): void {
@@ -70,7 +70,7 @@ export class HzCustomerGroupManageComponent implements OnInit {
     this.store.dispatch(new ToListableStatusAction())
   }
 
-  toCreateTemplate(type: string) {
+  toCreateTemplate() {
     this.store.dispatch(new ToCreateAction())
   }
 

@@ -45,7 +45,7 @@ export class MatcherService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserId()
-          .mergeMap(([tenantId, userId]) => {
+          .mergeMap(([tenantId, _]) => {
             let query = `?role=E&tenantId=${tenantId}`
             if (params.pageIndex) {
               query += `&pageIndex=${params.pageIndex}`

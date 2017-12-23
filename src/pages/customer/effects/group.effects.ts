@@ -13,17 +13,17 @@ import { State, getSelectedExhibitionId } from '../../login/reducers'
 import * as fromGroup from '../actions/group.action'
 import * as fromCustomer from '../actions/customer.action'
 import { GroupService } from '../services/group.service'
-import { CreateGroupModal } from '../modals/to-create-group-modal.component'
+import { ToCreateGroupModal } from '../modals/to-create-group-modal.component'
 import { ToRenameGroupModal } from '../modals/to-rename-group-modal.component'
 import { ToDeleteGroupModal } from '../modals/to-delete-group-modal.component'
 
 @Injectable()
 export class GroupEffects {
   @Effect()
-  toCreate$ = this.actions$.ofType(fromGroup.TO_CREATE).mergeMap(phone => {
+  toCreate$ = this.actions$.ofType(fromGroup.TO_CREATE).mergeMap(() => {
     return Observable.fromPromise(
-      new Promise((res, rej) => {
-        const createGroupModal = this.modalCtrl.create(CreateGroupModal)
+      new Promise((res, _) => {
+        const createGroupModal = this.modalCtrl.create(ToCreateGroupModal)
         createGroupModal.onDidDismiss(groupName => {
           res(groupName)
         })
@@ -46,11 +46,11 @@ export class GroupEffects {
     .mergeMap(([groupName, exhibitionId]) =>
       this.groupService
         .createGroup(groupName, exhibitionId)
-        .concatMap(res => [
+        .concatMap(() => [
           new fromGroup.CreateSuccessAction(),
           new fromGroup.FetchAllAction()
         ])
-        .catch(err => Observable.of(new fromGroup.CreateFailureAction()))
+        .catch(() => Observable.of(new fromGroup.CreateFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -81,7 +81,7 @@ export class GroupEffects {
       this.groupService
         .fetchAllGroup()
         .map(res => new fromGroup.FetchAllSuccessAction(res))
-        .catch(err => Observable.of(new fromGroup.FetchAllFailureAction()))
+        .catch(() => Observable.of(new fromGroup.FetchAllFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -122,7 +122,7 @@ export class GroupEffects {
       new fromGroup.RenameGroupSuccessAction(),
       new fromGroup.FetchAllAction()
     ])
-    .catch(e => Observable.of(new fromGroup.RenameGroupFailureAction()))
+    .catch(() => Observable.of(new fromGroup.RenameGroupFailureAction()))
   })
 
   @Effect({ dispatch: false })
@@ -163,7 +163,7 @@ export class GroupEffects {
       new fromCustomer.RemoveCustomerGroupIdAction(groupId),
       new fromGroup.FetchAllAction()
     ])
-    .catch(e => Observable.of(new fromGroup.DeleteGroupFailureAction()))
+    .catch(() => Observable.of(new fromGroup.DeleteGroupFailureAction()))
   })
 
   @Effect({ dispatch: false })

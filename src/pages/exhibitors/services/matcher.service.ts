@@ -8,7 +8,6 @@ import { ExhibitorMatcher } from '../models/matcher.model'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
-import { ExhibitorService } from './exhibitor.service'
 
 const fakeMatchers: ExhibitorMatcher[] = Array.from(
   { length: 100 },
@@ -56,8 +55,8 @@ export class MatcherService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserId()
-          .mergeMap(([tenantId, userId]) => {
-            return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}`)
+          .mergeMap(([tenantId, _]) => {
+            return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}&pageIndex=${pageIndex}&pageSize=${pageSize}`)
           })
           .map(e => (e as APIResponse).result)
           .map(e => e.map(ExhibitorMatcher.convertFromResp))

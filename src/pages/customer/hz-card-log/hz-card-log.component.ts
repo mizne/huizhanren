@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { State, getLogs, getShowLog, getShowNotification } from '../reducers'

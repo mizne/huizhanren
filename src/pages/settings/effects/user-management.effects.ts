@@ -3,17 +3,15 @@ import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable';
 
 import { ModalController, ToastController } from 'ionic-angular'
-import { UserManagementPage } from '../user-management/user-management'
 
 import * as fromUserManagement from '../actions/user-management.action'
 import { UserService } from '../services/user.service'
 import { SmsService } from '../../../providers/sms.service'
-import { ToDeleteUserModal } from '../to-delete-user-modal.component'
-import { ToAddUserModal } from '../to-add-user-modal.component'
+import { ToDeleteUserModal } from '../modals/to-delete-user-modal.component'
+import { ToAddUserModal } from '../modals/to-add-user-modal.component'
 
 import { Store } from '@ngrx/store'
 import { State, getUsers, getMaxUserCount } from '../reducers'
-import { isAdmin } from '../../login/reducers'
 
 @Injectable()
 export class UserManagementEffects {
@@ -24,7 +22,7 @@ export class UserManagementEffects {
       this.userService
         .fetchAllUsers()
         .map(users => new fromUserManagement.FetchAllUserSuccessAction(users))
-        .catch(err => Observable.of(new fromUserManagement.FetchAllUserFailureAction([])))
+        .catch(() => Observable.of(new fromUserManagement.FetchAllUserFailureAction([])))
     )
 
   @Effect({ dispatch: false })
@@ -106,7 +104,7 @@ export class UserManagementEffects {
     .withLatestFrom(this.store.select(getMaxUserCount))
     .withLatestFrom(
       this.store.select(getUsers).map(e => e.length),
-      ([action, maxCount], usersCount) => [maxCount, usersCount]
+      ([_, maxCount], usersCount) => [maxCount, usersCount]
     )
     .do(([maxCount, usersCount]) => {
       if (usersCount >= maxCount) {

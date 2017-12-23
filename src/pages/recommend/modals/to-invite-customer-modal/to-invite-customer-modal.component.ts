@@ -1,8 +1,7 @@
-import { Component, ElementRef, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import {
   NavParams,
   ViewController,
-  ToastController
 } from 'ionic-angular'
 
 @Component({
@@ -23,7 +22,6 @@ export class ToInviteCustomerModal implements OnInit {
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
-    private toastCtrl: ToastController,
   ) {
   }
 
@@ -41,7 +39,7 @@ export class ToInviteCustomerModal implements OnInit {
   }
 
   private computeTpl(): string {
-    return this.contentTpl.replace(/\{\{([^{}]*)\}\}/g, (m, c) => {
+    return this.contentTpl.replace(/\{\{([^{}]*)\}\}/g, (_, c) => {
       return this[c]
     })
   }

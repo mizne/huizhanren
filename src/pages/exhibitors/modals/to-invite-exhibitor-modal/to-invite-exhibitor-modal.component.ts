@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit } from '@angular/core'
-import { NavParams, ViewController, ToastController } from 'ionic-angular'
+import { Component, OnInit } from '@angular/core'
+import { NavParams, ViewController } from 'ionic-angular'
 
 import { FormControl } from '@angular/forms'
 import { DestroyService } from '../../../../providers/destroy.service'
@@ -25,7 +25,6 @@ export class ToInviteExhibitorModal implements OnInit {
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
-    private toastCtrl: ToastController,
     private destroyService: DestroyService
   ) {}
 
@@ -51,7 +50,7 @@ export class ToInviteExhibitorModal implements OnInit {
   }
 
   private computeTpl(address: string): string {
-    return this.contentTpl.replace(/\{\{([^{}]*)\}\}/g, (m, c) => {
+    return this.contentTpl.replace(/\{\{([^{}]*)\}\}/g, (_, c) => {
       if (c === 'address') {
         return address
       }

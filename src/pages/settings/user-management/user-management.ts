@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ModalController } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
 import { Store } from '@ngrx/store'
@@ -22,9 +21,8 @@ export class UserManagementPage implements OnInit {
   maxCount$: Observable<number>
 
   constructor(
-    private modalCtrl: ModalController,
     private store: Store<State>
-  ) { 
+  ) {
     this.companyName$ = this.store.select(getCompanyName)
     this.adminName$ = this.store.select(getAdminName)
     this.phone$ = this.store.select(getPhone)
@@ -99,7 +97,7 @@ export class HzAdminItemComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { 
+  ngOnInit() {
   }
 
   clear() {
@@ -113,7 +111,7 @@ export class HzAdminItemComponent implements OnInit {
   template: `
     <div class="user-item-container">
       <input class="name-input" type="text" [(ngModel)]="_value" disabled>
-      
+
       <span class="phone-span">{{phone}}</span>
       <button class="change-btn" (click)="toDelete()">删除</button>
     </div>
@@ -179,7 +177,7 @@ export class HzUserItemComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { 
+  ngOnInit() {
   }
 
   toDelete() {

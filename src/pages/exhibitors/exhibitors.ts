@@ -2,9 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 import {
   NavController,
   ToastController,
-  ModalController,
-  LoadingController,
-  App,
   IonicPage
 } from 'ionic-angular'
 
@@ -25,7 +22,6 @@ import {
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
-  ChangePageStatusAction,
   TogglePageStatusAction,
   ChangeListStatusAction,
   FetchExhibitorsAction,
@@ -51,7 +47,7 @@ import {
   RecommendExhibitor,
   Product
 } from './models/exhibitor.model'
-import { Logger, LoggerLevel } from '../customer/models/logger.model'
+import { Logger } from '../customer/models/logger.model'
 import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus
@@ -122,9 +118,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   constructor(
     public navCtrl: NavController,
     private toastCtrl: ToastController,
-    private modalCtrl: ModalController,
-    private loadCtrl: LoadingController,
-    private app: App,
     private store: Store<State>,
     private destroyService: DestroyService
   ) {}
@@ -313,7 +306,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       )
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
-        console.log('to load more with recommend filter, ', recommendFilter)
+        console.log('to load more with exhibitor filter, ', recommendFilter)
         this.store.dispatch(new FetchRecommendAction())
       })
   }

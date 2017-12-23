@@ -58,6 +58,39 @@ import { NotificationService } from './services/notification.service'
 import { GroupPipe } from '../../pipes/customer-group.pipe'
 import { TimeRestPipe } from '../../pipes/time-rest.pipe'
 
+import { ToCreateGroupModal } from './modals/to-create-group-modal.component'
+import { ToCreateLoggerModal } from './modals/to-create-logger-modal.component'
+import { ToCreateNotificationModal } from './modals/to-create-notification-modal.component'
+import { ToDeleteCustomerModal } from './modals/to-delete-customer-modal.component'
+import { ToDeleteGroupModal } from './modals/to-delete-group-modal.component'
+import { ToDiscardModal } from './modals/to-discard-modal.component'
+import { ToEditCustomerGroupModal } from './modals/to-edit-customer-group-modal.component'
+import { ToEditLoggerModal } from './modals/to-edit-logger-modal.component'
+import { ToEditNotificationModal } from './modals/to-edit-notification-modal.component'
+import { ToRenameGroupModal } from './modals/to-rename-group-modal.component'
+import { ToSendSMSModal } from './modals/to-send-sms-modal.component'
+import { ToSingleSendSMSModal } from './modals/to-single-send-sms-modal.component'
+
+const modals = [
+  ToCreateGroupModal,
+  ToCreateLoggerModal,
+  ToCreateNotificationModal,
+  ToDeleteCustomerModal,
+  ToDeleteGroupModal,
+  ToDiscardModal,
+  ToEditCustomerGroupModal,
+  ToEditLoggerModal,
+  ToEditNotificationModal,
+  ToRenameGroupModal,
+  ToSendSMSModal,
+  ToSingleSendSMSModal,
+]
+
+const pipes = [
+  GroupPipe,
+  TimeRestPipe,
+]
+
 @NgModule({
   declarations: [
     CustomerPage,
@@ -91,8 +124,8 @@ import { TimeRestPipe } from '../../pipes/time-rest.pipe'
 
     HzHelpToggleLogComponent,
 
-    GroupPipe,
-    TimeRestPipe,
+    ...pipes,
+    ...modals,
   ],
   imports: [
     SharedModule,
@@ -104,6 +137,9 @@ import { TimeRestPipe } from '../../pipes/time-rest.pipe'
     CustomerService,
     GroupService,
     NotificationService
+  ],
+  entryComponents: [
+    ...modals,
   ]
 })
 export class CustomerPageModule {}

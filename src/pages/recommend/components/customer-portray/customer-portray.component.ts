@@ -1,11 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { Subject } from 'rxjs/Subject'
+import { Component, Input } from '@angular/core'
 
 @Component({
   selector: 'hz-customer-portray',
   templateUrl: 'customer-portray.component.html',
 })
-export class HzCustomerPortrayComponent implements OnInit {
+export class HzCustomerPortrayComponent {
   @Input() portray: any
 
   constructor() {}

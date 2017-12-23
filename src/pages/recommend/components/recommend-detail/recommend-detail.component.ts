@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { Recommend, Portray, Customer } from '../../models/recommend.model'
-import { Matcher } from '../../models/matcher.model'
+import { Portray, Customer } from '../../models/recommend.model'
 import { Logger } from '../../../customer/models/logger.model'
 
 @Component({

@@ -20,7 +20,7 @@ export class LoggerEffects {
     .ofType(fromLogger.TO_CREATE_LOGGER)
     .mergeMap(() => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
           loggerModal.onDidDismiss((log: Logger) => {
@@ -46,7 +46,7 @@ export class LoggerEffects {
     .mergeMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
-        .concatMap(res => {
+        .concatMap(() => {
           // 系统日志 不弹出toast
           if (log.level === 'sys') {
             return [new fromLogger.FetchLoggerAction()]
@@ -57,7 +57,7 @@ export class LoggerEffects {
             ]
           }
         })
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromLogger.CreateLoggerFailureAction())
         )
     )
@@ -92,7 +92,7 @@ export class LoggerEffects {
     .map((action: fromLogger.EditLoggerAction) => action.log)
     .mergeMap(log => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToEditLoggerModal, log)
 
           loggerModal.onDidDismiss((log: Logger) => {
@@ -117,11 +117,11 @@ export class LoggerEffects {
     .mergeMap(log =>
       this.loggerService
         .editLog(log)
-        .concatMap(res => [
+        .concatMap(() => [
           new fromLogger.EditLoggerSuccessAction(),
           new fromLogger.FetchLoggerAction()
         ])
-        .catch(error => Observable.of(new fromLogger.EditLoggerFailureAction()))
+        .catch(() => Observable.of(new fromLogger.EditLoggerFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -156,7 +156,7 @@ export class LoggerEffects {
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromLogger.FetchLoggerSuccessAction(logs))
-        .catch(error =>
+        .catch(() =>
           Observable.of(new fromLogger.FetchLoggerFailureAction())
         )
     )
@@ -192,8 +192,8 @@ export class LoggerEffects {
     .mergeMap(({ customerIds, log }) => {
       return this.loggerService
         .batchCreateLog(customerIds, log)
-        .map(res => new fromLogger.BatchCreateLoggerSuccessAction())
-        .catch(e =>
+        .map(() => new fromLogger.BatchCreateLoggerSuccessAction())
+        .catch(() =>
           Observable.of(new fromLogger.BatchCreateLoggerFailureAction())
         )
     })

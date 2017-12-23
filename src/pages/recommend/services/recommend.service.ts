@@ -6,7 +6,6 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import {
   Recommend,
-  RecommendResp,
   FetchRecommendParams
 } from '../models/recommend.model'
 

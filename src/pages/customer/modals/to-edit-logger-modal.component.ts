@@ -1,8 +1,5 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core'
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import { NavParams, ViewController, ToastController } from 'ionic-angular'
-
-import { Store } from '@ngrx/store'
-import { State } from '../../../reducers/index'
 
 import { Logger, LoggerLevel } from '../models/logger.model'
 
@@ -143,8 +140,6 @@ export class ToEditLoggerModal {
     public params: NavParams,
     public viewCtrl: ViewController,
     private toastCtrl: ToastController,
-    private store: Store<State>,
-    private rd: Renderer2
   ) {
     this.level = params.get('level')
     this.content = params.get('content')

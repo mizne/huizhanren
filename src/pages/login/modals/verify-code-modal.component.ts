@@ -8,11 +8,11 @@ import {
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
-import { FetchCodeAction } from './actions/verify-code.action'
-import { 
-  State, 
+import { FetchCodeAction } from '../actions/verify-code.action'
+import {
+  State,
   getPhone
-} from './reducers/index'
+} from '../reducers/index'
 
 @Component({
   template: `
@@ -22,7 +22,7 @@ import {
     <ion-title>
       验证码
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -61,7 +61,7 @@ export class VerifyCodeModal implements OnDestroy {
   private subscription: Subscription
 
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private toastCtrl: ToastController,
     private store: Store<State>
@@ -90,7 +90,7 @@ export class VerifyCodeModal implements OnDestroy {
           phone: phone,
           code: this.code
         })
-      }) 
+      })
     }
   }
 

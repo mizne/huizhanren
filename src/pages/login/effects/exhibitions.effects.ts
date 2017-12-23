@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core'
-import { Store } from '@ngrx/store'
-import { Effect, Actions, toPayload } from '@ngrx/effects'
+import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
-import { Storage } from '@ionic/storage'
 import { ModalController, ToastController, LoadingController } from 'ionic-angular'
 
 import * as fromExhibitions from '../actions/exhibitions.action'
-import { VerifyCodeModal } from '../verify-code-modal.component'
-import { WelcomeModal } from '../welcome-modal.component'
+import { WelcomeModal } from '../modals/welcome-modal.component'
 import { LoginService } from '../../../providers/login.service'
-import { SmsService } from '../../../providers/sms.service'
-
-import { State, getPhone } from '../reducers/index'
 
 @Injectable()
 export class ExhibitionsEffects {
@@ -36,7 +30,7 @@ export class ExhibitionsEffects {
             new fromExhibitions.ToWelcomeAction()
           ]
         })
-        .catch(err => {
+        .catch(() => {
           loadingCtrl.dismiss()
           return Observable.of(new fromExhibitions.FetchAllExhibitionsFailureAction())
         })
@@ -58,7 +52,7 @@ export class ExhibitionsEffects {
   @Effect({ dispatch: false })
   toWelcome$ = this.actions$.ofType(fromExhibitions.TO_WELCOME).mergeMap(() => {
     return Observable.fromPromise(
-      new Promise((res, rej) => {
+      new Promise((res, _) => {
         const welcomeModal = this.modalCtrl.create(WelcomeModal, {})
         welcomeModal.onDidDismiss(text => {
           res(text)
@@ -75,8 +69,5 @@ export class ExhibitionsEffects {
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
     private loginService: LoginService,
-    private smsService: SmsService,
-    private storage: Storage,
-    private store: Store<State>
   ) {}
 }

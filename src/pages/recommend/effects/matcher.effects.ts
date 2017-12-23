@@ -5,10 +5,8 @@ import { Observable } from 'rxjs/Observable'
 import {
   ModalController,
   ToastController,
-  LoadingController
 } from 'ionic-angular'
 
-import * as fromRecommend from '../actions/recommend.action'
 import * as fromMatcher from '../actions/matcher.action'
 
 import { MatcherService } from '../services/matcher.service'
@@ -36,7 +34,7 @@ export class MatcherEffects {
           // loadingCtrl.dismiss()
           return new fromMatcher.FetchMatchersSuccessAction(matchers)
         })
-        .catch(err => {
+        .catch(() => {
           // loadingCtrl.dismiss()
           return Observable.of(new fromMatcher.FetchMatchersFailureAction())
         })
@@ -48,7 +46,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToCancelMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToCancelMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -112,7 +110,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToAgreeMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToAgreeMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -174,7 +172,7 @@ export class MatcherEffects {
     .map((action: fromMatcher.ToRefuseMatcherAction) => action.matcherId)
     .mergeMap(matcherId => {
       return Observable.fromPromise(
-        new Promise((res, rej) => {
+        new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToRefuseMatcherModal)
           modal.onDidDismiss(ok => {
             res(ok)
@@ -236,7 +234,6 @@ export class MatcherEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private loadCtrl: LoadingController,
     private matcherService: MatcherService
   ) {}
 }

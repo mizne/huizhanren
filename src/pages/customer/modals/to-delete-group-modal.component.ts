@@ -4,16 +4,12 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Observable } from 'rxjs/Observable'
-import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
-import { 
-  CancelDeleteGroupAction, 
+import {
+  CancelDeleteGroupAction,
   EnsureDeleteGroupAction
  } from '../actions/group.action'
-
- import { getSelectedCustomers } from '../reducers'
 
 @Component({
   template: `
@@ -23,7 +19,7 @@ import {
     <ion-title>
       删除标签
     </ion-title>
-    
+
   </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -56,9 +52,9 @@ styles: [`
 `]
 })
 export class ToDeleteGroupModal {
-  private groupName: string
+  groupName: string
   constructor(
-    public params: NavParams, 
+    public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>
   ) {
