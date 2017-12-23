@@ -10,7 +10,7 @@ export class NativeService {
    * 是否真机环境
    *
    * @returns {boolean}
-   * @memberof NativeServiceProvider
+   * @memberof NativeService
    */
   isMobile(): boolean {
     return this.platform.is('mobile') && !this.platform.is('mobileweb')
@@ -20,7 +20,7 @@ export class NativeService {
    * 是否android真机环境
    *
    * @returns {boolean}
-   * @memberof NativeServiceProvider
+   * @memberof NativeService
    */
   isAndroid(): boolean {
     return this.isMobile() && this.platform.is('android')
@@ -30,7 +30,7 @@ export class NativeService {
    * 是否ios真机环境
    *
    * @returns {boolean}
-   * @memberof NativeServiceProvider
+   * @memberof NativeService
    */
   isIos(): boolean {
     return (

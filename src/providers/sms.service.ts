@@ -26,19 +26,17 @@ export class SmsService {
     public http: HttpClient,
     private tenantService: TenantService,
     private logger: ErrorLoggerService
-  ) {
-  }
+  ) {}
 
   /**
    * 发送验证码
    *
    * @param {string} phone
    * @returns {Observable<any>}
-   * @memberof SmsServiceProvider
+   * @memberof SmsService
    */
   fetchVerifyCode(phone: string): Observable<any> {
-    return this.http.get(this.fetchUrl + `?phoneNumber=${phone}`)
-    .catch(e => {
+    return this.http.get(this.fetchUrl + `?phoneNumber=${phone}`).catch(e => {
       return this.logger.httpError({
         module: 'SmsService',
         method: 'fetchVerifyCode',
@@ -46,7 +44,14 @@ export class SmsService {
       })
     })
   }
-
+  /**
+   * 校验验证码
+   *
+   * @param {string} phone
+   * @param {string} code
+   * @returns {Observable<any>}
+   * @memberof SmsService
+   */
   verifyCode(phone: string, code: string): Observable<any> {
     // return environment.production
     // ? this.http.post(this.fetchUrl, {
@@ -69,48 +74,66 @@ export class SmsService {
 
   editSmsTemplate() {}
 
+  /**
+   * 获取所有 短信模板
+   *
+   * @returns {Observable<SmsTemplate[]>}
+   * @memberof SmsService
+   */
   fetchAllTemplate(): Observable<SmsTemplate[]> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-        params: {
-          condition: {}
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition: {}
+          }
+        })
       })
-    })
-    .map((res) => {
-      const results = (res as APIResponse).result
-      return results.map(e => ({
-        id: e.RecordId,
-        label: e.Name,
-        preview: e.Content,
-      }))
-    })
-    .catch(e => {
-      return this.logger.httpError({
-        module: 'SmsService',
-        method: 'fetchAllTemplate',
-        error: e
+      .map(res => {
+        const results = (res as APIResponse).result
+        return results.map(e => ({
+          id: e.RecordId,
+          label: e.Name,
+          preview: e.Content
+        }))
       })
-    })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'SmsService',
+          method: 'fetchAllTemplate',
+          error: e
+        })
+      })
   }
-
+  /**
+   * 发送短信
+   *
+   * @param {string} templateId
+   * @param {SmsContent[]} objects
+   * @returns {Observable<any>}
+   * @memberof SmsService
+   */
   sendMessage(templateId: string, objects: SmsContent[]): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.sendUrl, {
-        content: objects.map(e => ({ phoneNumbers: e.phone, code: e.content.join(',') })),
-        tenantId,
-        userId,
-        smsTemplateId: templateId
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.sendUrl, {
+          content: objects.map(e => ({
+            phoneNumbers: e.phone,
+            code: e.content.join(',')
+          })),
+          tenantId,
+          userId,
+          smsTemplateId: templateId
+        })
       })
-    })
-    .catch(e => {
-      return this.logger.httpError({
-        module: 'SmsService',
-        method: 'sendMessage',
-        error: e
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'SmsService',
+          method: 'sendMessage',
+          error: e
+        })
       })
-    })
   }
 }

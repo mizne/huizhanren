@@ -33,22 +33,20 @@ export class LoginService {
    *
    * @private
    * @type {number}
-   * @memberof LoginServiceProvider
+   * @memberof LoginService
    */
   private MAX_RETRY_COUNT: number = 3
+
   /**
    * http请求错误 重试间隔时间
    *
    * @private
    * @type {number}
-   * @memberof LoginServiceProvider
+   * @memberof LoginService
    */
   private RETRY_DELAY: number = 5e2
 
-  constructor(
-    public http: HttpClient,
-    private logger: ErrorLoggerService
-  ) {}
+  constructor(public http: HttpClient, private logger: ErrorLoggerService) {}
 
   /**
    * 调用获取Exhibitions接口获取 所有会展信息
@@ -56,7 +54,7 @@ export class LoginService {
    *
    * @param {any} phone
    * @returns {Observable<FetchExhibitionsAndLoginResp>}
-   * @memberof LoginServiceProvider
+   * @memberof LoginService
    */
   fetchExhibitionsAndLogin(phone): Observable<FetchExhibitionsAndLoginResp> {
     return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
@@ -84,8 +82,8 @@ export class LoginService {
    *
    * @private
    * @param {any} phone
-   * @returns {Observable<Exhibition[]>}
-   * @memberof LoginServiceProvider
+   * @returns {Observable<any[]>}
+   * @memberof LoginService
    */
   private fetchExhibitions(phone): Observable<any[]> {
     return this.http
@@ -108,15 +106,19 @@ export class LoginService {
           boothNo: e.BoothNo
         }))
       })
-      .retryWhen(errStream => errStream.scan((errCount, err) => {
-        if (err.message === '没有查询到会展信息') {
-          throw err
-        }
-        if (errCount >= this.MAX_RETRY_COUNT) {
-          throw err
-        }
-        return errCount + 1
-      }, 0).delay(this.RETRY_DELAY))
+      .retryWhen(errStream =>
+        errStream
+          .scan((errCount, err) => {
+            if (err.message === '没有查询到会展信息') {
+              throw err
+            }
+            if (errCount >= this.MAX_RETRY_COUNT) {
+              throw err
+            }
+            return errCount + 1
+          }, 0)
+          .delay(this.RETRY_DELAY)
+      )
   }
 
   /**
@@ -125,7 +127,7 @@ export class LoginService {
    * @private
    * @param {any} phone
    * @returns {Observable<LoginResp>}
-   * @memberof LoginServiceProvider
+   * @memberof LoginService
    */
   private login(phone): Observable<LoginResp> {
     return this.http
@@ -143,11 +145,15 @@ export class LoginService {
           userId: results[0].UserId
         }
       })
-      .retryWhen(errStream => errStream.scan((errCount, err) => {
-        if (errCount >= this.MAX_RETRY_COUNT) {
-          throw err
-        }
-        return errCount + 1
-      }, 0).delay(this.RETRY_DELAY))
+      .retryWhen(errStream =>
+        errStream
+          .scan((errCount, err) => {
+            if (errCount >= this.MAX_RETRY_COUNT) {
+              throw err
+            }
+            return errCount + 1
+          }, 0)
+          .delay(this.RETRY_DELAY)
+      )
   }
 }

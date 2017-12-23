@@ -31,7 +31,7 @@ export class ErrorLoggerService {
    *
    * @param {ErrorInfo} error
    * @returns {(Promise<any> | void)}
-   * @memberof LoggerService
+   * @memberof ErrorLoggerService
    */
   info(error: ErrorInfo): Promise<any> | void {
     if (environment.production) {
@@ -51,7 +51,7 @@ export class ErrorLoggerService {
    *
    * @param {ErrorInfo} error
    * @returns {(Promise<any> | void)}
-   * @memberof LoggerService
+   * @memberof ErrorLoggerService
    */
   error(error: ErrorInfo): Promise<any> | void {
     if (environment.production) {
@@ -70,7 +70,7 @@ export class ErrorLoggerService {
    *
    * @param {HttpErrorInfo} info
    * @returns {Observable<any>}
-   * @memberof LoggerService
+   * @memberof ErrorLoggerService
    */
   httpError(info: HttpErrorInfo): Observable<any> {
     const errMsg = info.error.message
@@ -98,7 +98,7 @@ export class ErrorLoggerService {
    * @param {any} method
    * @param {any} description
    * @returns {Promise<any>}
-   * @memberof LoggerService
+   * @memberof ErrorLoggerService
    */
   private postErrorMessage(module, level, method, description): Promise<any> {
     return this.tenantService.getLoginName().then(loginName => {

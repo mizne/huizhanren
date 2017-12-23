@@ -12,13 +12,10 @@ import { fakeJson } from '../../fake/fake'
 import { environment } from '../../environments/environment'
 import { OcrService } from '../../providers/ocr.service'
 
-
 import { Store } from '@ngrx/store'
 import { State } from '../customer/reducers/index'
 import { ParseCardSuccessAction } from '../customer/actions/card.action'
 import { ToCreateableStatusAction } from '../customer/actions/customer.action'
-
-
 
 @Component({
   templateUrl: 'tabs.html',
@@ -38,7 +35,6 @@ export class TabsPage {
   tab2Root = RecommendPage
   tab4Root = ExhibitorsPage
   tab5Root = MorePage
-
 
   options: CameraOptions = {
     quality: 100,
@@ -65,19 +61,21 @@ export class TabsPage {
 
   private takeFakeCamera() {
     this.store.dispatch(new ToCreateableStatusAction())
-    this.store.dispatch(new ParseCardSuccessAction({
-      cardImg: fakeJson.base64Img,
-      cardInfo: {
-        addr: ['南京市雨花区长虹路22号德盈国际广场1栋211号'],
-        company: ['江苏超烨科技发展有限公司'],
-        department: [],
-        email: ['966036112@qq.com'],
-        name: '刘亚丽',
-        tel_cell: ['13776615796'],
-        tel_work: ['02568023353'],
-        title: ['营销总监']
-      }
-    }))
+    this.store.dispatch(
+      new ParseCardSuccessAction({
+        cardImg: fakeJson.base64Img,
+        cardInfo: {
+          addr: ['南京市雨花区长虹路22号德盈国际广场1栋211号'],
+          company: ['江苏超烨科技发展有限公司'],
+          department: [],
+          email: ['966036112@qq.com'],
+          name: '刘亚丽',
+          tel_cell: ['13776615796'],
+          tel_work: ['02568023353'],
+          title: ['营销总监']
+        }
+      })
+    )
   }
 
   private takeRealCamera(): void {
@@ -102,11 +100,12 @@ export class TabsPage {
               const info = JSON.parse(data.outputs[0].outputValue.dataValue)
 
               this.store.dispatch(new ToCreateableStatusAction())
-              this.store.dispatch(new ParseCardSuccessAction({
-                cardImg: base64Image,
-                cardInfo: info
-              }))
-
+              this.store.dispatch(
+                new ParseCardSuccessAction({
+                  cardImg: base64Image,
+                  cardInfo: info
+                })
+              )
             } catch (e) {
               this.parseCardFailed()
             }
