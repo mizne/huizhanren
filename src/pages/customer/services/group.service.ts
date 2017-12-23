@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 
 import { Group } from '../models/group.model'
 
@@ -16,7 +17,8 @@ export class GroupService {
 
   constructor(
     private http: HttpClient,
-    private tenantService: TenantService
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
   ) {}
 
   /**
@@ -27,19 +29,26 @@ export class GroupService {
    * @memberof GroupService
    */
   createGroup(name: string, exhibitionId: string): Observable<Group[]> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) =>
-      this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
-        params: {
-          record: {
-            Name: name,
-            ExhibitionInfo: exhibitionId
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+          params: {
+            record: {
+              Name: name,
+              ExhibitionInfo: exhibitionId
+            }
           }
-        }
+        })
+      )
+      .map(res => (res as APIResponse).result)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'GroupService',
+          method: 'createGroup',
+          error: e
+        })
       })
-    )
-    .map(res => (res as APIResponse).result)
-    .catch(this.handleError)
   }
 
   /**
@@ -50,16 +59,23 @@ export class GroupService {
    * @memberof GroupService
    */
   delGroup(groupId): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) =>
-      this.http.post(this.deleteUrl + `/${groupId}/${tenantId}/${userId}`, {
-        params: {
-          recordId: groupId
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.deleteUrl + `/${groupId}/${tenantId}/${userId}`, {
+          params: {
+            recordId: groupId
+          }
+        })
+      )
+      .map(res => (res as APIResponse).result)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'GroupService',
+          method: 'delGroup',
+          error: e
+        })
       })
-    )
-    .map(res => (res as APIResponse).result)
-    .catch(this.handleError)
   }
 
   /**
@@ -71,18 +87,25 @@ export class GroupService {
    * @memberof GroupService
    */
   editGroup(groupId: string, groupName: string): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) =>
-      this.http.post(this.updateUrl + `/${groupId}/${tenantId}/${userId}`, {
-        params: {
-          setValue: {
-            Name: groupName,
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.updateUrl + `/${groupId}/${tenantId}/${userId}`, {
+          params: {
+            setValue: {
+              Name: groupName
+            }
           }
-        }
+        })
+      )
+      .map(res => (res as APIResponse).result)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'GroupService',
+          method: 'editGroup',
+          error: e
+        })
       })
-    )
-    .map(res => (res as APIResponse).result)
-    .catch(this.handleError)
   }
 
   /**
@@ -93,43 +116,48 @@ export class GroupService {
    */
   fetchAllGroup(): Observable<Group[]> {
     return this.fetchGroup({})
-    .map(groups => {
-      return [{
-        id: '无标签',
-        name: '无标签',
-        active: true,
-        selected: false,
-        createdAt: '1970-01-01 00:00:00',
-        scrollTop: 0,
-      }, ...groups]
-    })
-    .catch(this.handleError)
+      .map(groups => {
+        return [
+          {
+            id: '无标签',
+            name: '无标签',
+            active: true,
+            selected: false,
+            createdAt: '1970-01-01 00:00:00',
+            scrollTop: 0
+          },
+          ...groups
+        ]
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'GroupService',
+          method: 'fetchAllGroup',
+          error: e
+        })
+      })
   }
 
   private fetchGroup(condition): Observable<Group[]> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-        params: {
-          condition
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition
+          }
+        })
       })
-    })
-    .map(res => (res as APIResponse).result)
-    .map(groups => groups.map(group => ({
-      id: group.RecordId,
-      name: group.Name,
-      active: false,
-      selected: false,
-      createdAt: group.CreatedAt,
-      scrollTop: 0
-    })))
+      .map(res => (res as APIResponse).result)
+      .map(groups =>
+        groups.map(group => ({
+          id: group.RecordId,
+          name: group.Name,
+          active: false,
+          selected: false,
+          createdAt: group.CreatedAt,
+          scrollTop: 0
+        }))
+      )
   }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw
-    (error)
-  }
-
 }

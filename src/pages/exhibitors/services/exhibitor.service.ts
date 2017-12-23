@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
@@ -34,7 +35,11 @@ const fakeExhibitors: RecommendExhibitor[] = Array.from(
 export class ExhibitorService {
   private fetchUrl: string = '/data/ExhibitionInfo'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 获取推荐展商 分页请求
@@ -57,13 +62,14 @@ export class ExhibitorService {
               .get(this.fetchUrl + query)
               .map(e => (e as APIResponse).result)
               .map(e => e.filter(e => e.TenantId !== tenantId).map(RecommendExhibitor.convertFromResp))
-              .catch(this.handleError)
+              .catch(e => {
+                return this.logger.httpError({
+                  module: 'ExhibitorService',
+                  method: 'fetchExhibitors',
+                  error: e
+                })
+              })
           })
       : Observable.of(fakeExhibitors)
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
   }
 }

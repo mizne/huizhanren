@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import { Notification }from '../models/notification.model'
 
 @Injectable()
@@ -12,7 +13,11 @@ export class NotificationService {
   private insertUrl: string = '/data/insert/Remind'
   private updateUrl: string = '/data/update/Remind'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 在当前客户下 创建notification
@@ -34,7 +39,13 @@ export class NotificationService {
         }
       })
     })
-    .catch(this.handleError)
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'NotificationService',
+        method: 'createNotification',
+        error: e
+      })
+    })
   }
 
 
@@ -57,7 +68,13 @@ export class NotificationService {
         }
       })
     })
-    .catch(this.handleError)
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'NotificationService',
+        method: 'editNotification',
+        error: e
+      })
+    })
   }
 
 
@@ -96,12 +113,12 @@ export class NotificationService {
 
       return [...unTimeoutResults, ...timeoutResults]
     })
-    .catch(this.handleError)
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'NotificationService',
+        method: 'fetchNotifications',
+        error: e
+      })
+    })
   }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
-  }
-
 }

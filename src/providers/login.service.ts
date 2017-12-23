@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-
 import { Observable } from 'rxjs/Observable'
 
 import { Exhibition } from '../pages/login/models/exhibition.model'
 import { APIResponse } from './interceptor'
+import { ErrorLoggerService } from './error-logger.service'
 
 export interface FetchExhibitionsAndLoginResp extends LoginResp {
   companyName: string
@@ -45,7 +45,10 @@ export class LoginService {
    */
   private RETRY_DELAY: number = 5e2
 
-  constructor(public http: HttpClient) {}
+  constructor(
+    public http: HttpClient,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 调用获取Exhibitions接口获取 所有会展信息
@@ -67,7 +70,13 @@ export class LoginService {
           exhibitions: exhibitons
         }
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'LoginService',
+          method: 'fetchExhibitionsAndLogin',
+          error: e
+        })
+      })
   }
 
   /**
@@ -140,18 +149,5 @@ export class LoginService {
         }
         return errCount + 1
       }, 0).delay(this.RETRY_DELAY))
-  }
-
-  /**
-   * http 错误处理
-   *
-   * @private
-   * @param {*} error
-   * @returns {Observable<any>}
-   * @memberof OrderProvider
-   */
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
   }
 }

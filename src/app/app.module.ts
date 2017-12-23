@@ -49,6 +49,7 @@ import { LoginService } from '../providers/login.service'
 import { TenantService } from '../providers/tenant.service'
 import { NativeService } from '../providers/native.service'
 import { LoggerService } from '../providers/logger.service'
+import { ErrorLoggerService } from '../providers/error-logger.service'
 import { ApiErrorInterceptor } from '../providers/interceptor'
 
 import * as Raven from 'raven-js'
@@ -119,6 +120,7 @@ export class RavenErrorHandler implements ErrorHandler {
     TenantService,
     NativeService,
     LoggerService,
+    ErrorLoggerService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiErrorInterceptor, multi: true }
   ]
 })

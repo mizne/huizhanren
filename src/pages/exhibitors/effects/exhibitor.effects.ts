@@ -12,7 +12,7 @@ import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-moda
 import { Logger } from '../../customer/models/logger.model'
 
 import { ExhibitorService } from '../services/exhibitor.service'
-import { MatcherService } from '../services/matcher.service'
+import { ExhibitorMatcherService } from '../services/matcher.service'
 
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
@@ -263,7 +263,7 @@ export class ExhibitorEffects {
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
     private exhibitorService: ExhibitorService,
-    private matcherService: MatcherService,
+    private matcherService: ExhibitorMatcherService,
     private loggerService: LoggerService,
     private store: Store<State>
   ) {}

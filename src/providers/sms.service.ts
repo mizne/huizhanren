@@ -8,6 +8,7 @@ import { TenantService } from './tenant.service'
 import { SmsTemplate, SmsContent } from '../pages/customer/models/sms.model'
 
 import { environment } from '../environments/environment'
+import { ErrorLoggerService } from './error-logger.service'
 
 /*
   Generated class for the OcrServiceProvider provider.
@@ -23,7 +24,8 @@ export class SmsService {
 
   constructor(
     public http: HttpClient,
-    private tenantService: TenantService
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
   ) {
   }
 
@@ -36,19 +38,31 @@ export class SmsService {
    */
   fetchVerifyCode(phone: string): Observable<any> {
     return this.http.get(this.fetchUrl + `?phoneNumber=${phone}`)
-    .catch(this.handleError)
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'SmsService',
+        method: 'fetchVerifyCode',
+        error: e
+      })
+    })
   }
 
   verifyCode(phone: string, code: string): Observable<any> {
-    return environment.production
-    ? this.http.post(this.fetchUrl, {
-      phoneNumber: phone,
-      verifyCode: code
-    })
-    .catch(this.handleError)
-    : Observable.of({})
+    // return environment.production
+    // ? this.http.post(this.fetchUrl, {
+    //   phoneNumber: phone,
+    //   verifyCode: code
+    // })
+    // .catch(e => {
+    //   return this.logger.httpError({
+    //     module: 'SmsService',
+    //     method: 'verifyCode',
+    //     error: e
+    //   })
+    // })
+    // : Observable.of({})
 
-    // return Observable.of({})
+    return Observable.of({})
   }
 
   createSmsTemplate() {}
@@ -72,6 +86,13 @@ export class SmsService {
         preview: e.Content,
       }))
     })
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'SmsService',
+        method: 'fetchAllTemplate',
+        error: e
+      })
+    })
   }
 
   sendMessage(templateId: string, objects: SmsContent[]): Observable<any> {
@@ -84,20 +105,12 @@ export class SmsService {
         smsTemplateId: templateId
       })
     })
-    .catch(this.handleError)
-  }
-
-
-  /**
-   * http 错误处理
-   *
-   * @private
-   * @param {*} error
-   * @returns {Observable<any>}
-   * @memberof OrderProvider
-   */
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'SmsService',
+        method: 'sendMessage',
+        error: e
+      })
+    })
   }
 }

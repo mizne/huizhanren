@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   Matcher,
   FetchMatcherParams,
@@ -26,12 +27,16 @@ const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
 }))
 
 @Injectable()
-export class MatcherService {
+export class VisitorMatcherService {
   private fetchUrl: string = '/data/InvitationInfo'
   private insertUrl = '/data/insert/InvitationInfo'
   private updateUrl: string = '/data/update/InvitationInfo'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 获取 发出的或收到的约请记录
@@ -61,7 +66,9 @@ export class MatcherService {
             return this.http.get(this.fetchUrl + query)
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.filter(f => f.State !== '已取消').map(Matcher.convertFromResp))
+          .map(e =>
+            e.filter(f => f.State !== '已取消').map(Matcher.convertFromResp)
+          )
           .withLatestFrom(
             this.tenantService.getTenantId(),
             (matchers, tenantId) =>
@@ -71,7 +78,13 @@ export class MatcherService {
                 isReceiver: e.receiverId === tenantId
               }))
           )
-          .catch(this.handleError)
+          .catch(e => {
+            return this.logger.httpError({
+              module: 'VisitorMatcherService',
+              method: 'fetchMatchers',
+              error: e
+            })
+          })
       : Observable.of(fakeMatchers).withLatestFrom(
           this.tenantService.getTenantId(),
           (matchers, tenantId) =>
@@ -118,7 +131,13 @@ export class MatcherService {
           }
         })
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'VisitorMatcherService',
+          method: 'createMatcher',
+          error: e
+        })
+      })
   }
   /**
    * 取消约请
@@ -143,7 +162,13 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'VisitorMatcherService',
+          method: 'cancelMatcher',
+          error: e
+        })
+      })
   }
 
   /**
@@ -169,7 +194,13 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'VisitorMatcherService',
+          method: 'agreeMatcher',
+          error: e
+        })
+      })
   }
 
   /**
@@ -195,11 +226,12 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'VisitorMatcherService',
+          method: 'refuseMatcher',
+          error: e
+        })
+      })
   }
 }

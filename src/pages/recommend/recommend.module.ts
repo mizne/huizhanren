@@ -24,9 +24,9 @@ import { MatcherEffects } from './effects/matcher.effects'
 import { CustomerMatcherStatusPipe } from './pipes/matcher-status.pipe'
 
 import { RecommendService } from './services/recommend.service'
-import { MatcherService } from './services/matcher.service'
+import { VisitorMatcherService } from './services/matcher.service'
 
-const services = [RecommendService, MatcherService]
+const services = [RecommendService, VisitorMatcherService]
 const effects = [RecommendEffects, MatcherEffects]
 const pipes = [CustomerMatcherStatusPipe]
 const modals = [

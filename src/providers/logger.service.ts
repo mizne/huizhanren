@@ -6,7 +6,7 @@ import { APIResponse } from './interceptor'
 import { TenantService } from './tenant.service'
 import { Logger, LoggerLevel } from '../pages/customer/models/logger.model'
 
-import { environment } from '../environments/environment'
+import { ErrorLoggerService } from './error-logger.service'
 
 const levelStrings: LoggerLevel[] = ['info', 'warn', 'error', 'sys']
 
@@ -18,7 +18,11 @@ export class LoggerService {
 
   private insertListUrl: string = '/data/insertList/ContactLog'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private errorLogger: ErrorLoggerService
+  ) {}
 
   /**
    * 新建 log
@@ -43,7 +47,13 @@ export class LoggerService {
           }
         })
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.errorLogger.httpError({
+          module: 'LoggerService',
+          method: 'createLog',
+          error: e
+        })
+      })
   }
 
   batchCreateLog(customerIds: string[], log: Logger): Observable<any> {
@@ -61,7 +71,13 @@ export class LoggerService {
           }
         })
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.errorLogger.httpError({
+          module: 'LoggerService',
+          method: 'batchCreateLog',
+          error: e
+        })
+      })
   }
 
   editLog(log: Logger): Observable<any> {
@@ -82,7 +98,13 @@ export class LoggerService {
           }
         )
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.errorLogger.httpError({
+          module: 'LoggerService',
+          method: 'editLog',
+          error: e
+        })
+      })
   }
 
   /**
@@ -92,40 +114,32 @@ export class LoggerService {
    * @memberof LoggerService
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
-    return environment.production
-      ? this.tenantService
-          .getTenantIdAndUserId()
-          .mergeMap(([tenantId, userId]) =>
-            this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-              params: {
-                condition: {
-                  ContactInfo: customerId
-                }
-              }
-            })
-          )
-          .map(res => {
-            const results = (res as APIResponse).result
-            return results.map(e => ({
-              id: e.RecordId,
-              time: e.CreatedAt,
-              level: levelStrings[e.level],
-              content: e.info
-            }))
-          })
-          .catch(this.handleError)
-      : Observable.of(
-          Array.from({ length: 100 }, (_, i) => ({
-            id: `id${i}`,
-            time: `time${i}`,
-            level: `info` as LoggerLevel,
-            content: `testContent${i}`
-          }))
-        )
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition: {
+              ContactInfo: customerId
+            }
+          }
+        })
+      )
+      .map(res => {
+        const results = (res as APIResponse).result
+        return results.map(e => ({
+          id: e.RecordId,
+          time: e.CreatedAt,
+          level: levelStrings[e.level],
+          content: e.info
+        }))
+      })
+      .catch(e => {
+        return this.errorLogger.httpError({
+          module: 'LoggerService',
+          method: 'fetchLogger',
+          error: e
+        })
+      })
   }
 }

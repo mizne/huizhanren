@@ -23,7 +23,7 @@ interface HttpErrorInfo {
   for more info on providers and Angular 2 DI.
 */
 @Injectable()
-export class LoggerService {
+export class ErrorLoggerService {
   constructor(private tenantService: TenantService) {}
 
   /**

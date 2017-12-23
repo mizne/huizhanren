@@ -17,19 +17,19 @@ export class TimeRestPipe implements PipeTransform {
     const oneMinute = 60 * oneSecond
     const oneHour = 60 * oneMinute
     const oneDay = 24 * oneHour
-  
+
     if (diff < oneMinute) {
       return `还有${Math.floor(diff / oneSecond)}秒`
     }
-  
+
     if (diff < oneHour) {
       return `还有${Math.floor(diff / oneMinute)}分钟`
     }
-  
+
     if (diff < oneDay) {
       const hours = Math.floor(diff / oneHour)
       const minutes = Math.floor((diff % oneHour) / oneMinute)
-  
+
       return `还有${hours}小时${minutes}分钟`
     }
 

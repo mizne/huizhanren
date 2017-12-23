@@ -55,8 +55,7 @@ import { CustomerService } from './services/customer.service'
 import { GroupService } from './services/group.service'
 import { NotificationService } from './services/notification.service'
 
-import { GroupPipe } from '../../pipes/customer-group.pipe'
-import { TimeRestPipe } from '../../pipes/time-rest.pipe'
+import { TimeRestPipe } from './pipes/time-rest.pipe'
 
 import { ToCreateGroupModal } from './modals/to-create-group-modal.component'
 import { ToCreateLoggerModal } from './modals/to-create-logger-modal.component'
@@ -87,7 +86,6 @@ const modals = [
 ]
 
 const pipes = [
-  GroupPipe,
   TimeRestPipe,
 ]
 

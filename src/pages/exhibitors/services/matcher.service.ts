@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
+
 import { ExhibitorMatcher } from '../models/matcher.model'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
@@ -33,12 +35,16 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
 )
 
 @Injectable()
-export class MatcherService {
+export class ExhibitorMatcherService {
   private fetchUrl: string = '/data/ExhibitionInvitationInfo'
   private insertUrl = '/data/insert/ExhibitionInvitationInfo'
   private updateUrl: string = '/data/update/ExhibitionInvitationInfo'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 获取 发出的或收到的约请记录
@@ -56,7 +62,10 @@ export class MatcherService {
       ? this.tenantService
           .getTenantIdAndUserId()
           .mergeMap(([tenantId, _]) => {
-            return this.http.get(this.fetchUrl + `?role=E&tenantId=${tenantId}&pageIndex=${pageIndex}&pageSize=${pageSize}`)
+            return this.http.get(
+              this.fetchUrl +
+                `?role=E&tenantId=${tenantId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+            )
           })
           .map(e => (e as APIResponse).result)
           .map(e => e.map(ExhibitorMatcher.convertFromResp))
@@ -69,7 +78,13 @@ export class MatcherService {
                 isReceiver: e.receiverId === tenantId
               }))
           )
-          .catch(this.handleError)
+          .catch(e => {
+            return this.logger.httpError({
+              module: 'ExhibitorMatcherService',
+              method: 'fetchMatchers',
+              error: e
+            })
+          })
       : Observable.of(fakeMatchers).withLatestFrom(
           this.tenantService.getTenantId(),
           (matchers, tenantId) =>
@@ -115,7 +130,13 @@ export class MatcherService {
           }
         })
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'createMatcher',
+          error: e
+        })
+      })
   }
 
   /**
@@ -141,7 +162,13 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'cancelMatcher',
+          error: e
+        })
+      })
   }
 
   /**
@@ -167,7 +194,13 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'agreeMatcher',
+          error: e
+        })
+      })
   }
 
   /**
@@ -193,11 +226,12 @@ export class MatcherService {
           params
         )
       })
-      .catch(this.handleError)
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'refuseMatcher',
+          error: e
+        })
+      })
   }
 }

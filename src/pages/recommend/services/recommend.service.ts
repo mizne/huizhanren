@@ -4,10 +4,8 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
-import {
-  Recommend,
-  FetchRecommendParams
-} from '../models/recommend.model'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
+import { Recommend, FetchRecommendParams } from '../models/recommend.model'
 
 import { environment } from '../../../environments/environment'
 
@@ -24,7 +22,11 @@ const fakeRecommends: Recommend[] = Array.from({ length: 100 }, (_, i) => ({
 export class RecommendService {
   private fetchUrl: string = '/data/VisiterInfo'
 
-  constructor(private http: HttpClient, private tenantService: TenantService) {}
+  constructor(
+    private http: HttpClient,
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
+  ) {}
 
   /**
    * 获取推荐观众信息
@@ -59,12 +61,13 @@ export class RecommendService {
           })
           .map(e => (e as APIResponse).result)
           .map(e => e.map(Recommend.convertFromResp))
-          .catch(this.handleError)
+          .catch(e => {
+            return this.logger.httpError({
+              module: 'RecommendService',
+              method: 'fetchRecommend',
+              error: e
+            })
+          })
       : Observable.of(fakeRecommends)
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
   }
 }

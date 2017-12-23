@@ -12,7 +12,7 @@ import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-moda
 import { Logger } from '../../customer/models/logger.model'
 
 import { RecommendService } from '../services/recommend.service'
-import { MatcherService } from '../services/matcher.service'
+import { VisitorMatcherService } from '../services/matcher.service'
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
 
@@ -233,7 +233,7 @@ export class RecommendEffects {
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
     private recommendService: RecommendService,
-    private matcherService: MatcherService,
+    private matcherService: VisitorMatcherService,
     private loggerService: LoggerService,
     private store: Store<State>
   ) {}

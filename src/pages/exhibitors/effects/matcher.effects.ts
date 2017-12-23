@@ -10,7 +10,7 @@ import {
 
 import * as fromMatcher from '../actions/matcher.action'
 
-import { MatcherService } from '../services/matcher.service'
+import { ExhibitorMatcherService } from '../services/matcher.service'
 
 import { ToCancelMatcherModal } from '../../recommend/modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
 import { ToAgreeMatcherModal } from '../../recommend/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
@@ -237,6 +237,6 @@ export class MatcherEffects {
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
-    private matcherService: MatcherService
+    private matcherService: ExhibitorMatcherService
   ) {}
 }

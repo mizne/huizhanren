@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import { HOST } from '../../../providers/interceptor'
 import { GroupService } from './group.service'
 
@@ -15,7 +16,6 @@ export interface InitFetchAllResp {
   customers: Customer[]
   groups: Group[]
 }
-
 
 @Injectable()
 export class CustomerService {
@@ -31,7 +31,8 @@ export class CustomerService {
   constructor(
     private http: HttpClient,
     private groupService: GroupService,
-    private tenantService: TenantService
+    private tenantService: TenantService,
+    private logger: ErrorLoggerService
   ) {}
 
   /**
@@ -44,8 +45,14 @@ export class CustomerService {
     return Observable.zip(
       this.fetchAllCustomer(),
       this.groupService.fetchAllGroup(),
-      (customers, groups) => ({customers, groups}))
-    .catch(this.handleError)
+      (customers, groups) => ({ customers, groups })
+    ).catch(e => {
+      return this.logger.httpError({
+        module: 'CustomerService',
+        method: 'initialFetchAll',
+        error: e
+      })
+    })
   }
 
   /**
@@ -56,11 +63,18 @@ export class CustomerService {
    * @memberof CustomerService
    */
   uploadCardImage(base64Img): Observable<any> {
-    return this.http.post(this.uploadImgUrl, {
-      rawBody: base64Img
-    })
-    .map(res => HOST + '/' + (res as APIResponse).result)
-    .catch(this.handleError)
+    return this.http
+      .post(this.uploadImgUrl, {
+        rawBody: base64Img
+      })
+      .map(res => HOST + '/' + (res as APIResponse).result)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'uploadCardImage',
+          error: e
+        })
+      })
   }
 
   /**
@@ -71,36 +85,41 @@ export class CustomerService {
    * @memberof CustomerService
    */
   createCustomer(customer: Customer, exhibitionId: string): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      const params = {
-        params: {
-          record: {
-            Name: customer.name,
-            ExhibitionInfo: exhibitionId,
-            GroupInfo: [],
-            Address: customer.addresses,
-            Phone: customer.phones,
-            Email: customer.emails,
-            Department: customer.departments,
-            Job: customer.jobs,
-            Company: customer.companys,
-            Image: customer.imageUrl,
-            BackImage: customer.imageBehindUrl
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        const params = {
+          params: {
+            record: {
+              Name: customer.name,
+              ExhibitionInfo: exhibitionId,
+              GroupInfo: [],
+              Address: customer.addresses,
+              Phone: customer.phones,
+              Email: customer.emails,
+              Department: customer.departments,
+              Job: customer.jobs,
+              Company: customer.companys,
+              Image: customer.imageUrl,
+              BackImage: customer.imageBehindUrl
+            }
           }
         }
-      }
-      return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, params)
-    })
-    .map(res => {
-      const result = (res as APIResponse).result
+        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, params)
+      })
+      .map(res => {
+        const result = (res as APIResponse).result
 
-
-      return result
-    })
-    .catch(this.handleError)
+        return result
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'createCustomer',
+          error: e
+        })
+      })
   }
-
 
   /**
    * 编辑客户
@@ -110,31 +129,45 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  editCustomer(customer: Customer, customerId: string, exhibitionId: string): Observable<any> {
-    const mapper = (e) => ({
+  editCustomer(
+    customer: Customer,
+    customerId: string,
+    exhibitionId: string
+  ): Observable<any> {
+    const mapper = e => ({
       label: e.label,
       value: e.value
     })
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      const params = {
-        params: {
-          setValue: {
-            ExhibitionInfo: exhibitionId,
-            Name: customer.name,
-            Phone: customer.phones.map(mapper),
-            Email: customer.emails.map(mapper),
-            Address: customer.addresses.map(mapper),
-            Department: customer.departments.map(mapper),
-            Job: customer.jobs.map(mapper),
-            Company: customer.companys.map(mapper),
-            BackImage: customer.imageBehindUrl
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        const params = {
+          params: {
+            setValue: {
+              ExhibitionInfo: exhibitionId,
+              Name: customer.name,
+              Phone: customer.phones.map(mapper),
+              Email: customer.emails.map(mapper),
+              Address: customer.addresses.map(mapper),
+              Department: customer.departments.map(mapper),
+              Job: customer.jobs.map(mapper),
+              Company: customer.companys.map(mapper),
+              BackImage: customer.imageBehindUrl
+            }
           }
         }
-      }
-      return this.http.post(this.updateUrl + `/${customerId}/${tenantId}/${userId}`, params)
-    })
-    .catch(this.handleError)
+        return this.http.post(
+          this.updateUrl + `/${customerId}/${tenantId}/${userId}`,
+          params
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'editCustomer',
+          error: e
+        })
+      })
   }
 
   /**
@@ -144,25 +177,37 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  markCustomersHasSendSms(customerIds: string[], exhibitionId): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      const params = {
-        params: customerIds.map(id => {
-          return {
-            recordId: id,
-            setValue: {
-              ExhibitionInfo: exhibitionId,
-              HaveSendMsg: true
+  markCustomersHasSendSms(
+    customerIds: string[],
+    exhibitionId
+  ): Observable<any> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        const params = {
+          params: customerIds.map(id => {
+            return {
+              recordId: id,
+              setValue: {
+                ExhibitionInfo: exhibitionId,
+                HaveSendMsg: true
+              }
             }
-          }
+          })
+        }
+        return this.http.post(
+          this.updateListUrl + `/${tenantId}/${userId}`,
+          params
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'markCustomersHasSendSms',
+          error: e
         })
-      }
-
-      return this.http.post(this.updateListUrl + `/${tenantId}/${userId}`, params)
-    })
+      })
   }
-
 
   /**
    * 批量设置分组
@@ -171,30 +216,44 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  batchEditCustomerGroupId(customers: Customer[], groupId: string, exhibitionId: string): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      const params = {
-        params: customers.map(customer => {
-          return {
-            recordId: customer.id,
-            setValue: {
-              ExhibitionInfo: exhibitionId,
-              GroupInfo: (() => {
-                if (groupId === '无标签') {
-                  return []
-                } else {
-                  return deduplicate([...customer.groups, groupId])
-                }
-              })()
+  batchEditCustomerGroupId(
+    customers: Customer[],
+    groupId: string,
+    exhibitionId: string
+  ): Observable<any> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        const params = {
+          params: customers.map(customer => {
+            return {
+              recordId: customer.id,
+              setValue: {
+                ExhibitionInfo: exhibitionId,
+                GroupInfo: (() => {
+                  if (groupId === '无标签') {
+                    return []
+                  } else {
+                    return deduplicate([...customer.groups, groupId])
+                  }
+                })()
+              }
             }
-          }
-        })
-      }
+          })
+        }
 
-      return this.http.post(this.updateListUrl + `/${tenantId}/${userId}`, params)
-    })
-    .catch(this.handleError)
+        return this.http.post(
+          this.updateListUrl + `/${tenantId}/${userId}`,
+          params
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'batchEditCustomerGroupId',
+          error: e
+        })
+      })
   }
 
   /**
@@ -206,28 +265,43 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  removeCustomerGroupId(customers: Customer[], groupId: string, exhibitionId: string): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      const params = {
-        params: customers.filter(customer => customer.groups.indexOf(groupId) >= 0)
-        .map(customer => {
-          return {
-            recordId: customer.id,
-            setValue: {
-              ExhibitionInfo: exhibitionId,
-              GroupInfo: (() => {
-                const index = customer.groups.indexOf(groupId)
-                return customer.groups.filter((_, i) => i !== index)
-              })()
-            }
-          }
-        })
-      }
+  removeCustomerGroupId(
+    customers: Customer[],
+    groupId: string,
+    exhibitionId: string
+  ): Observable<any> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        const params = {
+          params: customers
+            .filter(customer => customer.groups.indexOf(groupId) >= 0)
+            .map(customer => {
+              return {
+                recordId: customer.id,
+                setValue: {
+                  ExhibitionInfo: exhibitionId,
+                  GroupInfo: (() => {
+                    const index = customer.groups.indexOf(groupId)
+                    return customer.groups.filter((_, i) => i !== index)
+                  })()
+                }
+              }
+            })
+        }
 
-      return this.http.post(this.updateListUrl + `/${tenantId}/${userId}`, params)
-    })
-    .catch(this.handleError)
+        return this.http.post(
+          this.updateListUrl + `/${tenantId}/${userId}`,
+          params
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'removeCustomerGroupId',
+          error: e
+        })
+      })
   }
 
   /**
@@ -238,26 +312,39 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  singleEditCustomerGroupId(customer: Customer, groupId: string, exhibitionId: string): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-
-      return this.http.post(this.updateUrl + `/${customer.id}/${tenantId}/${userId}`, {
-        params: {
-          setValue: {
-            ExhibitionInfo: exhibitionId,
-            GroupInfo: (() => {
-              if (groupId === '无标签') {
-                return []
-              } else {
-                return deduplicate([...customer.groups, groupId])
+  singleEditCustomerGroupId(
+    customer: Customer,
+    groupId: string,
+    exhibitionId: string
+  ): Observable<any> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl + `/${customer.id}/${tenantId}/${userId}`,
+          {
+            params: {
+              setValue: {
+                ExhibitionInfo: exhibitionId,
+                GroupInfo: (() => {
+                  if (groupId === '无标签') {
+                    return []
+                  } else {
+                    return deduplicate([...customer.groups, groupId])
+                  }
+                })()
               }
-            })()
+            }
           }
-        }
+        )
       })
-    })
-    .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'singleEditCustomerGroupId',
+          error: e
+        })
+      })
   }
 
   /**
@@ -267,15 +354,21 @@ export class CustomerService {
    * @memberof CustomerService
    */
   batchDeleteCustomer(customerIds: string[]): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.deleteListUrl + `/${tenantId}/${userId}`, {
-        params: customerIds.map(e => ({ recordId: e }))
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.deleteListUrl + `/${tenantId}/${userId}`, {
+          params: customerIds.map(e => ({ recordId: e }))
+        })
       })
-    })
-    .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'batchDeleteCustomer',
+          error: e
+        })
+      })
   }
-
 
   /**
    * 单条删除 客户
@@ -284,15 +377,25 @@ export class CustomerService {
    * @memberof CustomerService
    */
   singleDeleteCustomer(customerId): Observable<any> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([ tenantId, userId ]) => {
-      return this.http.post(this.deleteUrl + `/${customerId}/${tenantId}/${userId}`, {
-        params: {
-          recordId: customerId
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.deleteUrl + `/${customerId}/${tenantId}/${userId}`,
+          {
+            params: {
+              recordId: customerId
+            }
+          }
+        )
       })
-    })
-    .catch(this.handleError)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'singleDeleteCustomer',
+          error: e
+        })
+      })
   }
 
   /**
@@ -302,44 +405,46 @@ export class CustomerService {
    * @memberof CustomerService
    */
   fetchAllCustomer(): Observable<Customer[]> {
-    return this.tenantService.getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) =>
-      this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-        params: {
-          condition: {}
-        }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition: {}
+          }
+        })
+      )
+      .map(res => {
+        const results = (res as APIResponse).result
+        const customers: Customer[] = results.map(e => ({
+          id: e.RecordId,
+          groups: e.GroupInfo,
+          name: e.Name,
+          phones: e.Phone.map(e => ({ ...e, selected: true })),
+          emails: e.Email.map(e => ({ ...e, selected: true })),
+          addresses: e.Address.map(e => ({ ...e, selected: true })),
+          departments: e.Department.map(e => ({ ...e, selected: true })),
+          jobs: e.Job.map(e => ({ ...e, selected: true })),
+          companys: e.Company.map(e => ({ ...e, selected: true })),
+          imageUrl: e.Image,
+          imageBehindUrl: e.BackImage,
+          haveCalled: e.HaveCalled,
+          // haveCalled: Math.random() > 0.5,
+          haveSendEmail: e.HaveSendEmail,
+          // haveSendEmail: Math.random() > 0.5,
+          haveSendMsg: e.HaveSendMsg,
+          // haveSendMsg: Math.random() > 0.5,
+          selected: false
+        }))
+
+        return customers
       })
-    )
-    .map(res => {
-      const results = (res as APIResponse).result
-      const customers: Customer[] = results.map(e => ({
-        id: e.RecordId,
-        groups: e.GroupInfo,
-        name: e.Name,
-        phones: e.Phone.map(e => ({ ...e, selected: true })),
-        emails: e.Email.map(e => ({ ...e, selected: true })),
-        addresses: e.Address.map(e => ({ ...e, selected: true })),
-        departments: e.Department.map(e => ({ ...e, selected: true })),
-        jobs: e.Job.map(e => ({ ...e, selected: true })),
-        companys: e.Company.map(e => ({ ...e, selected: true })),
-        imageUrl: e.Image,
-        imageBehindUrl: e.BackImage,
-        haveCalled: e.HaveCalled,
-        // haveCalled: Math.random() > 0.5,
-        haveSendEmail: e.HaveSendEmail,
-        // haveSendEmail: Math.random() > 0.5,
-        haveSendMsg: e.HaveSendMsg,
-        // haveSendMsg: Math.random() > 0.5,
-        selected: false
-      }))
-
-      return customers
-    })
-    .catch(this.handleError)
-  }
-
-  private handleError(error: any): Observable<any> {
-    console.error(error)
-    return Observable.throw(error)
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'fetchAllCustomer',
+          error: e
+        })
+      })
   }
 }

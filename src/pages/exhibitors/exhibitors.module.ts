@@ -19,11 +19,11 @@ import { ExhibitorEffects } from './effects/exhibitor.effects'
 import { MatcherEffects } from './effects/matcher.effects'
 
 import { ExhibitorService } from './services/exhibitor.service'
-import { MatcherService } from './services/matcher.service'
+import { ExhibitorMatcherService } from './services/matcher.service'
 
 import { ExhibitorMatcherStatusPipe } from './pipes/exhibitor-matcher-status.pipe'
 
-const services = [ExhibitorService, MatcherService]
+const services = [ExhibitorService, ExhibitorMatcherService]
 const effects = [ExhibitorEffects, MatcherEffects]
 const pipes = [ExhibitorMatcherStatusPipe]
 const modals = [

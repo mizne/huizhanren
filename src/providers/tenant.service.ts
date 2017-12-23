@@ -21,14 +21,14 @@ export class TenantService {
   ) {}
 
   getLoginName(): Promise<string> {
-    return this.storage.get('loginName')
+    return this.storage.get('@@HuiZhanRen_LoginName')
   }
 
   setLoginName(name: string): Promise<any> {
-    return this.storage.set('loginName', name)
+    return this.storage.set('@@HuiZhanRen_LoginName', name)
   }
 
-  hasVerify(phone: string): Promise<any> {
+  hasVerify(phone: string): Promise<boolean> {
     return this.getLoginName()
     .then((name) => {
       return name === phone
