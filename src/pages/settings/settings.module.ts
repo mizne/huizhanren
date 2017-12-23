@@ -18,6 +18,17 @@ import { ToAddUserModal } from './modals/to-add-user-modal.component'
 import { ToDeleteUserModal } from './modals/to-delete-user-modal.component'
 import { ToDownloadModal } from './modals/to-download-modal.component'
 
+import {
+  UserManagementPage,
+  HzAdminItemComponent,
+  HzUserItemComponent
+} from './user-management/user-management'
+import {
+  SmsTemplatePage,
+  SmsTemplateDetailComponent
+} from './sms-template/sms-template'
+import { HzAboutPage } from './about/about'
+
 const modals = [
   LogoutModal,
   ToAddUserModal,
@@ -25,11 +36,21 @@ const modals = [
   ToDownloadModal
 ]
 
+const pages = [
+  UserManagementPage,
+  SmsTemplatePage,
+  HzAboutPage,
+]
+
 @NgModule({
   declarations: [
     SettingsPage,
     HzSettingItemComponent,
+    HzAdminItemComponent,
+    HzUserItemComponent,
+    SmsTemplateDetailComponent,
     ...modals,
+    ...pages,
   ],
   imports: [
     StoreModule.forFeature('settings', reducers),
@@ -42,6 +63,7 @@ const modals = [
   ],
   entryComponents: [
     ...modals,
+    ...pages,
   ]
 })
 export class SettingsPageModule {}

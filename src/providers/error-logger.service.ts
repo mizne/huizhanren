@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { TenantService } from './tenant.service'
 import * as Raven from 'raven-js'
 import { environment } from '../environments/environment'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable'
 
 interface ErrorInfo {
   module: string
@@ -65,14 +65,14 @@ export class ErrorLoggerService {
       console.error(error.description)
     }
   }
-/**
- * 记录 Http error
- *
- * @param {HttpErrorInfo} info
- * @returns {Observable<any>}
- * @memberof LoggerService
- */
-httpError(info: HttpErrorInfo): Observable<any> {
+  /**
+   * 记录 Http error
+   *
+   * @param {HttpErrorInfo} info
+   * @returns {Observable<any>}
+   * @memberof LoggerService
+   */
+  httpError(info: HttpErrorInfo): Observable<any> {
     const errMsg = info.error.message
       ? info.error.message
       : info.error.status
@@ -101,8 +101,7 @@ httpError(info: HttpErrorInfo): Observable<any> {
    * @memberof LoggerService
    */
   private postErrorMessage(module, level, method, description): Promise<any> {
-    return this.tenantService.getLoginName()
-    .then((loginName) => {
+    return this.tenantService.getLoginName().then(loginName => {
       const msg = `Module: ${module}, Method: ${method}, LoginName: ${loginName}, description: ${description}`
 
       Raven.captureMessage(
