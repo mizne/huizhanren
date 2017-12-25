@@ -19,6 +19,7 @@ import { reducers } from '../reducers/index'
 import { MyApp } from './app.component'
 import { environment } from '../environments/environment'
 import { TabsPage } from '../pages/tabs/tabs'
+import { MorePage } from '../pages/more/more'
 
 import { LoginPageModule } from '../pages/login/login.module'
 import { CustomerPageModule } from '../pages/customer/customer.module'
@@ -51,6 +52,7 @@ export class RavenErrorHandler implements ErrorHandler {
   declarations: [
     MyApp,
     TabsPage,
+    MorePage
   ],
   imports: [
     BrowserAnimationsModule,
@@ -78,6 +80,7 @@ export class RavenErrorHandler implements ErrorHandler {
   entryComponents: [
     MyApp,
     TabsPage,
+    MorePage
   ],
   providers: [
     StatusBar,

@@ -22,9 +22,9 @@
         <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
         <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']" class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
       </ion-col>
-      <ion-col col-1>{{item.name}}</ion-col>
+      <ion-col col-1>{{item.name | customerNamePrivacy:item.status}}</ion-col>
       <ion-col col-1>{{item.title}}</ion-col>
-      <ion-col col-2>{{item.company}}</ion-col>
+      <ion-col col-2>{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
       <ion-col col-2>{{item.industry}}</ion-col>
 
       <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>

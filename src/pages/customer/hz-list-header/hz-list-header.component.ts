@@ -17,23 +17,23 @@ import {
         <span class="header-count">(共 {{totalCount}} 条)</span>
       </div>
       <div (clickOutside)="clickOutside()">
-        <div class="header-icon-wrapper" (click)="showMore()">
+        <div class="header-icon-wrapper" tappable (click)="showMore()">
           <ion-icon name="more"></ion-icon>
         </div>
         <div class="hz-popover-wrapper" [@collapseState]="_active?'active':'inactive'">
-          <div class="hz-popover-item" (click)="sendSms.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="sendSms.emit(); showMore()">
             <ion-icon name="chatbubbles"></ion-icon>群发短信
           </div>
-          <div class="hz-popover-item" (click)="setGroup.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="setGroup.emit(); showMore()">
             <ion-icon name="people"></ion-icon>设置标签
           </div>
-          <div class="hz-popover-item" (click)="del.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="del.emit(); showMore()">
             <ion-icon name="trash"></ion-icon>删除
           </div>
         </div>
       </div>
     </div>
-    
+
   `,
   // styleUrls: ['./hz-list-header.scss'],
   animations   : [

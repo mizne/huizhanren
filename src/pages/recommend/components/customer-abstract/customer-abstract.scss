@@ -8,6 +8,10 @@
   flex-direction: column;
   justify-content: center;
 
+  .no-item {
+    color: map-get($map: $colors, $key: danger);
+  }
+
   .customer-header {
     display: flex;
     justify-content: space-between;

@@ -17,10 +17,11 @@
   align-items: center;
 }
 
-@mixin textOverflow {
+@mixin textOverflow($width) {
   overflow: hidden;
 	white-space: nowrap;
-	text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  width: $width;
 }
 
 @mixin confirmModal {

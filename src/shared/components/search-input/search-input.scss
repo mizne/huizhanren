@@ -1,7 +1,7 @@
 .hz-search-input {
   display: flex;
-  height: 82px;
-  padding: 16px 10px;
+  height: 42px;
+  padding: 4px;
   background-color: transparent;
 
   .input-wrapper {
@@ -25,7 +25,7 @@
     .icon-search {
       position: absolute;
       right: 15px;
-      top: 10px;
+      top: 4px;
       font-size: 2.5rem;
       color: map-get($map: $colors, $key: primary);
     }

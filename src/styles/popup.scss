@@ -24,22 +24,26 @@
 
   .hz-popover-item {
     height: 37px;
+    line-height: 37px;
     padding-right: 25px;
     padding-left: 15px;
     color: map-get($colors, primary);
     font-size: 14px;
-    line-height: 37px;
     min-width: 120px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 
     &:not(:last-child) {
       border-bottom: 1px solid #e6e6e6;
     }
 
+    .icon,
     .iconfont {
       margin-right: 14px;
-      margin-left: 4px;
       color: map-get($colors, primary);
       font-size: 18px;
+      min-width: 20px;
     }
   }
 }

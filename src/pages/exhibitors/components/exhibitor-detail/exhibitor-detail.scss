@@ -6,6 +6,8 @@
   overflow: auto;
   .left-area {
     flex: 1;
+    height: calc(100vh - 90px);
+    overflow: auto;
     .card-container {
       background-color: #6287d5;
       height: 200px;
@@ -29,9 +31,6 @@
       .exhibitor-detail {
         padding: 30px 10px;
         background-color: #fff;
-        min-height: calc(100vh - 720px);
-        max-height: calc(100vh - 400px);
-        overflow: auto;
         .headers {
           display: flex;
           justify-content: space-around;

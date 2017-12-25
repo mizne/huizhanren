@@ -1,8 +1,11 @@
 <div class="customer-abstract-container">
   <div class="customer-header">
     <div class="customer-title">
-      <span class="customer-name">{{detail.name}}</span>
-      <span class="customer-title">( {{detail.title}} )</span>
+      <span class="customer-name">{{detail.name | customerNamePrivacy:detail.status}}</span>
+      <span class="customer-title" *ngIf="detail.title; else noTitle;">( {{detail.title}} )</span>
+      <ng-template #noTitle>
+        <span class="no-title no-item"></span>
+      </ng-template>
     </div>
 
     <div class="customer-rate">
@@ -11,12 +14,18 @@
   </div>
 
   <div class="customer-company" *ngIf="detail.company">
-    {{detail.company}}
+    {{detail.company | customerCompanyPrivacy:detail.status}}
   </div>
 
   <div class="customer-industry">
-    <span class="industry" *ngIf="detail.industry">{{detail.industry}}</span>
-    <span class="area" *ngIf="detail.area">{{detail.area}}</span>
+    <span class="industry" *ngIf="detail.industry; else noIndustry;">{{detail.industry}}</span>
+    <ng-template #noIndustry>
+      <span class="no-industry no-item"></span>
+    </ng-template>
+    <span class="area" *ngIf="detail.area; else noArea;">{{detail.area}}</span>
+    <ng-template #noArea>
+      <span class="no-area no-item"></span>
+    </ng-template>
   </div>
 
   <div class="customer-status">

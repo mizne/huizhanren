@@ -256,7 +256,7 @@ export class HzCardDetailComponent implements OnInit {
   `,
   styles: [`
     :host {
-      margin: 10px 0;
+      margin: 5px 0;
     }
     .hz-card-detail-field-item {
       display: flex;
@@ -279,7 +279,12 @@ export class HzCardDetailComponent implements OnInit {
 
     .hz-card-detail-field-item .hz-content .hz-card-field-value,
     .hz-card-detail-field-item .hz-content .hz-card-field-label {
-      margin:5px 0;
+      margin:2px 0;
+    }
+
+    .hz-card-detail-field-item .hz-content .hz-card-field-label {
+      color: #AEAEAE;
+      font-size: 12px;
     }
 
     .hz-card-detail-field-item .icon-wrapper {

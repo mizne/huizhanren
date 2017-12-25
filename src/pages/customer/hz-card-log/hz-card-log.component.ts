@@ -19,6 +19,7 @@ import { Logger } from '../models/logger.model'
       </div>
 
       <div class="hz-log-container">
+        <hz-card-log-item-add></hz-card-log-item-add>
         <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
         <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
       </div>
@@ -37,10 +38,6 @@ import { Logger } from '../models/logger.model'
 
   .hz-card-log .hz-log-title .hz-item.active {
     background-color: #6287d5;
-  }
-
-  .hz-card-log .hz-log-title .hz-item:last-child {
-    margin-right: 60px;
   }
   `]
 })

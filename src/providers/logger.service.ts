@@ -7,6 +7,7 @@ import { TenantService } from './tenant.service'
 import { Logger, LoggerLevel } from '../pages/customer/models/logger.model'
 
 import { ErrorLoggerService } from './error-logger.service'
+import { environment } from '../environments/environment'
 
 const levelStrings: LoggerLevel[] = ['info', 'warn', 'error', 'sys']
 
@@ -114,32 +115,41 @@ export class LoggerService {
    * @memberof LoggerService
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-          params: {
-            condition: {
-              ContactInfo: customerId
-            }
-          }
-        })
-      )
-      .map(res => {
-        const results = (res as APIResponse).result
-        return results.map(e => ({
-          id: e.RecordId,
-          time: e.CreatedAt,
-          level: levelStrings[e.level],
-          content: e.info
-        }))
-      })
-      .catch(e => {
-        return this.errorLogger.httpError({
-          module: 'LoggerService',
-          method: 'fetchLogger',
-          error: e
-        })
-      })
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserId()
+          .mergeMap(([tenantId, userId]) =>
+            this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+              params: {
+                condition: {
+                  ContactInfo: customerId
+                }
+              }
+            })
+          )
+          .map(res => {
+            const results = (res as APIResponse).result
+            return results.map(e => ({
+              id: e.RecordId,
+              time: e.CreatedAt,
+              level: levelStrings[e.level],
+              content: e.info
+            }))
+          })
+          .catch(e => {
+            return this.errorLogger.httpError({
+              module: 'LoggerService',
+              method: 'fetchLogger',
+              error: e
+            })
+          })
+      : Observable.of(
+          Array.from({ length: 100 }, (_, i) => ({
+            id: String(i),
+            time: '2017-12-22 11:12:11',
+            level: 'info',
+            content: `test content ${i}`
+          }))
+        )
   }
 }

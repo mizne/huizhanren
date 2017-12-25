@@ -9,7 +9,7 @@ page-more {
       width: 100%;
       height: calc(100vh - 140px);
       margin: 0 auto;
-      padding: 0 35px;
+      padding: 0 75px;
       position: relative;
       // background-color: rgba(33, 33, 33, 0.95);
 
@@ -18,6 +18,10 @@ page-more {
         color: white;
         text-align: center;
         font-size: 27px;
+
+        .desc {
+          margin-top: 10px;
+        }
       }
 
       .hz-module-box1 {

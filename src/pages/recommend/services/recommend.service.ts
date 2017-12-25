@@ -11,11 +11,11 @@ import { environment } from '../../../environments/environment'
 
 const fakeRecommends: Recommend[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'recommend-' + String(i),
-  name: `testName${i}`,
-  title: `testTitle${i}`,
-  company: `testCompany${i}`,
-  industry: `testIndustry${i}`,
-  area: `testArea${i}`
+  name: `张${i}`,
+  title: `经理${i}`,
+  company: `移动公司${i}`,
+  industry: i % 2 === 0 ? `互联网${i}` : '',
+  area: `上海${i}`
 }))
 
 @Injectable()

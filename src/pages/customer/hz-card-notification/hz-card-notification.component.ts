@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ToastController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
 import { State, getNotifications, getShowLog, getShowNotification } from '../reducers'
@@ -39,10 +40,6 @@ import { Notification } from '../models/notification.model'
   .hz-card-notification .hz-notification-title .hz-item.active {
     background-color: #6287d5;
   }
-
-  .hz-card-notification .hz-notification-title .hz-item:last-child {
-    margin-right: 60px;
-  }
   `]
 })
 export class HzCardNotificationComponent implements OnInit {
@@ -54,7 +51,10 @@ export class HzCardNotificationComponent implements OnInit {
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(private store: Store<State>) {
+  constructor(
+    private store: Store<State>,
+    private toastCtrl: ToastController
+  ) {
     this.notifications$ = store.select(getNotifications)
     this.showLog$ = store.select(getShowLog)
     this.showNotification$ = store.select(getShowNotification)
@@ -71,7 +71,11 @@ export class HzCardNotificationComponent implements OnInit {
   }
 
   toggleAnasisy() {
-
+    this.toastCtrl.create({
+      message: '吐血研发中',
+      position: 'top',
+      duration: 3e3
+    }).present()
   }
 
 }

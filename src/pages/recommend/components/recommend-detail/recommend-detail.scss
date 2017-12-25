@@ -1,12 +1,11 @@
 .recommend-detail-container {
   display: flex;
-  min-height: calc(100vh - 90px);
-  max-height: calc(100vh - 90px);
   background-color: #fff;
-  overflow: auto;
 
   .left-area {
     flex: 1;
+    height: calc(100vh - 90px);
+    overflow: auto;
     .card-container {
       background-color: #6287d5;
       height: 200px;
@@ -21,6 +20,9 @@
         .title {
           font-size: 2rem;
         }
+        .desc {
+          margin-top: 10px;
+        }
         .no-cardimg,
         .tel {
           font-size: 2rem;
@@ -34,8 +36,6 @@
       .customer-detail {
         background-color: #fff;
         padding: 30px 10px;
-        height: calc(100vh - 400px);
-        overflow: auto;
         .headers {
           display: flex;
           justify-content: space-around;

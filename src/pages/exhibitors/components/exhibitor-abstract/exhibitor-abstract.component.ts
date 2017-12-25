@@ -17,10 +17,12 @@ export class HzExhibitorAbstractComponent implements OnInit {
 
   viewProduct: boolean
   viewDescription: boolean
+  viewVisitors: boolean
 
   ngOnInit() {
     this.viewProduct = false
     this.viewDescription = false
+    this.viewVisitors = false
   }
 
   toggleViewProduct() {
@@ -29,6 +31,10 @@ export class HzExhibitorAbstractComponent implements OnInit {
 
   toggleViewDescription() {
     this.viewDescription = !this.viewDescription
+  }
+
+  toggleViewVisitors() {
+    this.viewVisitors = !this.viewVisitors
   }
 
   ensureInvite() {

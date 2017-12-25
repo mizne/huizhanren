@@ -22,13 +22,19 @@ import { RecommendEffects } from './effects/recommend.effects'
 import { MatcherEffects } from './effects/matcher.effects'
 
 import { CustomerMatcherStatusPipe } from './pipes/matcher-status.pipe'
+import { CustomerNamePrivacyPipe } from './pipes/name-privacy.pipe'
+import { CustomerCompanyPrivacyPipe } from './pipes/company-privacy.pipe'
 
 import { RecommendService } from './services/recommend.service'
 import { VisitorMatcherService } from './services/matcher.service'
 
 const services = [RecommendService, VisitorMatcherService]
 const effects = [RecommendEffects, MatcherEffects]
-const pipes = [CustomerMatcherStatusPipe]
+const pipes = [
+  CustomerMatcherStatusPipe,
+  CustomerNamePrivacyPipe,
+  CustomerCompanyPrivacyPipe
+]
 const modals = [
   ToInviteCustomerModal,
   ToCancelMatcherModal,

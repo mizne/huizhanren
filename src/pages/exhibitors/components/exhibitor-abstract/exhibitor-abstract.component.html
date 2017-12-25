@@ -10,11 +10,19 @@
       {{detail.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="area">
-        <span *ngIf="detail.booth">{{detail.booth}}</span>
-        <span *ngIf="detail.area"> | {{detail.area}}</span>
-      </span>
-      <span class="industry" *ngIf="detail.industry">{{detail.industry}}</span>
+      <span class="area" *ngIf="detail.booth; else noBooth;">{{detail.booth}}</span>
+      <ng-template #noBooth>
+        <span class="no-item"></span>
+      </ng-template>
+      <span class="pipe" *ngIf="detail.booth && detail.area"> | </span>
+      <span class="area" *ngIf="detail.area; else noArea;">{{detail.area}}</span>
+      <ng-template #noArea>
+        <span class="no-item"></span>
+      </ng-template>
+      <span class="industry" *ngIf="detail.industry; else noIndustry;">{{detail.industry}}</span>
+      <ng-template #noIndustry>
+        <span class="no-item"></span>
+      </ng-template>
     </div>
 
     <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
@@ -44,25 +52,25 @@
     </ng-template>
   </div>
 
-  <div class="exhibitor-product" *ngIf="detail.products.length > 0">
+  <div class="exhibitor-product" *ngIf="detail.products.length > 0; else noProduct;">
     <div class="header" (click)="toggleViewProduct()">
       <span>产品</span>
       <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
     <div class="content" *ngIf="viewProduct">
       <div class="products">
-        <div class="product-item" *ngFor="let item of detail.products" (click)="ensureShowProduct(item)">
+        <div class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures && item.pictures[0]" alt="">
           <div class="product-name">{{item.name}}</div>
         </div>
       </div>
-      <!-- <ng-template #noProduct>
-        <div class="no-product">还没有产品</div>
-      </ng-template> -->
     </div>
   </div>
+  <ng-template #noProduct>
+    <div class="no-item no-product">暂未上传产品</div>
+  </ng-template>
 
-  <div class="exhibitor-jianjie" *ngIf="detail.description">
+  <div class="exhibitor-jianjie" *ngIf="detail.description; else noDescription;">
     <div class="header" (click)="toggleViewDescription()">
       <span>简介</span>
       <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i>
@@ -71,4 +79,21 @@
       {{detail.description}}
     </div>
   </div>
+  <ng-template #noDescription>
+    <div class="no-item no-description">暂未上传简介</div>
+  </ng-template>
+
+  <div class="exhibitor-visitors" *ngIf="detail.visitors.length > 0; else noVisitors;">
+    <div class="header" (click)="toggleViewVisitors()">
+      <span>访客</span>
+      <span>{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
+      <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+    </div>
+    <div class="content" *ngIf="viewVisitors">
+      <img *ngFor="let visitor of detail.visitors.slice(0, 10)" [src]="visitor.headImgUrl" alt="">
+    </div>
+  </div>
+  <ng-template #noVisitors>
+    <div class="no-item no-visitor">暂无访客</div>
+  </ng-template>
 </div>

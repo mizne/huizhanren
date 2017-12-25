@@ -16,11 +16,11 @@ import { environment } from '../../../environments/environment'
 
 const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'matcher-' + String(i),
-  name: `testName${i}`,
-  title: `testTitle${i}`,
-  company: `testCompany${i}`,
-  industry: `testIndustry${i}`,
-  area: `testArea${i}`,
+  name: `李${i}`,
+  title: `经理${i}`,
+  company: `移动公司${i}`,
+  industry: `互联网${i}`,
+  area: `北京${i}`,
   status: i % 5,
   senderId: i % 2 === 0 ? '1aed77d156448e784da0affd6eda84e1' : '111',
   receiverId: i % 2 === 1 ? '1aed77d156448e784da0affd6eda84e1' : '222'

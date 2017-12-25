@@ -53,21 +53,19 @@ export class SmsService {
    * @memberof SmsService
    */
   verifyCode(phone: string, code: string): Observable<any> {
-    // return environment.production
-    // ? this.http.post(this.fetchUrl, {
-    //   phoneNumber: phone,
-    //   verifyCode: code
-    // })
-    // .catch(e => {
-    //   return this.logger.httpError({
-    //     module: 'SmsService',
-    //     method: 'verifyCode',
-    //     error: e
-    //   })
-    // })
-    // : Observable.of({})
-
-    return Observable.of({})
+    return environment.production
+    ? this.http.post(this.fetchUrl, {
+      phoneNumber: phone,
+      verifyCode: code
+    })
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'SmsService',
+        method: 'verifyCode',
+        error: e
+      })
+    })
+    : Observable.of({})
   }
 
   createSmsTemplate() {}

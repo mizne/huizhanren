@@ -12,6 +12,7 @@ export class Exhibitor {
   heat?: number
   products?: Product[]
   description?: string
+  visitors?: Visitor[]
   organizer?: string
   organizerId?: string
   selected?: boolean
@@ -36,6 +37,10 @@ export class RecommendExhibitor extends Exhibitor {
         name: e.Name,
         remark: e.Remark,
         pictures: e.PicList.map(f => f.PicPath)
+      })),
+      visitors: resp.Visitors.map(e => ({
+        id: e.id,
+        headImgUrl: e.HeadImgUrl
       })),
       description: resp.website,
       organizer: resp.Organizer,
@@ -63,6 +68,11 @@ export interface Product {
   remark?: string
 }
 
+export interface Visitor {
+  id?: string
+  headImgUrl?: string
+}
+
 export interface RecommendExhibitorResp {
   TenantId?: string
   _id?: string
@@ -77,6 +87,7 @@ export interface RecommendExhibitorResp {
   ExHall?: string
   heat?: number
   ProductList?: ProductResp[]
+  Visitors?: VisitorResp[]
   Organizer?: string
   OrganizerId?: string
   Industry?: string
@@ -88,6 +99,11 @@ export interface ProductResp {
   PicList?: PicResp[]
   Remark?: string
   UpTime?: string
+}
+
+export interface VisitorResp {
+  id?: string
+  HeadImgUrl?: string
 }
 
 export interface PicResp {

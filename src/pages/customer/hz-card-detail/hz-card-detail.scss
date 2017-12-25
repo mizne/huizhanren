@@ -26,9 +26,7 @@ hz-card-detail {
   .hz-card-box {
     width: 100%;
     height: 240px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    padding-left: 47px;
+    padding: 18px 30px;
     transition: all ease .8s;
 
     ion-label {
@@ -48,7 +46,6 @@ hz-card-detail {
 
   &.open .hz-card-box {
     padding-left: 22px;
-    // background: url(../assets/images/customer_cardbg_big.png) no-repeat;
     background-color: #6288d5;
     background-size: cover;
 
@@ -58,11 +55,10 @@ hz-card-detail {
   }
 
   &.close .hz-card-box {
-    // background: url(../assets/images/customer_cardbg.png) no-repeat;
     background-color: #6288d5;
     background-size: cover;
     .hz-img-wrapper {
-      width: 90%;
+      width: 100%;
     }
   }
 
@@ -84,12 +80,12 @@ hz-card-detail {
     }
 
     .hz-person-info {
-      margin-bottom: 42px;
+      margin-bottom: 30px;
       // margin-bottom: 35px;
       font-size: 17px;
       .hz-card-name,
       .hz-card-company {
-        @include textOverflow;
+        @include textOverflow(100%);
       }
 
       .hz-card-name {
@@ -102,7 +98,7 @@ hz-card-detail {
       font-size: 16px;
       .hz-msg-tag {
         margin-bottom: 10px;
-        @include textOverflow;
+        @include textOverflow(100%);
 
         ion-icon {
           margin-right: 8px;
@@ -117,15 +113,14 @@ hz-card-detail {
         }
         .hz-msg-content {
           display: inline-block;
-          width: 300px;
-          @include textOverflow;
+          @include textOverflow(100%);
         }
       }
 
       .hz-msg-timerest {
         margin-top: 5px;
         margin-left: 5px;
-        @include textOverflow;
+        @include textOverflow(100%);
       }
     }
   }
