@@ -11,7 +11,7 @@
       ></hz-exhibitor-abstract>
       <div class="exhibitor-detail">
         <div class="headers">
-          <div class="header-item logger"
+          <div class="header-item logger" tappable
           [class.active]="activeHeaderIndex === 0"
           (click)="activeHeader(0)">日志</div>
           <div class="header-item portray"
@@ -29,7 +29,7 @@
 
   <div class="right-area" *ngIf="expand">
     <div class="headers">
-      <div class="header-item logger"
+      <div class="header-item logger" tappable
       [class.active]="activeDetailHeaderIndex === 0"
       (click)="activeDetailHeader(0)">日志</div>
       <div class="header-item portray"

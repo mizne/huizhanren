@@ -13,9 +13,9 @@ import { Logger } from '../models/logger.model'
   template: `
     <div class="hz-card-log" [class.close]="!open">
       <div class="hz-log-title">
-        <span class="hz-item" [class.active]="showLog$ | async" (click)="toggleLog()">日志</span>
-        <span class="hz-item" [class.active]="showNotification$ | async" (click)="toggleNotification()">提醒</span>
-        <span class="hz-item" (click)="toggleAnasisy()">分析</span>
+        <span class="hz-item" tappable [class.active]="showLog$ | async" (click)="toggleLog()">日志</span>
+        <span class="hz-item" tappable [class.active]="showNotification$ | async" (click)="toggleNotification()">提醒</span>
+        <span class="hz-item" tappable (click)="toggleAnasisy()">分析</span>
       </div>
 
       <div class="hz-log-container">
@@ -80,7 +80,7 @@ export class HzCardLogComponent implements OnInit {
       <div class="hz-card-log-time">
         {{log.time}}
       </div>
-      <div class="hz-card-log-content" [ngClass]="log.level" (click)="editLogger(log)">
+      <div class="hz-card-log-content" tappable [ngClass]="log.level" (click)="editLogger(log)">
         {{log.content}}
       </div>
     </div>
@@ -165,7 +165,7 @@ export class HzCardLogItemComponent implements OnInit {
   template: `
     <div class="hz-card-log-item-add hz-card-log-item">
       添加
-      <ion-icon name="add-circle" (click)="createLogger()"></ion-icon>
+      <ion-icon name="add-circle" tappable (click)="createLogger()"></ion-icon>
     </div>
   `,
   styles: [`

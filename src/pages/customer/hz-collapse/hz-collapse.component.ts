@@ -46,7 +46,7 @@ export class HzCollapsesetComponent {
   selector     : 'hz-collapse',
   template     : `
     <div class="hz-collapse-header" tappable [attr.aria-expanded]="nzActive" (click)="clickHeader($event)" role="tab">
-      <ion-checkbox [(ngModel)]="_selected" (ionChange)="change()"></ion-checkbox>
+      <ion-checkbox [(ngModel)]="_selected" tappable (ionChange)="change()"></ion-checkbox>
       <ion-label margin-left="10px">{{nzTitle + ' ( ' + num + ' )'}}</ion-label>
       <ion-icon float-right class="icon" name="arrow-down" *ngIf="nzActive"></ion-icon>
       <ion-icon float-right class="icon" name="arrow-forward" *ngIf="!nzActive"></ion-icon>

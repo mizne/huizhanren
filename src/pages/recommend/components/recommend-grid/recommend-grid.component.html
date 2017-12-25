@@ -16,10 +16,10 @@
   </ion-grid>
 
   <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
-    <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
+    <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
       (click)="ensureShow(item.id)">
       <ion-col col-1 class="checkbox-col">
-        <ion-checkbox [(ngModel)]="item.selected"></ion-checkbox>
+        <ion-checkbox tappable [(ngModel)]="item.selected"></ion-checkbox>
         <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']" class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
       </ion-col>
       <ion-col col-1>{{item.name | customerNamePrivacy:item.status}}</ion-col>
@@ -70,7 +70,7 @@
     </ion-grid>
 
     <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
-      <ion-row *ngFor="let item of dataItems; even as even" class="row-item" [class.even]="even" [class.active]="activeId === item.id"
+      <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
         (click)="ensureShow(item.id)">
         <ion-col col-2>{{item.name}}</ion-col>
         <ion-col col-2>{{item.title}}</ion-col>

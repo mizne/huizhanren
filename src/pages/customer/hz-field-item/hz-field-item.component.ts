@@ -6,7 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
     <div class="hz-field-item">
       <div class="hz-field-title">
         <span class="hz-title-text">{{field.title}}</span>
-        <ion-icon *ngIf="!field.single" class="hz-icon" name="add-circle" (click)="addItem()"></ion-icon>
+        <ion-icon *ngIf="!field.single" tappable class="hz-icon" name="add-circle" (click)="addItem()"></ion-icon>
       </div>
       <ng-template [ngIf]="field.single">
         <div class="hz-field-single">
@@ -20,13 +20,13 @@ import { Component, OnInit, Input } from '@angular/core';
           </span>
           <span class="hz-field-value">
             <input type="text" [(ngModel)]="item.value">
-            
+
           </span>
-          <ion-icon class="hz-icon" name="close" (click)="removeItem(i)"></ion-icon>
+          <ion-icon class="hz-icon" tappable name="close" (click)="removeItem(i)"></ion-icon>
         </div>
       </ng-template>
     </div>
-    
+
   `,
 })
 

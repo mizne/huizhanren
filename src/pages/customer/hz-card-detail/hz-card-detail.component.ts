@@ -30,19 +30,7 @@ interface Field {
   label: string
   value: string
 }
-// <img [src]="(customer$ | async)?.imageUrl">
 
-// <ion-slides>
-// <ion-slide>
-//   <h1>Slide 1</h1>
-// </ion-slide>
-// <ion-slide>
-//   <h1>Slide 2</h1>
-// </ion-slide>
-// <ion-slide>
-//   <h1>Slide 3</h1>
-// </ion-slide>
-// </ion-slides>
 @Component({
   selector: 'hz-card-detail',
   template: `
@@ -66,17 +54,17 @@ interface Field {
       </div>
 
       <div (clickOutside)="clickOutside()">
-        <div class="card-icon-wrapper" (click)="showMore()">
+        <div class="card-icon-wrapper" tappable (click)="showMore()">
           <ion-icon name="more"></ion-icon>
         </div>
         <div class="hz-popover-wrapper" [@collapseState]="_active?'active':'inactive'">
-          <div class="hz-popover-item" (click)="editCustomer.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="editCustomer.emit(); showMore()">
             <ion-icon name="create"></ion-icon>编辑
           </div>
-          <div class="hz-popover-item" (click)="delCustomer.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="delCustomer.emit(); showMore()">
             <ion-icon name="trash"></ion-icon>删除
           </div>
-          <div class="hz-popover-item" (click)="toList.emit(); showMore()">
+          <div class="hz-popover-item" tappable (click)="toList.emit(); showMore()">
           <ion-icon name="close-circle"></ion-icon>关闭
         </div>
         </div>
@@ -89,11 +77,11 @@ interface Field {
           <div class="hz-card-company">{{(customer$ | async).companys[0]?.value}}</div>
         </div>
         <div class="hz-msg-info">
-        <div class="hz-msg-tag" (click)="toSingleEditGroup()">
+        <div class="hz-msg-tag" tappable (click)="toSingleEditGroup()">
           <ion-icon name="people"></ion-icon>
           标签：{{currentGroupName$ | async}}
         </div>
-        <div class="hz-msg-notification" (click)="toShowNotification()">
+        <div class="hz-msg-notification" tappable (click)="toShowNotification()">
           <ion-icon name="clock"></ion-icon>
           <span class="hz-msg-content">提醒：{{earliestNotificationContent$ | async}}</span>
         </div>
@@ -249,7 +237,7 @@ export class HzCardDetailComponent implements OnInit {
           <div class="hz-card-field-label">{{field.label}}</div>
         </a>
       </div>
-      <div class="icon-wrapper" *ngIf="isPhone" (click)="sendSMS()">
+      <div class="icon-wrapper" tappable *ngIf="isPhone" (click)="sendSMS()">
         <ion-icon name="chatboxes" color="primary"></ion-icon>
       </div>
     </div>

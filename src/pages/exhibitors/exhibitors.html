@@ -29,7 +29,7 @@
         [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
-      <p *ngIf="showLoadMore$ | async" class="load-more" (click)="loadMore()">加载更多</p>
+      <p *ngIf="showLoadMore$ | async" tappable class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
@@ -45,7 +45,7 @@
       </exhibitor-detail>
     </div>
 
-    <div class="hz-toggle-log" *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
+    <div class="hz-toggle-log" tappable *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
       <i *ngIf="(pageStatus$ | async) === 1" class="iconfont icon-right"></i>
       <i *ngIf="(pageStatus$ | async) === 0" class="iconfont icon-left"></i>
     </div>

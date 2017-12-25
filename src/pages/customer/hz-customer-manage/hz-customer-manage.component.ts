@@ -7,11 +7,11 @@ import { Group } from '../models/group.model'
   template: `
     <div class="hz-customer-manage">
       <ul class="hz-manage-nav">
-        <li class="hz-manage-nav-item" [class.active]="_activeIndex === 0" (click)="tabClick(0)">
+        <li class="hz-manage-nav-item" tappable [class.active]="_activeIndex === 0" (click)="tabClick(0)">
           <span>发短信</span>
         </li>
 
-        <li class="hz-manage-nav-item" [class.active]="_activeIndex === 1" (click)="tabClick(1)">
+        <li class="hz-manage-nav-item" tappable [class.active]="_activeIndex === 1" (click)="tabClick(1)">
           <span>设置标签</span>
         </li>
       </ul>
@@ -47,7 +47,7 @@ export class HzCustomerManageComponent implements OnInit {
   template: `
     <div class="hz-customer-manage-header">
       <span>已选择{{ item.number + '个' + item.label }}</span>
-      <span *ngIf="type !== 'group'" class="select-all" (click)="toggleAll()">全选</span>
+      <span *ngIf="type !== 'group'" tappable class="select-all" (click)="toggleAll()">全选</span>
     </div>
   `
 })
@@ -104,17 +104,17 @@ export class HzCustomerManageContentItem implements OnInit {
       <div class="left-area">
         <div class="header">
           <span class="label">{{type === 'group' ? '选择标签' : '选择模板'}}
-            <span class="rename" *ngIf="type === 'group' && validSelected" (click)="toRename()">重命名</span>
-            <span class="delete" *ngIf="type === 'group' && validSelected" (click)="toDel()">删除</span>
+            <span class="rename" tappable *ngIf="type === 'group' && validSelected" (click)="toRename()">重命名</span>
+            <span class="delete" tappable *ngIf="type === 'group' && validSelected" (click)="toDel()">删除</span>
           </span>
 
-          <span class="action" *ngIf="type === 'group'" (click)="toCreateTemplate(type)">
+          <span class="action" tappable *ngIf="type === 'group'" (click)="toCreateTemplate(type)">
             <ion-icon name="add-circle" color="primary"></ion-icon>
             <span class="text">{{type === 'group' ? '新建标签' : '添加模板'}}</span>
           </span>
         </div>
         <div class="content">
-          <div class="template-item" *ngFor="let template of _templates; let i = index;" [class.active]="selectedTemplate === template"
+          <div class="template-item" tappable *ngFor="let template of _templates; let i = index;" [class.active]="selectedTemplate === template"
             (click)="selectTemplate(template, i)">{{template.label}}</div>
         </div>
       </div>

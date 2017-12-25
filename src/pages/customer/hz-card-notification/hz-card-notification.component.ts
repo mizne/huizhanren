@@ -14,9 +14,9 @@ import { Notification } from '../models/notification.model'
   template: `
     <div class="hz-card-notification" [class.close]="!open">
       <div class="hz-notification-title">
-        <span class="hz-item" [class.active]="showLog$ | async" (click)="toggleLog()">日志</span>
-        <span class="hz-item" [class.active]="showNotification$ | async" (click)="toggleNotification()">提醒</span>
-        <span class="hz-item" (click)="toggleAnasisy()">分析</span>
+        <span class="hz-item" tappable [class.active]="showLog$ | async" (click)="toggleLog()">日志</span>
+        <span class="hz-item" tappable [class.active]="showNotification$ | async" (click)="toggleNotification()">提醒</span>
+        <span class="hz-item" tappable (click)="toggleAnasisy()">分析</span>
       </div>
 
       <div class="hz-notification-container">
@@ -87,7 +87,7 @@ export class HzCardNotificationComponent implements OnInit {
       <div class="hz-card-notification-time">
         {{notification.time}}
       </div>
-      <div class="hz-card-notification-content" (click)="editNotification(notification)">
+      <div class="hz-card-notification-content" tappable (click)="editNotification(notification)">
         {{notification.content}}
       </div>
     </div>
@@ -157,7 +157,7 @@ export class HzCardNotificationItemComponent implements OnInit {
   template: `
     <div class="hz-card-notification-item-add hz-card-notification-item">
       添加
-      <ion-icon name="add-circle" (click)="createNotification()"></ion-icon>
+      <ion-icon name="add-circle" tappable (click)="createNotification()"></ion-icon>
     </div>
   `,
   styles: [`

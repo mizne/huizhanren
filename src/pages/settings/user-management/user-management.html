@@ -38,7 +38,7 @@
             <div class="user-prompt">
               用户最多可添加{{ maxCount$ | async }}个
             </div>
-            <div class="user-add" (click)="toAddUser()">
+            <div class="user-add" tappable (click)="toAddUser()">
               <ion-icon name="add-circle" color="primary"></ion-icon>
               <span class="user-add-text">添加用户</span>
             </div>

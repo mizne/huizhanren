@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable'
   template: `
     <div class="hz-customer-item" tappable (click)="showDetail(customer.id)" [class.choosed]="hasChoosed$ | async">
       <div class="left-area">
-        <ion-checkbox [(ngModel)]="selected" (ionChange)="change($event)"></ion-checkbox>
+        <ion-checkbox tappable [(ngModel)]="selected" (ionChange)="change($event)"></ion-checkbox>
       </div>
       <div class="center-area">
         <div class="item-name">{{customer.name}}</div>

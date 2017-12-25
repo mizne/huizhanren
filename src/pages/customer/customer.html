@@ -24,7 +24,7 @@
 
 <ion-content padding>
   <div class="hz-customer-container">
-    <div class="hz-toggle-log" *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
+    <div class="hz-toggle-log" tappable *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
       <i *ngIf="showLog$ | async" class="iconfont icon-right"></i>
       <i *ngIf="!(showLog$ | async)" class="iconfont icon-left"></i>
     </div>
@@ -65,7 +65,7 @@
 
               <img *ngIf="cardBehindImg$ | async" [src]="cardBehindImg$ | async">
 
-              <div *ngIf="!(cardBehindImg$ | async)" class="hz-card-box" (click)="takeCardBehind()">
+              <div *ngIf="!(cardBehindImg$ | async)" tappable class="hz-card-box" (click)="takeCardBehind()">
                 <ion-icon class="hz-icon" name="camera"></ion-icon>
               </div>
               <p *ngIf="!(cardBehindImg$ | async)" class="hz-card-text">添加名片背面</p>

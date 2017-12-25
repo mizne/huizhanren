@@ -6,10 +6,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
     <div class="hz-setting-item">
       <div class="hz-setting-title">
         <span class="hz-title-text">{{hzTitle}}</span>
-        <ion-icon *ngIf="hzEditable" class="hz-icon" name="add-circle" (click)="toUserManagement()"></ion-icon>
+        <ion-icon *ngIf="hzEditable" tappable class="hz-icon" name="add-circle" (click)="toUserManagement()"></ion-icon>
       </div>
-      
-      <div class="hz-setting-content" *ngFor="let item of hzItems" (click)="active(item.name)">
+
+      <div class="hz-setting-content" *ngFor="let item of hzItems" tappable (click)="active(item.name)">
         <ion-icon class="hz-icon" [name]="item.icon" [color]="item.active ? 'primary' : 'grey'"></ion-icon>
         <div class="hz-setting-wrapper">
           <span class="hz-setting-label">{{item.label}}</span>
@@ -17,7 +17,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
         </div>
       </div>
     </div>
-    
+
   `
 })
 export class HzSettingItemComponent implements OnInit {
@@ -36,7 +36,7 @@ export class HzSettingItemComponent implements OnInit {
   @Output() about: EventEmitter<void> = new EventEmitter<void>()
 
   @Output() checkUpdate: EventEmitter<void> = new EventEmitter<void>()
-  
+
   @Output() tagManagement: EventEmitter<void> = new EventEmitter<void>()
   @Output() download: EventEmitter<void> = new EventEmitter<void>()
   constructor() {}

@@ -1,13 +1,13 @@
 <div class="matcher-filter-container" [class.expand]="expand">
   <label class="first" for="">筛选:</label>
-  <ion-checkbox [formControl]="allowControl"></ion-checkbox>
+  <ion-checkbox tappable [formControl]="allowControl"></ion-checkbox>
   <label for="">已同意</label>
-  <ion-checkbox *ngIf="expand" [formControl]="refuseControl"></ion-checkbox>
+  <ion-checkbox tappable *ngIf="expand" [formControl]="refuseControl"></ion-checkbox>
   <label *ngIf="expand">被拒绝</label>
-  <ion-checkbox [formControl]="unAuditControl"></ion-checkbox>
+  <ion-checkbox tappable [formControl]="unAuditControl"></ion-checkbox>
   <label for="">未审核</label>
-  <ion-checkbox *ngIf="expand" [formControl]="notAllowAuditControl"></ion-checkbox>
+  <ion-checkbox tappable *ngIf="expand" [formControl]="notAllowAuditControl"></ion-checkbox>
   <label *ngIf="expand" for="">审核未通过</label>
-  <ion-checkbox [formControl]="unReplyControl"></ion-checkbox>
+  <ion-checkbox tappable [formControl]="unReplyControl"></ion-checkbox>
   <label for="">未答复</label>
 </div>

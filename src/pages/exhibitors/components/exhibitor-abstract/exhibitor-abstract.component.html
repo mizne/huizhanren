@@ -53,7 +53,7 @@
   </div>
 
   <div class="exhibitor-product" *ngIf="detail.products.length > 0; else noProduct;">
-    <div class="header" (click)="toggleViewProduct()">
+    <div class="header" tappable (click)="toggleViewProduct()">
       <span>产品</span>
       <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
@@ -71,7 +71,7 @@
   </ng-template>
 
   <div class="exhibitor-jianjie" *ngIf="detail.description; else noDescription;">
-    <div class="header" (click)="toggleViewDescription()">
+    <div class="header" tappable (click)="toggleViewDescription()">
       <span>简介</span>
       <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
@@ -84,7 +84,7 @@
   </ng-template>
 
   <div class="exhibitor-visitors" *ngIf="detail.visitors.length > 0; else noVisitors;">
-    <div class="header" (click)="toggleViewVisitors()">
+    <div class="header" tappable (click)="toggleViewVisitors()">
       <span>访客</span>
       <span>{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
       <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i>

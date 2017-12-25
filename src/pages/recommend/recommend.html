@@ -25,7 +25,7 @@
       [dataItems]="matchers$ | async">
     </recommend-grid>
 
-      <p class="load-more" *ngIf="showLoadMore$ | async" (click)="loadMore()">加载更多</p>
+      <p class="load-more" tappable *ngIf="showLoadMore$ | async" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
@@ -42,7 +42,7 @@
       </recommend-detail>
     </div>
 
-    <div class="hz-toggle-log" *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
+    <div class="hz-toggle-log" tappable *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
         <i *ngIf="(pageStatus$ | async) === 1" class="iconfont icon-right"></i>
         <i *ngIf="(pageStatus$ | async) === 0" class="iconfont icon-left"></i>
       </div>
