@@ -8,9 +8,9 @@ hz-card-log {
   height: calc(100vh - 90px);
 
   .hz-log-title {
-    height: 52px;
+    height: 50px;
     background: #2f5ebd;
-    line-height: 52px;
+    line-height: 50px;
     padding: 0 14px;
     vertical-align: middle;
     color: #fff;
@@ -18,9 +18,9 @@ hz-card-log {
   }
 
   .hz-log-container {
-    padding: 22px 28px 22px 24px;
+    padding: 30px;
     color: #fff;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 140px);
     overflow: auto;
   }
 }
