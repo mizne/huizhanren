@@ -1,8 +1,8 @@
-<div class="hz-selector" (click)="togglePopover()" (clickOutside)="closePopover()">
+<div class="hz-selector" tappable (click)="togglePopover()" (clickOutside)="closePopover()">
   {{selectedLabel}}
   <i class="iconfont icon-arrowdown"></i>
   <div class="hz-popover-wrapper" *ngIf="showPopover">
-    <div class="hz-popover-item" *ngFor="let option of options" (click)="ensureSelect(option)">
+    <div class="hz-popover-item" tappable *ngFor="let option of options" (click)="ensureSelect(option)">
       {{option.label}}
     </div>
   </div>

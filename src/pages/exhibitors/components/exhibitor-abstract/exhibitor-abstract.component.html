@@ -58,12 +58,12 @@
       <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
     <div class="content" *ngIf="viewProduct">
-      <div class="products">
-        <div class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
+      <ul class="products">
+        <li class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures && item.pictures[0]" alt="">
           <div class="product-name">{{item.name}}</div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </div>
   <ng-template #noProduct>
@@ -90,7 +90,11 @@
       <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i>
     </div>
     <div class="content" *ngIf="viewVisitors">
-      <img *ngFor="let visitor of detail.visitors.slice(0, 10)" [src]="visitor.headImgUrl" alt="">
+      <ul class="visitors">
+        <li *ngFor="let visitor of detail.visitors" class="visitor">
+          <img [src]="visitor.headImgUrl" alt="">
+        </li>
+      </ul>
     </div>
   </div>
   <ng-template #noVisitors>
