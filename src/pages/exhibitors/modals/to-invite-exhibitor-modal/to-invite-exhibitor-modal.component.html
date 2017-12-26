@@ -16,12 +16,17 @@
       <div class="field-item address" radio-group [formControl]="addressCtrl">
         <label for="">预约地点:</label>
         <span>
-          <!-- <ion-checkbox checked="true"></ion-checkbox> -->
-          <ion-radio id="first" [value]="srcAddress"></ion-radio>
-          <label for="first">{{srcAddress}}</label>
-          <!-- <ion-checkbox checked="true"></ion-checkbox> -->
-          <ion-radio id="second" [value]="destAddress"></ion-radio>
-          <label for="second">{{destAddress}}</label>
+          <ion-list>
+            <ion-item>
+              <ion-label>{{srcAddress}}</ion-label>
+              <ion-radio id="first" [value]="srcAddress"></ion-radio>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>{{destAddress}}</ion-label>
+              <ion-radio id="second" [value]="destAddress"></ion-radio>
+            </ion-item>
+          </ion-list>
         </span>
       </div>
 

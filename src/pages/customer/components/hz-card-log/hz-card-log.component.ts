@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-
+import { ToastController } from 'ionic-angular'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 import { State, getLogs, getShowLog, getShowNotification } from '../../reducers'
@@ -40,7 +40,10 @@ export class HzCardLogComponent {
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(private store: Store<State>) {
+  constructor(
+    private store: Store<State>,
+    private toastCtrl: ToastController
+  ) {
     this.logs$ = store.select(getLogs)
 
     this.showLog$ = store.select(getShowLog)
@@ -55,5 +58,11 @@ export class HzCardLogComponent {
     this.store.dispatch(new ToggleShowNotificationAction(true))
   }
 
-  toggleAnasisy() {}
+  toggleAnasisy() {
+    this.toastCtrl.create({
+      message: '吐血研发中...',
+      duration: 3e3,
+      position: 'top'
+    }).present()
+  }
 }

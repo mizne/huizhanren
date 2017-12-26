@@ -17,6 +17,13 @@
       span {
         flex: 4;
         color: #333333;
+
+        ion-list {
+          display: flex;
+          ion-item {
+            width: 160px;
+          }
+        }
       }
     }
 
