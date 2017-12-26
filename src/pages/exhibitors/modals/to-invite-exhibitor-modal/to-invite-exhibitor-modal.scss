@@ -12,6 +12,9 @@
       label {
         flex: 1;
         color: map-get($map: $colors, $key: grey);
+        &.address-label {
+          padding-top: 15px;
+        }
       }
 
       span {
@@ -22,6 +25,9 @@
           display: flex;
           ion-item {
             width: 160px;
+            &:first-child {
+              padding-left: 0;
+            }
           }
         }
       }
