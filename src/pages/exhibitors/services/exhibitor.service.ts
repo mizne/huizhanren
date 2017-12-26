@@ -13,7 +13,7 @@ const fakeExhibitors: RecommendExhibitor[] = Array.from(
   { length: 100 },
   (_, i) => ({
     id: String(i),
-    name: `展商特别长特别长特别长特别长特别长特别长特别长特别长的名字${i}`,
+    name: `展商特别长特别长特别长的名字${i}`,
     logo: './assets/images/card.jpg',
     booth: Math.random() > 0.5 ? `0-2AAA${i}` : '',
     industry: Math.random() > 0.5 ? `大数据${i}` : '',
