@@ -118,14 +118,7 @@ export class GroupService {
     return this.fetchGroup({})
       .map(groups => {
         return [
-          {
-            id: '无标签',
-            name: '无标签',
-            active: true,
-            selected: false,
-            createdAt: '1970-01-01 00:00:00',
-            scrollTop: 0
-          },
+          Group.NONE,
           ...groups
         ]
       })
@@ -148,16 +141,6 @@ export class GroupService {
           }
         })
       })
-      .map(res => (res as APIResponse).result)
-      .map(groups =>
-        groups.map(group => ({
-          id: group.RecordId,
-          name: group.Name,
-          active: false,
-          selected: false,
-          createdAt: group.CreatedAt,
-          scrollTop: 0
-        }))
-      )
+      .map(res => (res as APIResponse).result.map(Group.convertFromResp))
   }
 }

@@ -1,0 +1,19 @@
+.hz-card-log-item {
+  @include cardExtractItem(log);
+
+  .hz-card-log-content {
+    &.info {
+      background-color: #a66cb9;
+    }
+    &.warn {
+      background-color: #0ec5a9;
+    }
+    &.error {
+      background-color: #ef9c64;
+    }
+    &.sys {
+      background-color: #2f5ebd;
+    }
+  }
+}
+

@@ -33,3 +33,111 @@
     color: map-get($map: $colors, $key: grey);
   }
 }
+
+@mixin cardExtractContainer($itemName) {
+  background-color: rgba(47, 94, 189, 0.8);
+  height: calc(100vh - 90px);
+
+  .hz-#{$itemName}-title {
+    height: 50px;
+    background: #2f5ebd;
+    line-height: 50px;
+    padding: 0 14px;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+
+    .hz-item {
+      flex: 1;
+      text-align: center;
+      &.active {
+        background-color: #6287d5;
+      }
+    }
+  }
+
+  .hz-#{$itemName}-container {
+    padding: 30px;
+    color: #fff;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+  }
+}
+
+@mixin cardExtractAdd($itemName) {
+  position: relative;
+  min-height: 57px;
+  padding-bottom: 20px;
+  padding-left: 35px;
+
+  .icon {
+    font-size: 20px;
+    margin-left: 7px;
+  }
+
+  &:before {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    box-sizing: content-box;
+    content: '';
+    border-radius: 50%;
+    background: #fff;
+    width: 13px;
+    height: 13px;
+    border: 3px solid rgba(108, 140, 220, 0.51);
+  }
+
+  &:after {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+    width: 1px;
+    height: 100%;
+    content: '';
+    background: rgba(245, 247, 252, 0.51);
+  }
+}
+
+@mixin cardExtractItem($itemName) {
+  position: relative;
+  min-height: 57px;
+  padding-bottom: 20px;
+  padding-left: 35px;
+
+  &:before {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 13px;
+    height: 13px;
+    content: '';
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  &:after {
+    position: absolute;
+    top: 7px;
+    left: 9px;
+    width: 1px;
+    height: 100%;
+    content: '';
+    background: rgba(245, 247, 252, 0.51);
+  }
+
+  .hz-card-#{$itemName}-time {
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+
+  .hz-card-#{$itemName}-content {
+    display: inline-block;
+    min-height: 42px;
+    padding: 12px 15px 8px;
+    border-radius: 4px;
+    background: #6190ec;
+  }
+}

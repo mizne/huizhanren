@@ -405,93 +405,49 @@ export class CustomerService {
    * @memberof CustomerService
    */
   fetchAllCustomer(): Observable<Customer[]> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-          params: {
-            condition: {}
-          }
-        })
-      )
-      .map(res => {
-        const results = (res as APIResponse).result
-        const customers: Customer[] = results.map(e => ({
-          id: e.RecordId,
-          groups: e.GroupInfo,
-          name: e.Name,
-          phones: e.Phone.map(e => ({ ...e, selected: true })),
-          emails: e.Email.map(e => ({ ...e, selected: true })),
-          addresses: e.Address.map(e => ({ ...e, selected: true })),
-          departments: e.Department.map(e => ({ ...e, selected: true })),
-          jobs: e.Job.map(e => ({ ...e, selected: true })),
-          companys: e.Company.map(e => ({ ...e, selected: true })),
-          imageUrl: e.Image,
-          imageBehindUrl: e.BackImage,
-          haveCalled: e.HaveCalled,
-          haveSendEmail: e.HaveSendEmail,
-          haveSendMsg: e.HaveSendMsg,
-          selected: false
-        }))
-
-        return customers
+    return this.fetchCustomers({}).catch(e => {
+      return this.logger.httpError({
+        module: 'CustomerService',
+        method: 'fetchAllCustomer',
+        error: e
       })
-      .catch(e => {
-        return this.logger.httpError({
-          module: 'CustomerService',
-          method: 'fetchAllCustomer',
-          error: e
-        })
-      })
+    })
   }
-/**
- * 获取单条客户信息
- *
- * @param {string} customerId
- * @returns {Observable<Customer>}
- * @memberof CustomerService
- */
-fetchSingleCustomer(customerId: string): Observable<Customer> {
-    return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
-          params: {
-            condition: {
-              RecordId: customerId
-            }
-          }
-        })
-      )
-      .map(res => {
-        const results = (res as APIResponse).result
-        const customers: Customer[] = results.map(e => ({
-          id: e.RecordId,
-          groups: e.GroupInfo,
-          name: e.Name,
-          phones: e.Phone.map(e => ({ ...e, selected: true })),
-          emails: e.Email.map(e => ({ ...e, selected: true })),
-          addresses: e.Address.map(e => ({ ...e, selected: true })),
-          departments: e.Department.map(e => ({ ...e, selected: true })),
-          jobs: e.Job.map(e => ({ ...e, selected: true })),
-          companys: e.Company.map(e => ({ ...e, selected: true })),
-          imageUrl: e.Image,
-          imageBehindUrl: e.BackImage,
-          haveCalled: e.HaveCalled,
-          haveSendEmail: e.HaveSendEmail,
-          haveSendMsg: e.HaveSendMsg,
-          selected: false
-        }))
-
+  /**
+   * 获取单条客户信息
+   *
+   * @param {string} customerId
+   * @returns {Observable<Customer>}
+   * @memberof CustomerService
+   */
+  fetchSingleCustomer(customerId: string): Observable<Customer> {
+    return this.fetchCustomers({
+      RecordId: customerId
+    })
+      .map(customers => {
         return customers[0]
       })
       .catch(e => {
         return this.logger.httpError({
           module: 'CustomerService',
-          method: 'fetchAllCustomer',
+          method: 'fetchSingleCustomer',
           error: e
         })
       })
   }
-}
 
+  private fetchCustomers(condition: any): Observable<Customer[]> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition
+          }
+        })
+      )
+      .map(res => {
+        return (res as APIResponse).result.map(Customer.convertFromResp)
+      })
+  }
+}

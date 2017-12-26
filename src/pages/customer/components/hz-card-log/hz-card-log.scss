@@ -1,27 +1,3 @@
-hz-card-log {
-  width: 100%;
-}
-
 .hz-card-log {
-  background-color: rgba(47, 94, 189, 0.8);;
-  width: 100%;
-  height: calc(100vh - 90px);
-
-  .hz-log-title {
-    height: 50px;
-    background: #2f5ebd;
-    line-height: 50px;
-    padding: 0 14px;
-    vertical-align: middle;
-    color: #fff;
-    font-size: 18px;
-  }
-
-  .hz-log-container {
-    padding: 30px;
-    color: #fff;
-    max-height: calc(100vh - 140px);
-    overflow: auto;
-  }
+  @include cardExtractContainer(log);
 }
-

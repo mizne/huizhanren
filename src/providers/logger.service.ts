@@ -4,19 +4,15 @@ import { Observable } from 'rxjs/Observable'
 
 import { APIResponse } from './interceptor'
 import { TenantService } from './tenant.service'
-import { Logger, LoggerLevel } from '../pages/customer/models/logger.model'
-
+import { Logger } from '../pages/customer/models/logger.model'
 import { ErrorLoggerService } from './error-logger.service'
 import { environment } from '../environments/environment'
-
-const levelStrings: LoggerLevel[] = ['info', 'warn', 'error', 'sys']
 
 @Injectable()
 export class LoggerService {
   private queryUrl: string = '/data/querybycondition/ContactLog'
   private insertUrl: string = '/data/insert/ContactLog'
   private updateUrl: string = '/data/update/ContactLog'
-
   private insertListUrl: string = '/data/insertList/ContactLog'
 
   constructor(
@@ -33,16 +29,13 @@ export class LoggerService {
    * @memberof LoggerService
    */
   createLog(log: Logger, customerId): Observable<any> {
-    const level = levelStrings.indexOf(log.level)
-
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
             record: {
-              info: log.content,
-              level,
+              ...Logger.convertFromModel(log),
               ContactInfo: customerId
             }
           }
@@ -58,15 +51,13 @@ export class LoggerService {
   }
 
   batchCreateLog(customerIds: string[], log: Logger): Observable<any> {
-    const level = levelStrings.indexOf(log.level)
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(this.insertListUrl + `/${tenantId}/${userId}`, {
           params: {
             recordlist: customerIds.map(e => ({
-              info: log.content,
-              level,
+              ...Logger.convertFromModel(log),
               ContactInfo: e
             }))
           }
@@ -82,8 +73,6 @@ export class LoggerService {
   }
 
   editLog(log: Logger): Observable<any> {
-    const level = levelStrings.indexOf(log.level)
-
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
@@ -92,8 +81,7 @@ export class LoggerService {
           {
             params: {
               setValue: {
-                level,
-                info: log.content
+                ...Logger.convertFromModel(log)
               }
             }
           }
@@ -127,15 +115,7 @@ export class LoggerService {
               }
             })
           )
-          .map(res => {
-            const results = (res as APIResponse).result
-            return results.map(e => ({
-              id: e.RecordId,
-              time: e.CreatedAt,
-              level: levelStrings[e.level],
-              content: e.info
-            }))
-          })
+          .map(res => (res as APIResponse).result.map(Logger.convertFromResp))
           .catch(e => {
             return this.errorLogger.httpError({
               module: 'LoggerService',
@@ -143,13 +123,6 @@ export class LoggerService {
               error: e
             })
           })
-      : Observable.of(
-          Array.from({ length: 100 }, (_, i) => ({
-            id: String(i),
-            time: '2017-12-22 11:12:11',
-            level: 'info',
-            content: `test content ${i}`
-          }))
-        )
+      : Observable.of(Logger.generateFakeLogs(100))
   }
 }

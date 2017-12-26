@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ToastController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
-import { State, getNotifications, getShowLog, getShowNotification } from '../../reducers'
-import { ToCreateNotificationAction, ToEditNotificationAction } from '../../actions/notification.action'
-import { ToggleShowLogAction, ToggleShowNotificationAction } from '../../actions/customer.action'
 import { Observable } from 'rxjs/Observable'
-
+import { State, getNotifications, getShowLog, getShowNotification } from '../../reducers'
+import { ToggleShowLogAction, ToggleShowNotificationAction } from '../../actions/customer.action'
 import { Notification } from '../../models/notification.model'
+
+export { HzCardNotificationItemComponent } from './card-notification-item/card-notification-item.component'
+export { HzCardNotificationItemAddComponent } from './card-notification-item-add/card-notification-item-add.component'
 
 @Component({
   selector: 'hz-card-notification',
@@ -25,29 +26,12 @@ import { Notification } from '../../models/notification.model'
         <p class="no-notification" *ngIf="(notifications$ | async).length === 0">还没有提醒呢</p>
       </div>
     </div>
-  `,
-  styles: [`
-  .hz-card-notification .hz-notification-title {
-    width: 100%;
-    display: flex;
-  }
-
-  .hz-card-notification .hz-notification-title .hz-item {
-    flex: 1;
-    text-align: center;
-  }
-
-  .hz-card-notification .hz-notification-title .hz-item.active {
-    background-color: #6287d5;
-  }
-  `]
+  `
 })
-export class HzCardNotificationComponent implements OnInit {
+export class HzCardNotificationComponent {
   @Input()
   open: boolean
-
   notifications$: Observable<Notification[]>
-
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
@@ -59,8 +43,6 @@ export class HzCardNotificationComponent implements OnInit {
     this.showLog$ = store.select(getShowLog)
     this.showNotification$ = store.select(getShowNotification)
   }
-
-  ngOnInit() { }
 
   toggleLog() {
     this.store.dispatch(new ToggleShowLogAction(true))
@@ -80,144 +62,3 @@ export class HzCardNotificationComponent implements OnInit {
 
 }
 
-@Component({
-  selector: 'hz-card-notification-item',
-  template: `
-    <div class="hz-card-notification-item">
-      <div class="hz-card-notification-time">
-        {{notification.time}}
-      </div>
-      <div class="hz-card-notification-content" tappable (click)="editNotification(notification)">
-        {{notification.content}}
-      </div>
-    </div>
-  `,
-  styles: [`
-    .hz-card-notification-item {
-      position: relative;
-      min-height: 57px;
-      padding-bottom: 20px;
-      padding-left: 35px;
-    }
-
-    .hz-card-notification-item:before {
-      position: absolute;
-      top: 2px;
-      left: 3px;
-      -webkit-box-sizing: content-box;
-      box-sizing: content-box;
-      width: 13px;
-      height: 13px;
-      content: '';
-      border-radius: 50%;
-      background: #fff;
-    }
-
-    .hz-card-notification-item:after {
-      position: absolute;
-      top: 7px;
-      left: 9px;
-      width: 1px;
-      height: 100%;
-      content: '';
-      background: rgba(245, 247, 252, 0.51);
-    }
-
-    .hz-card-notification-item .hz-card-notification-time {
-      margin-bottom: 5px;
-      font-size: 12px;
-    }
-
-    .hz-card-notification-item .hz-card-notification-content {
-      display: inline-block;
-      min-height: 42px;
-      padding: 12px 15px 8px;
-      border-radius: 4px;
-      background: #6190ec;
-    }
-  `]
-})
-export class HzCardNotificationItemComponent implements OnInit {
-
-  @Input() notification: Notification
-
-  constructor(private store: Store<State>) {
-  }
-
-  ngOnInit() {
-  }
-
-  editNotification(notification: Notification) {
-    this.store.dispatch(new ToEditNotificationAction(notification))
-  }
-}
-
-@Component({
-  selector: 'hz-card-notification-item-add',
-  template: `
-    <div class="hz-card-notification-item-add hz-card-notification-item">
-      添加
-      <ion-icon name="add-circle" tappable (click)="createNotification()"></ion-icon>
-    </div>
-  `,
-  styles: [`
-    .hz-card-notification-item {
-      position: relative;
-      display: flex;
-      min-height: 57px;
-      padding-bottom: 20px;
-      padding-left: 35px;
-    }
-
-    .hz-card-notification-item ion-icon {
-      font-size: 20px;
-      margin-left: 7px;
-    }
-
-    .hz-card-notification-item:before {
-      position: absolute;
-      top: 2px;
-      left: 3px;
-      box-sizing: content-box;
-      width: 13px;
-      height: 13px;
-      content: '';
-      border-radius: 50%;
-      background: #fff;
-    }
-
-    .hz-card-notification-item:after {
-      position: absolute;
-      top: 7px;
-      left: 9px;
-      width: 1px;
-      height: 100%;
-      content: '';
-      background: rgba(245, 247, 252, 0.51);
-    }
-
-    .hz-card-notification-item-add:before {
-      left: 0;
-      width: 13px;
-      height: 13px;
-      border: 3px solid rgba(108, 140, 220, 0.51);
-    }
-  `]
-})
-export class HzCardNotificationItemAddComponent implements OnInit {
-
-  @Input() notification: any
-
-  constructor(
-    private store: Store<State>
-  ) {
-
-  }
-
-  ngOnInit() {
-  }
-
-  createNotification() {
-    this.store.dispatch(new ToCreateNotificationAction())
-  }
-}

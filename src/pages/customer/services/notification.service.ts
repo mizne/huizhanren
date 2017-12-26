@@ -95,21 +95,24 @@ export class NotificationService {
         }
       })
     )
-    .map(res => {
-      const results = (res as APIResponse).result.map(e => ({
-        id: e.RecordId,
-        time: e.RemindDate,
-        content: e.RemindContent
-      }))
+    .map(res => (res as APIResponse).result.map(Notification.convertFromResp))
+    .map(notifications => {
       // 重新排序提醒 未过期正序 过期倒序
-
-      const unTimeoutResults = results
+      const unTimeoutResults = notifications
       .filter(e => Date.now() < new Date(e.time).getTime())
       .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+      .map(e => ({
+        ...e,
+        expired: false
+      }))
 
-      const timeoutResults = results
+      const timeoutResults = notifications
       .filter(e => Date.now() >= new Date(e.time).getTime())
       .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+      .map(e => ({
+        ...e,
+        expired: true
+      }))
 
       return [...unTimeoutResults, ...timeoutResults]
     })
