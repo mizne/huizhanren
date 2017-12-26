@@ -2,7 +2,7 @@ import * as customer from '../actions/customer.action'
 import * as sms from '../actions/sms.action'
 import * as group from '../actions/group.action'
 
-import { remain, phoneRe } from '../services/utils'
+import { remain, phoneRe, deduplicate } from '../services/utils'
 
 import {
   Customer,
@@ -136,6 +136,12 @@ export function reducer(
       return {
         ...state,
         customers: remain(state.customers, action.customers, ['selected'])
+      }
+
+    case customer.FETCH_SINGLE_SUCCESS:
+      return {
+        ...state,
+        customers: remain(state.customers, deduplicate([action.customer].concat(state.customers), e => e.id), ['selected'])
       }
 
     case customer.INITIAL_SUCCESS:

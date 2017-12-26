@@ -17,13 +17,13 @@ import {
   getShowDetailCustomerId,
   getShowDetailGroupId,
   getNotifications
-} from '../reducers/index'
-import { ToSingleEditGroupAction, ToggleShowNotificationAction } from '../actions/customer.action'
-import { ToSingleSendSMSAction } from '../actions/sms.action'
-import { Customer } from '../models/customer.model'
-import { Notification } from '../models/notification.model'
+} from '../../reducers/index'
+import { ToSingleEditGroupAction, ToggleShowNotificationAction } from '../../actions/customer.action'
+import { ToSingleSendSMSAction } from '../../actions/sms.action'
+import { Customer } from '../../models/customer.model'
+import { Notification } from '../../models/notification.model'
 
-import { phoneRe } from '../services/utils'
+import { phoneRe } from '../../services/utils'
 
 interface Field {
   icon: string

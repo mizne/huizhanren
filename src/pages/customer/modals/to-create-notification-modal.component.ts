@@ -5,7 +5,7 @@ import {
   ToastController
 } from 'ionic-angular'
 
-import * as fecha from 'fecha'
+import * as moment from 'moment'
 import { Notification } from '../models/notification.model';
 
 @Component({
@@ -106,7 +106,7 @@ export class ToCreateNotificationModal {
 
     if (this.content) {
       this.dismiss({
-        time: fecha.format(time, this.DATE_FORMAT),
+        time: moment(time).format(this.DATE_FORMAT),
         content: this.content
       })
     } else {

@@ -1,61 +1,58 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ToastController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
-import { State, getNotifications, getShowLog, getShowNotification } from '../reducers'
-import { ToCreateNotificationAction, ToEditNotificationAction } from '../actions/notification.action'
-import { ToggleShowLogAction, ToggleShowNotificationAction } from '../actions/customer.action'
+import { State, getLogs, getShowLog, getShowNotification } from '../../reducers'
+import { ToCreateLoggerAction, ToEditLoggerAction } from '../../actions/logger.action'
+import { ToggleShowLogAction, ToggleShowNotificationAction } from '../../actions/customer.action'
 import { Observable } from 'rxjs/Observable'
 
-import { Notification } from '../models/notification.model'
+import { Logger } from '../../models/logger.model'
 
 @Component({
-  selector: 'hz-card-notification',
+  selector: 'hz-card-log',
   template: `
-    <div class="hz-card-notification" [class.close]="!open">
-      <div class="hz-notification-title">
+    <div class="hz-card-log" [class.close]="!open">
+      <div class="hz-log-title">
         <span class="hz-item" tappable [class.active]="showLog$ | async" (click)="toggleLog()">日志</span>
         <span class="hz-item" tappable [class.active]="showNotification$ | async" (click)="toggleNotification()">提醒</span>
         <span class="hz-item" tappable (click)="toggleAnasisy()">分析</span>
       </div>
 
-      <div class="hz-notification-container">
-        <hz-card-notification-item-add></hz-card-notification-item-add>
-        <hz-card-notification-item *ngFor="let notification of notifications$ | async" [notification]="notification"></hz-card-notification-item>
-        <p class="no-notification" *ngIf="(notifications$ | async).length === 0">还没有提醒呢</p>
+      <div class="hz-log-container">
+        <hz-card-log-item-add></hz-card-log-item-add>
+        <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
+        <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
       </div>
     </div>
   `,
   styles: [`
-  .hz-card-notification .hz-notification-title {
+  .hz-card-log .hz-log-title {
     width: 100%;
     display: flex;
   }
 
-  .hz-card-notification .hz-notification-title .hz-item {
+  .hz-card-log .hz-log-title .hz-item {
     flex: 1;
     text-align: center;
   }
 
-  .hz-card-notification .hz-notification-title .hz-item.active {
+  .hz-card-log .hz-log-title .hz-item.active {
     background-color: #6287d5;
   }
   `]
 })
-export class HzCardNotificationComponent implements OnInit {
+export class HzCardLogComponent implements OnInit {
   @Input()
   open: boolean
 
-  notifications$: Observable<Notification[]>
+  logs$: Observable<Logger[]>
 
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(
-    private store: Store<State>,
-    private toastCtrl: ToastController
-  ) {
-    this.notifications$ = store.select(getNotifications)
+  constructor(private store: Store<State>) {
+    this.logs$ = store.select(getLogs)
+
     this.showLog$ = store.select(getShowLog)
     this.showNotification$ = store.select(getShowNotification)
   }
@@ -71,36 +68,32 @@ export class HzCardNotificationComponent implements OnInit {
   }
 
   toggleAnasisy() {
-    this.toastCtrl.create({
-      message: '吐血研发中',
-      position: 'top',
-      duration: 3e3
-    }).present()
+
   }
 
 }
 
 @Component({
-  selector: 'hz-card-notification-item',
+  selector: 'hz-card-log-item',
   template: `
-    <div class="hz-card-notification-item">
-      <div class="hz-card-notification-time">
-        {{notification.time}}
+    <div class="hz-card-log-item">
+      <div class="hz-card-log-time">
+        {{log.time}}
       </div>
-      <div class="hz-card-notification-content" tappable (click)="editNotification(notification)">
-        {{notification.content}}
+      <div class="hz-card-log-content" tappable [ngClass]="log.level" (click)="editLogger(log)">
+        {{log.content}}
       </div>
     </div>
   `,
   styles: [`
-    .hz-card-notification-item {
+    .hz-card-log-item {
       position: relative;
       min-height: 57px;
       padding-bottom: 20px;
       padding-left: 35px;
     }
 
-    .hz-card-notification-item:before {
+    .hz-card-log-item:before {
       position: absolute;
       top: 2px;
       left: 3px;
@@ -113,7 +106,7 @@ export class HzCardNotificationComponent implements OnInit {
       background: #fff;
     }
 
-    .hz-card-notification-item:after {
+    .hz-card-log-item:after {
       position: absolute;
       top: 7px;
       left: 9px;
@@ -123,23 +116,36 @@ export class HzCardNotificationComponent implements OnInit {
       background: rgba(245, 247, 252, 0.51);
     }
 
-    .hz-card-notification-item .hz-card-notification-time {
+    .hz-card-log-item .hz-card-log-time {
       margin-bottom: 5px;
       font-size: 12px;
     }
 
-    .hz-card-notification-item .hz-card-notification-content {
+    .hz-card-log-item .hz-card-log-content {
       display: inline-block;
       min-height: 42px;
       padding: 12px 15px 8px;
       border-radius: 4px;
       background: #6190ec;
     }
+
+    .hz-card-log-item .hz-card-log-content.info {
+      background-color: #a66cb9;
+    }
+    .hz-card-log-item .hz-card-log-content.warn {
+      background-color: #0ec5a9;
+    }
+    .hz-card-log-item .hz-card-log-content.error {
+      background-color: #ef9c64;
+    }
+    .hz-card-log-item .hz-card-log-content.sys {
+      background-color: #2f5ebd;
+    }
   `]
 })
-export class HzCardNotificationItemComponent implements OnInit {
+export class HzCardLogItemComponent implements OnInit {
 
-  @Input() notification: Notification
+  @Input() log: Logger
 
   constructor(private store: Store<State>) {
   }
@@ -147,21 +153,23 @@ export class HzCardNotificationItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  editNotification(notification: Notification) {
-    this.store.dispatch(new ToEditNotificationAction(notification))
+  editLogger(log: Logger) {
+    if (log.level !== 'sys') {
+      this.store.dispatch(new ToEditLoggerAction(log))
+    }
   }
 }
 
 @Component({
-  selector: 'hz-card-notification-item-add',
+  selector: 'hz-card-log-item-add',
   template: `
-    <div class="hz-card-notification-item-add hz-card-notification-item">
+    <div class="hz-card-log-item-add hz-card-log-item">
       添加
-      <ion-icon name="add-circle" tappable (click)="createNotification()"></ion-icon>
+      <ion-icon name="add-circle" tappable (click)="createLogger()"></ion-icon>
     </div>
   `,
   styles: [`
-    .hz-card-notification-item {
+    .hz-card-log-item {
       position: relative;
       display: flex;
       min-height: 57px;
@@ -169,12 +177,12 @@ export class HzCardNotificationItemComponent implements OnInit {
       padding-left: 35px;
     }
 
-    .hz-card-notification-item ion-icon {
+    .hz-card-log-item ion-icon {
       font-size: 20px;
       margin-left: 7px;
     }
 
-    .hz-card-notification-item:before {
+    .hz-card-log-item:before {
       position: absolute;
       top: 2px;
       left: 3px;
@@ -186,7 +194,7 @@ export class HzCardNotificationItemComponent implements OnInit {
       background: #fff;
     }
 
-    .hz-card-notification-item:after {
+    .hz-card-log-item:after {
       position: absolute;
       top: 7px;
       left: 9px;
@@ -196,7 +204,7 @@ export class HzCardNotificationItemComponent implements OnInit {
       background: rgba(245, 247, 252, 0.51);
     }
 
-    .hz-card-notification-item-add:before {
+    .hz-card-log-item-add:before {
       left: 0;
       width: 13px;
       height: 13px;
@@ -204,9 +212,9 @@ export class HzCardNotificationItemComponent implements OnInit {
     }
   `]
 })
-export class HzCardNotificationItemAddComponent implements OnInit {
+export class HzCardLogItemAddComponent implements OnInit {
 
-  @Input() notification: any
+  @Input() log: any
 
   constructor(
     private store: Store<State>
@@ -215,9 +223,10 @@ export class HzCardNotificationItemAddComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
-  createNotification() {
-    this.store.dispatch(new ToCreateNotificationAction())
+  createLogger() {
+    this.store.dispatch(new ToCreateLoggerAction())
   }
 }

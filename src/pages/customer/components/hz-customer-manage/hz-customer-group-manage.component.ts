@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
-import { State, getSelectedCustomers, getGroups } from '../reducers/index'
-import { CancelSelectCustomerAction, ToCreateAction, ToRenameGroupAction, ToDeleteGroupAction } from '../actions/group.action'
-import { PreBatchEditGroupAction, ToListableStatusAction } from '../actions/customer.action'
+import { State, getSelectedCustomers, getGroups } from '../../reducers/index'
+import { CancelSelectCustomerAction, ToCreateAction, ToRenameGroupAction, ToDeleteGroupAction } from '../../actions/group.action'
+import { PreBatchEditGroupAction, ToListableStatusAction } from '../../actions/customer.action'
 
-import { Group } from '../models/group.model'
+import { Group } from '../../models/group.model'
 
 @Component({
   selector: 'hz-customer-group-manage',

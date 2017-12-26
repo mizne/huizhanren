@@ -429,11 +429,8 @@ export class CustomerService {
           imageUrl: e.Image,
           imageBehindUrl: e.BackImage,
           haveCalled: e.HaveCalled,
-          // haveCalled: Math.random() > 0.5,
           haveSendEmail: e.HaveSendEmail,
-          // haveSendEmail: Math.random() > 0.5,
           haveSendMsg: e.HaveSendMsg,
-          // haveSendMsg: Math.random() > 0.5,
           selected: false
         }))
 
@@ -447,4 +444,54 @@ export class CustomerService {
         })
       })
   }
+/**
+ * 获取单条客户信息
+ *
+ * @param {string} customerId
+ * @returns {Observable<Customer>}
+ * @memberof CustomerService
+ */
+fetchSingleCustomer(customerId: string): Observable<Customer> {
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) =>
+        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+          params: {
+            condition: {
+              RecordId: customerId
+            }
+          }
+        })
+      )
+      .map(res => {
+        const results = (res as APIResponse).result
+        const customers: Customer[] = results.map(e => ({
+          id: e.RecordId,
+          groups: e.GroupInfo,
+          name: e.Name,
+          phones: e.Phone.map(e => ({ ...e, selected: true })),
+          emails: e.Email.map(e => ({ ...e, selected: true })),
+          addresses: e.Address.map(e => ({ ...e, selected: true })),
+          departments: e.Department.map(e => ({ ...e, selected: true })),
+          jobs: e.Job.map(e => ({ ...e, selected: true })),
+          companys: e.Company.map(e => ({ ...e, selected: true })),
+          imageUrl: e.Image,
+          imageBehindUrl: e.BackImage,
+          haveCalled: e.HaveCalled,
+          haveSendEmail: e.HaveSendEmail,
+          haveSendMsg: e.HaveSendMsg,
+          selected: false
+        }))
+
+        return customers[0]
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'CustomerService',
+          method: 'fetchAllCustomer',
+          error: e
+        })
+      })
+  }
 }
+

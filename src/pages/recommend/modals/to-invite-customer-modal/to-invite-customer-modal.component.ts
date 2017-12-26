@@ -3,6 +3,7 @@ import {
   NavParams,
   ViewController,
 } from 'ionic-angular'
+import * as moment from 'moment'
 
 @Component({
   templateUrl: './to-invite-customer-modal.component.html',
@@ -16,8 +17,8 @@ export class ToInviteCustomerModal implements OnInit {
   srcAddress: string
   content: string
 
-  private contentTpl = '{{destName}}，您于12月4日收到了{{srcCompany}}的约请，' +
-  'TA希望在展位({{srcAddress}})上会面，请去"我的约请"接受或拒绝。'
+  private contentTpl = `{{destName}}，您于${moment().month() + 1}月${moment().date()}日收到了{{srcCompany}}的约请，' +
+  'TA希望在展位({{srcAddress}})上会面，请去"我的约请"接受或拒绝。`
 
   constructor(
     public params: NavParams,

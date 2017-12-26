@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
-import { State, getSelectedCustomers, getSmsTemplates } from '../reducers/index'
+import { State, getSelectedCustomers, getSmsTemplates } from '../../reducers/index'
 import {
   PreSendSMSAction,
   SelectPhoneAction,
@@ -10,12 +10,12 @@ import {
   FetchAllTemplateAction,
   SelectAllPhoneAction,
   CancelSelectAllPhoneAction
- } from '../actions/sms.action'
-import { ToListableStatusAction } from '../actions/customer.action'
+ } from '../../actions/sms.action'
+import { ToListableStatusAction } from '../../actions/customer.action'
 
- import { SmsTemplate } from '../models/sms.model'
+ import { SmsTemplate } from '../../models/sms.model'
 
- import { phoneRe } from '../services/utils'
+ import { phoneRe } from '../../services/utils'
 
 @Component({
   selector: 'hz-customer-sms-manage',

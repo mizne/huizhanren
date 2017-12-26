@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { Group } from '../models/group.model'
+import { Group } from '../../models/group.model'
 
 @Component({
   selector: 'hz-customer-manage',

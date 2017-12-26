@@ -205,7 +205,7 @@ export class CustomerEffects {
     return this.customerService
       .fetchAllCustomer()
       .map(customers => new fromCustomer.FetchAllSuccessAction(customers))
-      .catch(error => Observable.of(new fromCustomer.FetchAllFailureAction(error)))
+      .catch(() => Observable.of(new fromCustomer.FetchAllFailureAction()))
   })
 
   @Effect({ dispatch: false })
@@ -220,6 +220,15 @@ export class CustomerEffects {
         })
         .present()
     })
+
+  @Effect()
+  fetchSingle$ = this.actions$.ofType(fromCustomer.FETCH_SINGLE)
+  .map((action: fromCustomer.FetchSingleAction) => action.customerId)
+  .switchMap((id) => {
+    return this.customerService.fetchSingleCustomer(id)
+    .map(customer => new fromCustomer.FetchSingleSuccessAction(customer))
+      .catch(() => Observable.of(new fromCustomer.FetchSingleFailureAction()))
+  })
 
   @Effect()
   preBatchEditGroup$ = this.actions$
@@ -546,7 +555,7 @@ export class CustomerEffects {
           return [
             new fromCustomer.EditCustomerSuccessAction(),
             new fromCustomer.ToListableStatusAction(),
-            new fromCustomer.FetchAllAction()
+            new fromCustomer.FetchSingleAction(customerId)
           ]
         })
         .catch(() => {

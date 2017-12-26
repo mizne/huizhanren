@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store'
-import { State } from '../reducers'
-import { HasShowedHlepOfToggleLogAction } from '../actions/helper.action'
+import { State } from '../../reducers'
+import { HasShowedHlepOfToggleLogAction } from '../../actions/helper.action'
 
 @Component({
   selector: 'hz-help-toggle-log',
@@ -45,10 +45,10 @@ import { HasShowedHlepOfToggleLogAction } from '../actions/helper.action'
 export class HzHelpToggleLogComponent implements OnInit {
   private timeId: number
 
-  constructor(private store: Store<State>) { 
+  constructor(private store: Store<State>) {
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.timeId = window.setTimeout(() => {
       this.store.dispatch(new HasShowedHlepOfToggleLogAction())
     }, 3e3)

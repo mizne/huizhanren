@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { Customer } from '../models/customer.model'
+import { Customer } from '../../models/customer.model'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailCustomerId } from '../reducers'
+import { State, getShowDetailCustomerId } from '../../reducers'
 import { Observable } from 'rxjs/Observable'
 
 @Component({

@@ -20,6 +20,10 @@ export const FETCH_ALL = '[Customer] Fetch All'
 export const FETCH_ALL_SUCCESS = '[Customer] Fetch All Success'
 export const FETCH_ALL_FAILURE = '[Customer] Fetch All Failure'
 
+export const FETCH_SINGLE = '[Customer] Fetch Single'
+export const FETCH_SINGLE_SUCCESS = '[Customer] Fetch Single Success'
+export const FETCH_SINGLE_FAILURE = '[Customer] Fetch Single Failure'
+
 export const PRE_BATCH_EDIT_GROUP = '[Customer] Pre Batch Edit Group'
 export const CANCEL_BATCH_EDIT_GROUP = '[Customer] Cancel Batch Edit Group'
 export const BATCH_EDIT_GROUP = '[Customer] Batch Edit Group'
@@ -126,28 +130,35 @@ export class CreateFailureAction implements Action {
 export class FetchAllAction implements Action {
   readonly type = FETCH_ALL
 }
-
 export class FetchAllSuccessAction implements Action {
   readonly type = FETCH_ALL_SUCCESS
   constructor(public customers: Customer[]) {}
 }
-
 export class FetchAllFailureAction implements Action {
   readonly type = FETCH_ALL_FAILURE
-  constructor(public payload: any) {}
 }
 
+
+export class FetchSingleAction implements Action {
+  readonly type = FETCH_SINGLE
+  constructor(public customerId: string) {}
+}
+export class FetchSingleSuccessAction implements Action {
+  readonly type = FETCH_SINGLE_SUCCESS
+  constructor(public customer: Customer) {}
+}
+export class FetchSingleFailureAction implements Action {
+  readonly type = FETCH_SINGLE_FAILURE
+}
 
 
 export class PreBatchEditGroupAction implements Action {
   readonly type = PRE_BATCH_EDIT_GROUP
   constructor(public groupId: string) {}
 }
-
 export class CancelBatchEditGroupAction implements Action {
   readonly type = CANCEL_BATCH_EDIT_GROUP
 }
-
 export class BatchEditGroupAction implements Action {
   readonly type = BATCH_EDIT_GROUP
   constructor(public groupId: string) {}
@@ -330,6 +341,10 @@ export type Actions =
   | FetchAllSuccessAction
   | FetchAllFailureAction
 
+  | FetchSingleAction
+  | FetchSingleSuccessAction
+  | FetchSingleFailureAction
+
   | PreBatchEditGroupAction
   | CancelBatchEditGroupAction
   | BatchEditGroupAction
@@ -371,5 +386,5 @@ export type Actions =
   | RemoveCustomerGroupIdAction
   | RemoveCustomerGroupIdSuccessAction
   | RemoveCustomerGroupIdFailureAction
-  
+
   | EnsureGroupScrollTopAction

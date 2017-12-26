@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { NavParams, ViewController } from 'ionic-angular'
+import * as moment from 'moment'
 
 import { FormControl } from '@angular/forms'
 import { DestroyService } from '../../../../providers/destroy.service'
@@ -18,9 +19,9 @@ export class ToInviteExhibitorModal implements OnInit {
 
   content: string
 
-  private contentTpl = '{{destName}}，您于12月4日收到了{{srcName}}的约请，' +
+  private contentTpl = `{{destName}}，您于${moment().month() + 1}月${moment().date()}收到了{{srcName}}的约请，' +
     'TA希望在展位({{address}})上会面，请登录智慧会展系统(微信小程序)' +
-    '接受或拒绝。'
+    '接受或拒绝。`
 
   constructor(
     public params: NavParams,
