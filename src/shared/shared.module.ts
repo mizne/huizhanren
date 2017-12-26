@@ -12,6 +12,7 @@ import { HzGridFilterComponent } from './components/grid-filter/grid-filter.comp
 import { HzLoggerItemComponent } from './components/logger-item/logger-item.component'
 import { HzLoggerItemAddComponent } from './components/logger-item-add/logger-item-add.component'
 import { HzLoggerListComponent } from './components/logger-list/logger-list.component'
+import { HzToggleDetailComponent } from './components/toggle-detail/toggle-detail.component'
 
 import { ClickOutSideDirective } from './directives/click-outside.directive'
 
@@ -26,6 +27,7 @@ const components = [
   HzLoggerItemComponent,
   HzLoggerItemAddComponent,
   HzLoggerListComponent,
+  HzToggleDetailComponent,
 ]
 
 const directives = [ClickOutSideDirective]

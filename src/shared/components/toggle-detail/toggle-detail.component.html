@@ -1,0 +1,6 @@
+<div class="hz-toggle-detail" tappable (click)="handleClick()">
+    <i *ngIf="collapse; else expand;" class="iconfont icon-right"></i>
+    <ng-template #expand>
+        <i class="iconfont icon-left"></i>
+    </ng-template>
+  </div>

@@ -18,7 +18,7 @@
       transition: all .5s;
 
       &:focus {
-        border: 1px #6190ec solid;
+        border: 1px map-get($map: $colors, $key: primary) solid;
       }
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'hz-list-search',
@@ -9,7 +9,5 @@ import { Component, OnInit } from '@angular/core';
   `,
 })
 
-export class HzListSearchComponent implements OnInit {
-  constructor() { }
-  ngOnInit() { }
+export class HzListSearchComponent {
 }

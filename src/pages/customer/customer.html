@@ -24,10 +24,8 @@
 
 <ion-content padding>
   <div class="hz-customer-container">
-    <div class="hz-toggle-log" tappable *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
-      <i *ngIf="showLog$ | async" class="iconfont icon-right"></i>
-      <i *ngIf="!(showLog$ | async)" class="iconfont icon-left"></i>
-    </div>
+    <hz-toggle-detail *ngIf="(status$ | async) === 'detailable'" [collapse]="showLog$ | async" (toggle)="toggleLog()"></hz-toggle-detail>
+
     <div class="hz-customer-left">
       <hz-list-header (sendSms)="toSendSms()" (setGroup)="toSetGroup()" (del)="toMultiDelete()" [totalCount]="customerCount$ | async"></hz-list-header>
       <hz-list-search>
@@ -102,5 +100,3 @@
     </div>
   </div>
 </ion-content>
-
-<!-- <hz-help-toggle-log *ngIf="needShowHelpOfToggleLog$ | async">切换日志显示</hz-help-toggle-log> -->

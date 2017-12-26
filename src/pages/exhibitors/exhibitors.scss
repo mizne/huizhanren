@@ -31,27 +31,6 @@ page-exhibitors {
           flex: 2;
         }
       }
-
-      .hz-toggle-log {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: -124px;
-        z-index: 200;
-        height: 150px;
-        width: 150px;
-        border-radius: 50%;
-        background-color: rgba(26, 27, 29, 0.8);
-
-        .iconfont {
-          position: absolute;
-          top: 50%;
-          left: 10px;
-          transform: translateY(-50%);
-          font-size: 30px;
-          color: map-get($colors, primary);
-        }
-      }
     }
   }
 }

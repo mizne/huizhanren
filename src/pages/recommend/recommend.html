@@ -42,9 +42,6 @@
       </recommend-detail>
     </div>
 
-    <div class="hz-toggle-log" tappable *ngIf="(showDetailID$ | async)" (click)="toggleLog()">
-        <i *ngIf="(pageStatus$ | async) === 1" class="iconfont icon-right"></i>
-        <i *ngIf="(pageStatus$ | async) === 0" class="iconfont icon-left"></i>
-      </div>
+    <hz-toggle-detail *ngIf="(showDetailID$ | async)" [collapse]="(pageStatus$ | async) === 1" (toggle)="toggleLog()"></hz-toggle-detail>
   </div>
 </ion-content>
