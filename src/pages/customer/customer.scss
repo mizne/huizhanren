@@ -1,41 +1,12 @@
 page-customer {
-  ion-header {
-    .bar-button-md {
-      color: white;
-      font-size: 2rem;
-    }
-  }
-
   ion-content {
     background: url(../assets/images/bg-huizhanren-pure.png) no-repeat;
     background-size: cover;
-    display: flex;
 
     .hz-customer-container {
       display: flex;
       height: calc(100vh - 90px);
       position: relative;
-
-      .hz-toggle-log {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: -124px;
-        z-index: 200;
-        height: 150px;
-        width: 150px;
-        border-radius: 50%;
-        background-color: rgba(26, 27, 29, 0.8);
-
-        .iconfont {
-          position: absolute;
-          top: 50%;
-          left: 10px;
-          transform: translateY(-50%);
-          font-size: 30px;
-          color: map-get($colors, primary);
-        }
-      }
 
       .hz-customer-left {
         flex: 1;
@@ -64,8 +35,6 @@ page-customer {
               padding: 16px 15px 16px 36px;
               .hz-card-container {
                 height: 200px;
-                // background-size: cover;
-                // background-image: url(../../assets/images/card.jpg);
                 img {
                   width: 100%;
                   max-height: 100%;
@@ -81,8 +50,6 @@ page-customer {
               .hz-card-behind-container {
                 height: 200px;
                 border: 1px solid #e6e6e6;
-                // background-size: cover;
-                // background-image: url(../assets/images/card.jpg);
                 @include flexboxCenter;
                 flex-direction: column;
 
@@ -122,8 +89,6 @@ page-customer {
         }
 
         .hz-customer-detail {
-          // display: flex;
-
           hz-card-detail,
           hz-card-log,
           hz-card-notification {
@@ -135,7 +100,6 @@ page-customer {
           }
 
           hz-card-detail.close {
-            // flex: 1;
             display: inline-block;
             width: 50%;
           }
@@ -147,17 +111,12 @@ page-customer {
           hz-card-log.close,
           hz-card-notification.close {
             width: 0;
-            // -webkit-animation: fadeOutRight .6s 0.2s ease both;
-            // animation: fadeOutRight .6s 0.2s ease both;
           }
 
           hz-card-log.open,
           hz-card-notification.open {
-            // flex: 1;
             display: inline-block;
             width: 50%;
-            // -webkit-animation: fadeInRight .6s 0.2s ease both;
-            // animation: fadeInRight .6s 0.2s ease both;
           }
         }
 
@@ -169,28 +128,3 @@ page-customer {
     }
   }
 }
-
-@-webkit-keyframes fadeInRight { 0% { opacity: 0;
-  -webkit-transform: translateX(20px);
-          transform: translateX(20px); }
-100% { opacity: 1;
-  -webkit-transform: translateX(0);
-          transform: translateX(0); } }
-@keyframes fadeInRight { 0% { opacity: 0;
-  -webkit-transform: translateX(20px);
-          transform: translateX(20px); }
-100% { opacity: 1;
-  -webkit-transform: translateX(0);
-          transform: translateX(0); } }
-@-webkit-keyframes fadeOutRight { 0% { opacity: 1;
-  -webkit-transform: translateX(0);
-          transform: translateX(0); }
-100% { opacity: 0;
-  -webkit-transform: translateX(20px);
-          transform: translateX(20px); } }
-@keyframes fadeOutRight { 0% { opacity: 1;
-  -webkit-transform: translateX(0);
-          transform: translateX(0); }
-100% { opacity: 0;
-  -webkit-transform: translateX(20px);
-          transform: translateX(20px); } }
