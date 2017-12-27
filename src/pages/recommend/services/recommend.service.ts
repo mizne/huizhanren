@@ -20,7 +20,7 @@ const fakeRecommends: Recommend[] = Array.from({ length: 100 }, (_, i) => ({
 
 @Injectable()
 export class RecommendService {
-  private fetchUrl: string = '/data/VisiterInfo'
+  private fetchUrl: string = '/data/RecVisInfo'
 
   constructor(
     private http: HttpClient,
@@ -39,8 +39,8 @@ export class RecommendService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndExhibitionId()
-          .mergeMap(([tenantId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitionId}&itemId=${tenantId}`
+          .mergeMap(([tenantId, _]) => {
+            let query = `?exhibitorId=${tenantId}`
             if (params.area) {
               query += `&province=${params.area}`
             }

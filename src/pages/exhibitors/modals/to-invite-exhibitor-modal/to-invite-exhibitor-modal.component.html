@@ -22,7 +22,7 @@
               <ion-radio [value]="srcAddress"></ion-radio>
             </ion-item>
 
-            <ion-item>
+            <ion-item *ngIf="destAddress">
               <ion-label>{{destAddress}}</ion-label>
               <ion-radio [value]="destAddress"></ion-radio>
             </ion-item>
