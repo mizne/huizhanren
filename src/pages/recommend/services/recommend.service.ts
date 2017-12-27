@@ -35,12 +35,12 @@ export class RecommendService {
    * @returns {Observable<Recommend[]>}
    * @memberof RecommendService
    */
-  fetchRecommend(params: FetchRecommendParams): Observable<Recommend[]> {
+  public fetchRecommend(params: FetchRecommendParams): Observable<Recommend[]> {
     return environment.production
       ? this.tenantService
-          .getTenantIdAndExhibitionId()
-          .mergeMap(([tenantId, _]) => {
-            let query = `?exhibitorId=${tenantId}`
+          .getExhibitorId()
+          .mergeMap(exhibitorId => {
+            let query = `?exhibitorId=${exhibitorId}`
             if (params.area) {
               query += `&province=${params.area}`
             }

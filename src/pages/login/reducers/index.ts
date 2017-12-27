@@ -40,3 +40,4 @@ export const getSelectedExhibitionAddress = createSelector(selectExhibitionsStat
 
 export const getTenantId = createSelector(selectExhibitionsState, fromExhibitions.getTenantId)
 export const getUserId = createSelector(selectExhibitionsState, fromExhibitions.getUserId)
+export const getExhibitorId = createSelector(selectExhibitionsState, fromExhibitions.getExhibitorId)

@@ -10,40 +10,53 @@ import {
   getUserId,
   getSelectedExhibitionId,
   getExhibitions,
-  getCompanyName
- } from '../pages/login/reducers/index'
+  getCompanyName,
+  getExhibitorId
+} from '../pages/login/reducers/index'
 
 @Injectable()
 export class TenantService {
-  constructor(
-    private store: Store<State>,
-    private storage: Storage
-  ) {}
+  constructor(private store: Store<State>, private storage: Storage) {}
 
-  getLoginName(): Promise<string> {
+  public getLoginName(): Promise<string> {
     return this.storage.get('@@HuiZhanRen_LoginName')
   }
 
-  setLoginName(name: string): Promise<any> {
+  public setLoginName(name: string): Promise<any> {
     return this.storage.set('@@HuiZhanRen_LoginName', name)
   }
 
-  hasVerify(phone: string): Promise<boolean> {
-    return this.getLoginName()
-    .then((name) => {
+  public hasVerify(phone: string): Promise<boolean> {
+    return this.getLoginName().then(name => {
       return name === phone
     })
   }
 
-  getTenantId(): Observable<string> {
+  public getTenantId(): Observable<string> {
     return this.store.select(getTenantId)
   }
 
-  getTenantIdAndUserId(): Observable<[string, string]> {
-    return Observable.zip(this.store.select(getTenantId), this.store.select(getUserId))
+  public getExhibitorId(): Observable<string> {
+    return this.store.select(getExhibitorId)
   }
 
-  getTenantIdAndUserIdAndCompanyName(): Observable<[string, string, string]> {
+  public getExhibitorIdAndExhibitionId(): Observable<[string, string]> {
+    return Observable.zip(
+      this.store.select(getExhibitorId),
+      this.store.select(getSelectedExhibitionId)
+    )
+  }
+
+  public getTenantIdAndUserId(): Observable<[string, string]> {
+    return Observable.zip(
+      this.store.select(getTenantId),
+      this.store.select(getUserId)
+    )
+  }
+
+  public getTenantIdAndUserIdAndCompanyName(): Observable<
+    [string, string, string]
+  > {
     return Observable.zip(
       this.store.select(getTenantId),
       this.store.select(getUserId),
@@ -51,7 +64,9 @@ export class TenantService {
     )
   }
 
-  getTenantIdAndUserIdAndSelectedExhibitionId(): Observable<[string, string, string]> {
+  public getTenantIdAndUserIdAndSelectedExhibitionId(): Observable<
+    [string, string, string]
+  > {
     return Observable.zip(
       this.store.select(getTenantId),
       this.store.select(getUserId),
@@ -59,19 +74,21 @@ export class TenantService {
     )
   }
 
-  getTenantIdAndExhibitionId(): Observable<[string, string]> {
-    return Observable.zip(this.store.select(getTenantId), this.store.select(getSelectedExhibitionId))
+  public getTenantIdAndExhibitionId(): Observable<[string, string]> {
+    return Observable.zip(
+      this.store.select(getTenantId),
+      this.store.select(getSelectedExhibitionId)
+    )
   }
 
-  getSelectedItemName(): Observable<string> {
+  public getSelectedItemName(): Observable<string> {
     return Observable.zip(
       this.store.select(getExhibitions),
       this.store.select(getSelectedExhibitionId)
-    )
-    .map(([exhibitions, id]) => exhibitions.find(e => e.id === id).name)
+    ).map(([exhibitions, id]) => exhibitions.find(e => e.id === id).name)
   }
 
-  getTenantIdAndItemName(): Observable<[string, string]> {
+  public getTenantIdAndItemName(): Observable<[string, string]> {
     return Observable.zip(
       this.store.select(getTenantId),
       this.getSelectedItemName()

@@ -28,9 +28,9 @@ const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
 
 @Injectable()
 export class VisitorMatcherService {
-  private fetchUrl: string = '/data/InvitationInfo'
+  private fetchUrl: string = '/data/get/invitationInfo'
   private insertUrl = '/data/insert/InvitationInfo'
-  private updateUrl: string = '/data/update/InvitationInfo'
+  private updateUrl: string = '/data/update/inviinfo'
 
   constructor(
     private http: HttpClient,
@@ -46,12 +46,12 @@ export class VisitorMatcherService {
    * @returns {Observable<Matcher[]>}
    * @memberof MatcherService
    */
-  fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
+  public fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
     return environment.production
       ? this.tenantService
-          .getTenantIdAndUserId()
-          .mergeMap(([tenantId, _]) => {
-            let query = `?role=E&tenantId=${tenantId}`
+          .getExhibitorIdAndExhibitionId()
+          .mergeMap(([exhibitorId, exhibitionId]) => {
+            let query = `?exhibitionId=${exhibitionId}&exhibitorId=${exhibitorId}`
             if (params.pageIndex) {
               query += `&pageIndex=${params.pageIndex}`
             }
@@ -105,29 +105,35 @@ export class VisitorMatcherService {
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
-  createMatcher(
+  public createMatcher(
     recommend: Recommend,
     boothArea: string,
     tenantId: string,
     customerId: string
   ): Observable<any> {
-    const params = Recommend.convertFromModel(recommend)
-    Object.assign(params, {
-      Place: boothArea,
-      State: '未审核',
+    // const params = Recommend.convertFromModel(recommend)
+    // Object.assign(params, {
+    //   Place: boothArea,
+    //   State: '未审核',
+    //   Initator: tenantId,
+    //   Receiver: customerId
+    // })
+    const params = {
+      State: '1',
+      Type: '1',
       Initator: tenantId,
       Receiver: customerId
-    })
+    }
 
     return this.tenantService
-      .getTenantIdAndUserIdAndCompanyName()
-      .mergeMap(([tenantId, userId, companyName]) => {
+      .getTenantIdAndUserIdAndSelectedExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitionId]) => {
         Object.assign(params, {
-          ExhibitionName: companyName
+          ExhibitionId: exhibitionId
         })
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
-            record: params
+            records: params
           }
         })
       })
@@ -146,21 +152,19 @@ export class VisitorMatcherService {
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
-  cancelMatcher(matcherId: string): Observable<any> {
+  public cancelMatcher(matcherId: string): Observable<any> {
     const params = {
       params: {
         setValue: {
           State: '已取消'
-        }
+        },
+        InvitationInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
-          params
-        )
+      .mergeMap(([_, __]) => {
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -178,7 +182,7 @@ export class VisitorMatcherService {
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
-  agreeMatcher(matcherId: string): Observable<any> {
+  public agreeMatcher(matcherId: string): Observable<any> {
     const params = {
       params: {
         setValue: {
@@ -210,7 +214,7 @@ export class VisitorMatcherService {
    * @returns {Observable<any>}
    * @memberof MatcherService
    */
-  refuseMatcher(matcherId: string): Observable<any> {
+  public refuseMatcher(matcherId: string): Observable<any> {
     const params = {
       params: {
         setValue: {

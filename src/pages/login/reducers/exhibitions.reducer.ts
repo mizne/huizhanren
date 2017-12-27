@@ -15,6 +15,7 @@ export interface State {
   exhibitions: Exhibition[]
   selectedExhibitionId: string
   selectedExhibitionAddress: string
+  exhibitorId: string
 }
 
 export const initialState: State = {
@@ -25,7 +26,8 @@ export const initialState: State = {
   companyName: '',
   exhibitions: [],
   selectedExhibitionId: '',
-  selectedExhibitionAddress: '' // 参展的展台位置
+  selectedExhibitionAddress: '', // 参展的展台位置
+  exhibitorId: ''
 }
 
 export function reducer(
@@ -61,3 +63,4 @@ export const getSelectedExhibitionAddress = (state: State) => state.selectedExhi
 
 export const getTenantId = (state: State) => state.tenantId
 export const getUserId = (state: State) => state.userId
+export const getExhibitorId = (state: State) => state.exhibitorId

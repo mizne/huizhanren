@@ -16,6 +16,7 @@ interface LoginResp {
   userName: string
   tenantId: string
   userId: string
+  exhibitorId: string
 }
 /*
   Generated class for the OcrServiceProvider provider.
@@ -142,7 +143,8 @@ export class LoginService {
           adminName: results[0].adminName,
           userName: results[0].Name,
           tenantId: results[0].TenantId,
-          userId: results[0].UserId
+          userId: results[0].UserId,
+          exhibitorId: results[0].RecordId
         }
       })
       .retryWhen(errStream =>
