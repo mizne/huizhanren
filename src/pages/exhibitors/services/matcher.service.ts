@@ -36,9 +36,9 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
 
 @Injectable()
 export class ExhibitorMatcherService {
-  private fetchUrl: string = '/data/ExhibitionInvitationInfo'
-  private insertUrl = '/data/insert/ExhibitionInvitationInfo'
-  private updateUrl: string = '/data/update/ExhibitionInvitationInfo'
+  private fetchUrl: string = '/data/get/ExhibitionInvitationInfo'
+  private insertUrl = '/sys/insert/ExhibitionInvitationInfo'
+  private updateUrl: string = '/data/update/exhiinviinfo'
 
   constructor(
     private http: HttpClient,
@@ -60,11 +60,11 @@ export class ExhibitorMatcherService {
   ): Observable<ExhibitorMatcher[]> {
     return environment.production
       ? this.tenantService
-          .getTenantIdAndUserId()
-          .mergeMap(([tenantId, _]) => {
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
             return this.http.get(
               this.fetchUrl +
-                `?role=E&tenantId=${tenantId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+                `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
             )
           })
           .map(e => (e as APIResponse).result)
@@ -111,15 +111,15 @@ export class ExhibitorMatcherService {
   ): Observable<any> {
     const params = RecommendExhibitor.convertFromModel(exhibitor)
     Object.assign(params, {
-      BoothNo: boothNo,
-      State: '未审核',
+      State: '1',
+      Type: '1',
       Initator: tenantId,
       Receiver: exhibitor.id
     })
 
     return this.tenantService
-      .getTenantIdAndUserIdAndSelectedExhibitionId()
-      .mergeMap(([tenantId, userId, exhibitionId]) => {
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
         Object.assign(params, {
           ContactExhibitionReceiver: exhibitor.recordId,
           ContactExhibitionInitator: exhibitionId

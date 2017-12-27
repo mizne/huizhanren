@@ -36,17 +36,6 @@ export class TenantService {
     return this.store.select(getTenantId)
   }
 
-  public getExhibitorId(): Observable<string> {
-    return this.store.select(getExhibitorId)
-  }
-
-  public getExhibitorIdAndExhibitionId(): Observable<[string, string]> {
-    return Observable.zip(
-      this.store.select(getExhibitorId),
-      this.store.select(getSelectedExhibitionId)
-    )
-  }
-
   public getTenantIdAndUserId(): Observable<[string, string]> {
     return Observable.zip(
       this.store.select(getTenantId),
@@ -64,19 +53,11 @@ export class TenantService {
     )
   }
 
-  public getTenantIdAndUserIdAndSelectedExhibitionId(): Observable<
-    [string, string, string]
-  > {
+  public getTenantIdAndUserIdAndExhibitorIdAndExhibitionId(): Observable<[string, string, string, string]> {
     return Observable.zip(
       this.store.select(getTenantId),
       this.store.select(getUserId),
-      this.store.select(getSelectedExhibitionId)
-    )
-  }
-
-  public getTenantIdAndExhibitionId(): Observable<[string, string]> {
-    return Observable.zip(
-      this.store.select(getTenantId),
+      this.store.select(getExhibitorId),
       this.store.select(getSelectedExhibitionId)
     )
   }

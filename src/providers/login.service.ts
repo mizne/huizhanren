@@ -65,6 +65,7 @@ export class LoginService {
           userName: loginResp.userName,
           tenantId: loginResp.tenantId,
           userId: loginResp.userId,
+          exhibitorId: loginResp.exhibitorId,
           companyName: exhibitons[0].companyName,
           exhibitions: exhibitons
         }
@@ -139,6 +140,7 @@ export class LoginService {
       })
       .map(res => {
         const results = (res as APIResponse).result
+
         return {
           adminName: results[0].adminName,
           userName: results[0].Name,

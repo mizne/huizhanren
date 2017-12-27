@@ -49,8 +49,8 @@ export class VisitorMatcherService {
   public fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
     return environment.production
       ? this.tenantService
-          .getExhibitorIdAndExhibitionId()
-          .mergeMap(([exhibitorId, exhibitionId]) => {
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
             let query = `?exhibitionId=${exhibitionId}&exhibitorId=${exhibitorId}`
             if (params.pageIndex) {
               query += `&pageIndex=${params.pageIndex}`
@@ -126,8 +126,8 @@ export class VisitorMatcherService {
     }
 
     return this.tenantService
-      .getTenantIdAndUserIdAndSelectedExhibitionId()
-      .mergeMap(([tenantId, userId, exhibitionId]) => {
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
         Object.assign(params, {
           ExhibitionId: exhibitionId
         })

@@ -66,9 +66,9 @@ export class ExhibitorService {
   ): Observable<RecommendExhibitor[]> {
     return environment.production
       ? this.tenantService
-          .getTenantIdAndItemName()
-          .mergeMap(([tenantId, itemName]) => {
-            const query = `?itemName=${itemName}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+            const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
             return this.http
               .get(this.fetchUrl + query)
               .map(e => (e as APIResponse).result)
