@@ -180,46 +180,36 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   private initCurrentDetail(): void {
     // 根据list status和 show detail ID寻找当前推荐客户
-
-    // 点击列表项目 触发请求最新的 当前项目详情
-    // 点击列表头 切换不同表格 隐藏当前详情
-    // 有新表格数据刷新 刷新当前详情
-    const items$: Observable<Visitor[]> = Observable.merge(
-      this.listStatus$
-        .filter(listStatus => listStatus === ListStatus.VISITOR)
-        .withLatestFrom(this.visitors$, (_, visitors) => visitors),
-      this.listStatus$
-        .filter(listStatus => listStatus === ListStatus.MATCHER)
-        .withLatestFrom(this.matchers$, (_, matchers) => matchers)
-    )
-    const clickGridItem$: Observable<
-      Visitor
-    > = this.showDetailID$.withLatestFrom(items$, (detailId, items) => {
-      return items.find(e => e.id === detailId)
-    })
-
-    const clickGridHead$ = this.listStatusChangeSub.mapTo(null)
-    const refeashGridData$: Observable<Visitor> = Observable.merge<Visitor[]>(
-      this.visitors$,
-      this.matchers$
-    ).withLatestFrom(this.showDetailID$, (items, detailId) => {
-      return items.find(e => e.id === detailId)
-    })
-
-    this.currentDetail$ = Observable.merge(
-      clickGridItem$,
-      clickGridHead$,
-      refeashGridData$
+    const latestItems$: Observable<Visitor[]> = Observable.combineLatest(
+      Observable.merge(
+        this.visitors$.withLatestFrom(this.matchers$, (visitors, matchers) => [
+          visitors,
+          matchers
+        ]),
+        this.matchers$.withLatestFrom(this.visitors$, (matchers, visitors) => [
+          visitors,
+          matchers
+        ])
+      ),
+      this.listStatus$,
+      ([visitors, matchers], listStatus) => {
+        if (listStatus === ListStatus.VISITOR) {
+          return visitors
+        }
+        if (listStatus === ListStatus.MATCHER) {
+          return matchers
+        }
+      }
     )
 
-    // this.currentDetail$ = Observable.combineLatest(
-    //   items$,
-    //   this.showDetailID$,
-    //   (items, detailId) => {
-    //     debugger
-    //     return items.find(e => e.id === detailId)
-    //   }
-    // )
+    const clickGridItem$ = this.showDetailID$.withLatestFrom(
+      latestItems$,
+      (detailId, items) => {
+        return items.find(e => e.id === detailId)
+      }
+    )
+
+    this.currentDetail$ = Observable.merge(clickGridItem$)
   }
 
   private initSubscriber() {

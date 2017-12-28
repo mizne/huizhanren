@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import {
-  NavController,
-  ToastController,
-  IonicPage
-} from 'ionic-angular'
+import { NavController, ToastController, IonicPage } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
 import { Subject } from 'rxjs/Subject'
@@ -18,7 +14,7 @@ import {
   getMatchers,
   getCurrentLogs,
   getShowExhibitorLoadMore,
-  getShowMatcherLoadMore,
+  getShowMatcherLoadMore
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -28,14 +24,14 @@ import {
   UpdateDetailIDAction,
   ToInviteExhibitorAction,
   ToShowProcuctAction,
-  FetchLoggerAction,
+  FetchLoggerAction
 } from './actions/exhibitor.action'
 import {
   FetchMatchersAction,
   ToAgreeMatcherAction,
   ToCancelMatcherAction,
-  ToRefuseMatcherAction,
- } from './actions/matcher.action'
+  ToRefuseMatcherAction
+} from './actions/matcher.action'
 
 import {
   PageStatus,
@@ -186,25 +182,47 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
     this.currentLogs$ = this.store.select(getCurrentLogs)
     this.showLoadMore$ = Observable.merge(
-      this.listStatus$.filter(e => e === ListStatus.EXHIBITOR).mergeMap(() => this.store.select(getShowExhibitorLoadMore)),
-      this.listStatus$.filter(e => e === ListStatus.MATCHER).mergeMap(() => this.store.select(getShowMatcherLoadMore)),
+      this.listStatus$
+        .filter(e => e === ListStatus.EXHIBITOR)
+        .mergeMap(() => this.store.select(getShowExhibitorLoadMore)),
+      this.listStatus$
+        .filter(e => e === ListStatus.MATCHER)
+        .mergeMap(() => this.store.select(getShowMatcherLoadMore))
     )
   }
 
   private initCurrentDetail(): void {
     // 根据list status和 show detail ID寻找当前推荐客户
-    const items$: Observable<Exhibitor[]> = Observable.merge(
-      this.listStatus$.filter(listStatus => listStatus === ListStatus.EXHIBITOR).withLatestFrom(this.exhibitors$, (_, exhibitors) => exhibitors),
-      this.listStatus$.filter(listStatus => listStatus === ListStatus.MATCHER).withLatestFrom(this.matchers$, (_, matchers) => matchers),
+    const latestItems$: Observable<Exhibitor[]> = Observable.combineLatest(
+      Observable.merge(
+        this.exhibitors$.withLatestFrom(
+          this.matchers$,
+          (exhibitors, matchers) => [exhibitors, matchers]
+        ),
+        this.matchers$.withLatestFrom(
+          this.exhibitors$,
+          (matchers, exhibitors) => [exhibitors, matchers]
+        )
+      ),
+      this.listStatus$,
+      ([exhibitors, matchers], listStatus) => {
+        if (listStatus === ListStatus.EXHIBITOR) {
+          return exhibitors
+        }
+        if (listStatus === ListStatus.MATCHER) {
+          return matchers
+        }
+      }
     )
 
-    this.currentDetail$ = Observable.combineLatest(
-      items$,
-      this.showDetailID$,
-      (items, detailId) => {
+    const clickGridItem$ = this.showDetailID$.withLatestFrom(
+      latestItems$,
+      (detailId, items) => {
         return items.find(e => e.id === detailId)
       }
     )
+
+    this.currentDetail$ = Observable.merge(clickGridItem$)
   }
 
   private initSubscriber() {
