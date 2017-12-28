@@ -1,6 +1,14 @@
-import { Visitor } from './visitor.model'
+import {
+  Visitor,
+  RecommendVisitor,
+  RecommendVisitorResp
+} from './visitor.model'
+import {
+  RecommendExhibitor,
+  RecommendExhibitorResp
+} from '../../exhibitors/models/exhibitor.model'
 
-export class Matcher extends Visitor {
+export class VisitorMatcher extends Visitor {
   status?: MatcherStatus
   selected?: boolean
   senderId?: string
@@ -8,49 +16,54 @@ export class Matcher extends Visitor {
   type?: string
   isSender?: boolean
   isReceiver?: boolean
+  sender?: RecommendVisitor | RecommendExhibitor
+  receiver?: RecommendVisitor | RecommendExhibitor
 
-  static convertFromResp(resp: MatcherResp): Matcher {
+  static convertFromResp(resp: VisitorMatcherResp): VisitorMatcher {
     return {
       id: resp._id,
       type: resp.Type,
       status: convertMatcherStatusFromResp(resp.State),
       senderId: resp.Initator[0]._id,
       receiverId: resp.Receiver[0]._id,
-
-      name:
-        resp.Type === '0'
-          ? resp.Initator[0].LinkList[0].LinkName
-          : resp.Receiver[0].Name,
-      title:
-        resp.Type === '0'
-          ? resp.Initator[0].LinkList[0].LinkMob
-          : resp.Receiver[0].JobTitle,
-      company:
-        resp.Type === '0'
-          ? resp.Initator[0].companyName
-          : resp.Receiver[0].CompName,
-      industry:
-        resp.Type === '0'
-          ? resp.Initator[0].Industry
-          : resp.Receiver[0].Industry,
-      area:
-        resp.Type === '0'
-          ? resp.Initator[0].ShowArea
-          : resp.Receiver[0].Province,
-      mobile:
-        resp.Type === '0'
-          ? resp.Initator[0].LinkList[0].LinkMob
-          : resp.Receiver[0].Mob
+      sender: (() => {
+        if (resp.Type === '0') {
+          return RecommendVisitor.convertFromResp(resp.Initator[0])
+        }
+        if (resp.Type === '1') {
+          return RecommendExhibitor.convertFromResp(resp.Initator[0])
+        }
+      })(),
+      receiver: (() => {
+        if (resp.Type === '0') {
+          return RecommendExhibitor.convertFromResp(resp.Receiver[0])
+        }
+        if (resp.Type === '1') {
+          return RecommendVisitor.convertFromResp(resp.Receiver[0])
+        }
+      })()
     }
+  }
+
+  static extractVisitorToShow(matcher: VisitorMatcher): RecommendVisitor {
+    let toShow: RecommendVisitor = null
+    if (matcher.type === '0') {
+      toShow = matcher.sender as RecommendVisitor
+    }
+
+    if (matcher.type === '1') {
+      toShow = matcher.receiver as RecommendVisitor
+    }
+    return toShow
   }
 }
 
-export class MatcherResp {
+export class VisitorMatcherResp {
   _id?: string
   Type?: string
   State?: string
-  Initator?: any
-  Receiver?: any
+  Initator?: RecommendVisitorResp[] | RecommendExhibitorResp[]
+  Receiver?: RecommendVisitorResp[] | RecommendExhibitorResp[]
 }
 
 // export interface
@@ -111,7 +124,10 @@ export function convertMatcherStatusFromModel(status: MatcherStatus): string {
   }
 }
 
-export function convertMatcherDescFromModel(status: MatcherStatus, isSender: boolean): string {
+export function convertMatcherDescFromModel(
+  status: MatcherStatus,
+  isSender: boolean
+): string {
   switch (status) {
     case MatcherStatus.UN_AUDIT:
       return '未审核'

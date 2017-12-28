@@ -6,7 +6,7 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
-  Matcher,
+  VisitorMatcher,
   FetchMatcherParams,
   convertMatcherStatusFromModel
 } from '../models/matcher.model'
@@ -14,7 +14,7 @@ import { Visitor } from '../models/visitor.model'
 
 import { environment } from '../../../environments/environment'
 
-const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
+const fakeMatchers: VisitorMatcher[] = Array.from({ length: 100 }, (_, i) => ({
   id: 'matcher-' + String(i),
   name: `李${i}`,
   title: `经理${i}`,
@@ -43,10 +43,10 @@ export class VisitorMatcherService {
    *
    * @param {number} pageIndex
    * @param {number} pageSize
-   * @returns {Observable<Matcher[]>}
+   * @returns {Observable<VisitorMatcher[]>}
    * @memberof MatcherService
    */
-  public fetchMatchers(params: FetchMatcherParams): Observable<Matcher[]> {
+  public fetchMatchers(params: FetchMatcherParams): Observable<VisitorMatcher[]> {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
@@ -67,15 +67,16 @@ export class VisitorMatcherService {
           })
           .map(e => (e as APIResponse).result)
           .map(e =>
-            e.filter(f => f.State !== '5').map(Matcher.convertFromResp)
+            e.filter(f => f.State !== '5').map(VisitorMatcher.convertFromResp)
           )
           .withLatestFrom(
-            this.tenantService.getTenantId(),
-            (matchers, tenantId) =>
+            this.tenantService.getExhibitorId(),
+            (matchers, exhibitorId) =>
               matchers.map(e => ({
                 ...e,
-                isSender: e.type === '1',
-                isReceiver: e.type === '0'
+                ...VisitorMatcher.extractVisitorToShow(e),
+                isSender: e.sender.id === exhibitorId,
+                isReceiver: e.receiver.id === exhibitorId,
               }))
           )
           .catch(e => {

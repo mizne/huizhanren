@@ -13,15 +13,15 @@ export class ExhibitorMatcher extends Exhibitor {
     return {
       id: resp._id,
       status: convertMatcherStatus(resp.State),
-      senderId: resp.Initator._id,
-      receiverId: resp.Receiver._id,
-      sender: RecommendExhibitor.convertFromResp(resp.Initator),
-      receiver: RecommendExhibitor.convertFromResp(resp.Receiver),
+      senderId: resp.Initator[0]._id,
+      receiverId: resp.Receiver[0]._id,
+      sender: RecommendExhibitor.convertFromResp(resp.Initator[0]),
+      receiver: RecommendExhibitor.convertFromResp(resp.Receiver[0]),
       selected: false,
     }
   }
 
-  static extractExhibitorToShow(matcher: ExhibitorMatcher, currentExhibitorId: string) {
+  static extractExhibitorToShow(matcher: ExhibitorMatcher, currentExhibitorId: string): Exhibitor {
     let toShow: RecommendExhibitor = null
     if (matcher.sender.id === currentExhibitorId) {
       toShow = matcher.receiver
@@ -50,8 +50,8 @@ export class ExhibitorMatcher extends Exhibitor {
 export interface ExhibitorMatcherResp {
   _id?: string
   State?: string
-  Initator?: RecommendExhibitorResp
-  Receiver?: RecommendExhibitorResp
+  Initator?: RecommendExhibitorResp[]
+  Receiver?: RecommendExhibitorResp[]
 }
 
 export enum ExhibitorMatcherStatus {

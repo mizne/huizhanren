@@ -48,6 +48,7 @@ export class RecommendVisitor extends Visitor {
 }
 
 export class RecommendVisitorResp {
+  _id?: string
   TenantId?: string
   RecordId?: string
   Name?: string

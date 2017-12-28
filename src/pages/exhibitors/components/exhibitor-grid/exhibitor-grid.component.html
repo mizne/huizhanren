@@ -1,5 +1,6 @@
-<div class="exhibitor-grid-container">
-  <div class="exhibitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
+<div class="exhibitor-grid-container" *ngIf="dataItems.length > 0; else noData;">
+  <div class="exhibitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
+    (click)="ensureShow(item)">
     <div class="logo">
       <img [src]="item.logo || './assets/images/default_exhibitor.png'" alt="logo">
     </div>
@@ -72,3 +73,8 @@
     </div>
   </div>
 </div>
+<ng-template #noData>
+  <p class="no-data">
+    没有{{ type === 'matcher' ? '约请' : '展商' }}数据
+  </p>
+</ng-template>

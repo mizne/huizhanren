@@ -160,3 +160,9 @@
     }
   }
 }
+
+.no-data {
+  @include flexboxCenter;
+  height: 50px;
+  color: map-get($map: $gridColors, $key: grey);
+}

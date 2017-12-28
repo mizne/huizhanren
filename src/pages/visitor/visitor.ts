@@ -50,7 +50,7 @@ import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger } from '../customer/models/logger.model'
 import { Visitor } from './models/visitor.model'
-import { Matcher, MatcherStatus } from './models/matcher.model'
+import { VisitorMatcher, MatcherStatus } from './models/matcher.model'
 
 @IonicPage()
 @Component({
@@ -60,7 +60,7 @@ import { Matcher, MatcherStatus } from './models/matcher.model'
 })
 export class VisitorPage implements OnInit, OnDestroy {
   visitors$: Observable<RecommendVisitor[]>
-  matchers$: Observable<Matcher[]>
+  matchers$: Observable<VisitorMatcher[]>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
@@ -72,7 +72,7 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<RecommendVisitorFilter> = new Subject<RecommendVisitorFilter>()
+  visitorFilterSub: Subject<RecommendVisitorFilter> = new Subject<RecommendVisitorFilter>()
   matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
 
@@ -252,7 +252,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   }
 
   private initRecommendFilter(): void {
-    this.recommendFilterSub
+    this.visitorFilterSub
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         const params: FetchRecommendVisitorParams = {
@@ -291,7 +291,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.RECOMMEND)
       .withLatestFrom(
-        this.recommendFilterSub.startWith({
+        this.visitorFilterSub.startWith({
           type: '',
           area: '',
           key: ''
