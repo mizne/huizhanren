@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import {
-  NavController,
-  ToastController,
-  IonicPage
-} from 'ionic-angular'
+import { NavController, ToastController, IonicPage } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
 import { Subject } from 'rxjs/Subject'
@@ -18,7 +14,7 @@ import {
   getMatchers,
   getLogs,
   getShowMatcherLoadMore,
-  getShowRecommendLoadMore,
+  getShowRecommendLoadMore
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -33,8 +29,8 @@ import {
   FetchMatchersAction,
   ToCancelMatcherAction,
   ToAgreeMatcherAction,
-  ToRefuseMatcherAction,
- } from './actions/matcher.action'
+  ToRefuseMatcherAction
+} from './actions/matcher.action'
 
 import {
   PageStatus,
@@ -72,8 +68,12 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  visitorFilterSub: Subject<RecommendVisitorFilter> = new Subject<RecommendVisitorFilter>()
-  matcherFilterSub: Subject<VisitorMatcherStatus[]> = new Subject<VisitorMatcherStatus[]>()
+  visitorFilterSub: Subject<RecommendVisitorFilter> = new Subject<
+    RecommendVisitorFilter
+  >()
+  matcherFilterSub: Subject<VisitorMatcherStatus[]> = new Subject<
+    VisitorMatcherStatus[]
+  >()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   filterOptions = [
@@ -169,30 +169,57 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.currentLogs$ = this.store.select(getLogs)
 
     this.showLoadMore$ = Observable.merge(
-      this.listStatus$.filter(e => e === ListStatus.RECOMMEND).mergeMap(() => this.store.select(getShowRecommendLoadMore)),
-      this.listStatus$.filter(e => e === ListStatus.MATCHER).mergeMap(() => this.store.select(getShowMatcherLoadMore)),
+      this.listStatus$
+        .filter(e => e === ListStatus.VISITOR)
+        .mergeMap(() => this.store.select(getShowRecommendLoadMore)),
+      this.listStatus$
+        .filter(e => e === ListStatus.MATCHER)
+        .mergeMap(() => this.store.select(getShowMatcherLoadMore))
     )
   }
 
   private initCurrentDetail(): void {
     // 根据list status和 show detail ID寻找当前推荐客户
-    const items$: Observable<Visitor[]> = this.listStatus$.mergeMap(
-      listStatus => {
-        if (listStatus === ListStatus.RECOMMEND) {
-          return this.visitors$
-        } else {
-          return this.matchers$
-        }
-      }
+
+    // 点击列表项目 触发请求最新的 当前项目详情
+    // 点击列表头 切换不同表格 隐藏当前详情
+    // 有新表格数据刷新 刷新当前详情
+    const items$: Observable<Visitor[]> = Observable.merge(
+      this.listStatus$
+        .filter(listStatus => listStatus === ListStatus.VISITOR)
+        .withLatestFrom(this.visitors$, (_, visitors) => visitors),
+      this.listStatus$
+        .filter(listStatus => listStatus === ListStatus.MATCHER)
+        .withLatestFrom(this.matchers$, (_, matchers) => matchers)
+    )
+    const clickGridItem$: Observable<
+      Visitor
+    > = this.showDetailID$.withLatestFrom(items$, (detailId, items) => {
+      return items.find(e => e.id === detailId)
+    })
+
+    const clickGridHead$ = this.listStatusChangeSub.mapTo(null)
+    const refeashGridData$: Observable<Visitor> = Observable.merge<Visitor[]>(
+      this.visitors$,
+      this.matchers$
+    ).withLatestFrom(this.showDetailID$, (items, detailId) => {
+      return items.find(e => e.id === detailId)
+    })
+
+    this.currentDetail$ = Observable.merge(
+      clickGridItem$,
+      clickGridHead$,
+      refeashGridData$
     )
 
-    this.currentDetail$ = this.showDetailID$.withLatestFrom(
-      items$,
-      (showDetailID, items) => {
-        const detail = items.find(e => e.id === showDetailID)
-        return detail
-      }
-    )
+    // this.currentDetail$ = Observable.combineLatest(
+    //   items$,
+    //   this.showDetailID$,
+    //   (items, detailId) => {
+    //     debugger
+    //     return items.find(e => e.id === detailId)
+    //   }
+    // )
   }
 
   private initSubscriber() {
@@ -289,7 +316,7 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   private initLoadMoreRecommend(loadMore: Observable<ListStatus>) {
     loadMore
-      .filter(e => e === ListStatus.RECOMMEND)
+      .filter(e => e === ListStatus.VISITOR)
       .withLatestFrom(
         this.visitorFilterSub.startWith({
           type: '',

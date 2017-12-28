@@ -10,11 +10,11 @@
       {{detail.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="area" *ngIf="detail.booth; else noBooth;">{{detail.booth}}</span>
+      <span class="area" *ngIf="detail.boothNo; else noBooth;">{{detail.boothNo}}</span>
       <ng-template #noBooth>
         <span class="no-item"></span>
       </ng-template>
-      <span class="pipe" *ngIf="detail.booth && detail.area"> | </span>
+      <span class="pipe" *ngIf="detail.boothNo && detail.area"> | </span>
       <span class="area" *ngIf="detail.area; else noArea;">{{detail.area}}</span>
       <ng-template #noArea>
         <span class="no-item"></span>

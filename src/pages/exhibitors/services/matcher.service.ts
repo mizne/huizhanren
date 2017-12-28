@@ -161,7 +161,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
+        return this.http.put(
           this.updateUrl,
           params
         )
@@ -194,7 +194,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
+        return this.http.put(
           this.updateUrl,
           params
         )
@@ -227,7 +227,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
+        return this.http.put(
           this.updateUrl,
           params
         )

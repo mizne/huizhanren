@@ -1,5 +1,9 @@
 import * as fromVisitor from '../actions/visitor.action'
-import { RecommendVisitor, ListStatus, PageStatus } from '../models/visitor.model'
+import {
+  RecommendVisitor,
+  ListStatus,
+  PageStatus
+} from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export interface State {
@@ -16,10 +20,10 @@ export interface State {
 
 export const initialState: State = {
   visitors: [],
-  visitorsTotalCount: 0,
+  visitorsTotalCount: 1,
   currentVisitorsTotalCount: 0,
 
-  listStatus: ListStatus.RECOMMEND,
+  listStatus: ListStatus.VISITOR,
   pageStatus: PageStatus.LIST,
   showDetailID: '',
 
@@ -82,12 +86,12 @@ export function reducer(
 }
 
 export const getVisitors = (state: State) => state.visitors
-export const getVisitorsTotalCount = (state: State) =>
-  state.visitorsTotalCount
+export const getVisitorsTotalCount = (state: State) => state.visitorsTotalCount
 
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
-export const getShowLoadMore = (state: State) => state.visitorsTotalCount > state.currentVisitorsTotalCount
+export const getShowLoadMore = (state: State) =>
+  state.visitorsTotalCount > state.currentVisitorsTotalCount

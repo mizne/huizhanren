@@ -65,7 +65,7 @@ export class ExhibitorEffects {
       (exhibitor, srcCompanyName) => ({
         destName: exhibitor.name,
         srcName: srcCompanyName,
-        destAddress: exhibitor.booth
+        destAddress: exhibitor.boothNo
       })
     )
     .withLatestFrom(

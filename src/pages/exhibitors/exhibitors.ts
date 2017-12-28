@@ -55,7 +55,6 @@ import {
 import { AREA_OPTIONS } from '../visitor/models/visitor.model'
 
 import { DestroyService } from '../../providers/destroy.service'
-import { FetchVisitorsAction } from '../visitor/actions/visitor.action';
 
 @IonicPage()
 @Component({
@@ -194,21 +193,16 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   private initCurrentDetail(): void {
     // 根据list status和 show detail ID寻找当前推荐客户
-    const items$: Observable<Exhibitor[]> = this.listStatus$.mergeMap(
-      listStatus => {
-        if (listStatus === ListStatus.EXHIBITOR) {
-          return this.exhibitors$
-        } else {
-          return this.matchers$
-        }
-      }
+    const items$: Observable<Exhibitor[]> = Observable.merge(
+      this.listStatus$.filter(listStatus => listStatus === ListStatus.EXHIBITOR).withLatestFrom(this.exhibitors$, (_, exhibitors) => exhibitors),
+      this.listStatus$.filter(listStatus => listStatus === ListStatus.MATCHER).withLatestFrom(this.matchers$, (_, matchers) => matchers),
     )
 
-    this.currentDetail$ = this.showDetailID$.withLatestFrom(
+    this.currentDetail$ = Observable.combineLatest(
       items$,
-      (showDetailID, items) => {
-        const detail = items.find(e => e.id === showDetailID)
-        return detail
+      this.showDetailID$,
+      (items, detailId) => {
+        return items.find(e => e.id === detailId)
       }
     )
   }
@@ -307,7 +301,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with exhibitor filter, ', recommendFilter)
-        this.store.dispatch(new FetchVisitorsAction())
+        this.store.dispatch(new FetchExhibitorsAction())
       })
   }
 

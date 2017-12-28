@@ -27,7 +27,7 @@
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <exhibitor-detail *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
+      <exhibitor-detail *ngIf="currentDetail$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (createLog)="ensureCreateLogger()"
         (showProduct)="ensureShowProduct($event)" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)">

@@ -12,7 +12,6 @@ export interface State {
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
   showDetailID: string // 表明 右边显示详细信息的 id
 
-
   logs: Logger[]
 }
 
@@ -92,4 +91,5 @@ export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
-export const getShowLoadMore = (state: State) => state.exhibitorsTotalCount > state.currentExhibitorsTotalCount
+export const getShowLoadMore = (state: State) =>
+  state.exhibitorsTotalCount > state.currentExhibitorsTotalCount

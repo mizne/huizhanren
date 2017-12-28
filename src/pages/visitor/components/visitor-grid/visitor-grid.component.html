@@ -60,7 +60,7 @@
 </div>
 
 <ng-template #noExpand>
-  <div class="recommend-grid-container">
+  <div class="visitor-grid-container">
     <ion-grid class="header">
       <ion-row class="header">
         <ion-col col-2>姓名</ion-col>
@@ -73,9 +73,9 @@
     <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
       <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
         (click)="ensureShow(item.id)">
-        <ion-col col-2>{{item.name}}</ion-col>
+        <ion-col col-2>{{item.name | customerNamePrivacy:item.status}}</ion-col>
         <ion-col col-2>{{item.title}}</ion-col>
-        <ion-col col-5>{{item.company}}</ion-col>
+        <ion-col col-5 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
         <ion-col col-3>
           <hz-customer-status class="no-expand"></hz-customer-status>
         </ion-col>

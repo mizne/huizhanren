@@ -191,14 +191,15 @@ export class VisitorMatcherService {
       params: {
         setValue: {
           State: convertMatcherStatusFromModel(VisitorMatcherStatus.AGREE)
-        }
+        },
+        InvitationInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+        return this.http.put(
+          this.updateUrl,
           params
         )
       })
@@ -223,14 +224,15 @@ export class VisitorMatcherService {
       params: {
         setValue: {
           State: convertMatcherStatusFromModel(VisitorMatcherStatus.REFUSE)
-        }
+        },
+        InvitationInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+        return this.http.put(
+          this.updateUrl,
           params
         )
       })

@@ -10,11 +10,11 @@
 
       <div class="center">
         <div class="area">
-          <span *ngIf="item.booth; else noBooth;">{{item.booth}}</span>
-          <ng-template #noBooth>
+          <span *ngIf="item.boothNo; else noBoothNo;">{{item.boothNo}}</span>
+          <ng-template #noBoothNo>
             <span class="no-item"></span>
           </ng-template>
-          <span class="pipe" *ngIf="item.booth && item.area"> | </span>
+          <span class="pipe" *ngIf="item.boothNo && item.area"> | </span>
           <span *ngIf="item.area; else noArea;">{{item.area}}</span>
           <ng-template #noArea>
             <span class="no-item"></span>

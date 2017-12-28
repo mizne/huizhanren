@@ -1,6 +1,11 @@
 .visitor-grid-container {
   max-height: calc(100vh - 240px);
   overflow: auto;
+
+  .company {
+    @include textOverflow(100%);
+  }
+
   .header {
     color: map-get($map: $gridColors, $key: header);
     .status-header {
@@ -33,10 +38,6 @@
         &:last-child {
           justify-content: space-evenly;
         }
-      }
-
-      .company {
-        @include textOverflow(100%);
       }
 
       .checkbox-col {

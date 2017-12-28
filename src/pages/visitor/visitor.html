@@ -37,7 +37,7 @@
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
       <visitor-detail
-      *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async"
+      *ngIf="currentDetail$ | async" [detail]="currentDetail$ | async"
       [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async"
         [portray]="currentPortray$ | async"

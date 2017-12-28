@@ -96,7 +96,7 @@ export interface Portray {
 }
 
 export enum ListStatus {
-  RECOMMEND,
+  VISITOR,
   MATCHER
 }
 
