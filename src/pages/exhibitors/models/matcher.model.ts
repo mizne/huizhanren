@@ -29,7 +29,6 @@ export class ExhibitorMatcher extends Exhibitor {
     matcher: ExhibitorMatcher,
     currentExhibitorId: string
   ): Exhibitor {
-    debugger
     let toShow: RecommendExhibitor = null
     if (matcher.sender.id === currentExhibitorId) {
       toShow = matcher.receiver

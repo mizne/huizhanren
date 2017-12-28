@@ -73,7 +73,7 @@ export class ExhibitorMatcherService {
             )
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(ExhibitorMatcher.convertFromResp))
+          .map(e => e.filter(f => f.State !== '5').map(ExhibitorMatcher.convertFromResp))
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
             (results, exhibitorId) => {
@@ -154,14 +154,15 @@ export class ExhibitorMatcherService {
       params: {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.CANCEL)
-        }
+        },
+        ExhiInvInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          this.updateUrl,
           params
         )
       })
@@ -186,14 +187,15 @@ export class ExhibitorMatcherService {
       params: {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.AGREE)
-        }
+        },
+        ExhiInvInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          this.updateUrl,
           params
         )
       })
@@ -218,14 +220,15 @@ export class ExhibitorMatcherService {
       params: {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.REFUSE)
-        }
+        },
+        ExhiInvInfoId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(
-          this.updateUrl + `/${matcherId}/${tenantId}/${userId}`,
+          this.updateUrl,
           params
         )
       })

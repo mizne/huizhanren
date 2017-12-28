@@ -20,7 +20,6 @@ export class Exhibitor {
 
 export class RecommendExhibitor extends Exhibitor {
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
-    debugger
     return {
       id: resp.RecordId || resp._id,
       name: resp.companyName,
