@@ -6,7 +6,11 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 
-import { ExhibitorMatcher } from '../models/matcher.model'
+import {
+  ExhibitorMatcher,
+  ExhibitorMatcherStatus,
+  convertMatcherStatusFromModel
+} from '../models/matcher.model'
 import { RecommendExhibitor } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
@@ -30,7 +34,8 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
       //   id: '0',
       //   name: 'product1',
       // }
-    ]
+    ],
+    visitors: []
   })
 )
 
@@ -111,24 +116,20 @@ export class ExhibitorMatcherService {
     boothNo: string,
     tenantId: string
   ): Observable<any> {
-    const params = RecommendExhibitor.convertFromModel(exhibitor)
-    Object.assign(params, {
-      State: '1',
-      Type: '1',
-      Initator: tenantId,
-      Receiver: exhibitor.id
-    })
-
     return this.tenantService
       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
       .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-        Object.assign(params, {
-          ContactExhibitionReceiver: exhibitor.recordId,
-          ContactExhibitionInitator: exhibitionId
-        })
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
-            record: params
+            records: {
+              State: convertMatcherStatusFromModel(
+                ExhibitorMatcherStatus.UN_AUDIT
+              ),
+              Type: '1',
+              Initator: exhibitorId,
+              Receiver: exhibitor.id,
+              ExhibitionId: exhibitionId
+            }
           }
         })
       })
@@ -152,7 +153,7 @@ export class ExhibitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已取消'
+          State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.CANCEL)
         }
       }
     }
@@ -184,7 +185,7 @@ export class ExhibitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已同意'
+          State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.AGREE)
         }
       }
     }
@@ -216,7 +217,7 @@ export class ExhibitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已拒绝'
+          State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.REFUSE)
         }
       }
     }

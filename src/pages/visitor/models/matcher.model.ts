@@ -9,7 +9,7 @@ import {
 } from '../../exhibitors/models/exhibitor.model'
 
 export class VisitorMatcher extends Visitor {
-  status?: MatcherStatus
+  status?: VisitorMatcherStatus
   selected?: boolean
   senderId?: string
   receiverId?: string
@@ -21,11 +21,11 @@ export class VisitorMatcher extends Visitor {
 
   static convertFromResp(resp: VisitorMatcherResp): VisitorMatcher {
     return {
-      id: resp._id,
+      id: resp.RecordId || resp._id,
       type: resp.Type,
       status: convertMatcherStatusFromResp(resp.State),
-      senderId: resp.Initator[0]._id,
-      receiverId: resp.Receiver[0]._id,
+      senderId: resp.Initator[0].RecordId || resp.Initator[0]._id,
+      receiverId: resp.Receiver[0].RecordId || resp.Receiver[0]._id,
       sender: (() => {
         if (resp.Type === '0') {
           return RecommendVisitor.convertFromResp(resp.Initator[0])
@@ -45,8 +45,21 @@ export class VisitorMatcher extends Visitor {
     }
   }
 
-  static extractVisitorToShow(matcher: VisitorMatcher): RecommendVisitor {
+  static extractVisitorToShow(
+    matcher: VisitorMatcher,
+    exhibitorId: string
+  ): RecommendVisitor {
     let toShow: RecommendVisitor = null
+    if (
+      matcher.sender.id !== exhibitorId &&
+      matcher.receiver.id !== exhibitorId
+    ) {
+      throw new Error(
+        `Matcher not belong to exhibitor; matcherId: ${
+          matcher.id
+        }, exhibitorId: ${exhibitorId}`
+      )
+    }
     if (matcher.type === '0') {
       toShow = matcher.sender as RecommendVisitor
     }
@@ -54,12 +67,23 @@ export class VisitorMatcher extends Visitor {
     if (matcher.type === '1') {
       toShow = matcher.receiver as RecommendVisitor
     }
-    return toShow
+    return {
+      name: toShow.name,
+      title: toShow.title,
+      company: toShow.company,
+      industry: toShow.industry,
+      area: toShow.area,
+      organizer: toShow.organizer,
+      mobile: toShow.mobile,
+      cardImg: toShow.cardImg,
+      email: toShow.email
+    }
   }
 }
 
 export class VisitorMatcherResp {
   _id?: string
+  RecordId?: string
   Type?: string
   State?: string
   Initator?: RecommendVisitorResp[] | RecommendExhibitorResp[]
@@ -68,7 +92,7 @@ export class VisitorMatcherResp {
 
 // export interface
 
-export enum MatcherStatus {
+export enum VisitorMatcherStatus {
   UN_AUDIT, // 未审核
   AUDIT_FAILED, // 审核未通过
   AUDIT_SUCCESS, // 审核通过 未答复
@@ -78,22 +102,24 @@ export enum MatcherStatus {
   DELETED // 已删除
 }
 
-export function convertMatcherStatusFromResp(status: string): MatcherStatus {
+export function convertMatcherStatusFromResp(
+  status: string
+): VisitorMatcherStatus {
   switch (status) {
     case '0':
-      return MatcherStatus.UN_AUDIT
+      return VisitorMatcherStatus.UN_AUDIT
     case '1':
-      return MatcherStatus.AUDIT_FAILED
+      return VisitorMatcherStatus.AUDIT_FAILED
     case '2':
-      return MatcherStatus.AUDIT_SUCCESS
+      return VisitorMatcherStatus.AUDIT_SUCCESS
     case '4':
-      return MatcherStatus.AGREE
+      return VisitorMatcherStatus.AGREE
     case '3':
-      return MatcherStatus.REFUSE
+      return VisitorMatcherStatus.REFUSE
     case '5':
-      return MatcherStatus.CANCEL
+      return VisitorMatcherStatus.CANCEL
     case '6':
-      return MatcherStatus.DELETED
+      return VisitorMatcherStatus.DELETED
 
     default:
       console.warn(`Unknown matcher status: ${status}`)
@@ -101,21 +127,23 @@ export function convertMatcherStatusFromResp(status: string): MatcherStatus {
   }
 }
 
-export function convertMatcherStatusFromModel(status: MatcherStatus): string {
+export function convertMatcherStatusFromModel(
+  status: VisitorMatcherStatus
+): string {
   switch (status) {
-    case MatcherStatus.UN_AUDIT:
+    case VisitorMatcherStatus.UN_AUDIT:
       return '0'
-    case MatcherStatus.AUDIT_FAILED:
+    case VisitorMatcherStatus.AUDIT_FAILED:
       return '1'
-    case MatcherStatus.AUDIT_SUCCESS:
+    case VisitorMatcherStatus.AUDIT_SUCCESS:
       return '2'
-    case MatcherStatus.AGREE:
+    case VisitorMatcherStatus.AGREE:
       return '4'
-    case MatcherStatus.REFUSE:
+    case VisitorMatcherStatus.REFUSE:
       return '3'
-    case MatcherStatus.DELETED:
+    case VisitorMatcherStatus.DELETED:
       return '6'
-    case MatcherStatus.CANCEL:
+    case VisitorMatcherStatus.CANCEL:
       return '5'
 
     default:
@@ -125,23 +153,23 @@ export function convertMatcherStatusFromModel(status: MatcherStatus): string {
 }
 
 export function convertMatcherDescFromModel(
-  status: MatcherStatus,
+  status: VisitorMatcherStatus,
   isSender: boolean
 ): string {
   switch (status) {
-    case MatcherStatus.UN_AUDIT:
+    case VisitorMatcherStatus.UN_AUDIT:
       return '未审核'
-    case MatcherStatus.AUDIT_FAILED:
+    case VisitorMatcherStatus.AUDIT_FAILED:
       return '审核不通过'
-    case MatcherStatus.AUDIT_SUCCESS:
+    case VisitorMatcherStatus.AUDIT_SUCCESS:
       return '未答复'
-    case MatcherStatus.AGREE:
+    case VisitorMatcherStatus.AGREE:
       return '已同意'
-    case MatcherStatus.REFUSE:
+    case VisitorMatcherStatus.REFUSE:
       return '已拒绝'
-    case MatcherStatus.DELETED:
+    case VisitorMatcherStatus.DELETED:
       return '已删除'
-    case MatcherStatus.CANCEL:
+    case VisitorMatcherStatus.CANCEL:
       return '已取消'
 
     default:
@@ -153,5 +181,5 @@ export function convertMatcherDescFromModel(
 export interface FetchMatcherParams {
   pageSize?: number
   pageIndex?: number
-  statuses?: MatcherStatus[]
+  statuses?: VisitorMatcherStatus[]
 }

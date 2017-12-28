@@ -7,6 +7,7 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   VisitorMatcher,
+  VisitorMatcherStatus,
   FetchMatcherParams,
   convertMatcherStatusFromModel
 } from '../models/matcher.model'
@@ -46,7 +47,9 @@ export class VisitorMatcherService {
    * @returns {Observable<VisitorMatcher[]>}
    * @memberof MatcherService
    */
-  public fetchMatchers(params: FetchMatcherParams): Observable<VisitorMatcher[]> {
+  public fetchMatchers(
+    params: FetchMatcherParams
+  ): Observable<VisitorMatcher[]> {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
@@ -74,9 +77,9 @@ export class VisitorMatcherService {
             (matchers, exhibitorId) =>
               matchers.map(e => ({
                 ...e,
-                ...VisitorMatcher.extractVisitorToShow(e),
+                ...VisitorMatcher.extractVisitorToShow(e, exhibitorId),
                 isSender: e.sender.id === exhibitorId,
-                isReceiver: e.receiver.id === exhibitorId,
+                isReceiver: e.receiver.id === exhibitorId
               }))
           )
           .catch(e => {
@@ -87,12 +90,12 @@ export class VisitorMatcherService {
             })
           })
       : Observable.of(fakeMatchers).withLatestFrom(
-          this.tenantService.getTenantId(),
-          (matchers, tenantId) =>
+          this.tenantService.getExhibitorId(),
+          (matchers, exhibitorId) =>
             matchers.map(e => ({
               ...e,
-              isSender: e.senderId === tenantId,
-              isReceiver: e.receiverId === tenantId
+              isSender: e.senderId === exhibitorId,
+              isReceiver: e.receiverId === exhibitorId
             }))
         )
   }
@@ -120,7 +123,7 @@ export class VisitorMatcherService {
     //   Receiver: customerId
     // })
     const params = {
-      State: '2',
+      State: convertMatcherStatusFromModel(VisitorMatcherStatus.UN_AUDIT),
       Type: '1', // 约请的发起方向
       Receiver: customerId
     }
@@ -157,7 +160,7 @@ export class VisitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '5'
+          State: convertMatcherStatusFromModel(VisitorMatcherStatus.CANCEL)
         },
         InvitationInfoId: matcherId
       }
@@ -187,7 +190,7 @@ export class VisitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已同意'
+          State: convertMatcherStatusFromModel(VisitorMatcherStatus.AGREE)
         }
       }
     }
@@ -219,7 +222,7 @@ export class VisitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已拒绝'
+          State: convertMatcherStatusFromModel(VisitorMatcherStatus.REFUSE)
         }
       }
     }

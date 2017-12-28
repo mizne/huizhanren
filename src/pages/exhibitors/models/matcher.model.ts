@@ -1,4 +1,8 @@
-import { Exhibitor, RecommendExhibitor, RecommendExhibitorResp } from './exhibitor.model'
+import {
+  Exhibitor,
+  RecommendExhibitor,
+  RecommendExhibitorResp
+} from './exhibitor.model'
 
 export class ExhibitorMatcher extends Exhibitor {
   status?: ExhibitorMatcherStatus
@@ -11,17 +15,21 @@ export class ExhibitorMatcher extends Exhibitor {
 
   static convertFromResp(resp: ExhibitorMatcherResp): ExhibitorMatcher {
     return {
-      id: resp._id,
+      id: resp.RecordId || resp._id,
       status: convertMatcherStatus(resp.State),
-      senderId: resp.Initator[0]._id,
-      receiverId: resp.Receiver[0]._id,
+      senderId: resp.Initator[0]._id || resp.Initator[0].RecordId,
+      receiverId: resp.Receiver[0]._id || resp.Receiver[0].RecordId,
       sender: RecommendExhibitor.convertFromResp(resp.Initator[0]),
       receiver: RecommendExhibitor.convertFromResp(resp.Receiver[0]),
-      selected: false,
+      selected: false
     }
   }
 
-  static extractExhibitorToShow(matcher: ExhibitorMatcher, currentExhibitorId: string): Exhibitor {
+  static extractExhibitorToShow(
+    matcher: ExhibitorMatcher,
+    currentExhibitorId: string
+  ): Exhibitor {
+    debugger
     let toShow: RecommendExhibitor = null
     if (matcher.sender.id === currentExhibitorId) {
       toShow = matcher.receiver
@@ -31,15 +39,21 @@ export class ExhibitorMatcher extends Exhibitor {
     }
 
     if (!toShow) {
-      throw new Error(`Current exhibitor matcher not found exhibitorId in sender or receiver; matcherId: ${matcher.id}, currentExhibitorId: ${currentExhibitorId}`)
+      throw new Error(
+        `Current exhibitor matcher not found exhibitorId in sender or receiver; matcherId: ${
+          matcher.id
+        }, currentExhibitorId: ${currentExhibitorId}`
+      )
     }
-
     return {
-      booth: toShow.booth,
+      name: toShow.name,
+      logo: toShow.logo,
+      booth: toShow.boothNo,
       industry: toShow.industry,
       area: toShow.area,
       heat: toShow.heat,
       products: toShow.products,
+      visitors: toShow.visitors,
       description: toShow.description,
       organizer: toShow.organizer,
       organizerId: toShow.organizerId
@@ -48,6 +62,7 @@ export class ExhibitorMatcher extends Exhibitor {
 }
 
 export interface ExhibitorMatcherResp {
+  RecordId?: string
   _id?: string
   State?: string
   Initator?: RecommendExhibitorResp[]
@@ -111,7 +126,10 @@ export function convertMatcherStatusFromModel(
   }
 }
 
-export function convertMatcherDescFromModel(status: ExhibitorMatcherStatus, isSender: boolean): string {
+export function convertMatcherDescFromModel(
+  status: ExhibitorMatcherStatus,
+  isSender: boolean
+): string {
   switch (status) {
     case ExhibitorMatcherStatus.UN_AUDIT:
       return '未审核'

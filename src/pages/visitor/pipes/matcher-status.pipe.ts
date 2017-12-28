@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
 import {
-  MatcherStatus,
+  VisitorMatcherStatus,
   convertMatcherDescFromModel
 } from '../models/matcher.model'
 
@@ -9,7 +9,7 @@ import {
   name: 'customerMatcherStatus'
 })
 export class CustomerMatcherStatusPipe implements PipeTransform {
-  transform(value: MatcherStatus, isSender: boolean): string {
+  transform(value: VisitorMatcherStatus, isSender: boolean): string {
     return convertMatcherDescFromModel(value, isSender)
   }
 }

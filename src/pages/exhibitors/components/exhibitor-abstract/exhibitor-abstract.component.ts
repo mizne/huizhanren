@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core'
 
 import { Exhibitor, Product } from '../../models/exhibitor.model'
 
@@ -6,7 +6,7 @@ import { Exhibitor, Product } from '../../models/exhibitor.model'
   selector: 'hz-exhibitor-abstract',
   templateUrl: 'exhibitor-abstract.component.html'
 })
-export class HzExhibitorAbstractComponent implements OnInit {
+export class HzExhibitorAbstractComponent implements OnInit, OnChanges {
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Input() detail: Exhibitor
 

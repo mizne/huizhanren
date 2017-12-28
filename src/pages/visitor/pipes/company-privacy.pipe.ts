@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core'
 
 import {
-  MatcherStatus,
+  VisitorMatcherStatus,
 } from '../models/matcher.model'
 
 @Pipe({
   name: 'customerCompanyPrivacy'
 })
 export class CustomerCompanyPrivacyPipe implements PipeTransform {
-  transform(company: string, status: MatcherStatus): string {
-    return status === MatcherStatus.AGREE ? company : 'X'.repeat(6)
+  transform(company: string, status: VisitorMatcherStatus): string {
+    return status === VisitorMatcherStatus.AGREE ? company : 'X'.repeat(6)
   }
 }

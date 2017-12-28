@@ -18,7 +18,7 @@ export class RecommendVisitor extends Visitor {
 
   static convertFromResp(resp: RecommendVisitorResp): RecommendVisitor {
     return {
-      id: resp.RecordId,
+      id: resp.RecordId || resp._id,
       name: resp.Name,
       title: resp.JobTitle,
       company: resp.CompName,

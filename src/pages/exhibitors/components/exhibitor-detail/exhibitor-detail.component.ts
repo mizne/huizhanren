@@ -27,7 +27,8 @@ export class ExhibitorDetailComponent implements OnInit {
 
   constructor(private toastCtrl: ToastController) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   activeHeader(index: number) {
     if (index === 1) {

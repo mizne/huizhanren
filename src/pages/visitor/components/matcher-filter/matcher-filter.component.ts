@@ -3,14 +3,14 @@ import { Subject } from 'rxjs/Subject'
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
-import { MatcherStatus } from '../../models/matcher.model'
+import { VisitorMatcherStatus } from '../../models/matcher.model'
 
 @Component({
   selector: 'hz-matcher-filter',
   templateUrl: 'matcher-filter.component.html',
 })
 export class HzMatcherFilterComponent implements OnInit {
-  @Input() filterSub: Subject<MatcherStatus[]>
+  @Input() filterSub: Subject<VisitorMatcherStatus[]>
   @Input() expand: boolean
 
   allowControl: FormControl = new FormControl(false)

@@ -50,7 +50,7 @@ import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger } from '../customer/models/logger.model'
 import { Visitor } from './models/visitor.model'
-import { VisitorMatcher, MatcherStatus } from './models/matcher.model'
+import { VisitorMatcher, VisitorMatcherStatus } from './models/matcher.model'
 
 @IonicPage()
 @Component({
@@ -73,7 +73,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
   visitorFilterSub: Subject<RecommendVisitorFilter> = new Subject<RecommendVisitorFilter>()
-  matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
+  matcherFilterSub: Subject<VisitorMatcherStatus[]> = new Subject<VisitorMatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   filterOptions = [

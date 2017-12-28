@@ -1,6 +1,5 @@
 export class Exhibitor {
   id?: string
-  recordId?: string
   name?: string
   logo?: string
   booth?: string
@@ -21,11 +20,11 @@ export class Exhibitor {
 
 export class RecommendExhibitor extends Exhibitor {
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
+    debugger
     return {
-      id: resp._id,
-      recordId: resp._id,
+      id: resp.RecordId || resp._id,
       name: resp.companyName,
-      logo: resp.logo,
+      logo: resp.logo || './assets/images/default_exhibitor.png',
       booth: resp.boothArea,
       boothNo: resp.BoothNo,
       exHall: resp.ExHall,
@@ -76,8 +75,9 @@ export interface Visitor {
 }
 
 export interface RecommendExhibitorResp {
-  TenantId?: string
   _id?: string
+  TenantId?: string
+  RecordId?: string
   companyName?: string
   logo?: string
   boothArea?: string
