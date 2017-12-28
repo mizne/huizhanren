@@ -1,4 +1,4 @@
-import { Exhibitor } from './exhibitor.model'
+import { Exhibitor, RecommendExhibitor, RecommendExhibitorResp } from './exhibitor.model'
 
 export class ExhibitorMatcher extends Exhibitor {
   status?: ExhibitorMatcherStatus
@@ -6,44 +6,52 @@ export class ExhibitorMatcher extends Exhibitor {
   receiverId?: string
   isSender?: boolean
   isReceiver?: boolean
+  sender?: RecommendExhibitor
+  receiver?: RecommendExhibitor
 
   static convertFromResp(resp: ExhibitorMatcherResp): ExhibitorMatcher {
     return {
       id: resp._id,
-      name: resp.companyName,
-      logo: resp.logo,
-      booth: resp.BoothNo,
-      industry: resp.Industry,
-      area: resp.city,
-      heat: resp.heat,
       status: convertMatcherStatus(resp.State),
-      senderId: resp.Initator,
-      receiverId: resp.Receiver,
-      products: [],
-      description: resp.website,
-      organizer: resp.Organizer,
-      organizerId: resp.OrganizerId,
-      selected: false
+      senderId: resp.Initator._id,
+      receiverId: resp.Receiver._id,
+      sender: RecommendExhibitor.convertFromResp(resp.Initator),
+      receiver: RecommendExhibitor.convertFromResp(resp.Receiver),
+      selected: false,
+    }
+  }
+
+  static extractExhibitorToShow(matcher: ExhibitorMatcher, currentExhibitorId: string) {
+    let toShow: RecommendExhibitor = null
+    if (matcher.sender.id === currentExhibitorId) {
+      toShow = matcher.receiver
+    }
+    if (matcher.receiver.id === currentExhibitorId) {
+      toShow = matcher.sender
+    }
+
+    if (!toShow) {
+      throw new Error(`Current exhibitor matcher not found exhibitorId in sender or receiver; matcherId: ${matcher.id}, currentExhibitorId: ${currentExhibitorId}`)
+    }
+
+    return {
+      booth: toShow.booth,
+      industry: toShow.industry,
+      area: toShow.area,
+      heat: toShow.heat,
+      products: toShow.products,
+      description: toShow.description,
+      organizer: toShow.organizer,
+      organizerId: toShow.organizerId
     }
   }
 }
 
 export interface ExhibitorMatcherResp {
   _id?: string
-  Organizer?: string
-  OrganizerId?: string
-  companyName?: string
-  city?: string
-  boothArea?: string
-  ExHall?: string
-  BoothNo?: string
   State?: string
-  logo?: string
-  Industry?: string
-  heat?: number
-  Initator?: string
-  Receiver?: string
-  website?: string
+  Initator?: RecommendExhibitorResp
+  Receiver?: RecommendExhibitorResp
 }
 
 export enum ExhibitorMatcherStatus {
@@ -58,19 +66,19 @@ export enum ExhibitorMatcherStatus {
 
 function convertMatcherStatus(status: string): ExhibitorMatcherStatus {
   switch (status) {
-    case '未审核':
+    case '0':
       return ExhibitorMatcherStatus.UN_AUDIT
-    case '审核未通过':
+    case '1':
       return ExhibitorMatcherStatus.AUDIT_FAILED
-    case '未答复':
+    case '2':
       return ExhibitorMatcherStatus.AUDIT_SUCCESS
-    case '已同意':
+    case '4':
       return ExhibitorMatcherStatus.AGREE
-    case '已拒绝':
+    case '3':
       return ExhibitorMatcherStatus.REFUSE
-    case '已删除':
+    case '6':
       return ExhibitorMatcherStatus.DELETED
-    case '已取消':
+    case '5':
       return ExhibitorMatcherStatus.CANCEL
 
     default:
@@ -84,9 +92,31 @@ export function convertMatcherStatusFromModel(
 ): string {
   switch (status) {
     case ExhibitorMatcherStatus.UN_AUDIT:
+      return '0'
+    case ExhibitorMatcherStatus.AUDIT_FAILED:
+      return '1'
+    case ExhibitorMatcherStatus.AUDIT_SUCCESS:
+      return '2'
+    case ExhibitorMatcherStatus.AGREE:
+      return '4'
+    case ExhibitorMatcherStatus.REFUSE:
+      return '3'
+    case ExhibitorMatcherStatus.DELETED:
+      return '6'
+    case ExhibitorMatcherStatus.CANCEL:
+      return '5'
+    default:
+      console.warn(`Unknown matcher status: ${status}`)
+      break
+  }
+}
+
+export function convertMatcherDescFromModel(status: ExhibitorMatcherStatus, isSender: boolean): string {
+  switch (status) {
+    case ExhibitorMatcherStatus.UN_AUDIT:
       return '未审核'
     case ExhibitorMatcherStatus.AUDIT_FAILED:
-      return '审核未通过'
+      return '审核不通过'
     case ExhibitorMatcherStatus.AUDIT_SUCCESS:
       return '未答复'
     case ExhibitorMatcherStatus.AGREE:
@@ -97,6 +127,7 @@ export function convertMatcherStatusFromModel(
       return '已删除'
     case ExhibitorMatcherStatus.CANCEL:
       return '已取消'
+
     default:
       console.warn(`Unknown matcher status: ${status}`)
       break

@@ -7,7 +7,6 @@ import { APIResponse } from './interceptor'
 import { ErrorLoggerService } from './error-logger.service'
 
 export interface FetchExhibitionsAndLoginResp extends LoginResp {
-  companyName: string
   exhibitions: Exhibition[]
 }
 
@@ -17,6 +16,8 @@ interface LoginResp {
   tenantId: string
   userId: string
   exhibitorId: string
+  companyName: string
+  boothNo: string
 }
 /*
   Generated class for the OcrServiceProvider provider.
@@ -66,7 +67,8 @@ export class LoginService {
           tenantId: loginResp.tenantId,
           userId: loginResp.userId,
           exhibitorId: loginResp.exhibitorId,
-          companyName: exhibitons[0].companyName,
+          companyName: loginResp.companyName,
+          boothNo: loginResp.boothNo,
           exhibitions: exhibitons
         }
       })
@@ -87,7 +89,7 @@ export class LoginService {
    * @returns {Observable<any[]>}
    * @memberof LoginService
    */
-  private fetchExhibitions(phone): Observable<any[]> {
+  private fetchExhibitions(phone): Observable<Exhibition[]> {
     return this.http
       .post(this.exhibitionsUrl, {
         params: {
@@ -101,11 +103,9 @@ export class LoginService {
         }
         return results.map(e => ({
           id: e.RecordId,
-          name: e.ItemName,
-          startTime: e.startTime,
-          endTime: e.endTime,
-          companyName: e.companyName,
-          boothNo: e.BoothNo
+          name: e.ExName,
+          startTime: e.StartTime,
+          endTime: e.EndTime
         }))
       })
       .retryWhen(errStream =>
@@ -140,13 +140,14 @@ export class LoginService {
       })
       .map(res => {
         const results = (res as APIResponse).result
-
         return {
           adminName: results[0].adminName,
           userName: results[0].Name,
           tenantId: results[0].TenantId,
           userId: results[0].UserId,
-          exhibitorId: results[0].RecordId
+          exhibitorId: results[0].RecordId,
+          companyName: results[0].CompanyName,
+          boothNo: results[0].BoothNo
         }
       })
       .retryWhen(errStream =>

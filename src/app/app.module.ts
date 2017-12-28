@@ -70,7 +70,9 @@ export class RavenErrorHandler implements ErrorHandler {
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     environment.production
-      ? []
+      ? StoreDevtoolsModule.instrument({
+        maxAge: 42
+      })
       : StoreDevtoolsModule.instrument({
           maxAge: 42
         }),

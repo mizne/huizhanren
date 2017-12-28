@@ -12,6 +12,7 @@ export class Exhibitor {
   heat?: number
   products?: Product[]
   description?: string
+  website?: string
   visitors?: Visitor[]
   organizer?: string
   organizerId?: string
@@ -21,7 +22,7 @@ export class Exhibitor {
 export class RecommendExhibitor extends Exhibitor {
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
     return {
-      id: resp.TenantId,
+      id: resp._id,
       recordId: resp._id,
       name: resp.companyName,
       logo: resp.logo,
@@ -32,17 +33,18 @@ export class RecommendExhibitor extends Exhibitor {
       area: resp.province,
       city: resp.city,
       heat: resp.heat || Math.round(Math.random() * 1000),
-      products: resp.ProductList.map(e => ({
+      products: (resp.ProductList || []).map(e => ({
         id: e.Name,
         name: e.Name,
         remark: e.Remark,
         pictures: e.PicList.map(f => f.PicPath)
       })),
-      visitors: resp.Visitors.map(e => ({
+      visitors: (resp.Visitors || []).map(e => ({
         id: e.id,
         headImgUrl: e.HeadImgUrl
       })),
-      description: resp.website,
+      description: resp.description,
+      website: resp.website,
       organizer: resp.Organizer,
       organizerId: resp.OrganizerId,
       selected: false
@@ -92,6 +94,7 @@ export interface RecommendExhibitorResp {
   OrganizerId?: string
   Industry?: string
   website?: string
+  description?: string
 }
 
 export interface ProductResp {

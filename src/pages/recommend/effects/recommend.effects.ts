@@ -22,7 +22,7 @@ import { Store } from '@ngrx/store'
 import { State, getShowDetailID, getRecommends } from '../reducers'
 import {
   getCompanyName,
-  getSelectedExhibitionAddress,
+  getBoothNo,
   getTenantId,
 } from '../../login/reducers'
 
@@ -67,11 +67,13 @@ export class RecommendEffects {
       })
     )
     .withLatestFrom(
-      this.store.select(getSelectedExhibitionAddress),
-      (params, exhibitionAddress) => ({
-        ...params,
-        srcAddress: exhibitionAddress
-      })
+      this.store.select(getBoothNo),
+      (params, boothNo) => {
+        return ({
+          ...params,
+          boothNo
+        })
+      }
     )
     .mergeMap(params => {
       return Observable.fromPromise(
@@ -96,7 +98,7 @@ export class RecommendEffects {
     .ofType(fromRecommend.INVITE_RECOMMEND)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
     .withLatestFrom(this.store.select(getRecommends), (id, recommends) => recommends.find(e => e.id === id))
-    .withLatestFrom(this.store.select(getSelectedExhibitionAddress), (recommend, boothArea) => ({
+    .withLatestFrom(this.store.select(getBoothNo), (recommend, boothArea) => ({
       recommend, boothArea
     }))
     .withLatestFrom(this.store.select(getTenantId), ({recommend, boothArea}, tenantId) => ({

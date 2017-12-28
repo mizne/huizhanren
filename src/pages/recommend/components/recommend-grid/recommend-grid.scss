@@ -35,6 +35,10 @@
         }
       }
 
+      .company {
+        @include textOverflow(100%);
+      }
+
       .checkbox-col {
         display: flex;
         justify-content: space-around;

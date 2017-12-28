@@ -29,7 +29,7 @@ const fakeMatchers: Matcher[] = Array.from({ length: 100 }, (_, i) => ({
 @Injectable()
 export class VisitorMatcherService {
   private fetchUrl: string = '/data/get/invitationInfo'
-  private insertUrl = '/data/insert/InvitationInfo'
+  private insertUrl = '/sys/insert/InvitationInfo'
   private updateUrl: string = '/data/update/inviinfo'
 
   constructor(
@@ -67,15 +67,15 @@ export class VisitorMatcherService {
           })
           .map(e => (e as APIResponse).result)
           .map(e =>
-            e.filter(f => f.State !== '已取消').map(Matcher.convertFromResp)
+            e.filter(f => f.State !== '5').map(Matcher.convertFromResp)
           )
           .withLatestFrom(
             this.tenantService.getTenantId(),
             (matchers, tenantId) =>
               matchers.map(e => ({
                 ...e,
-                isSender: e.senderId === tenantId,
-                isReceiver: e.receiverId === tenantId
+                isSender: e.type === '1',
+                isReceiver: e.type === '0'
               }))
           )
           .catch(e => {
@@ -119,9 +119,8 @@ export class VisitorMatcherService {
     //   Receiver: customerId
     // })
     const params = {
-      State: '1',
-      Type: '1',
-      Initator: tenantId,
+      State: '2',
+      Type: '1', // 约请的发起方向
       Receiver: customerId
     }
 
@@ -129,7 +128,8 @@ export class VisitorMatcherService {
       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
       .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
         Object.assign(params, {
-          ExhibitionId: exhibitionId
+          ExhibitionId: exhibitionId,
+          Initator: exhibitorId
         })
         return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
           params: {
@@ -156,7 +156,7 @@ export class VisitorMatcherService {
     const params = {
       params: {
         setValue: {
-          State: '已取消'
+          State: '5'
         },
         InvitationInfoId: matcherId
       }

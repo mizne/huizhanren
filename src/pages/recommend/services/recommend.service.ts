@@ -39,8 +39,8 @@ export class RecommendService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, ___]) => {
-            let query = `?exhibitorId=${exhibitorId}`
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (params.area) {
               query += `&province=${params.area}`
             }

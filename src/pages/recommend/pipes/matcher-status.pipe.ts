@@ -2,14 +2,14 @@ import { Pipe, PipeTransform } from '@angular/core'
 
 import {
   MatcherStatus,
-  convertMatcherStatusFromModel
+  convertMatcherDescFromModel
 } from '../models/matcher.model'
 
 @Pipe({
   name: 'customerMatcherStatus'
 })
 export class CustomerMatcherStatusPipe implements PipeTransform {
-  transform(value: MatcherStatus): string {
-    return convertMatcherStatusFromModel(value)
+  transform(value: MatcherStatus, isSender: boolean): string {
+    return convertMatcherDescFromModel(value, isSender)
   }
 }

@@ -70,13 +70,15 @@ export class ExhibitorMatcherService {
           .map(e => (e as APIResponse).result)
           .map(e => e.map(ExhibitorMatcher.convertFromResp))
           .withLatestFrom(
-            this.tenantService.getTenantId(),
-            (matchers, tenantId) =>
-              matchers.map(e => ({
+            this.tenantService.getExhibitorId(),
+            (results, exhibitorId) => {
+              return results.map(e => ({
                 ...e,
-                isSender: e.senderId === tenantId,
-                isReceiver: e.receiverId === tenantId
+                ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
+                isSender: e.sender.id === exhibitorId,
+                isReceiver: e.receiver.id === exhibitorId
               }))
+            }
           )
           .catch(e => {
             return this.logger.httpError({
@@ -86,12 +88,12 @@ export class ExhibitorMatcherService {
             })
           })
       : Observable.of(fakeMatchers).withLatestFrom(
-          this.tenantService.getTenantId(),
-          (matchers, tenantId) =>
+          this.tenantService.getExhibitorId(),
+          (matchers, exhibitorId) =>
             matchers.map(e => ({
               ...e,
-              isSender: e.senderId === tenantId,
-              isReceiver: e.receiverId === tenantId
+              isSender: e.senderId === exhibitorId,
+              isReceiver: e.receiverId === exhibitorId
             }))
         )
   }

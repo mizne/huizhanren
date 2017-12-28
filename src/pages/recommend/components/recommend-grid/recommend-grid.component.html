@@ -20,23 +20,24 @@
       (click)="ensureShow(item.id)">
       <ion-col col-1 class="checkbox-col">
         <ion-checkbox tappable [(ngModel)]="item.selected"></ion-checkbox>
-        <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']" class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
+        <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']"
+        class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
       </ion-col>
-      <ion-col col-1>{{item.name | customerNamePrivacy:item.status}}</ion-col>
-      <ion-col col-1>{{item.title}}</ion-col>
-      <ion-col col-2>{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
-      <ion-col col-2>{{item.industry}}</ion-col>
+      <ion-col col-1 class="name">{{item.name | customerNamePrivacy:item.status}}</ion-col>
+      <ion-col col-1 class="title">{{item.title}}</ion-col>
+      <ion-col col-2 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
+      <ion-col col-2 class="industry">{{item.industry}}</ion-col>
 
       <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>
 
       <ion-col col-1 *ngIf="type === 'matcher'">{{item.area}}</ion-col>
       <ion-col col-2 *ngIf="type === 'matcher'" [ngClass]="['matcher-status', 'matcher-status-' + item.status]">
         <span *ngIf="item.isSender; else receiver;">
-          {{item.status | customerMatcherStatus}}
+          {{item.status | customerMatcherStatus:item.isSender}}
         </span>
         <ng-template #receiver>
           <span *ngIf="item.status !== 2; else auditSuccess;">
-            {{item.status | customerMatcherStatus}}
+            {{item.status | customerMatcherStatus:item.isSender}}
           </span>
           <ng-template #auditSuccess>
             <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(item.id)">接受</button>

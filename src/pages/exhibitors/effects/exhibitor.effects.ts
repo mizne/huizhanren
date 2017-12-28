@@ -25,7 +25,7 @@ import { State, getShowDetailID, getExhibitors } from '../reducers'
 import {
   getTenantId,
   getCompanyName,
-  getSelectedExhibitionAddress
+  getBoothNo
 } from '../../login/reducers'
 
 @Injectable()
@@ -69,7 +69,7 @@ export class ExhibitorEffects {
       })
     )
     .withLatestFrom(
-      this.store.select(getSelectedExhibitionAddress),
+      this.store.select(getBoothNo),
       (params, exhibitionAddress) => ({
         ...params,
         srcAddress: exhibitionAddress
