@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 import { trigger, state, style, animate, transition } from '@angular/animations'
 
-import { ListHeaderEvent, ListStatus } from '../../../pages/recommend/models/recommend.model'
+import { ListHeaderEvent, ListStatus } from '../../../pages/visitor/models/visitor.model'
 
 
 @Component({

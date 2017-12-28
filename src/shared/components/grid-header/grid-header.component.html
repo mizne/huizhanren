@@ -1,6 +1,6 @@
 <div class="grid-header-container">
   <div class="grid-header left-header" tappable (clickOutside)="closeLeftMore()" (click)="activeHeader(0)" [class.active]="activeIndex === 0">
-    <div class="text">{{type === 'recommend' ? '推荐买家' : '本届展商'}}</div>
+    <div class="text">{{type === 'visitor' ? '推荐买家' : '本届展商'}}</div>
     <div class="icon-wrapper" tappable (click)="showLeftMore($event)">
       <i class="iconfont icon-more" *ngIf="activeIndex === 0"></i>
     </div>

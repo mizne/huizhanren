@@ -1,19 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { Recommend } from '../../models/recommend.model'
+import { RecommendVisitor } from '../../models/visitor.model'
 
 @Component({
-  selector: 'recommend-grid',
-  templateUrl: 'recommend-grid.component.html'
+  selector: 'visitor-grid',
+  templateUrl: 'visitor-grid.component.html'
 })
-export class RecommendGridComponent implements OnInit {
+export class VisitorGridComponent implements OnInit {
   activeId: string
 
   @Input() expand: boolean
 
   @Input() type: string
 
-  @Input() dataItems: Recommend[]
+  @Input() dataItems: RecommendVisitor[]
 
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()

@@ -10,7 +10,7 @@ import {
   FetchMatcherParams,
   convertMatcherStatusFromModel
 } from '../models/matcher.model'
-import { Recommend } from '../models/recommend.model'
+import { Visitor } from '../models/visitor.model'
 
 import { environment } from '../../../environments/environment'
 
@@ -98,7 +98,7 @@ export class VisitorMatcherService {
   /**
    * 新建约请
    *
-   * @param {Recommend} recommend
+   * @param {Visitor} recommend
    * @param {string} boothArea
    * @param {string} tenantId
    * @param {string} customerId
@@ -106,7 +106,7 @@ export class VisitorMatcherService {
    * @memberof MatcherService
    */
   public createMatcher(
-    recommend: Recommend,
+    recommend: Visitor,
     boothArea: string,
     tenantId: string,
     customerId: string

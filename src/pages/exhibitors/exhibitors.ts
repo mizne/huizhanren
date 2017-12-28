@@ -52,10 +52,10 @@ import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus
 } from './models/matcher.model'
-import { AREA_OPTIONS } from '../recommend/models/recommend.model'
+import { AREA_OPTIONS } from '../visitor/models/visitor.model'
 
 import { DestroyService } from '../../providers/destroy.service'
-import { FetchRecommendAction } from '../recommend/actions/recommend.action';
+import { FetchVisitorsAction } from '../visitor/actions/visitor.action';
 
 @IonicPage()
 @Component({
@@ -307,7 +307,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with exhibitor filter, ', recommendFilter)
-        this.store.dispatch(new FetchRecommendAction())
+        this.store.dispatch(new FetchVisitorsAction())
       })
   }
 

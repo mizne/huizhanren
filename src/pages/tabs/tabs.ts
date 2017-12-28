@@ -3,7 +3,7 @@ import { LoadingController, ToastController } from 'ionic-angular'
 
 import { CustomerPage } from '../customer/customer'
 
-import { RecommendPage } from '../recommend/recommend'
+import { VisitorPage } from '../visitor/visitor'
 import { ExhibitorsPage } from '../exhibitors/exhibitors'
 import { MorePage } from '../more/more'
 
@@ -32,7 +32,7 @@ import { ToCreateableStatusAction } from '../customer/actions/customer.action'
 })
 export class TabsPage {
   tab1Root = CustomerPage
-  tab2Root = RecommendPage
+  tab2Root = VisitorPage
   tab4Root = ExhibitorsPage
   tab5Root = MorePage
 

@@ -5,13 +5,13 @@ import {
   ToastController,
   LoadingController
 } from 'ionic-angular'
-import * as fromRecommend from '../actions/recommend.action'
+import * as fromVisitor from '../actions/visitor.action'
 import * as fromMatcher from '../actions/matcher.action'
 
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
 import { Logger } from '../../customer/models/logger.model'
 
-import { RecommendService } from '../services/recommend.service'
+import { VisitorService } from '../services/visitor.service'
 import { VisitorMatcherService } from '../services/matcher.service'
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
@@ -19,7 +19,7 @@ import { Observable } from 'rxjs/Observable'
 import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID, getRecommends } from '../reducers'
+import { State, getShowDetailID, getVisitors } from '../reducers'
 import {
   getCompanyName,
   getBoothNo,
@@ -27,34 +27,34 @@ import {
 } from '../../login/reducers'
 
 @Injectable()
-export class RecommendEffects {
+export class VisitorEffects {
   @Effect()
   fetchRecommend$ = this.actions$
-    .ofType(fromRecommend.FETCH_RECOMMEND)
-    .map((action: fromRecommend.FetchRecommendAction) => action.payload)
+    .ofType(fromVisitor.FETCH_VISITORS)
+    .map((action: fromVisitor.FetchVisitorsAction) => action.payload)
     .mergeMap((params) => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取数据中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
-      return this.recommendService
-        .fetchRecommend(params)
+      return this.visitorService
+        .fetchVisitors(params)
         .map(recommends => {
           loadingCtrl.dismiss()
-          return new fromRecommend.FetchRecommendSuccessAction(recommends)
+          return new fromVisitor.FetchVisitorsSuccessAction(recommends)
         })
         .catch(() => {
           loadingCtrl.dismiss()
-          return Observable.of(new fromRecommend.FetchRecommendFailureAction())
+          return Observable.of(new fromVisitor.FetchVisitorsFailureAction())
         })
     })
 
   @Effect()
   toInviteRecommend$ = this.actions$
-    .ofType(fromRecommend.TO_INVITE_RECOMMEND)
+    .ofType(fromVisitor.TO_INVITE_VISITOR)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .withLatestFrom(this.store.select(getRecommends), (id, recommends) =>
+    .withLatestFrom(this.store.select(getVisitors), (id, recommends) =>
       recommends.find(e => e.id === id)
     )
     .withLatestFrom(
@@ -86,18 +86,18 @@ export class RecommendEffects {
         })
       ).map((ok: string) => {
         if (ok) {
-          return new fromRecommend.InviteRecommendAction()
+          return new fromVisitor.InviteVisitorAction()
         } else {
-          return new fromRecommend.CancelInviteRecommendAction()
+          return new fromVisitor.CancelInviteVisitorAction()
         }
       })
     })
 
   @Effect()
   inviteRecommend$ = this.actions$
-    .ofType(fromRecommend.INVITE_RECOMMEND)
+    .ofType(fromVisitor.INVITE_VISITOR)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .withLatestFrom(this.store.select(getRecommends), (id, recommends) => recommends.find(e => e.id === id))
+    .withLatestFrom(this.store.select(getVisitors), (id, recommends) => recommends.find(e => e.id === id))
     .withLatestFrom(this.store.select(getBoothNo), (recommend, boothArea) => ({
       recommend, boothArea
     }))
@@ -111,17 +111,17 @@ export class RecommendEffects {
       this.matcherService
         .createMatcher(recommend, boothArea, tenantId, customerId)
         .concatMap(() => [
-          new fromRecommend.InviteRecommendSuccessAction(),
+          new fromVisitor.InviteVisitorSuccessAction(),
           new fromMatcher.FetchMatchersAction()
         ])
         .catch(() =>
-          Observable.of(new fromRecommend.InviteRecommendFailureAction())
+          Observable.of(new fromVisitor.InviteVisitorFailureAction())
         )
     )
 
   @Effect({ dispatch: false })
   inviteRecommendSuccess$ = this.actions$
-    .ofType(fromRecommend.INVITE_RECOMMEND_SUCCESS)
+    .ofType(fromVisitor.INVITE_VISITOR_SUCCESS)
     .do(() => {
       this.toastCtrl
         .create({
@@ -134,7 +134,7 @@ export class RecommendEffects {
 
   @Effect({ dispatch: false })
   inviteRecommendFailure$ = this.actions$
-    .ofType(fromRecommend.INVITE_RECOMMEND_FAILURE)
+    .ofType(fromVisitor.INVITE_VISITOR_FAILURE)
     .do(() => {
       this.toastCtrl
         .create({
@@ -147,7 +147,7 @@ export class RecommendEffects {
 
   @Effect()
   toCreateLogger$ = this.actions$
-    .ofType(fromRecommend.TO_CREATE_LOGGER)
+    .ofType(fromVisitor.TO_CREATE_LOGGER)
     .mergeMap(() => {
       return Observable.fromPromise(
         new Promise((res, _) => {
@@ -161,17 +161,17 @@ export class RecommendEffects {
         })
       ).map((log: Logger) => {
         if (log) {
-          return new fromRecommend.CreateLoggerAction(log)
+          return new fromVisitor.CreateLoggerAction(log)
         } else {
-          return new fromRecommend.CancelCreateLoggerAction()
+          return new fromVisitor.CancelCreateLoggerAction()
         }
       })
     })
 
   @Effect()
   createLogger$ = this.actions$
-    .ofType(fromRecommend.CREATE_LOGGER)
-    .map((action: fromRecommend.CreateLoggerAction) => action.log)
+    .ofType(fromVisitor.CREATE_LOGGER)
+    .map((action: fromVisitor.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getShowDetailID))
     .mergeMap(([log, customerId]) =>
       this.loggerService
@@ -179,22 +179,22 @@ export class RecommendEffects {
         .concatMap(() => {
           // 系统日志 不弹出toast
           if (log.level === 'sys') {
-            return [new fromRecommend.FetchLoggerAction(customerId)]
+            return [new fromVisitor.FetchLoggerAction(customerId)]
           } else {
             return [
-              new fromRecommend.CreateLoggerSuccessAction(),
-              new fromRecommend.FetchLoggerAction(customerId)
+              new fromVisitor.CreateLoggerSuccessAction(),
+              new fromVisitor.FetchLoggerAction(customerId)
             ]
           }
         })
         .catch(() =>
-          Observable.of(new fromRecommend.CreateLoggerFailureAction())
+          Observable.of(new fromVisitor.CreateLoggerFailureAction())
         )
     )
 
   @Effect({ dispatch: false })
   createLoggerSuccess$ = this.actions$
-    .ofType(fromRecommend.CREATE_LOGGER_SUCCESS)
+    .ofType(fromVisitor.CREATE_LOGGER_SUCCESS)
     .do(() => {
       let toast = this.toastCtrl.create({
         message: '添加日志成功',
@@ -206,7 +206,7 @@ export class RecommendEffects {
 
   @Effect({ dispatch: false })
   createLoggerFailure$ = this.actions$
-    .ofType(fromRecommend.CREATE_LOGGER_FAILURE)
+    .ofType(fromVisitor.CREATE_LOGGER_FAILURE)
     .do(() => {
       let toast = this.toastCtrl.create({
         message: '添加日志失败',
@@ -218,14 +218,14 @@ export class RecommendEffects {
 
   @Effect()
   fetchLogger$ = this.actions$
-    .ofType(fromRecommend.FETCH_LOGGER)
-    .map((action: fromRecommend.FetchLoggerAction) => action.customerID)
+    .ofType(fromVisitor.FETCH_LOGGER)
+    .map((action: fromVisitor.FetchLoggerAction) => action.customerID)
     .mergeMap(customerId =>
       this.loggerService
         .fetchLogger(customerId)
-        .map(logs => new fromRecommend.FetchLoggerSuccessAction(logs))
+        .map(logs => new fromVisitor.FetchLoggerSuccessAction(logs))
         .catch(() =>
-          Observable.of(new fromRecommend.FetchLoggerFailureAction())
+          Observable.of(new fromVisitor.FetchLoggerFailureAction())
         )
     )
 
@@ -234,7 +234,7 @@ export class RecommendEffects {
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private loadCtrl: LoadingController,
-    private recommendService: RecommendService,
+    private visitorService: VisitorService,
     private matcherService: VisitorMatcherService,
     private loggerService: LoggerService,
     private store: Store<State>

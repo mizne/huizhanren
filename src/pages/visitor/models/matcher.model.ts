@@ -1,6 +1,6 @@
-import { Customer } from './recommend.model'
+import { Visitor } from './visitor.model'
 
-export class Matcher extends Customer {
+export class Matcher extends Visitor {
   status?: MatcherStatus
   selected?: boolean
   senderId?: string

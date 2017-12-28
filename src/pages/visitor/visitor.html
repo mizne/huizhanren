@@ -5,9 +5,9 @@
 </ion-header> -->
 
 <ion-content padding>
-  <div class="recommend-container">
+  <div class="visitor-container">
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
-      <hz-grid-header type="recommend" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
+      <hz-grid-header type="visitor" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
       <hz-grid-filter *ngIf="(listStatus$ | async) === 0" [showSearch]="(pageStatus$ | async) === 0"
         [filterSub]="recommendFilterSub" [filterOptions]="filterOptions" placeholder="请输入客户名">
@@ -16,20 +16,20 @@
         [filterSub]="matcherFilterSub">
       </hz-matcher-filter>
 
-      <recommend-grid *ngIf="(listStatus$ | async) === 0" type="recommend" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="recommends$ | async"></recommend-grid>
-      <recommend-grid *ngIf="(listStatus$ | async) === 1" type="matcher"
+      <visitor-grid *ngIf="(listStatus$ | async) === 0" type="visitor" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0" [dataItems]="visitors$ | async"></visitor-grid>
+      <visitor-grid *ngIf="(listStatus$ | async) === 1" type="matcher"
       (showDetail)="updateDetailID($event)"
       (agreeMatcher)="ensureAgreeMatcher($event)"
       (refuseMatcher)="ensureRefuseMatcher($event)"
       [expand]="(pageStatus$ | async) === 0"
       [dataItems]="matchers$ | async">
-    </recommend-grid>
+    </visitor-grid>
 
       <p class="load-more" tappable *ngIf="showLoadMore$ | async" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <recommend-detail
+      <visitor-detail
       *ngIf="showDetailID$ | async" [detail]="currentDetail$ | async"
       [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async"
@@ -39,7 +39,7 @@
         (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)"
         (createLog)="ensureCreateLog()">
-      </recommend-detail>
+      </visitor-detail>
     </div>
 
     <hz-toggle-detail *ngIf="(showDetailID$ | async)" [collapse]="(pageStatus$ | async) === 1" (toggle)="toggleLog()"></hz-toggle-detail>

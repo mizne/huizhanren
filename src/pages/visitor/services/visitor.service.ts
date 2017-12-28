@@ -5,21 +5,27 @@ import { Observable } from 'rxjs/Observable'
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
-import { Recommend, FetchRecommendParams } from '../models/recommend.model'
+import {
+  RecommendVisitor,
+  FetchRecommendVisitorParams
+} from '../models/visitor.model'
 
 import { environment } from '../../../environments/environment'
 
-const fakeRecommends: Recommend[] = Array.from({ length: 100 }, (_, i) => ({
-  id: 'recommend-' + String(i),
-  name: `张${i}`,
-  title: `经理${i}`,
-  company: `移动公司${i}`,
-  industry: i % 2 === 0 ? `互联网${i}` : '',
-  area: `上海${i}`
-}))
+const fakeRecommendVisitors: RecommendVisitor[] = Array.from(
+  { length: 100 },
+  (_, i) => ({
+    id: 'recommend-' + String(i),
+    name: `张${i}`,
+    title: `经理${i}`,
+    company: `移动公司${i}`,
+    industry: i % 2 === 0 ? `互联网${i}` : '',
+    area: `上海${i}`
+  })
+)
 
 @Injectable()
-export class RecommendService {
+export class VisitorService {
   private fetchUrl: string = '/data/RecVisInfo'
 
   constructor(
@@ -31,11 +37,13 @@ export class RecommendService {
   /**
    * 获取推荐观众信息
    *
-   * @param {FetchRecommendParams} params
-   * @returns {Observable<Recommend[]>}
-   * @memberof RecommendService
+   * @param {FetchRecommendVisitorParams} params
+   * @returns {Observable<RecommendVisitor[]>}
+   * @memberof VisitorService
    */
-  public fetchRecommend(params: FetchRecommendParams): Observable<Recommend[]> {
+  public fetchVisitors(
+    params: FetchRecommendVisitorParams
+  ): Observable<RecommendVisitor[]> {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
@@ -60,14 +68,14 @@ export class RecommendService {
             return this.http.get(this.fetchUrl + query)
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(Recommend.convertFromResp))
+          .map(e => e.map(RecommendVisitor.convertFromResp))
           .catch(e => {
             return this.logger.httpError({
-              module: 'RecommendService',
-              method: 'fetchRecommend',
+              module: 'VisitorService',
+              method: 'fetchVisitors',
               error: e
             })
           })
-      : Observable.of(fakeRecommends)
+      : Observable.of(fakeRecommendVisitors)
   }
 }

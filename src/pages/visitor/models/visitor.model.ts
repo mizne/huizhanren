@@ -1,4 +1,4 @@
-export class Customer {
+export class Visitor {
   id?: string
   name?: string
   title?: string
@@ -13,10 +13,10 @@ export class Customer {
   email?: string
 }
 
-export class Recommend extends Customer {
+export class RecommendVisitor extends Visitor {
   selected?: boolean
 
-  static convertFromResp(resp: RecommendResp): Recommend {
+  static convertFromResp(resp: RecommendVisitorResp): RecommendVisitor {
     return {
       id: resp.RecordId,
       name: resp.Name,
@@ -32,7 +32,7 @@ export class Recommend extends Customer {
     }
   }
 
-  static convertFromModel(model: Recommend): CreateMatcherParams {
+  static convertFromModel(model: RecommendVisitor): CreateMatcherParams {
     return {
       Organizer: model.organizer,
       OrganizerId: model.organizerId,
@@ -47,7 +47,7 @@ export class Recommend extends Customer {
   }
 }
 
-export class RecommendResp {
+export class RecommendVisitorResp {
   TenantId?: string
   RecordId?: string
   Name?: string
@@ -63,13 +63,13 @@ export class RecommendResp {
   Email?: string
 }
 
-export interface RecommendFilter {
+export interface RecommendVisitorFilter {
   area: string,
   type: string,
   key: string
 }
 
-export interface FetchRecommendParams {
+export interface FetchRecommendVisitorParams {
   pageSize?: number
   pageIndex?: number
   key?: string

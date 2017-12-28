@@ -24,7 +24,7 @@ import { MorePage } from '../pages/more/more'
 import { LoginPageModule } from '../pages/login/login.module'
 import { CustomerPageModule } from '../pages/customer/customer.module'
 import { SettingsPageModule } from '../pages/settings/settings.module'
-import { RecommendPageModule } from '../pages/recommend/recommend.module'
+import { VisitorPageModule } from '../pages/visitor/visitor.module'
 import { ExhibitorsPageModule } from '../pages/exhibitors/exhibitors.module'
 
 import { OcrService } from '../providers/ocr.service'
@@ -64,15 +64,13 @@ export class RavenErrorHandler implements ErrorHandler {
     LoginPageModule,
     CustomerPageModule,
     SettingsPageModule,
-    RecommendPageModule,
+    VisitorPageModule,
     ExhibitorsPageModule,
     IonicModule.forRoot(MyApp),
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     environment.production
-      ? StoreDevtoolsModule.instrument({
-        maxAge: 42
-      })
+      ? []
       : StoreDevtoolsModule.instrument({
           maxAge: 42
         }),

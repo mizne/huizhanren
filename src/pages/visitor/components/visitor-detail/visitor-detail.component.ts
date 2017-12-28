@@ -1,16 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { Portray, Customer } from '../../models/recommend.model'
+import { Portray, Visitor } from '../../models/visitor.model'
 import { Logger } from '../../../customer/models/logger.model'
 
 @Component({
-  selector: 'recommend-detail',
-  templateUrl: 'recommend-detail.component.html'
+  selector: 'visitor-detail',
+  templateUrl: 'visitor-detail.component.html'
 })
-export class RecommendDetailComponent implements OnInit {
+export class VisitorDetailComponent implements OnInit {
 
   @Input() logs: Logger[]
-  @Input() detail: Customer
+  @Input() detail: Visitor
   @Input() portray: Portray
   @Input() expand: boolean
 

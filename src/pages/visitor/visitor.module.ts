@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core'
 import { IonicPageModule } from 'ionic-angular'
-import { RecommendPage } from './recommend'
+import { VisitorPage } from './visitor'
 
-import { RecommendGridComponent } from './components/recommend-grid/recommend-grid.component'
-import { RecommendDetailComponent } from './components/recommend-detail/recommend-detail.component'
+import { VisitorGridComponent } from './components/visitor-grid/visitor-grid.component'
+import { VisitorDetailComponent } from './components/visitor-detail/visitor-detail.component'
 import { HzCustomerAbstractComponent } from './components/customer-abstract/customer-abstract.component'
 import { HzCustomerStatusComponent } from './components/customer-status/customer-status.component'
 import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
@@ -18,18 +18,18 @@ import { SharedModule } from '../../shared/shared.module'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { reducers } from './reducers'
-import { RecommendEffects } from './effects/recommend.effects'
+import { VisitorEffects } from './effects/visitor.effects'
 import { MatcherEffects } from './effects/matcher.effects'
 
 import { CustomerMatcherStatusPipe } from './pipes/matcher-status.pipe'
 import { CustomerNamePrivacyPipe } from './pipes/name-privacy.pipe'
 import { CustomerCompanyPrivacyPipe } from './pipes/company-privacy.pipe'
 
-import { RecommendService } from './services/recommend.service'
+import { VisitorService } from './services/visitor.service'
 import { VisitorMatcherService } from './services/matcher.service'
 
-const services = [RecommendService, VisitorMatcherService]
-const effects = [RecommendEffects, MatcherEffects]
+const services = [VisitorService, VisitorMatcherService]
+const effects = [VisitorEffects, MatcherEffects]
 const pipes = [
   CustomerMatcherStatusPipe,
   CustomerNamePrivacyPipe,
@@ -44,9 +44,9 @@ const modals = [
 
 @NgModule({
   declarations: [
-    RecommendPage,
-    RecommendGridComponent,
-    RecommendDetailComponent,
+    VisitorPage,
+    VisitorGridComponent,
+    VisitorDetailComponent,
     HzCustomerAbstractComponent,
     HzCustomerStatusComponent,
     HzCustomerPortrayComponent,
@@ -57,11 +57,11 @@ const modals = [
   ],
   imports: [
     SharedModule,
-    StoreModule.forFeature('recommendModule', reducers),
+    StoreModule.forFeature('visitorModule', reducers),
     EffectsModule.forFeature(effects),
-    IonicPageModule.forChild(RecommendPage)
+    IonicPageModule.forChild(VisitorPage)
   ],
   providers: [...services],
   entryComponents: [...modals]
 })
-export class RecommendPageModule {}
+export class VisitorPageModule {}

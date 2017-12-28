@@ -14,7 +14,7 @@ import {
   getListStatus,
   getPageStatus,
   getShowDetailID,
-  getRecommends,
+  getVisitors,
   getMatchers,
   getLogs,
   getShowMatcherLoadMore,
@@ -24,11 +24,11 @@ import {
   ToCreateLoggerAction,
   TogglePageStatusAction,
   ChangeListStatusAction,
-  FetchRecommendAction,
+  FetchVisitorsAction,
   UpdateDetailIDAction,
-  ToInviteRecommendAction,
+  ToInviteVisitorAction,
   FetchLoggerAction
-} from './actions/recommend.action'
+} from './actions/visitor.action'
 import {
   FetchMatchersAction,
   ToCancelMatcherAction,
@@ -40,39 +40,39 @@ import {
   PageStatus,
   ListStatus,
   ListHeaderEvent,
-  Recommend,
+  RecommendVisitor,
   Portray,
-  FetchRecommendParams,
-  RecommendFilter,
+  FetchRecommendVisitorParams,
+  RecommendVisitorFilter,
   AREA_OPTIONS
-} from './models/recommend.model'
+} from './models/visitor.model'
 import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger } from '../customer/models/logger.model'
-import { Customer } from './models/recommend.model'
+import { Visitor } from './models/visitor.model'
 import { Matcher, MatcherStatus } from './models/matcher.model'
 
 @IonicPage()
 @Component({
-  selector: 'page-recommend',
-  templateUrl: 'recommend.html',
+  selector: 'page-visitor',
+  templateUrl: 'visitor.html',
   providers: [DestroyService]
 })
-export class RecommendPage implements OnInit, OnDestroy {
-  recommends$: Observable<Recommend[]>
+export class VisitorPage implements OnInit, OnDestroy {
+  visitors$: Observable<RecommendVisitor[]>
   matchers$: Observable<Matcher[]>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
   showDetailID$: Observable<string>
-  currentDetail$: Observable<Customer>
+  currentDetail$: Observable<RecommendVisitor>
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<RecommendFilter> = new Subject<RecommendFilter>()
+  recommendFilterSub: Subject<RecommendVisitorFilter> = new Subject<RecommendVisitorFilter>()
   matcherFilterSub: Subject<MatcherStatus[]> = new Subject<MatcherStatus[]>()
   loadMoreSub: Subject<void> = new Subject<void>()
 
@@ -128,7 +128,7 @@ export class RecommendPage implements OnInit, OnDestroy {
   }
 
   ensureInvite() {
-    this.store.dispatch(new ToInviteRecommendAction())
+    this.store.dispatch(new ToInviteVisitorAction())
   }
 
   ensureCreateLog() {
@@ -153,7 +153,7 @@ export class RecommendPage implements OnInit, OnDestroy {
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
-    this.recommends$ = this.store.select(getRecommends)
+    this.visitors$ = this.store.select(getVisitors)
     this.matchers$ = Observable.combineLatest(
       this.store.select(getMatchers),
       this.matcherFilterSub.startWith([])
@@ -176,10 +176,10 @@ export class RecommendPage implements OnInit, OnDestroy {
 
   private initCurrentDetail(): void {
     // 根据list status和 show detail ID寻找当前推荐客户
-    const items$: Observable<Customer[]> = this.listStatus$.mergeMap(
+    const items$: Observable<Visitor[]> = this.listStatus$.mergeMap(
       listStatus => {
         if (listStatus === ListStatus.RECOMMEND) {
-          return this.recommends$
+          return this.visitors$
         } else {
           return this.matchers$
         }
@@ -255,12 +255,12 @@ export class RecommendPage implements OnInit, OnDestroy {
     this.recommendFilterSub
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
-        const params: FetchRecommendParams = {
+        const params: FetchRecommendVisitorParams = {
           ...recommendFilter,
           pageIndex: 1,
           pageSize: 10
         }
-        this.store.dispatch(new FetchRecommendAction(params))
+        this.store.dispatch(new FetchVisitorsAction(params))
       })
   }
 
@@ -301,7 +301,7 @@ export class RecommendPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with recommend filter, ', recommendFilter)
-        this.store.dispatch(new FetchRecommendAction())
+        this.store.dispatch(new FetchVisitorsAction(recommendFilter))
       })
   }
 
@@ -328,7 +328,7 @@ export class RecommendPage implements OnInit, OnDestroy {
   }
 
   private initDispatch(): void {
-    this.store.dispatch(new FetchRecommendAction())
+    this.store.dispatch(new FetchVisitorsAction())
     this.store.dispatch(new FetchMatchersAction())
   }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="expand; else noExpand;" class="recommend-grid-container">
+<div *ngIf="expand; else noExpand;" class="visitor-grid-container">
   <ion-grid class="header">
     <ion-row>
       <ion-col col-1></ion-col>
@@ -6,7 +6,7 @@
       <ion-col col-1>职务</ion-col>
       <ion-col col-2>公司</ion-col>
       <ion-col col-2>行业</ion-col>
-      <ion-col col-3 *ngIf="type === 'recommend'">地区</ion-col>
+      <ion-col col-3 *ngIf="type === 'visitor'">地区</ion-col>
 
       <ion-col col-1 *ngIf="type === 'matcher'">地区</ion-col>
       <ion-col col-2 *ngIf="type === 'matcher'" class="status-header">状态</ion-col>

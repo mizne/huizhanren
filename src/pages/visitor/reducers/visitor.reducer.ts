@@ -1,11 +1,11 @@
-import * as fromRecommend from '../actions/recommend.action'
-import { Recommend, ListStatus, PageStatus } from '../models/recommend.model'
+import * as fromVisitor from '../actions/visitor.action'
+import { RecommendVisitor, ListStatus, PageStatus } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export interface State {
-  recommends: Recommend[]
-  recommendTotalCount: number
-  currentRecommendTotalCount: number
+  visitors: RecommendVisitor[]
+  visitorsTotalCount: number
+  currentVisitorsTotalCount: number
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
@@ -15,9 +15,9 @@ export interface State {
 }
 
 export const initialState: State = {
-  recommends: [],
-  recommendTotalCount: 0,
-  currentRecommendTotalCount: 0,
+  visitors: [],
+  visitorsTotalCount: 0,
+  currentVisitorsTotalCount: 0,
 
   listStatus: ListStatus.RECOMMEND,
   pageStatus: PageStatus.LIST,
@@ -28,33 +28,33 @@ export const initialState: State = {
 
 export function reducer(
   state: State = initialState,
-  action: fromRecommend.Actions
+  action: fromVisitor.Actions
 ): State {
   switch (action.type) {
-    case fromRecommend.FETCH_RECOMMEND_SUCCESS:
+    case fromVisitor.FETCH_VISITORS_SUCCESS:
       return {
         ...state,
-        recommends: action.recommends
+        visitors: action.visitors
       }
-    case fromRecommend.FETCH_RECOMMEND_FAILURE:
+    case fromVisitor.FETCH_VISITORS_FAILURE:
       return {
         ...state,
-        recommends: []
+        visitors: []
       }
 
-    case fromRecommend.CHANGE_LIST_STATUS:
+    case fromVisitor.CHANGE_LIST_STATUS:
       return {
         ...state,
         listStatus: action.listStatus
       }
 
-    case fromRecommend.CHANGE_PAGE_STATUS:
+    case fromVisitor.CHANGE_PAGE_STATUS:
       return {
         ...state,
         pageStatus: action.pageStatus
       }
 
-    case fromRecommend.TOGGLE_PAGE_STATUS:
+    case fromVisitor.TOGGLE_PAGE_STATUS:
       return {
         ...state,
         pageStatus:
@@ -63,13 +63,13 @@ export function reducer(
             : PageStatus.LIST
       }
 
-    case fromRecommend.UPDATE_DETAIL_ID:
+    case fromVisitor.UPDATE_DETAIL_ID:
       return {
         ...state,
         showDetailID: action.detailID
       }
 
-    case fromRecommend.FETCH_LOGGER_SUCCESS:
+    case fromVisitor.FETCH_LOGGER_SUCCESS:
       return {
         ...state,
         logs: action.logs
@@ -81,13 +81,13 @@ export function reducer(
   }
 }
 
-export const getRecommends = (state: State) => state.recommends
-export const getRecommendTotalCount = (state: State) =>
-  state.recommendTotalCount
+export const getVisitors = (state: State) => state.visitors
+export const getVisitorsTotalCount = (state: State) =>
+  state.visitorsTotalCount
 
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
-export const getShowLoadMore = (state: State) => state.recommendTotalCount > state.currentRecommendTotalCount
+export const getShowLoadMore = (state: State) => state.visitorsTotalCount > state.currentVisitorsTotalCount

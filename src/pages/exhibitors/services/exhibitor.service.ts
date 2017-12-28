@@ -68,7 +68,6 @@ export class ExhibitorService {
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-            console.log(`tenantId: ${tenantId}`)
             const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
             return this.http
               .get(this.fetchUrl + query)

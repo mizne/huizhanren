@@ -12,9 +12,9 @@ import * as fromMatcher from '../actions/matcher.action'
 
 import { ExhibitorMatcherService } from '../services/matcher.service'
 
-import { ToCancelMatcherModal } from '../../recommend/modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
-import { ToAgreeMatcherModal } from '../../recommend/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
-import { ToRefuseMatcherModal } from '../../recommend/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
+import { ToCancelMatcherModal } from '../../visitor/modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
+import { ToAgreeMatcherModal } from '../../visitor/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
+import { ToRefuseMatcherModal } from '../../visitor/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 @Injectable()
 export class MatcherEffects {
