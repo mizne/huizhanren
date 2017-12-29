@@ -24,13 +24,17 @@ import {
   UpdateDetailIDAction,
   ToInviteExhibitorAction,
   ToShowProcuctAction,
-  FetchLoggerAction
+  FetchLoggerAction,
+  FetchExhibitorsCountAction,
+  LoadMoreExhibitorsAction
 } from './actions/exhibitor.action'
 import {
   FetchMatchersAction,
   ToAgreeMatcherAction,
   ToCancelMatcherAction,
-  ToRefuseMatcherAction
+  ToRefuseMatcherAction,
+  FetchMatchersCountAction,
+  LoadMoreMatchersAction,
 } from './actions/matcher.action'
 
 import {
@@ -39,7 +43,7 @@ import {
   ListHeaderEvent,
   Exhibitor,
   Portray,
-  ExhibitorFilter,
+  RecommendExhibitorFilter,
   RecommendExhibitor,
   Product
 } from './models/exhibitor.model'
@@ -72,7 +76,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
+  recommendFilterSub: Subject<RecommendExhibitorFilter> = new Subject<RecommendExhibitorFilter>()
   matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
     ExhibitorMatcherStatus[]
   >()
@@ -244,41 +248,63 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   private initListHeaderEvent(): void {
     this.headerEventSub
+      .withLatestFrom(this.listStatus$, (headerEvent, listStatus) => ({
+        headerEvent,
+        listStatus
+      }))
       .takeUntil(this.destroyService)
-      .subscribe(headerEvent => {
+      .subscribe(({ headerEvent, listStatus }) => {
         switch (headerEvent) {
           case ListHeaderEvent.BATCH_ACCEPT:
             console.log('batch accept')
+            this.prompt()
             break
           case ListHeaderEvent.BATCH_CANCEL:
             console.log('batch cancel')
+            this.prompt()
             break
           case ListHeaderEvent.BATCH_DELETE:
             console.log('batch delete')
+            this.prompt()
             break
           case ListHeaderEvent.BATCH_HIDDEN:
             console.log('batch hidden')
+            this.prompt()
             break
           case ListHeaderEvent.BATCH_INVITE:
             console.log('batch invite')
+            this.prompt()
             break
           case ListHeaderEvent.BATCH_REFUSE:
             console.log('batch refuse')
+            this.prompt()
             break
 
+          case ListHeaderEvent.REFRESH:
+            if (listStatus === ListStatus.EXHIBITOR) {
+              console.log(`to refresh exhibitor data`)
+              this.store.dispatch(new FetchExhibitorsAction())
+            }
+            if (listStatus === ListStatus.MATCHER) {
+              console.log(`to refresh exhibitor matcher data`)
+              this.store.dispatch(new FetchMatchersAction())
+            }
+            break
           default:
             console.warn(`Unknown recommend header event: ${headerEvent}`)
             break
         }
-
-        this.toastCtrl
-          .create({
-            message: '吐血研发中...',
-            position: 'top',
-            duration: 3e3
-          })
-          .present()
       })
+  }
+
+  private prompt(): void {
+    this.toastCtrl
+      .create({
+        message: '吐血研发中...',
+        position: 'top',
+        duration: 3e3
+      })
+      .present()
   }
 
   // private initRecommendFilter(): void {
@@ -301,11 +327,11 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .asObservable()
       .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
-    this.initLoadMoreRecommend(loadMore$)
+    this.initLoadMoreExhibitor(loadMore$)
     this.initLoadMoreMatcher(loadMore$)
   }
 
-  private initLoadMoreRecommend(loadMore: Observable<ListStatus>) {
+  private initLoadMoreExhibitor(loadMore: Observable<ListStatus>) {
     loadMore
       .filter(e => e === ListStatus.EXHIBITOR)
       .withLatestFrom(
@@ -319,7 +345,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log('to load more with exhibitor filter, ', recommendFilter)
-        this.store.dispatch(new FetchExhibitorsAction())
+        this.store.dispatch(new LoadMoreExhibitorsAction(recommendFilter))
       })
   }
 
@@ -333,7 +359,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
         console.log('to load more with matcher filter, ', matcherFilter)
-        this.store.dispatch(new FetchMatchersAction())
+        this.store.dispatch(new LoadMoreMatchersAction(matcherFilter))
       })
   }
 
@@ -348,5 +374,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   private initDispatch(): void {
     this.store.dispatch(new FetchExhibitorsAction())
     this.store.dispatch(new FetchMatchersAction())
+
+    this.store.dispatch(new FetchExhibitorsCountAction())
+    this.store.dispatch(new FetchMatchersCountAction())
   }
 }

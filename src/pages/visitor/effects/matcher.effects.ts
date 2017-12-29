@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable'
 import {
   ModalController,
   ToastController,
+  LoadingController
 } from 'ionic-angular'
 
 import * as fromMatcher from '../actions/matcher.action'
@@ -14,6 +15,9 @@ import { VisitorMatcherService } from '../services/matcher.service'
 import { ToCancelMatcherModal } from '../modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
 import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
 import { ToRefuseMatcherModal } from '../modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
+
+import { Store } from '@ngrx/store'
+import { State, getCurrentMatcherCount } from '../reducers'
 
 @Injectable()
 export class MatcherEffects {
@@ -37,6 +41,49 @@ export class MatcherEffects {
         .catch(() => {
           // loadingCtrl.dismiss()
           return Observable.of(new fromMatcher.FetchMatchersFailureAction())
+        })
+    })
+
+    @Effect()
+    fetchMatchersCount$ = this.actions$.ofType(fromMatcher.FETCH_MATCHERS_COUNT)
+    .mergeMap(() => {
+      return this.matcherService
+        .fetchMatcherCount()
+        .map(number => {
+          return new fromMatcher.FetchMatchersCountSuccessAction(number)
+        })
+        .catch(() => {
+          return Observable.of(new fromMatcher.FetchMatchersCountFailureAction())
+        })
+    })
+
+  @Effect()
+  loadMoreMatchers$ = this.actions$
+    .ofType(fromMatcher.LOAD_MORE_MATCHERS)
+    .map((action: fromMatcher.LoadMoreMatchersAction) => action.matcherStatuses)
+    .withLatestFrom(
+      this.store.select(getCurrentMatcherCount),
+      (matcherStatuses, currentTotal) => ({
+        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageSize: 10,
+        statuses: matcherStatuses
+      })
+    )
+    .mergeMap(params => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取更多约请中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+      return this.matcherService
+        .fetchMatchers(params)
+        .map(matchers => {
+          loadingCtrl.dismiss()
+          return new fromMatcher.LoadMoreMatchersSuccessAction(matchers)
+        })
+        .catch(() => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromMatcher.LoadMoreMatchersFailureAction())
         })
     })
 
@@ -234,6 +281,8 @@ export class MatcherEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private matcherService: VisitorMatcherService
+    private matcherService: VisitorMatcherService,
+    private store: Store<State>,
+    private loadCtrl: LoadingController
   ) {}
 }

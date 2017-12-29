@@ -19,20 +19,21 @@ import { Observable } from 'rxjs/Observable'
 import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID, getVisitors } from '../reducers'
 import {
-  getCompanyName,
-  getBoothNo,
-  getTenantId,
-} from '../../login/reducers'
+  State,
+  getShowDetailID,
+  getVisitors,
+  getCurrentVisitorCount
+} from '../reducers'
+import { getCompanyName, getBoothNo, getTenantId } from '../../login/reducers'
 
 @Injectable()
 export class VisitorEffects {
   @Effect()
-  fetchRecommend$ = this.actions$
+  fetchVisitors$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS)
-    .map((action: fromVisitor.FetchVisitorsAction) => action.payload)
-    .mergeMap((params) => {
+    .map((action: fromVisitor.FetchVisitorsAction) => action.params)
+    .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取数据中...',
         spinner: 'bubbles'
@@ -50,8 +51,77 @@ export class VisitorEffects {
         })
     })
 
+  @Effect({ dispatch: false })
+  fetchVisitorsFailure$ = this.actions$
+    .ofType(fromVisitor.FETCH_VISITORS_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '获取客户失败',
+          position: 'top',
+          duration: 3e3
+        })
+        .present()
+    })
+
+    @Effect()
+    fetchVisitorsCount$ = this.actions$.ofType(fromVisitor.FETCH_VISITORS_COUNT)
+    .mergeMap(() => {
+      return this.visitorService
+        .fetchVisitorCount()
+        .map(number => {
+          return new fromVisitor.FetchVisitorsCountSuccessAction(number)
+        })
+        .catch(() => {
+          return Observable.of(new fromVisitor.FetchVisitorsCountFailureAction())
+        })
+    })
+
   @Effect()
-  toInviteRecommend$ = this.actions$
+  loadMoreVisitors$ = this.actions$
+    .ofType(fromVisitor.LOAD_MORE_VISITORS)
+    .map((action: fromVisitor.LoadMoreVisitorsAction) => action.params)
+    .withLatestFrom(
+      this.store.select(getCurrentVisitorCount),
+      (params, currentTotal) => ({
+        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageSize: 10,
+        ...params
+      })
+    )
+    .mergeMap(params => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取更多客户中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+      return this.visitorService
+        .fetchVisitors(params)
+        .map(visitors => {
+          loadingCtrl.dismiss()
+          return new fromVisitor.LoadMoreVisitorsSuccessAction(visitors)
+        })
+        .catch(() => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromVisitor.LoadMoreVisitorsFailureAction())
+        })
+    })
+
+  @Effect({ dispatch: false })
+  loadMoreVisitorsFailure$ = this.actions$
+    .ofType(fromVisitor.LOAD_MORE_VISITORS_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '获取更多客户失败',
+          position: 'top',
+          duration: 3e3
+        })
+        .present()
+    })
+
+  @Effect()
+  toInviteVisitor$ = this.actions$
     .ofType(fromVisitor.TO_INVITE_VISITOR)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
     .withLatestFrom(this.store.select(getVisitors), (id, recommends) =>
@@ -66,15 +136,12 @@ export class VisitorEffects {
         srcCompany: srcCompanyName
       })
     )
-    .withLatestFrom(
-      this.store.select(getBoothNo),
-      (params, boothNo) => {
-        return ({
-          ...params,
-          boothNo
-        })
+    .withLatestFrom(this.store.select(getBoothNo), (params, boothNo) => {
+      return {
+        ...params,
+        boothNo
       }
-    )
+    })
     .mergeMap(params => {
       return Observable.fromPromise(
         new Promise((res, _) => {
@@ -94,19 +161,33 @@ export class VisitorEffects {
     })
 
   @Effect()
-  inviteRecommend$ = this.actions$
+  inviteVisitor$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .withLatestFrom(this.store.select(getVisitors), (id, recommends) => recommends.find(e => e.id === id))
+    .withLatestFrom(this.store.select(getVisitors), (id, recommends) =>
+      recommends.find(e => e.id === id)
+    )
     .withLatestFrom(this.store.select(getBoothNo), (recommend, boothArea) => ({
-      recommend, boothArea
+      recommend,
+      boothArea
     }))
-    .withLatestFrom(this.store.select(getTenantId), ({recommend, boothArea}, tenantId) => ({
-      recommend, boothArea, tenantId
-    }))
-    .withLatestFrom(this.store.select(getShowDetailID), ({ recommend, boothArea, tenantId }, customerId) => ({
-      recommend, boothArea, tenantId, customerId
-    }))
+    .withLatestFrom(
+      this.store.select(getTenantId),
+      ({ recommend, boothArea }, tenantId) => ({
+        recommend,
+        boothArea,
+        tenantId
+      })
+    )
+    .withLatestFrom(
+      this.store.select(getShowDetailID),
+      ({ recommend, boothArea, tenantId }, customerId) => ({
+        recommend,
+        boothArea,
+        tenantId,
+        customerId
+      })
+    )
     .mergeMap(({ recommend, boothArea, tenantId, customerId }) =>
       this.matcherService
         .createMatcher(recommend, boothArea, tenantId, customerId)
@@ -120,7 +201,7 @@ export class VisitorEffects {
     )
 
   @Effect({ dispatch: false })
-  inviteRecommendSuccess$ = this.actions$
+  inviteVisitorSuccess$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR_SUCCESS)
     .do(() => {
       this.toastCtrl
@@ -133,7 +214,7 @@ export class VisitorEffects {
     })
 
   @Effect({ dispatch: false })
-  inviteRecommendFailure$ = this.actions$
+  inviteVisitorFailure$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR_FAILURE)
     .do(() => {
       this.toastCtrl
@@ -187,9 +268,7 @@ export class VisitorEffects {
             ]
           }
         })
-        .catch(() =>
-          Observable.of(new fromVisitor.CreateLoggerFailureAction())
-        )
+        .catch(() => Observable.of(new fromVisitor.CreateLoggerFailureAction()))
     )
 
   @Effect({ dispatch: false })
@@ -224,9 +303,7 @@ export class VisitorEffects {
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromVisitor.FetchLoggerSuccessAction(logs))
-        .catch(() =>
-          Observable.of(new fromVisitor.FetchLoggerFailureAction())
-        )
+        .catch(() => Observable.of(new fromVisitor.FetchLoggerFailureAction()))
     )
 
   constructor(

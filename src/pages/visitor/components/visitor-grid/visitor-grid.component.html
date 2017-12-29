@@ -28,7 +28,7 @@
       <ion-col col-2 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
       <ion-col col-2 class="industry">{{item.industry}}</ion-col>
 
-      <ion-col col-3 *ngIf="type === 'recommend'">{{item.area}}</ion-col>
+      <ion-col col-3 *ngIf="type === 'visitor'">{{item.area}}</ion-col>
 
       <ion-col col-1 *ngIf="type === 'matcher'">{{item.area}}</ion-col>
       <ion-col col-2 *ngIf="type === 'matcher'" [ngClass]="['matcher-status', 'matcher-status-' + item.status]">

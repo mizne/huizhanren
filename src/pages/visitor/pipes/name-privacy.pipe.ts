@@ -12,6 +12,6 @@ export class CustomerNamePrivacyPipe implements PipeTransform {
     if (!name) {
       return ''
     }
-    return status === VisitorMatcherStatus.AGREE ? name : name.slice(0, 1) + 'X'.repeat(name.length - 1)
+    return status === VisitorMatcherStatus.AGREE ? name : name.slice(0, 1) + '*'.repeat(name.length - 1)
   }
 }

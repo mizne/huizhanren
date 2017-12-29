@@ -1,10 +1,14 @@
 import { Action } from '@ngrx/store'
-import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams } from '../models/visitor.model'
+import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams, RecommendVisitorFilter } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'
 export const FETCH_VISITORS_SUCCESS = '[Visitor] Fetch Visitors Success'
 export const FETCH_VISITORS_FAILURE = '[Visitor] Fetch Visitors Failure'
+
+export const FETCH_VISITORS_COUNT = '[Visitor] Fetch Visitors Count'
+export const FETCH_VISITORS_COUNT_SUCCESS = '[Visitor] Fetch Visitors Count Success'
+export const FETCH_VISITORS_COUNT_FAILURE = '[Visitor] Fetch Visitors Count Failure'
 
 export const LOAD_MORE_VISITORS = '[Visitor] Load More Visitors'
 export const LOAD_MORE_VISITORS_SUCCESS = '[Visitor] Load More Visitors Success'
@@ -43,7 +47,7 @@ export const FETCH_LOGGER_FAILURE = '[Visitor] Fetch Logger Failure'
 
 export class FetchVisitorsAction implements Action {
   readonly type = FETCH_VISITORS
-  constructor(public payload: FetchRecommendVisitorParams = {
+  constructor(public params: FetchRecommendVisitorParams = {
     pageIndex: 1,
     pageSize: 10
   }) {}
@@ -57,9 +61,21 @@ export class FetchVisitorsFailureAction implements Action {
 }
 
 
+export class FetchVisitorsCountAction implements Action {
+  readonly type = FETCH_VISITORS_COUNT
+}
+export class FetchVisitorsCountSuccessAction implements Action {
+  readonly type = FETCH_VISITORS_COUNT_SUCCESS
+  constructor(public count: number) {}
+}
+export class FetchVisitorsCountFailureAction implements Action {
+  readonly type = FETCH_VISITORS_COUNT_FAILURE
+}
+
+
 export class LoadMoreVisitorsAction implements Action {
   readonly type = LOAD_MORE_VISITORS
-  constructor(public count: number = 10) {}
+  constructor(public params: FetchRecommendVisitorParams) {}
 }
 export class LoadMoreVisitorsSuccessAction implements Action {
   readonly type = LOAD_MORE_VISITORS_SUCCESS
@@ -142,6 +158,10 @@ export type Actions =
 FetchVisitorsAction |
 FetchVisitorsSuccessAction |
 FetchVisitorsFailureAction |
+
+FetchVisitorsCountAction |
+FetchVisitorsCountSuccessAction |
+FetchVisitorsCountFailureAction |
 
 LoadMoreVisitorsAction |
 LoadMoreVisitorsSuccessAction |

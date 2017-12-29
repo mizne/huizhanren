@@ -2,14 +2,14 @@ import * as fromMatcher from '../actions/matcher.action'
 import { VisitorMatcher } from '../models/matcher.model'
 
 export interface State {
-  matchers: VisitorMatcher[],
-  matcherTotalCount: number,
+  matchers: VisitorMatcher[]
+  totalMatcherCount: number
   currentMatcherTotalCount: number
 }
 
 export const initialState: State = {
   matchers: [],
-  matcherTotalCount: 0,
+  totalMatcherCount: 0,
   currentMatcherTotalCount: 0
 }
 
@@ -21,12 +21,25 @@ export function reducer(
     case fromMatcher.FETCH_MATCHERS_SUCCESS:
       return {
         ...state,
-        matchers: action.matchers
+        matchers: action.matchers,
+        currentMatcherTotalCount: action.matchers.length
       }
     case fromMatcher.FETCH_MATCHERS_FAILURE:
       return {
         ...state,
         matchers: []
+      }
+    case fromMatcher.FETCH_MATCHERS_COUNT_SUCCESS:
+      return {
+        ...state,
+        totalMatcherCount: action.count
+      }
+    case fromMatcher.LOAD_MORE_MATCHERS_SUCCESS:
+      return {
+        ...state,
+        matchers: state.matchers.concat(action.matchers),
+        currentMatcherTotalCount:
+          state.currentMatcherTotalCount + action.matchers.length
       }
 
     default: {
@@ -36,5 +49,8 @@ export function reducer(
 }
 
 export const getMatchers = (state: State) => state.matchers
-export const getMatcherTotalCount = (state: State) => state.matcherTotalCount
-export const getShowLoadMore = (state: State) => state.matcherTotalCount > state.currentMatcherTotalCount
+export const getMatcherTotalCount = (state: State) => state.totalMatcherCount
+export const getCurrentMatcherCount = (state: State) => state.currentMatcherTotalCount
+
+export const getShowLoadMore = (state: State) =>
+  state.totalMatcherCount > state.currentMatcherTotalCount

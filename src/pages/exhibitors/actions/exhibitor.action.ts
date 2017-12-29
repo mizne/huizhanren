@@ -1,10 +1,18 @@
 import { Action } from '@ngrx/store'
-import { Exhibitor, ListStatus, PageStatus, Product } from '../models/exhibitor.model'
+import { Exhibitor, ListStatus, PageStatus, Product, FetchRecommendExhibitorParams } from '../models/exhibitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
 export const FETCH_EXHIBITORS_SUCCESS = '[Exhibitor] Fetch Exhibitors Success'
 export const FETCH_EXHIBITORS_FAILURE = '[Exhibitor] Fetch Exhibitors Failure'
+
+export const FETCH_EXHIBITORS_COUNT = '[Exhibitor] Fetch Exhibitors Count'
+export const FETCH_EXHIBITORS_COUNT_SUCCESS = '[Exhibitor] Fetch Exhibitors Count Success'
+export const FETCH_EXHIBITORS_COUNT_FAILURE = '[Exhibitor] Fetch Exhibitors Count Failure'
+
+export const LOAD_MORE_EXHIBITORS = '[Exhibitor] Load More Exhibitors'
+export const LOAD_MORE_EXHIBITORS_SUCCESS = '[Exhibitor] Load More Exhibitors Success'
+export const LOAD_MORE_EXHIBITORS_FAILURE = '[Exhibitor] Load More Exhibitors Failure'
 
 export const TO_INVITE_EXHIBITOR = '[Exhibitor] To Invite Exhibitor'
 export const CANCEL_INVITE_EXHIBITOR = '[Exhibitor] Cancel Invite Exhibitor'
@@ -41,10 +49,7 @@ export const CANCEL_SHOW_PRODUCT = '[Exhibitor] Cancel Show Product'
 
 export class FetchExhibitorsAction implements Action {
   readonly type = FETCH_EXHIBITORS
-  constructor(public payload: {
-    pageSize: number,
-    pageIndex: number
-  } = {
+  constructor(public params: FetchRecommendExhibitorParams = {
     pageIndex: 1,
     pageSize: 10
   }) {}
@@ -55,6 +60,31 @@ export class FetchExhibitorsSuccessAction implements Action {
 }
 export class FetchExhibitorsFailureAction implements Action {
   readonly type = FETCH_EXHIBITORS_FAILURE
+}
+
+
+export class FetchExhibitorsCountAction implements Action {
+  readonly type = FETCH_EXHIBITORS_COUNT
+}
+export class FetchExhibitorsCountSuccessAction implements Action {
+  readonly type = FETCH_EXHIBITORS_COUNT_SUCCESS
+  constructor(public count: number) {}
+}
+export class FetchExhibitorsCountFailureAction implements Action {
+  readonly type = FETCH_EXHIBITORS_COUNT_FAILURE
+}
+
+
+export class LoadMoreExhibitorsAction implements Action {
+  readonly type = LOAD_MORE_EXHIBITORS
+  constructor(public params: FetchRecommendExhibitorParams) {}
+}
+export class LoadMoreExhibitorsSuccessAction implements Action {
+  readonly type = LOAD_MORE_EXHIBITORS_SUCCESS
+  constructor(public exhibitors: Exhibitor[]) {}
+}
+export class LoadMoreExhibitorsFailureAction implements Action {
+  readonly type = LOAD_MORE_EXHIBITORS_FAILURE
 }
 
 
@@ -140,6 +170,14 @@ export type Actions =
 FetchExhibitorsAction |
 FetchExhibitorsSuccessAction |
 FetchExhibitorsFailureAction |
+
+FetchExhibitorsCountAction |
+FetchExhibitorsCountSuccessAction |
+FetchExhibitorsCountFailureAction |
+
+LoadMoreExhibitorsAction |
+LoadMoreExhibitorsSuccessAction |
+LoadMoreExhibitorsFailureAction |
 
 ToInviteExhibitorAction |
 CancelInviteExhibitorAction |

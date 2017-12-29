@@ -98,4 +98,10 @@ export class HzGridHeaderComponent implements OnInit {
     this.headerEventSub.next(ListHeaderEvent.BATCH_DELETE)
     this.closeRigthMore()
   }
+
+  refresh(ev: Event) {
+    ev.stopPropagation()
+    this.headerEventSub.next(ListHeaderEvent.REFRESH)
+    this.closeRigthMore()
+  }
 }

@@ -5,7 +5,10 @@ import { Observable } from 'rxjs/Observable'
 import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
-import { RecommendExhibitor } from '../models/exhibitor.model'
+import {
+  RecommendExhibitor,
+  FetchRecommendExhibitorParams
+} from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
 
@@ -61,14 +64,28 @@ export class ExhibitorService {
    * @memberof RecommendService
    */
   fetchExhibitors(
-    pageIndex: number,
-    pageSize: number
+    params: FetchRecommendExhibitorParams
   ): Observable<RecommendExhibitor[]> {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-            const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+            if (params.area) {
+              query += `&province=${params.area}`
+            }
+            if (params.key) {
+              query += `&search=${params.key}`
+            }
+            if (params.acreage) {
+              query += `&objective=${params.acreage}`
+            }
+            if (params.pageIndex) {
+              query += `&pageIndex=${params.pageIndex}`
+            }
+            if (params.pageSize) {
+              query += `&pageSize=${params.pageSize}`
+            }
             return this.http
               .get(this.fetchUrl + query)
               .map(e => (e as APIResponse).result)
@@ -86,5 +103,34 @@ export class ExhibitorService {
               })
           })
       : Observable.of(fakeExhibitors)
+  }
+
+  /**
+   * 获取所有展商 个数
+   *
+   * @returns {Observable<number>}
+   * @memberof ExhibitorService
+   */
+  fetchExhibitorsCount(): Observable<number> {
+    // return environment.production
+    //   ? this.tenantService
+    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+    //         return this.http
+    //           .get(this.fetchUrl + query)
+    //           .map(e => (e as APIResponse).result)
+    //           .map(e => e[0])
+    //           .catch(e => {
+    //             return this.logger.httpError({
+    //               module: 'ExhibitorService',
+    //               method: 'fetchExhibitorsCount',
+    //               error: e
+    //             })
+    //           })
+    //       })
+    //   : Observable.of(1)
+
+    return Observable.of(1000)
   }
 }

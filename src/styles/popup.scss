@@ -1,6 +1,5 @@
 .hz-popover-wrapper {
   position: absolute;
-  z-index: 3;
   right: 0;
   top: 35px;
   min-width: 100px;
@@ -8,7 +7,7 @@
   background: #fff;
   z-index: 200;
   max-height: 300px;
-  overflow: auto;
+  overflow: hidden;
 
   &:before {
     position: absolute;

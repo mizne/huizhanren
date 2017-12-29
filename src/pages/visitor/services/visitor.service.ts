@@ -78,4 +78,31 @@ export class VisitorService {
           })
       : Observable.of(fakeRecommendVisitors)
   }
+  /**
+   * 获取所有观众 个数
+   *
+   * @returns {Observable<number>}
+   * @memberof VisitorService
+   */
+  fetchVisitorCount(): Observable<number> {
+    // return environment.production
+    //   ? this.tenantService
+    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+    //         return this.http
+    //           .get(this.fetchUrl + query)
+    //           .map(e => (e as APIResponse).result)
+    //           .map(e => e[0])
+    //           .catch(e => {
+    //             return this.logger.httpError({
+    //               module: 'VisitorService',
+    //               method: 'fetchVisitorCount',
+    //               error: e
+    //             })
+    //           })
+    //       })
+    //   : Observable.of(1)
+    return Observable.of(1000)
+  }
 }

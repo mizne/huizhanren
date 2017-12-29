@@ -21,7 +21,7 @@ import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-i
 import { ToShowProductModal } from '../modals/to-show-product-modal/to-show-product-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID, getExhibitors } from '../reducers'
+import { State, getShowDetailID, getExhibitors, getCurrentExhibitorCount } from '../reducers'
 import {
   getTenantId,
   getCompanyName,
@@ -33,16 +33,16 @@ export class ExhibitorEffects {
   @Effect()
   fetchExhibitors$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
-    .map((action: fromExhibitor.FetchExhibitorsAction) => action.payload)
+    .map((action: fromExhibitor.FetchExhibitorsAction) => action.params)
     .mergeMap(({ pageIndex, pageSize }) => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取展商信息中...',
+        content: '获取展商数据中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
 
       return this.exhibitorService
-        .fetchExhibitors(pageIndex, pageSize)
+        .fetchExhibitors({ pageIndex: 1, pageSize: 10 })
         .map(exhibitors => {
           loadingCtrl.dismiss()
           return new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
@@ -50,6 +50,49 @@ export class ExhibitorEffects {
         .catch(() => {
           loadingCtrl.dismiss()
           return Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
+        })
+    })
+
+    @Effect()
+    fetchExhibitorsCount$ = this.actions$.ofType(fromExhibitor.FETCH_EXHIBITORS_COUNT)
+    .mergeMap(() => {
+      return this.exhibitorService
+        .fetchExhibitorsCount()
+        .map(number => {
+          return new fromExhibitor.FetchExhibitorsCountSuccessAction(number)
+        })
+        .catch(() => {
+          return Observable.of(new fromExhibitor.FetchExhibitorsCountFailureAction())
+        })
+    })
+
+  @Effect()
+  loadMoreExhibitors$ = this.actions$
+    .ofType(fromExhibitor.LOAD_MORE_EXHIBITORS)
+    .map((action: fromExhibitor.LoadMoreExhibitorsAction) => action.params)
+    .withLatestFrom(
+      this.store.select(getCurrentExhibitorCount),
+      (params, currentTotal) => ({
+        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageSize: 10,
+        ...params
+      })
+    )
+    .mergeMap(params => {
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取更多客户中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
+      return this.exhibitorService
+        .fetchExhibitors(params)
+        .map(exhibitors => {
+          loadingCtrl.dismiss()
+          return new fromExhibitor.LoadMoreExhibitorsSuccessAction(exhibitors)
+        })
+        .catch(() => {
+          loadingCtrl.dismiss()
+          return Observable.of(new fromExhibitor.LoadMoreExhibitorsFailureAction())
         })
     })
 

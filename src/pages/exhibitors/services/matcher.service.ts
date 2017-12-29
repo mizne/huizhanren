@@ -9,9 +9,11 @@ import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus,
-  convertMatcherStatusFromModel
+  convertMatcherStatusFromModel,
+  ExhibitorMatcherResp,
+  FetchMatcherParams
 } from '../models/matcher.model'
-import { RecommendExhibitor } from '../models/exhibitor.model'
+import { RecommendExhibitor, } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
 
@@ -60,20 +62,35 @@ export class ExhibitorMatcherService {
    * @memberof MatcherService
    */
   fetchMatchers(
-    pageIndex: number,
-    pageSize: number
+    params: FetchMatcherParams
   ): Observable<ExhibitorMatcher[]> {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+
+            if (params.pageIndex) {
+              query += `&pageIndex=${params.pageIndex}`
+            }
+            if (params.pageSize) {
+              query += `&pageSize=${params.pageSize}`
+            }
+            if (params.statuses) {
+              query += `&state=${params.statuses.map(
+                convertMatcherStatusFromModel
+              )}`
+            }
+
             return this.http.get(
-              this.fetchUrl +
-                `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
-            )
+              this.fetchUrl + query)
           })
-          .map(e => (e as APIResponse).result)
-          .map(e => e.filter(f => f.State !== '5').map(ExhibitorMatcher.convertFromResp))
+          .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
+          .map(e =>
+            e.filter(f => f.State !== '5')
+            .filter(f => f.Initator && f.Initator.length > 0 && f.Receiver && f.Receiver.length > 0)
+            .map(ExhibitorMatcher.convertFromResp)
+          )
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
             (results, exhibitorId) => {
@@ -102,6 +119,35 @@ export class ExhibitorMatcherService {
             }))
         )
   }
+
+  /**
+   * 获取所有约请条数
+   *
+   * @returns {Observable<number>}
+   * @memberof ExhibitorMatcherService
+   */
+  fetchMatcherCount(): Observable<number> {
+    // return environment.production
+    //   ? this.tenantService
+    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+    //         return this.http
+    //           .get(this.fetchUrl + query)
+    //           .map(e => (e as APIResponse).result)
+    //           .map(e => e[0])
+    //           .catch(e => {
+    //             return this.logger.httpError({
+    //               module: 'ExhibitorMatcherService',
+    //               method: 'fetchMatcherCount',
+    //               error: e
+    //             })
+    //           })
+    //       })
+    //   : Observable.of(1)
+    return Observable.of(1000)
+  }
+
   /**
    * 新建约请
    *
@@ -161,10 +207,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(
-          this.updateUrl,
-          params
-        )
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -194,10 +237,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(
-          this.updateUrl,
-          params
-        )
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -227,10 +267,7 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(
-          this.updateUrl,
-          params
-        )
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({

@@ -1,9 +1,13 @@
 import { Action } from '@ngrx/store'
-import { ExhibitorMatcher, FetchMatcherParams } from '../models/matcher.model'
+import { ExhibitorMatcher, FetchMatcherParams, ExhibitorMatcherStatus } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Exhibitor] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Exhibitor] Fetch Matchers Success'
 export const FETCH_MATCHERS_FAILURE = '[Exhibitor] Fetch Matchers Failure'
+
+export const FETCH_MATCHERS_COUNT = '[Exhibitor] Fetch Matchers Count'
+export const FETCH_MATCHERS_COUNT_SUCCESS = '[Exhibitor] Fetch Matchers Count Success'
+export const FETCH_MATCHERS_COUNT_FAILURE = '[Exhibitor] Fetch Matchers Count Failure'
 
 export const LOAD_MORE_MATCHERS = '[Exhibitor] Load More Matchers'
 export const LOAD_MORE_MATCHERS_SUCCESS = '[Exhibitor] Load More Matchers Success'
@@ -51,9 +55,22 @@ export class FetchMatchersFailureAction implements Action {
   readonly type = FETCH_MATCHERS_FAILURE
 }
 
+
+export class FetchMatchersCountAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT
+}
+export class FetchMatchersCountSuccessAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT_SUCCESS
+  constructor(public count: number) {}
+}
+export class FetchMatchersCountFailureAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT_FAILURE
+}
+
+
 export class LoadMoreMatchersAction implements Action {
   readonly type = LOAD_MORE_MATCHERS
-  constructor(public count?: number) {}
+  constructor(public statuses: ExhibitorMatcherStatus[]) {}
 }
 export class LoadMoreMatchersSuccessAction implements Action {
   readonly type = LOAD_MORE_MATCHERS_SUCCESS
@@ -128,6 +145,10 @@ export type Actions =
 FetchMatchersAction |
 FetchMatchersSuccessAction |
 FetchMatchersFailureAction |
+
+FetchMatchersCountAction |
+FetchMatchersCountSuccessAction |
+FetchMatchersCountFailureAction |
 
 LoadMoreMatchersAction |
 LoadMoreMatchersSuccessAction |

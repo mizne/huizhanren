@@ -6,7 +6,7 @@ import { Logger } from '../../customer/models/logger.model'
 export interface State {
   exhibitors: Exhibitor[]
   exhibitorsTotalCount: number
-  currentExhibitorsTotalCount: number
+  currentExhibitorsCount: number
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
@@ -18,7 +18,7 @@ export interface State {
 export const initialState: State = {
   exhibitors: [],
   exhibitorsTotalCount: 1,
-  currentExhibitorsTotalCount: 0,
+  currentExhibitorsCount: 0,
 
   listStatus: ListStatus.EXHIBITOR,
   pageStatus: PageStatus.LIST,
@@ -35,12 +35,26 @@ export function reducer(
     case fromExhibitor.FETCH_EXHIBITORS_SUCCESS:
       return {
         ...state,
-        exhibitors: action.exhibitors
+        exhibitors: action.exhibitors,
+        currentExhibitorsCount: action.exhibitors.length
       }
     case fromExhibitor.FETCH_EXHIBITORS_FAILURE:
       return {
         ...state,
         exhibitors: []
+      }
+
+    case fromExhibitor.FETCH_EXHIBITORS_COUNT_SUCCESS:
+      return {
+        ...state,
+        exhibitorsTotalCount: action.count
+      }
+
+    case fromExhibitor.LOAD_MORE_EXHIBITORS_SUCCESS:
+      return {
+        ...state,
+        exhibitors: state.exhibitors.concat(action.exhibitors),
+        currentExhibitorsCount: state.currentExhibitorsCount + action.exhibitors.length
       }
 
     case fromExhibitor.CHANGE_LIST_STATUS:
@@ -85,6 +99,8 @@ export function reducer(
 export const getExhibitors = (state: State) => state.exhibitors
 export const getExhibitorsTotalCount = (state: State) =>
   state.exhibitorsTotalCount
+export const getCurrentExhibitorCount = (state: State) => state.currentExhibitorsCount
+
 
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
@@ -92,4 +108,4 @@ export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
 export const getShowLoadMore = (state: State) =>
-  state.exhibitorsTotalCount > state.currentExhibitorsTotalCount
+  state.exhibitorsTotalCount > state.currentExhibitorsCount

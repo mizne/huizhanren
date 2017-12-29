@@ -112,10 +112,15 @@ export interface PicResp {
   PicPath?: string
 }
 
-export interface ExhibitorFilter {
-  area: string
-  acreage: string
-  key: string
+export interface RecommendExhibitorFilter {
+  area?: string
+  acreage?: string
+  key?: string
+}
+
+export interface FetchRecommendExhibitorParams extends RecommendExhibitorFilter {
+  pageSize?: number
+  pageIndex?: number
 }
 
 export interface Portray {
@@ -139,5 +144,6 @@ export enum ListHeaderEvent {
   BATCH_ACCEPT,
   BATCH_REFUSE,
   BATCH_CANCEL,
-  BATCH_DELETE
+  BATCH_DELETE,
+  REFRESH
 }

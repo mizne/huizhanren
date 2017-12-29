@@ -65,17 +65,14 @@ export class RecommendVisitorResp {
 }
 
 export interface RecommendVisitorFilter {
-  area: string,
-  type: string,
-  key: string
+  area?: string,
+  type?: string,
+  key?: string
 }
 
-export interface FetchRecommendVisitorParams {
+export interface FetchRecommendVisitorParams extends RecommendVisitorFilter {
   pageSize?: number
   pageIndex?: number
-  key?: string
-  area?: string
-  type?: string
 }
 
 export interface CreateMatcherParams {
@@ -111,7 +108,8 @@ export enum ListHeaderEvent {
   BATCH_ACCEPT,
   BATCH_REFUSE,
   BATCH_CANCEL,
-  BATCH_DELETE
+  BATCH_DELETE,
+  REFRESH
 }
 
 export const AREA_OPTIONS = [

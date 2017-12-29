@@ -9,7 +9,8 @@ import {
   VisitorMatcher,
   VisitorMatcherStatus,
   FetchMatcherParams,
-  convertMatcherStatusFromModel
+  convertMatcherStatusFromModel,
+  VisitorMatcherResp
 } from '../models/matcher.model'
 import { Visitor } from '../models/visitor.model'
 
@@ -68,9 +69,11 @@ export class VisitorMatcherService {
             }
             return this.http.get(this.fetchUrl + query)
           })
-          .map(e => (e as APIResponse).result)
+          .map(e => (e as APIResponse).result as VisitorMatcherResp[])
           .map(e =>
-            e.filter(f => f.State !== '5').map(VisitorMatcher.convertFromResp)
+            e.filter(f => f.State !== '5')
+            .filter(f => f.Initator && f.Initator.length > 0 && f.Receiver && f.Receiver.length > 0)
+            .map(VisitorMatcher.convertFromResp)
           )
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
@@ -99,6 +102,34 @@ export class VisitorMatcherService {
             }))
         )
   }
+  /**
+   * 获取所有约请 条数
+   *
+   * @returns {Observable<number>}
+   * @memberof VisitorMatcherService
+   */
+  fetchMatcherCount(): Observable<number> {
+    // return environment.production
+    //   ? this.tenantService
+    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+    //         return this.http
+    //           .get(this.fetchUrl + query)
+    //           .map(e => (e as APIResponse).result)
+    //           .map(e => e[0])
+    //           .catch(e => {
+    //             return this.logger.httpError({
+    //               module: 'VisitorMatcherService',
+    //               method: 'fetchMatcherCount',
+    //               error: e
+    //             })
+    //           })
+    //       })
+    //   : Observable.of(1)
+    return Observable.of(1000)
+  }
+
   /**
    * 新建约请
    *
@@ -198,10 +229,7 @@ export class VisitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(
-          this.updateUrl,
-          params
-        )
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -231,10 +259,7 @@ export class VisitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(
-          this.updateUrl,
-          params
-        )
+        return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({

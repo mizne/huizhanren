@@ -8,7 +8,7 @@ import { Logger } from '../../customer/models/logger.model'
 
 export interface State {
   visitors: RecommendVisitor[]
-  visitorsTotalCount: number
+  totalVisitorsCount: number
   currentVisitorsTotalCount: number
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
@@ -20,7 +20,7 @@ export interface State {
 
 export const initialState: State = {
   visitors: [],
-  visitorsTotalCount: 1,
+  totalVisitorsCount: 0,
   currentVisitorsTotalCount: 0,
 
   listStatus: ListStatus.VISITOR,
@@ -38,12 +38,26 @@ export function reducer(
     case fromVisitor.FETCH_VISITORS_SUCCESS:
       return {
         ...state,
-        visitors: action.visitors
+        visitors: action.visitors,
+        currentVisitorsTotalCount: action.visitors.length
       }
     case fromVisitor.FETCH_VISITORS_FAILURE:
       return {
         ...state,
         visitors: []
+      }
+
+    case fromVisitor.FETCH_VISITORS_COUNT_SUCCESS:
+      return {
+        ...state,
+        totalVisitorsCount: action.count
+      }
+
+    case fromVisitor.LOAD_MORE_VISITORS_SUCCESS:
+      return {
+        ...state,
+        visitors: state.visitors.concat(action.visitors),
+        currentVisitorsTotalCount: state.currentVisitorsTotalCount + action.visitors.length
       }
 
     case fromVisitor.CHANGE_LIST_STATUS:
@@ -86,7 +100,8 @@ export function reducer(
 }
 
 export const getVisitors = (state: State) => state.visitors
-export const getVisitorsTotalCount = (state: State) => state.visitorsTotalCount
+export const getTotalVisitorCount = (state: State) => state.totalVisitorsCount
+export const getCurrentVisitorCount = (state: State) => state.currentVisitorsTotalCount
 
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
@@ -94,4 +109,4 @@ export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
 export const getShowLoadMore = (state: State) =>
-  state.visitorsTotalCount > state.currentVisitorsTotalCount
+  state.totalVisitorsCount > state.currentVisitorsTotalCount

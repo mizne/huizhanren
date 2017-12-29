@@ -1,9 +1,17 @@
 import { Action } from '@ngrx/store'
-import { VisitorMatcher, FetchMatcherParams } from '../models/matcher.model'
+import { VisitorMatcher, FetchMatcherParams, VisitorMatcherStatus } from '../models/matcher.model'
 
 export const FETCH_MATCHERS = '[Visitor] Fetch Matchers'
 export const FETCH_MATCHERS_SUCCESS = '[Visitor] Fetch Matchers Success'
 export const FETCH_MATCHERS_FAILURE = '[Visitor] Fetch Matchers Failure'
+
+export const FETCH_MATCHERS_COUNT = '[Visitor] Fetch Matchers Count'
+export const FETCH_MATCHERS_COUNT_SUCCESS = '[Visitor] Fetch Matchers Count Success'
+export const FETCH_MATCHERS_COUNT_FAILURE = '[Visitor] Fetch Matchers Count Failure'
+
+export const LOAD_MORE_MATCHERS = '[Visitor] Load More Matchers'
+export const LOAD_MORE_MATCHERS_SUCCESS = '[Visitor] Load More Matchers Success'
+export const LOAD_MORE_MATCHERS_FAILURE = '[Visitor] Load More Matchers Failure'
 
 export const TO_AGREE_MATCHER = '[Visitor] To Agree Matcher'
 export const CANCEL_AGREE_MATCHER = '[Visitor] Cancel Agree Matcher'
@@ -44,6 +52,31 @@ export class FetchMatchersSuccessAction implements Action {
 }
 export class FetchMatchersFailureAction implements Action {
   readonly type = FETCH_MATCHERS_FAILURE
+}
+
+
+export class FetchMatchersCountAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT
+}
+export class FetchMatchersCountSuccessAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT_SUCCESS
+  constructor(public count: number) {}
+}
+export class FetchMatchersCountFailureAction implements Action {
+  readonly type = FETCH_MATCHERS_COUNT_FAILURE
+}
+
+
+export class LoadMoreMatchersAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS
+  constructor(public matcherStatuses: VisitorMatcherStatus[]) {}
+}
+export class LoadMoreMatchersSuccessAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS_SUCCESS
+  constructor(public matchers: VisitorMatcher[]) {}
+}
+export class LoadMoreMatchersFailureAction implements Action {
+  readonly type = LOAD_MORE_MATCHERS_FAILURE
 }
 
 
@@ -111,6 +144,14 @@ export type Actions =
 FetchMatchersAction |
 FetchMatchersSuccessAction |
 FetchMatchersFailureAction |
+
+FetchMatchersCountAction |
+FetchMatchersCountSuccessAction |
+FetchMatchersCountFailureAction |
+
+LoadMoreMatchersAction |
+LoadMoreMatchersSuccessAction |
+LoadMoreMatchersFailureAction |
 
 ToAgreeMatcherAction |
 CancelAgreeMatcherAction |
