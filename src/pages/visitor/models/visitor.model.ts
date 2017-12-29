@@ -119,34 +119,34 @@ export const AREA_OPTIONS = [
   },
   {
     label: '北京市',
-    value: 'beijing'
+    value: '北京市'
   },
   {
     label: '天津市',
-    value: 'tianjin'
+    value: '天津市'
   },
   {
     label: '上海市',
-    value: 'shanghai'
+    value: '上海市'
   },
   {
     label: '江苏省',
-    value: 'jiangsu'
+    value: '江苏省'
   },
   {
     label: '浙江省',
-    value: 'zhejiang'
+    value: '浙江省'
   },
   {
     label: '山东省',
-    value: 'shandong'
+    value: '山东省'
   },
   {
     label: '湖北省',
-    value: 'hubei'
+    value: '湖北省'
   },
   {
     label: '安徽省',
-    value: 'anhui'
+    value: '安徽省'
   }
 ]

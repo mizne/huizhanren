@@ -34,7 +34,7 @@ import {
   ToCancelMatcherAction,
   ToRefuseMatcherAction,
   FetchMatchersCountAction,
-  LoadMoreMatchersAction,
+  LoadMoreMatchersAction
 } from './actions/matcher.action'
 
 import {
@@ -45,7 +45,8 @@ import {
   Portray,
   RecommendExhibitorFilter,
   RecommendExhibitor,
-  Product
+  Product,
+  FetchRecommendExhibitorParams
 } from './models/exhibitor.model'
 import { Logger } from '../customer/models/logger.model'
 import {
@@ -76,7 +77,9 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<RecommendExhibitorFilter> = new Subject<RecommendExhibitorFilter>()
+  recommendFilterSub: Subject<RecommendExhibitorFilter> = new Subject<
+    RecommendExhibitorFilter
+  >()
   matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
     ExhibitorMatcherStatus[]
   >()
@@ -233,7 +236,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initListHeaderChange()
     this.initListHeaderEvent()
 
-    // this.initRecommendFilter()
+    this.initRecommendFilter()
     this.initMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
@@ -307,18 +310,34 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .present()
   }
 
-  // private initRecommendFilter(): void {
-  //   this.recommendFilterSub.takeUntil(this.destroyService)
-  //   .subscribe((recommendFilter) => {
-  //     console.log(recommendFilter)
-  //   })
-  // }
+  private initRecommendFilter(): void {
+    this.recommendFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(recommendFilter => {
+        console.log(recommendFilter)
+
+        const params: FetchRecommendExhibitorParams = {
+          ...recommendFilter,
+          pageIndex: 1,
+          pageSize: 10
+        }
+        this.store.dispatch(new FetchExhibitorsAction(params))
+      })
+  }
 
   private initMatcherFilter(): void {
     this.matcherFilterSub
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
         console.log(matcherFilter)
+
+        this.store.dispatch(
+          new FetchMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: matcherFilter
+          })
+        )
       })
   }
 

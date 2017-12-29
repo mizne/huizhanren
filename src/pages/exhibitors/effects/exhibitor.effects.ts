@@ -34,7 +34,7 @@ export class ExhibitorEffects {
   fetchExhibitors$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
     .map((action: fromExhibitor.FetchExhibitorsAction) => action.params)
-    .mergeMap(({ pageIndex, pageSize }) => {
+    .mergeMap((params) => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取展商数据中...',
         spinner: 'bubbles'
@@ -42,7 +42,7 @@ export class ExhibitorEffects {
       loadingCtrl.present()
 
       return this.exhibitorService
-        .fetchExhibitors({ pageIndex: 1, pageSize: 10 })
+        .fetchExhibitors(params)
         .map(exhibitors => {
           loadingCtrl.dismiss()
           return new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)

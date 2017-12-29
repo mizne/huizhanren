@@ -23,9 +23,9 @@ export class MatcherEffects {
   fetchMatchers$ = this.actions$
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
-    .mergeMap(({ pageIndex, pageSize }) =>
+    .mergeMap((params) =>
       this.matcherService
-        .fetchMatchers({ pageIndex, pageSize })
+        .fetchMatchers(params)
         .map(matchers => new fromMatcher.FetchMatchersSuccessAction(matchers))
         .catch(() =>
           Observable.of(new fromMatcher.FetchMatchersFailureAction())

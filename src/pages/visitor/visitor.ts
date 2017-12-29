@@ -221,7 +221,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.initListHeaderEvent()
 
     this.initRecommendFilter()
-    // this.initMatcherFilter()
+    this.initMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
   }
@@ -299,6 +299,8 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.visitorFilterSub
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
+        console.log(recommendFilter)
+
         const params: FetchRecommendVisitorParams = {
           ...recommendFilter,
           pageIndex: 1,
@@ -308,19 +310,21 @@ export class VisitorPage implements OnInit, OnDestroy {
       })
   }
 
-  // private initMatcherFilter(): void {
-  //   this.matcherFilterSub
-  //     .takeUntil(this.destroyService)
-  //     .subscribe(matcherFilter => {
-  //       this.store.dispatch(
-  //         new FetchMatchersAction({
-  //           pageIndex: 1,
-  //           pageSize: 10,
-  //           statuses: matcherFilter
-  //         })
-  //       )
-  //     })
-  // }
+  private initMatcherFilter(): void {
+    this.matcherFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        console.log(matcherFilter)
+
+        this.store.dispatch(
+          new FetchMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: matcherFilter
+          })
+        )
+      })
+  }
 
   private initLoadMore(): void {
     const loadMore$ = this.loadMoreSub
