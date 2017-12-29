@@ -108,4 +108,4 @@ export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
 export const getShowLoadMore = (state: State) =>
-  state.exhibitorsTotalCount > state.currentExhibitorsCount
+  state.exhibitorsTotalCount > state.currentExhibitorsCount || state.exhibitors.length === 0

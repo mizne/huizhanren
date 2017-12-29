@@ -78,7 +78,7 @@ export class ExhibitorService {
               query += `&search=${params.key}`
             }
             if (params.acreage) {
-              query += `&objective=${params.acreage}`
+              query += `&acreage=${params.acreage}`
             }
             if (params.pageIndex) {
               query += `&pageIndex=${params.pageIndex}`
