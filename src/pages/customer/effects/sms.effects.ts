@@ -184,45 +184,48 @@ export class SmsEffects {
     .map((action: fromSms.EnsureSingleSendSMSAction) => action.payload)
     .withLatestFrom(
       this.store.select(getShowDetailCustomerId),
-      ({ templateId, phone }, customerId) => ({ templateId, phone, customerId })
+      ({ content, phone, templateId }, customerId) => ({ content, phone, templateId, customerId })
     )
     .withLatestFrom(
       this.store.select(getCustomers),
-      ({ templateId, phone, customerId }, customers) => {
+      ({ content, phone, customerId, templateId }, customers) => {
         const customer = customers.find(e => e.id === customerId)
         return {
-          templateId,
+          content,
           phone,
-          customer
+          customer,
+          templateId
         }
       }
     )
     .withLatestFrom(
       this.store.select(getSmsTemplates),
-      ({ templateId, phone, customer }, templates) => {
+      ({ content, phone, customer, templateId }, templates) => {
         const template = templates.find(e => e.id === templateId)
         return {
-          template,
+          content,
           phone,
-          customer
+          customer,
+          template
         }
       }
     )
     .withLatestFrom(
       this.store.select(getSelectedExhibitionId),
-      ({ template, phone, customer }, exhibitionId) => ({
-        template,
+      ({ content, phone, customer, template }, exhibitionId) => ({
+        content,
         phone,
         customer,
-        exhibitionId
+        exhibitionId,
+        template
       })
     )
-    .mergeMap(({ template, phone, customer, exhibitionId }) => {
+    .mergeMap(({ content, phone, customer, exhibitionId, template }) => {
       // TODO 模板变量从 customer中获取
       const smsContents: SmsContent[] = [
         {
           phone,
-          content: [customer.name, `${SMS_TEMPLATE_BASE_URL}/${exhibitionId}`]
+          content
         }
       ]
       return this.smsService
@@ -244,7 +247,7 @@ export class SmsEffects {
     .mergeMap(() =>
       this.smsService
         .fetchAllTemplate()
-        .map(res => new fromSms.FetchAllTemplateSuccessAction(res))
+        .map(smsTemplates => new fromSms.FetchAllTemplateSuccessAction(smsTemplates))
         .catch(() => Observable.of(new fromSms.FetchAllTemplateFailureAction()))
     )
 

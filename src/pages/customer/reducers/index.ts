@@ -43,6 +43,7 @@ export const getManageableStatus = createSelector(selectCustomerState, fromCusto
 export const getSelectedCustomers = createSelector(selectCustomerState, fromCustomer.getSelectedCustomers)
 export const getPhonesToSendOfCustomers = createSelector(selectCustomerState, fromCustomer.getPhonesToSendOfCustomers)
 export const getShowDetailCustomerId = createSelector(selectCustomerState, fromCustomer.getShowDetailCustomerId)
+export const getShowDetailCustomer = createSelector(selectCustomerState, fromCustomer.getShowDetailCustomer)
 export const getShowDetailGroupId = createSelector(selectCustomerState, fromCustomer.getShowDetailGroupId)
 export const getShowLog = createSelector(selectCustomerState, fromCustomer.getShowLog)
 export const getShowNotification = createSelector(selectCustomerState, fromCustomer.getShowNotification)

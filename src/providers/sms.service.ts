@@ -120,7 +120,7 @@ export class SmsService {
         return this.http.post(this.sendUrl, {
           content: objects.map(e => ({
             phoneNumbers: e.phone,
-            code: e.content.join(',')
+            code: e.content
           })),
           tenantId,
           userId,

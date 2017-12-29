@@ -17,10 +17,9 @@ export function reducer(
     case sms.FETCH_ALL_TEMPLATE_SUCCESS:
       return {
         ...state,
-        templates: action.payload
+        templates: action.smsTemplates
       }
 
-    
     default: {
       return state
     }

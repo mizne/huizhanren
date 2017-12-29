@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store'
+import { SmsTemplate, SmsTemplateParams } from '../models/sms.model'
 
 export const CREATE_TEMPLATE = '[sms] Create Template'
 export const CREATE_TEMPLATE_SUCCESS = '[sms] Create Template Success'
@@ -60,12 +61,10 @@ export class CreateTemplateFailureAction implements Action {
 export class FetchAllTemplateAction implements Action {
   readonly type = FETCH_ALL_TEMPLATE
 }
-
 export class FetchAllTemplateSuccessAction implements Action {
   readonly type = FETCH_ALL_TEMPLATE_SUCCESS
-  constructor(public payload: any) {}
+  constructor(public smsTemplates: SmsTemplate[]) {}
 }
-
 export class FetchAllTemplateFailureAction implements Action {
   readonly type = FETCH_ALL_TEMPLATE_FAILURE
 }
@@ -133,7 +132,7 @@ export class CancelSingleSendSMSAction implements Action {
 
 export class EnsureSingleSendSMSAction implements Action {
   readonly type = ENSURE_SINGLE_SEND_SMS
-  constructor(public payload: { phone: string, templateId: string }) {}
+  constructor(public payload: { phone: string, content: SmsTemplateParams, templateId: string }) {}
 }
 
 export class SingleSendSMSSuccessAction implements Action {
@@ -172,12 +171,12 @@ export class CancelSelectAllPhoneAction implements Action {
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
-export type Actions = 
-CreateTemplateAction | 
-CreateTemplateSuccessAction | 
+export type Actions =
+CreateTemplateAction |
+CreateTemplateSuccessAction |
 CreateTemplateFailureAction |
 
-FetchAllTemplateAction | 
+FetchAllTemplateAction |
 FetchAllTemplateSuccessAction |
 FetchAllTemplateFailureAction |
 
@@ -185,7 +184,7 @@ ToSendSMSPageAction |
 PreSendSMSAction |
 ToSendSMSAction |
 NoPhoneToSendSMSAction |
-EnsureSendSMSAction | 
+EnsureSendSMSAction |
 SendSMSSuccessAction |
 MarkCustomerHasSendSMSAction |
 MarkCustomerHasSendSMSSuccessAction |

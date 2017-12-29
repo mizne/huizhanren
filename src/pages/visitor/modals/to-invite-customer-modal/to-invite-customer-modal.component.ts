@@ -15,8 +15,7 @@ export class ToInviteCustomerModal implements OnInit {
   content: string
 
   private contentTpl = `{{destName}}，您于${moment().month() +
-    1}月${moment().date()}日收到了{{srcCompany}}的约请，
-  TA希望在展位({{boothNo}})上会面，请去"我的约请"接受或拒绝。`
+    1}月${moment().date()}日收到了{{srcCompany}}的约请，TA希望在展位({{boothNo}})上会面，请去"我的约请"接受或拒绝。`
 
   constructor(public params: NavParams, public viewCtrl: ViewController) {}
 

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams, RecommendVisitorFilter } from '../models/visitor.model'
+import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'

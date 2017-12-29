@@ -337,3 +337,4 @@ export const getShowDetailCustomerId = (state: State) => state.showDetailCustome
 export const getShowDetailGroupId = (state: State) => state.showDetailGroupId
 export const getShowLog = (state: State) => state.showLog
 export const getShowNotification = (state: State) => state.showNotification
+export const getShowDetailCustomer = (state: State) => state.customers.find(e => e.id === state.showDetailCustomerId)
