@@ -15,10 +15,11 @@ export class Exhibitor {
   visitors?: Visitor[]
   organizer?: string
   organizerId?: string
-  selected?: boolean
 }
 
 export class RecommendExhibitor extends Exhibitor {
+  selected?: boolean
+
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
     return {
       id: resp.RecordId || resp._id,

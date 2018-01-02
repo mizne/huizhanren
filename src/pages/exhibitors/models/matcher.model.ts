@@ -6,6 +6,7 @@ import {
 
 export class ExhibitorMatcher extends Exhibitor {
   status?: ExhibitorMatcherStatus
+  selected?: boolean
   senderId?: string
   receiverId?: string
   isSender?: boolean
