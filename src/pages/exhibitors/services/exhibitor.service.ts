@@ -79,8 +79,8 @@ export class ExhibitorService {
             if (params.key) {
               query += `&search=${params.key}`
             }
-            if (params.acreage) {
-              query += `&acreage=${params.acreage}`
+            if (params.type) {
+              query += `&acreage=${params.type}`
             }
             if (params.pageIndex) {
               query += `&pageIndex=${params.pageIndex}`
@@ -125,8 +125,8 @@ export class ExhibitorService {
             if (params.key) {
               query += `&search=${params.key}`
             }
-            if (params.acreage) {
-              query += `&acreage=${params.acreage}`
+            if (params.type) {
+              query += `&acreage=${params.type}`
             }
             return this.http
               .get(this.fetchCountUrl + query)

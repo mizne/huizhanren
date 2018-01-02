@@ -265,7 +265,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .withLatestFrom(
         this.exhibitorFilterSub.startWith({
           area: '',
-          acreage: '',
+          type: '',
           key: ''
         }),
         ({ headerEvent, listStatus }, exhibitorFilter) => ({
@@ -358,7 +358,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .distinctUntilChanged((prev, curr) => {
         return (
           prev.area === curr.area &&
-          prev.acreage === curr.acreage &&
+          prev.type === curr.type &&
           prev.key === curr.key
         )
       })
@@ -408,7 +408,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .filter(e => e === ListStatus.EXHIBITOR)
       .withLatestFrom(
         this.exhibitorFilterSub.startWith({
-          acreage: '',
+          type: '',
           area: '',
           key: ''
         }),

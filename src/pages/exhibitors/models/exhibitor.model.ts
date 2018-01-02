@@ -115,7 +115,7 @@ export interface PicResp {
 
 export interface ExhibitorFilter {
   area?: string
-  acreage?: string
+  type?: string
   key?: string
 }
 
