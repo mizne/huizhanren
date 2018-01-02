@@ -80,7 +80,7 @@ export class ExhibitorEffects {
     )
     .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取更多客户中...',
+        content: '获取更多展商中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()

@@ -71,7 +71,7 @@ export class VisitorMatcherService {
           })
           .map(e => (e as APIResponse).result as VisitorMatcherResp[])
           .map(e =>
-            e.filter(f => f.State !== '5')
+            e.filter(f => f.State !== '5' && f.State !== '6')
             .filter(f => f.Initator && f.Initator.length > 0 && f.Receiver && f.Receiver.length > 0)
             .map(VisitorMatcher.convertFromResp)
           )

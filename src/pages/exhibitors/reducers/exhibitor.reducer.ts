@@ -2,6 +2,7 @@ import * as fromExhibitor from '../actions/exhibitor.action'
 import { Exhibitor, ListStatus, PageStatus } from '../models/exhibitor.model'
 
 import { Logger } from '../../customer/models/logger.model'
+import { deduplicate } from '../../customer/services/utils'
 
 export interface State {
   exhibitors: Exhibitor[]
@@ -53,7 +54,7 @@ export function reducer(
     case fromExhibitor.LOAD_MORE_EXHIBITORS_SUCCESS:
       return {
         ...state,
-        exhibitors: state.exhibitors.concat(action.exhibitors),
+        exhibitors: deduplicate(state.exhibitors.concat(action.exhibitors), e => e.id),
         currentExhibitorsCount: state.currentExhibitorsCount + action.exhibitors.length
       }
 

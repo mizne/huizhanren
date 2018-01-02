@@ -5,20 +5,17 @@ import {
   ToastController,
   LoadingController
 } from 'ionic-angular'
+import { Store } from '@ngrx/store'
+import { Observable } from 'rxjs/Observable'
+
 import * as fromVisitor from '../actions/visitor.action'
 import * as fromMatcher from '../actions/matcher.action'
-
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
 import { Logger } from '../../customer/models/logger.model'
-
 import { VisitorService } from '../services/visitor.service'
 import { VisitorMatcherService } from '../services/matcher.service'
 import { LoggerService } from '../../../providers/logger.service'
-import { Observable } from 'rxjs/Observable'
-
 import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
-
-import { Store } from '@ngrx/store'
 import {
   State,
   getShowDetailID,
@@ -64,8 +61,9 @@ export class VisitorEffects {
         .present()
     })
 
-    @Effect()
-    fetchVisitorsCount$ = this.actions$.ofType(fromVisitor.FETCH_VISITORS_COUNT)
+  @Effect()
+  fetchVisitorsCount$ = this.actions$
+    .ofType(fromVisitor.FETCH_VISITORS_COUNT)
     .mergeMap(() => {
       return this.visitorService
         .fetchVisitorCount()
@@ -73,7 +71,9 @@ export class VisitorEffects {
           return new fromVisitor.FetchVisitorsCountSuccessAction(number)
         })
         .catch(() => {
-          return Observable.of(new fromVisitor.FetchVisitorsCountFailureAction())
+          return Observable.of(
+            new fromVisitor.FetchVisitorsCountFailureAction()
+          )
         })
     })
 

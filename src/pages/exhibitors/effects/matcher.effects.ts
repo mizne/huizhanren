@@ -7,14 +7,13 @@ import {
   ToastController,
   LoadingController
 } from 'ionic-angular'
+import { Store } from '@ngrx/store'
 
 import * as fromMatcher from '../actions/matcher.action'
 import { ExhibitorMatcherService } from '../services/matcher.service'
 import { ToCancelMatcherModal } from '../../visitor/modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
 import { ToAgreeMatcherModal } from '../../visitor/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
 import { ToRefuseMatcherModal } from '../../visitor/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
-
-import { Store } from '@ngrx/store'
 import { State, getCurrentMatcherCount } from '../reducers'
 
 @Injectable()
@@ -23,7 +22,7 @@ export class MatcherEffects {
   fetchMatchers$ = this.actions$
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
-    .mergeMap((params) =>
+    .mergeMap(params =>
       this.matcherService
         .fetchMatchers(params)
         .map(matchers => new fromMatcher.FetchMatchersSuccessAction(matchers))

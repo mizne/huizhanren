@@ -5,6 +5,7 @@ import {
   PageStatus
 } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
+import { deduplicate } from '../../customer/services/utils'
 
 export interface State {
   visitors: RecommendVisitor[]
@@ -56,7 +57,7 @@ export function reducer(
     case fromVisitor.LOAD_MORE_VISITORS_SUCCESS:
       return {
         ...state,
-        visitors: state.visitors.concat(action.visitors),
+        visitors: deduplicate(state.visitors.concat(action.visitors), e => e.id),
         currentVisitorsTotalCount: state.currentVisitorsTotalCount + action.visitors.length
       }
 

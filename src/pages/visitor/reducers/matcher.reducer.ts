@@ -1,6 +1,8 @@
 import * as fromMatcher from '../actions/matcher.action'
 import { VisitorMatcher } from '../models/matcher.model'
 
+import { deduplicate } from '../../customer/services/utils'
+
 export interface State {
   matchers: VisitorMatcher[]
   totalMatcherCount: number
@@ -37,7 +39,7 @@ export function reducer(
     case fromMatcher.LOAD_MORE_MATCHERS_SUCCESS:
       return {
         ...state,
-        matchers: state.matchers.concat(action.matchers),
+        matchers: deduplicate(state.matchers.concat(action.matchers), e => e.id),
         currentMatcherTotalCount:
           state.currentMatcherTotalCount + action.matchers.length
       }
