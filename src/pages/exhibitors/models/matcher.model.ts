@@ -17,7 +17,7 @@ export class ExhibitorMatcher extends Exhibitor {
   static convertFromResp(resp: ExhibitorMatcherResp): ExhibitorMatcher {
     return {
       id: resp.RecordId || resp._id,
-      status: convertMatcherStatus(resp.State),
+      status: convertMatcherStatusFromResp(resp.State),
       senderId: resp.Initator[0]._id || resp.Initator[0].RecordId,
       receiverId: resp.Receiver[0]._id || resp.Receiver[0].RecordId,
       sender: RecommendExhibitor.convertFromResp(resp.Initator[0]),
@@ -79,7 +79,7 @@ export enum ExhibitorMatcherStatus {
   CANCEL // 已取消
 }
 
-function convertMatcherStatus(status: string): ExhibitorMatcherStatus {
+function convertMatcherStatusFromResp(status: string): ExhibitorMatcherStatus {
   switch (status) {
     case '0':
       return ExhibitorMatcherStatus.UN_AUDIT

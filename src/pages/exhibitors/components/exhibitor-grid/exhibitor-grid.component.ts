@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { Exhibitor } from '../../models/exhibitor.model'
+import { RecommendExhibitor } from '../../models/exhibitor.model'
 
 @Component({
   selector: 'exhibitor-grid',
@@ -12,7 +12,7 @@ export class ExhibitorGridComponent implements OnInit {
 
   @Input() type: string
 
-  @Input() dataItems: Exhibitor[]
+  @Input() dataItems: RecommendExhibitor[]
 
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -23,7 +23,7 @@ export class ExhibitorGridComponent implements OnInit {
 
   ngOnInit() {}
 
-  ensureShow(item: Exhibitor) {
+  ensureShow(item: RecommendExhibitor) {
     item.selected = !item.selected
     this.showDetail.emit(item.id)
   }

@@ -68,7 +68,7 @@ export class VisitorService {
             return this.http.get(this.fetchUrl + query)
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(RecommendVisitor.convertFromResp))
+          .map(e => e.map(RecommendVisitor.convertFromResp).slice(0, 10))
           .catch(e => {
             return this.logger.httpError({
               module: 'VisitorService',

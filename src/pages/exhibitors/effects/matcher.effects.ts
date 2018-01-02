@@ -22,14 +22,24 @@ export class MatcherEffects {
   fetchMatchers$ = this.actions$
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
-    .mergeMap(params =>
-      this.matcherService
+    .mergeMap(params => {
+      const loading = this.loadCtrl.create({
+        content: '获取展商约请中...',
+        spinner: 'bubbles'
+      })
+      loading.present()
+
+      return this.matcherService
         .fetchMatchers(params)
-        .map(matchers => new fromMatcher.FetchMatchersSuccessAction(matchers))
-        .catch(() =>
-          Observable.of(new fromMatcher.FetchMatchersFailureAction())
-        )
-    )
+        .map(matchers => {
+          loading.dismiss()
+          return new fromMatcher.FetchMatchersSuccessAction(matchers)
+        })
+        .catch(() => {
+          loading.dismiss()
+          return Observable.of(new fromMatcher.FetchMatchersFailureAction())
+        })
+    })
 
   @Effect()
   fetchMatchersCount$ = this.actions$
@@ -54,14 +64,14 @@ export class MatcherEffects {
     .withLatestFrom(
       this.store.select(getCurrentMatcherCount),
       (statuses, currentTotal) => ({
-        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageIndex: Math.ceil(currentTotal / 10) + 1,
         pageSize: 10,
         statuses
       })
     )
     .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取更多约请中...',
+        content: '获取更多展商约请中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()

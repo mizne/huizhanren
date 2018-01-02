@@ -32,7 +32,7 @@ export class VisitorEffects {
     .map((action: fromVisitor.FetchVisitorsAction) => action.params)
     .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取数据中...',
+        content: '获取客户中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
@@ -84,7 +84,7 @@ export class VisitorEffects {
     .withLatestFrom(
       this.store.select(getCurrentVisitorCount),
       (params, currentTotal) => ({
-        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageIndex: Math.ceil(currentTotal / 10) + 1,
         pageSize: 10,
         ...params
       })

@@ -26,20 +26,20 @@ export class MatcherEffects {
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
     .mergeMap(params => {
-      // const loadingCtrl = this.loadCtrl.create({
-      //   content: '获取约请信息中...',
-      //   spinner: 'bubbles'
-      // })
-      // loadingCtrl.present()
+      const loadingCtrl = this.loadCtrl.create({
+        content: '获取拉客约请中...',
+        spinner: 'bubbles'
+      })
+      loadingCtrl.present()
 
       return this.matcherService
         .fetchMatchers(params)
         .map(matchers => {
-          // loadingCtrl.dismiss()
+          loadingCtrl.dismiss()
           return new fromMatcher.FetchMatchersSuccessAction(matchers)
         })
         .catch(() => {
-          // loadingCtrl.dismiss()
+          loadingCtrl.dismiss()
           return Observable.of(new fromMatcher.FetchMatchersFailureAction())
         })
     })
@@ -64,14 +64,14 @@ export class MatcherEffects {
     .withLatestFrom(
       this.store.select(getCurrentMatcherCount),
       (matcherStatuses, currentTotal) => ({
-        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageIndex: Math.ceil(currentTotal / 10) + 1,
         pageSize: 10,
         statuses: matcherStatuses
       })
     )
     .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取更多约请中...',
+        content: '获取更多拉客约请中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()

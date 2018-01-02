@@ -56,24 +56,24 @@ export class HzGridHeaderComponent implements OnInit {
 
   batchInvite(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_INVITE)
     this.closeLeftMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_INVITE)
   }
 
   batchHidden(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_HIDDEN)
     this.closeLeftMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_HIDDEN)
   }
 
   refresh(ev: Event, leftOrRight: string) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.REFRESH)
     if (leftOrRight === 'left') {
       this.closeLeftMore()
     } else {
       this.closeRigthMore()
     }
+    this.headerEventSub.next(ListHeaderEvent.REFRESH)
   }
 
   showRightMore(ev: Event) {
@@ -87,26 +87,26 @@ export class HzGridHeaderComponent implements OnInit {
 
   batchAccept(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_ACCEPT)
     this.closeRigthMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_ACCEPT)
   }
 
   batchRefuse(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_REFUSE)
     this.closeRigthMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_REFUSE)
   }
 
   batchCancel(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_CANCEL)
     this.closeRigthMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_CANCEL)
   }
 
   batchDelete(ev: Event) {
     ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.BATCH_DELETE)
     this.closeRigthMore()
+    this.headerEventSub.next(ListHeaderEvent.BATCH_DELETE)
   }
 
 }

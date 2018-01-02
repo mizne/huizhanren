@@ -2,11 +2,12 @@
   <ion-content>
     <div class="modal-body">
       <div class="left-area">
-        <ion-slides>
+        <ion-slides (ionSlideDidChange)="slideChanged()">
           <ion-slide *ngFor="let pic of pictures">
             <img [src]="pic" alt="">
           </ion-slide>
         </ion-slides>
+        <div class="slide-indicator">{{indicator}}</div>
       </div>
 
       <div class="right-area">

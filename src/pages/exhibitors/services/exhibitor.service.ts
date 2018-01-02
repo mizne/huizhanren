@@ -92,7 +92,7 @@ export class ExhibitorService {
               .map(e =>
                 e
                   .filter(e => e.TenantId !== tenantId)
-                  .map(RecommendExhibitor.convertFromResp)
+                  .map(RecommendExhibitor.convertFromResp).slice(0, 10)
               )
               .catch(e => {
                 return this.logger.httpError({

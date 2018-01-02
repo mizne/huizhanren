@@ -35,20 +35,20 @@ export class ExhibitorEffects {
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
     .map((action: fromExhibitor.FetchExhibitorsAction) => action.params)
     .mergeMap((params) => {
-      const loadingCtrl = this.loadCtrl.create({
-        content: '获取展商数据中...',
+      const loading = this.loadCtrl.create({
+        content: '获取展商中...',
         spinner: 'bubbles'
       })
-      loadingCtrl.present()
+      loading.present()
 
       return this.exhibitorService
         .fetchExhibitors(params)
         .map(exhibitors => {
-          loadingCtrl.dismiss()
+          loading.dismiss()
           return new fromExhibitor.FetchExhibitorsSuccessAction(exhibitors)
         })
         .catch(() => {
-          loadingCtrl.dismiss()
+          loading.dismiss()
           return Observable.of(new fromExhibitor.FetchExhibitorsFailureAction())
         })
     })
@@ -73,7 +73,7 @@ export class ExhibitorEffects {
     .withLatestFrom(
       this.store.select(getCurrentExhibitorCount),
       (params, currentTotal) => ({
-        pageIndex: Math.floor(currentTotal / 10) + 1,
+        pageIndex: Math.ceil(currentTotal / 10) + 1,
         pageSize: 10,
         ...params
       })

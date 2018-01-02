@@ -156,6 +156,8 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.visitors$ = this.store.select(getVisitors)
+
+    // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
       this.store.select(getMatchers),
       this.matcherFilterSub.startWith([])
@@ -166,10 +168,8 @@ export class VisitorPage implements OnInit, OnDestroy {
     })
 
     this.showDetailID$ = this.store.select(getShowDetailID)
-    this.initCurrentDetail()
-
+    this.currentDetail$ = this.computeCurrentDetail()
     this.currentLogs$ = this.store.select(getLogs)
-
     this.showLoadMore$ = Observable.merge(
       this.listStatus$
         .filter(e => e === ListStatus.VISITOR)
@@ -180,7 +180,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     )
   }
 
-  private initCurrentDetail(): void {
+  private computeCurrentDetail(): Observable<RecommendVisitor> {
     // 根据list status和 show detail ID寻找当前推荐客户
     const latestItems$: Observable<Visitor[]> = Observable.combineLatest(
       Observable.merge(
@@ -211,14 +211,14 @@ export class VisitorPage implements OnInit, OnDestroy {
       }
     )
 
-    this.currentDetail$ = Observable.merge(clickGridItem$)
+    return Observable.merge(clickGridItem$)
   }
 
   private initSubscriber() {
     this.initListHeaderChange()
     this.initListHeaderEvent()
 
-    this.initRecommendFilter()
+    this.initVisitorFilter()
     this.initMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
@@ -228,6 +228,14 @@ export class VisitorPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
         this.store.dispatch(new ChangeListStatusAction(listStatus))
+      })
+
+    this.listStatusChangeSub
+      .filter(listStatus => listStatus === ListStatus.MATCHER)
+      .take(1)
+      .subscribe(_ => {
+        this.store.dispatch(new FetchMatchersAction())
+        this.store.dispatch(new FetchMatchersCountAction())
       })
   }
 
@@ -318,7 +326,7 @@ export class VisitorPage implements OnInit, OnDestroy {
       .present()
   }
 
-  private initRecommendFilter(): void {
+  private initVisitorFilter(): void {
     this.visitorFilterSub
       .distinctUntilChanged((prev, curr) => {
         return (
@@ -407,8 +415,8 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   private initDispatch(): void {
     this.store.dispatch(new FetchVisitorsAction())
-    this.store.dispatch(new FetchMatchersAction())
+    // this.store.dispatch(new FetchMatchersAction())
     this.store.dispatch(new FetchVisitorsCountAction())
-    this.store.dispatch(new FetchMatchersCountAction())
+    // this.store.dispatch(new FetchMatchersCountAction())
   }
 }

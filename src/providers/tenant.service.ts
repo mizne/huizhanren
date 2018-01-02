@@ -14,7 +14,6 @@ import {
   getExhibitorId,
   getBoothNo
 } from '../pages/login/reducers'
-import { Customer } from '../pages/customer/models/customer.model'
 import { SendSmsContext } from '../pages/customer/models/sms.model'
 import { getShowDetailCustomer } from '../pages/customer/reducers'
 

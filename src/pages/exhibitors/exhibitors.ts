@@ -173,6 +173,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
+
+    // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
       this.store.select(getMatchers),
       this.matcherFilterSub.startWith([])
@@ -183,8 +185,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     })
 
     this.showDetailID$ = this.store.select(getShowDetailID)
-    this.initCurrentDetail()
-
+    this.currentDetail$ = this.computeCurrentDetail()
     this.currentLogs$ = this.store.select(getCurrentLogs)
     this.showLoadMore$ = Observable.merge(
       this.listStatus$
@@ -196,7 +197,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     )
   }
 
-  private initCurrentDetail(): void {
+  private computeCurrentDetail(): Observable<RecommendExhibitor> {
     // 根据list status和 show detail ID寻找当前推荐客户
     const latestItems$: Observable<Exhibitor[]> = Observable.combineLatest(
       Observable.merge(
@@ -227,7 +228,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       }
     )
 
-    this.currentDetail$ = Observable.merge(clickGridItem$)
+    return Observable.merge(clickGridItem$)
   }
 
   private initSubscriber() {
@@ -244,6 +245,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
         this.store.dispatch(new ChangeListStatusAction(listStatus))
+      })
+
+    this.listStatusChangeSub
+      .filter(listStatus => listStatus === ListStatus.MATCHER)
+      .take(1)
+      .subscribe(() => {
+        this.store.dispatch(new FetchMatchersAction())
+        this.store.dispatch(new FetchMatchersCountAction())
       })
   }
 
@@ -423,9 +432,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   private initDispatch(): void {
     this.store.dispatch(new FetchExhibitorsAction())
-    this.store.dispatch(new FetchMatchersAction())
-
     this.store.dispatch(new FetchExhibitorsCountAction())
-    this.store.dispatch(new FetchMatchersCountAction())
   }
 }

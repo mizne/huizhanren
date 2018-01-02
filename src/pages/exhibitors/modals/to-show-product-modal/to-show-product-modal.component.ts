@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { NavParams, ViewController } from 'ionic-angular'
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { NavParams, ViewController, Slides } from 'ionic-angular'
 
 import { DestroyService } from '../../../../providers/destroy.service'
 
@@ -11,6 +11,9 @@ export class ToShowProductModal implements OnInit {
   name: string
   remark: string
   pictures: string[]
+  indicator: string
+
+  @ViewChild(Slides) slides: Slides
 
   constructor(
     public params: NavParams,
@@ -21,12 +24,17 @@ export class ToShowProductModal implements OnInit {
     this.name = this.params.get('name')
     this.remark = this.params.get('remark')
     this.pictures = this.params.get('pictures')
+    this.indicator = `1/${this.pictures.length}`
   }
 
-
-
-  private dismiss(data?): void {
-    this.viewCtrl.dismiss(data)
+  slideChanged() {
+    let currentIndex = this.slides.getActiveIndex()
+    console.log('Current index is', currentIndex)
+    if (currentIndex >= this.pictures.length) {
+      this.indicator = `${this.pictures.length}/${this.pictures.length}`
+    } else {
+      this.indicator = `${currentIndex + 1}/${this.pictures.length}`
+    }
   }
 
   cancel(): void {
@@ -35,5 +43,9 @@ export class ToShowProductModal implements OnInit {
 
   complete() {
     this.dismiss(true)
+  }
+
+  private dismiss(data?): void {
+    this.viewCtrl.dismiss(data)
   }
 }

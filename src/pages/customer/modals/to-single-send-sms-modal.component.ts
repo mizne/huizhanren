@@ -7,19 +7,13 @@ import { Store } from '@ngrx/store'
 import {
   State,
   getSmsTemplates,
-  getShowDetailCustomer
 } from '../reducers/index'
-
-import { getBoothNo, getCompanyName } from '../../login/reducers'
-
 import {
   CancelSingleSendSMSAction,
   EnsureSingleSendSMSAction,
   FetchAllTemplateAction
 } from '../actions/sms.action'
 import { SmsTemplate, SmsTemplateParams } from '../models/sms.model'
-import { Customer } from '../models/customer.model'
-
 import { DestroyService } from '../../../providers/destroy.service'
 import { TenantService } from '../../../providers/tenant.service'
 
