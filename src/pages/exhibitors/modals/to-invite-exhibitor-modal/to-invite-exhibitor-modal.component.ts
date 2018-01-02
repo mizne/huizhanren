@@ -19,10 +19,8 @@ export class ToInviteExhibitorModal implements OnInit {
 
   content: string
 
-  private contentTpl = `{{destName}}，您于${moment().month() +
-    1}月${moment().date()}收到了{{srcName}}的约请，
-    TA希望在展位({{address}})上会面，请登录智慧会展系统(微信小程序)
-    接受或拒绝。`
+  private contentTpl = `{{destName}}，您于${moment().month() + 1}月${moment().date()}收到了` +
+  `{{srcName}}的约请，TA希望在展位({{address}})上会面，请登录智慧会展系统(微信小程序)接受或拒绝。`
 
   constructor(
     public params: NavParams,
