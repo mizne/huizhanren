@@ -11,8 +11,12 @@ import {
   getSelectedExhibitionId,
   getExhibitions,
   getCompanyName,
-  getExhibitorId
-} from '../pages/login/reducers/index'
+  getExhibitorId,
+  getBoothNo
+} from '../pages/login/reducers'
+import { Customer } from '../pages/customer/models/customer.model'
+import { SendSmsContext } from '../pages/customer/models/sms.model'
+import { getShowDetailCustomer } from '../pages/customer/reducers'
 
 @Injectable()
 export class TenantService {
@@ -57,7 +61,9 @@ export class TenantService {
     )
   }
 
-  public getTenantIdAndUserIdAndExhibitorIdAndExhibitionId(): Observable<[string, string, string, string]> {
+  public getTenantIdAndUserIdAndExhibitorIdAndExhibitionId(): Observable<
+    [string, string, string, string]
+  > {
     return Observable.zip(
       this.store.select(getTenantId),
       this.store.select(getUserId),
@@ -77,6 +83,17 @@ export class TenantService {
     return Observable.zip(
       this.store.select(getTenantId),
       this.getSelectedItemName()
+    )
+  }
+
+  public getSendSmsContext(): Observable<SendSmsContext> {
+    return Observable.zip(
+      this.store.select(getShowDetailCustomer),
+      this.store.select(getCompanyName),
+      this.store.select(getBoothNo)
+    ).map(
+      ([customer, companyName, boothNo]) =>
+        new SendSmsContext(customer, companyName, boothNo)
     )
   }
 }

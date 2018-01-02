@@ -21,6 +21,7 @@ import { SmsTemplate, SmsTemplateParams } from '../models/sms.model'
 import { Customer } from '../models/customer.model'
 
 import { DestroyService } from '../../../providers/destroy.service'
+import { TenantService } from '../../../providers/tenant.service'
 
 @Component({
   template: `
@@ -102,161 +103,42 @@ export class ToSingleSendSMSModal implements OnInit {
     public viewCtrl: ViewController,
     private store: Store<State>,
     private toastCtrl: ToastController,
-    private destroyService: DestroyService
+    private destroyService: DestroyService,
+    private tenantService: TenantService
   ) {
     this.phone = params.get('phone')
     this.templates$ = store.select(getSmsTemplates)
 
-    this.templates$
-      .withLatestFrom(
-        this.store.select(getShowDetailCustomer),
-        (templates, customer) => ({
-          templates,
-          customer
-        })
-      )
-      .withLatestFrom(
-        this.store.select(getCompanyName),
-        ({ templates, customer }, companyName) => ({
-          templates,
-          customer,
-          companyName
-        })
-      )
-      .withLatestFrom(
-        this.store.select(getBoothNo),
-        ({ templates, customer, companyName }, boothNo) => ({
-          templates,
-          customer,
-          companyName,
-          boothNo
-        })
-      )
-      .takeUntil(this.destroyService)
-      .subscribe(({ templates, customer, companyName, boothNo }) => {
-        if (templates.length > 0) {
+    Observable.merge(
+      this.templates$
+        .filter(templates => templates.length > 0)
+        .do(templates => {
           this.selectedTemplateCtrl.patchValue(templates[0].label, {
             emitEvent: false
           })
-          this.selectedTemplateId = templates[0].id
-          this.templateContent = this.compluteTemplateContent(
-            templates[0],
-            customer,
-            companyName,
-            boothNo
-          )
-          this.templateParams = this.compluteTemplateParams(
-            templates[0],
-            customer,
-            companyName,
-            boothNo
-          )
-        }
-      })
+        })
+        .map(templates => templates[0]),
 
-    this.selectedTemplateCtrl.valueChanges
-      .withLatestFrom(this.templates$, (label, templates) =>
-        templates.find(e => e.label === label)
+      this.selectedTemplateCtrl.valueChanges.withLatestFrom(
+        this.templates$,
+        (label, templates) => templates.find(e => e.label === label)
       )
-      .withLatestFrom(
-        this.store.select(getShowDetailCustomer),
-        (template, customer) => ({
-          template,
-          customer
-        })
-      )
-      .withLatestFrom(
-        this.store.select(getCompanyName),
-        ({ template, customer }, companyName) => ({
-          template,
-          customer,
-          companyName
-        })
-      )
-      .withLatestFrom(
-        this.store.select(getBoothNo),
-        ({ template, customer, companyName }, boothNo) => ({
-          template,
-          customer,
-          companyName,
-          boothNo
-        })
-      )
+    )
+      .withLatestFrom(this.tenantService.getSendSmsContext())
       .takeUntil(this.destroyService)
-      .subscribe(({ template, customer, companyName, boothNo }) => {
+      .subscribe(([template, sendSmsContext]) => {
         this.selectedTemplateId = template.id
-        this.templateContent = this.compluteTemplateContent(
-          template,
-          customer,
-          companyName,
-          boothNo
+        this.templateContent = sendSmsContext.computeTemplateContent(
+          template.preview
         )
-        this.templateParams = this.compluteTemplateParams(
-          template,
-          customer,
-          companyName,
-          boothNo
+        this.templateParams = sendSmsContext.computeTemplateParams(
+          template.preview
         )
       })
   }
 
   private dismiss(data?): void {
     this.viewCtrl.dismiss(data)
-  }
-
-  private compluteTemplateContent(
-    tempalte: SmsTemplate,
-    customer: Customer,
-    companyName: string,
-    boothNo: string
-  ): string {
-    const templateParams = this.compluteTemplateParams(
-      tempalte,
-      customer,
-      companyName,
-      boothNo
-    )
-    const content = tempalte.preview.replace(/\$\{([^}]+)\}/g, function (m, c) {
-      return templateParams[c]
-    })
-    return content
-  }
-
-  private compluteTemplateParams(
-    tempalte: SmsTemplate,
-    customer: Customer,
-    companyName: string,
-    boothNo: string
-  ): SmsTemplateParams {
-    const variableNames = tempalte.preview.match(/\$\{([^}]+)\}/g).map(e =>　e.slice(2, -1))
-    let initV: SmsTemplateParams = {}
-    const templateParams: SmsTemplateParams = variableNames.reduce((accu, curr) => {
-      if (curr === 'exhibitorName') {
-        accu.exhibitorName = companyName
-      }
-      if (curr === 'exhibitorBoothNo') {
-        accu.exhibitorBoothNo = boothNo
-      }
-      if (curr === 'visitorName') {
-        accu.visitorName = customer.name
-      }
-      if (curr === 'visitorTitle') {
-        if (customer.jobs.length > 0) {
-          accu.visitorTitle = customer.jobs[0].label
-        } else {
-          accu.visitorTitle = `未知头衔`
-        }
-      }
-      if (curr === 'visitorCompanyName') {
-        if (customer.companys.length > 0) {
-          accu.visitorCompanyName = customer.companys[0].label
-        } else {
-          accu.visitorCompanyName = `未知公司`
-        }
-      }
-      return accu
-    }, initV)
-    return templateParams
   }
 
   ngOnInit() {
