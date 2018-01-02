@@ -273,12 +273,22 @@ export class VisitorPage implements OnInit, OnDestroy {
             case ListHeaderEvent.REFRESH:
               if (listStatus === ListStatus.VISITOR) {
                 console.log(`to refresh visitor data`)
-                this.store.dispatch(new FetchVisitorsAction(visitorFilter))
+                this.store.dispatch(
+                  new FetchVisitorsAction({
+                    ...visitorFilter,
+                    pageIndex: 1,
+                    pageSize: 10
+                  })
+                )
               }
               if (listStatus === ListStatus.MATCHER) {
                 console.log(`to refresh visitor matcher data`)
                 this.store.dispatch(
-                  new FetchMatchersAction({ statuses: matcherFilter })
+                  new FetchMatchersAction({
+                    statuses: matcherFilter,
+                    pageIndex: 1,
+                    pageSize: 10
+                  })
                 )
               }
               break

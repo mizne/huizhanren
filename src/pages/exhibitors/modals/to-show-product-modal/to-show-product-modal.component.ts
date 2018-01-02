@@ -28,7 +28,7 @@ export class ToShowProductModal implements OnInit {
   }
 
   slideChanged() {
-    let currentIndex = this.slides.getActiveIndex()
+    const currentIndex = this.slides.getActiveIndex()
     if (currentIndex >= this.pictures.length) {
       this.indicator = `${this.pictures.length}/${this.pictures.length}`
     } else {

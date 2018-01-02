@@ -290,13 +290,23 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
             case ListHeaderEvent.REFRESH:
               if (listStatus === ListStatus.EXHIBITOR) {
                 console.log(`to refresh exhibitor data`)
-                this.store.dispatch(new FetchExhibitorsAction(exhibitorFilter))
+                this.store.dispatch(
+                  new FetchExhibitorsAction({
+                    ...exhibitorFilter,
+                    pageIndex: 1,
+                    pageSize: 10
+                  })
+                )
               }
               if (listStatus === ListStatus.MATCHER) {
                 console.log(`to refresh exhibitor matcher data`)
                 console.log(matcherFilter)
                 this.store.dispatch(
-                  new FetchMatchersAction({ statuses: matcherFilter })
+                  new FetchMatchersAction({
+                    statuses: matcherFilter,
+                    pageIndex: 1,
+                    pageSize: 10
+                  })
                 )
               }
               break
