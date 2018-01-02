@@ -88,23 +88,23 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     [
       {
         label: '不限面积',
-        value: ''
-      },
-      {
-        label: '9-18m2',
         value: '0'
       },
       {
-        label: '18-27m2',
+        label: '9-18m2',
         value: '1'
       },
       {
-        label: '27-54m2',
+        label: '18-27m2',
         value: '2'
       },
       {
-        label: '>54m2',
+        label: '27-54m2',
         value: '3'
+      },
+      {
+        label: '>54m2',
+        value: '4'
       }
     ],
     [
@@ -363,15 +363,16 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         )
       })
       .takeUntil(this.destroyService)
-      .subscribe(recommendFilter => {
-        console.log(recommendFilter)
+      .subscribe(exhibitorFilter => {
+        console.log(exhibitorFilter)
 
         const params: FetchRecommendExhibitorParams = {
-          ...recommendFilter,
+          ...exhibitorFilter,
           pageIndex: 1,
           pageSize: 10
         }
         this.store.dispatch(new FetchExhibitorsAction(params))
+        this.store.dispatch(new FetchExhibitorsCountAction(exhibitorFilter))
       })
   }
 
@@ -388,6 +389,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
             statuses: matcherFilter
           })
         )
+
+        this.store.dispatch(new FetchMatchersCountAction(matcherFilter))
       })
   }
 

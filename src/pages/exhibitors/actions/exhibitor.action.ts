@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Exhibitor, ListStatus, PageStatus, Product, FetchRecommendExhibitorParams } from '../models/exhibitor.model'
+import { Exhibitor, ListStatus, PageStatus, Product, FetchRecommendExhibitorParams, ExhibitorFilter } from '../models/exhibitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
@@ -65,6 +65,11 @@ export class FetchExhibitorsFailureAction implements Action {
 
 export class FetchExhibitorsCountAction implements Action {
   readonly type = FETCH_EXHIBITORS_COUNT
+  constructor(public params: ExhibitorFilter = {
+    acreage: '',
+    area: '',
+    key: ''
+  }) {}
 }
 export class FetchExhibitorsCountSuccessAction implements Action {
   readonly type = FETCH_EXHIBITORS_COUNT_SUCCESS

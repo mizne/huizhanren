@@ -55,9 +55,10 @@ export class ExhibitorEffects {
 
     @Effect()
     fetchExhibitorsCount$ = this.actions$.ofType(fromExhibitor.FETCH_EXHIBITORS_COUNT)
-    .mergeMap(() => {
+    .map((action: fromExhibitor.FetchExhibitorsCountAction) => action.params)
+    .mergeMap((params) => {
       return this.exhibitorService
-        .fetchExhibitorsCount()
+        .fetchExhibitorsCount(params)
         .map(number => {
           return new fromExhibitor.FetchExhibitorsCountSuccessAction(number)
         })

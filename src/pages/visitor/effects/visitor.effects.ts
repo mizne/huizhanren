@@ -64,9 +64,10 @@ export class VisitorEffects {
   @Effect()
   fetchVisitorsCount$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS_COUNT)
-    .mergeMap(() => {
+    .map((action: fromVisitor.FetchVisitorsCountAction) => action.params)
+    .mergeMap((params) => {
       return this.visitorService
-        .fetchVisitorCount()
+        .fetchVisitorCount(params)
         .map(number => {
           return new fromVisitor.FetchVisitorsCountSuccessAction(number)
         })

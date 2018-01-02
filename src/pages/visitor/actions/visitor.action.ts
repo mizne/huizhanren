@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams } from '../models/visitor.model'
+import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams, VisitorFilter } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'
@@ -63,6 +63,11 @@ export class FetchVisitorsFailureAction implements Action {
 
 export class FetchVisitorsCountAction implements Action {
   readonly type = FETCH_VISITORS_COUNT
+  constructor(public params: VisitorFilter = {
+    key: '',
+    area: '',
+    type: ''
+  }) {}
 }
 export class FetchVisitorsCountSuccessAction implements Action {
   readonly type = FETCH_VISITORS_COUNT_SUCCESS

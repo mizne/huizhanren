@@ -346,15 +346,16 @@ export class VisitorPage implements OnInit, OnDestroy {
         )
       })
       .takeUntil(this.destroyService)
-      .subscribe(recommendFilter => {
-        console.log(recommendFilter)
+      .subscribe(visitorFilter => {
+        console.log(visitorFilter)
 
         const params: FetchRecommendVisitorParams = {
-          ...recommendFilter,
+          ...visitorFilter,
           pageIndex: 1,
           pageSize: 10
         }
         this.store.dispatch(new FetchVisitorsAction(params))
+        this.store.dispatch(new FetchVisitorsCountAction(visitorFilter))
       })
   }
 
@@ -371,6 +372,8 @@ export class VisitorPage implements OnInit, OnDestroy {
             statuses: matcherFilter
           })
         )
+
+        this.store.dispatch(new FetchMatchersCountAction(matcherFilter))
       })
   }
 

@@ -31,6 +31,7 @@ const fakeMatchers: VisitorMatcher[] = Array.from({ length: 100 }, (_, i) => ({
 @Injectable()
 export class VisitorMatcherService {
   private fetchUrl: string = '/data/get/invitationInfo'
+  private fetchCountUrl = '/data/get/invitationInfo/count'
   private insertUrl = '/sys/insert/InvitationInfo'
   private updateUrl: string = '/data/update/inviinfo'
 
@@ -108,26 +109,29 @@ export class VisitorMatcherService {
    * @returns {Observable<number>}
    * @memberof VisitorMatcherService
    */
-  fetchMatcherCount(): Observable<number> {
-    // return environment.production
-    //   ? this.tenantService
-    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
-    //         return this.http
-    //           .get(this.fetchUrl + query)
-    //           .map(e => (e as APIResponse).result)
-    //           .map(e => e[0])
-    //           .catch(e => {
-    //             return this.logger.httpError({
-    //               module: 'VisitorMatcherService',
-    //               method: 'fetchMatcherCount',
-    //               error: e
-    //             })
-    //           })
-    //       })
-    //   : Observable.of(1)
-    return Observable.of(1000)
+  fetchMatcherCount(statuses: VisitorMatcherStatus[]): Observable<number> {
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+            if (statuses && statuses.length > 0) {
+              query += `&state=${statuses.map(
+                convertMatcherStatusFromModel
+              )}`
+            }
+            return this.http
+              .get(this.fetchCountUrl + query)
+              .map(e => (e as APIResponse).result)
+              .catch(e => {
+                return this.logger.httpError({
+                  module: 'VisitorMatcherService',
+                  method: 'fetchMatcherCount',
+                  error: e
+                })
+              })
+          })
+      : Observable.of(1000)
   }
 
   /**
@@ -146,13 +150,6 @@ export class VisitorMatcherService {
     tenantId: string,
     customerId: string
   ): Observable<any> {
-    // const params = Recommend.convertFromModel(recommend)
-    // Object.assign(params, {
-    //   Place: boothArea,
-    //   State: '未审核',
-    //   Initator: tenantId,
-    //   Receiver: customerId
-    // })
     const params = {
       State: convertMatcherStatusFromModel(VisitorMatcherStatus.UN_AUDIT),
       Type: '1', // 约请的发起方向

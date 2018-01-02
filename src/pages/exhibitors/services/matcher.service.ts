@@ -44,6 +44,7 @@ const fakeMatchers: ExhibitorMatcher[] = Array.from(
 @Injectable()
 export class ExhibitorMatcherService {
   private fetchUrl: string = '/data/get/ExhibitionInvitationInfo'
+  private fetchCountUrl = '/data/get/ExhibitionInvitationInf/count'
   private insertUrl = '/sys/insert/ExhibitionInvitationInfo'
   private updateUrl: string = '/data/update/exhiinviinfo'
 
@@ -126,26 +127,29 @@ export class ExhibitorMatcherService {
    * @returns {Observable<number>}
    * @memberof ExhibitorMatcherService
    */
-  fetchMatcherCount(): Observable<number> {
-    // return environment.production
-    //   ? this.tenantService
-    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
-    //         return this.http
-    //           .get(this.fetchUrl + query)
-    //           .map(e => (e as APIResponse).result)
-    //           .map(e => e[0])
-    //           .catch(e => {
-    //             return this.logger.httpError({
-    //               module: 'ExhibitorMatcherService',
-    //               method: 'fetchMatcherCount',
-    //               error: e
-    //             })
-    //           })
-    //       })
-    //   : Observable.of(1)
-    return Observable.of(1000)
+  fetchMatcherCount(statuses: ExhibitorMatcherStatus[]): Observable<number> {
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+            if (statuses && statuses.length > 0) {
+              query += `&state=${statuses.map(
+                convertMatcherStatusFromModel
+              )}`
+            }
+            return this.http
+              .get(this.fetchCountUrl + query)
+              .map(e => (e as APIResponse).result)
+              .catch(e => {
+                return this.logger.httpError({
+                  module: 'ExhibitorMatcherService',
+                  method: 'fetchMatcherCount',
+                  error: e
+                })
+              })
+          })
+      : Observable.of(1000)
   }
 
   /**

@@ -38,7 +38,7 @@ import { createCustomerFromFields } from '../models/card.model'
 @Injectable()
 export class CustomerEffects {
   @Effect()
-  initial$ = this.actions$.ofType(fromCustomer.INITIAL).mergeMap(() => {
+  initial$ = this.actions$.ofType(fromCustomer.INITIAL).switchMap(() => {
     const loadingCtrl = this.loadCtrl.create({
       content: '获取客户信息中...',
       spinner: 'bubbles'
@@ -120,7 +120,7 @@ export class CustomerEffects {
       this.store.select(getSelectedExhibitionId),
       ([_, cardInfo], exhibitionId) => ({ cardInfo, exhibitionId })
     )
-    .mergeMap(({ cardInfo, exhibitionId }) => {
+    .switchMap(({ cardInfo, exhibitionId }) => {
       const loadingCtrl = this.loadCtrl.create({
         content: '保存中...',
         spinner: 'bubbles'
@@ -171,7 +171,7 @@ export class CustomerEffects {
   createSysLogger$ = this.actions$
     .ofType(fromCustomer.CREATE_SYS_LOGGER)
     .map((action: fromCustomer.CreateSysLoggerAction) => action.payload)
-    .mergeMap(({ log, customerId }) => {
+    .switchMap(({ log, customerId }) => {
       return this.loggerService
         .createLog(log, customerId)
         .map(() => new fromCustomer.CreateSysLoggerSuccessAction())
@@ -201,7 +201,7 @@ export class CustomerEffects {
   })
 
   @Effect()
-  fetchAll$ = this.actions$.ofType(fromCustomer.FETCH_ALL).mergeMap(() => {
+  fetchAll$ = this.actions$.ofType(fromCustomer.FETCH_ALL).switchMap(() => {
     return this.customerService
       .fetchAllCustomer()
       .map(customers => new fromCustomer.FetchAllSuccessAction(customers))
@@ -269,7 +269,7 @@ export class CustomerEffects {
         exhibitionId
       })
     )
-    .mergeMap(({ customers, groupId, exhibitionId }) => {
+    .switchMap(({ customers, groupId, exhibitionId }) => {
       return this.customerService
         .batchEditCustomerGroupId(customers, groupId, exhibitionId)
         .concatMap(() => [
@@ -334,7 +334,7 @@ export class CustomerEffects {
         exhibitionId
       })
     )
-    .mergeMap(({ groupId, customer, exhibitionId }) => {
+    .switchMap(({ groupId, customer, exhibitionId }) => {
       return this.customerService
         .singleEditCustomerGroupId(customer, groupId, exhibitionId)
         .concatMap(() => {
@@ -453,7 +453,7 @@ export class CustomerEffects {
         showDetailCustomerId
       })
     )
-    .mergeMap(({ multi, customerIds, showDetailCustomerId }) => {
+    .switchMap(({ multi, customerIds, showDetailCustomerId }) => {
       return (multi
         ? this.customerService.batchDeleteCustomer(customerIds)
         : this.customerService.singleDeleteCustomer(showDetailCustomerId)
@@ -523,7 +523,7 @@ export class CustomerEffects {
         exhibitionId
       })
     )
-    .mergeMap(({ cardInfo, customerId, cardBehindImg, exhibitionId }) => {
+    .switchMap(({ cardInfo, customerId, cardBehindImg, exhibitionId }) => {
       const customer = createCustomerFromFields({
         fields1: cardInfo.fields1,
         fields2: cardInfo.fields2
@@ -620,7 +620,7 @@ export class CustomerEffects {
         exhibitionId
       })
     )
-    .mergeMap(({ groupId, customers, exhibitionId }) => {
+    .switchMap(({ groupId, customers, exhibitionId }) => {
       return this.customerService
         .removeCustomerGroupId(customers, groupId, exhibitionId)
         .concatMap(() => [

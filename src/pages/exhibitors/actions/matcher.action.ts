@@ -58,6 +58,7 @@ export class FetchMatchersFailureAction implements Action {
 
 export class FetchMatchersCountAction implements Action {
   readonly type = FETCH_MATCHERS_COUNT
+  constructor(public statuses: ExhibitorMatcherStatus[] = []) {}
 }
 export class FetchMatchersCountSuccessAction implements Action {
   readonly type = FETCH_MATCHERS_COUNT_SUCCESS

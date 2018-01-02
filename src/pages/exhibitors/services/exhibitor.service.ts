@@ -7,7 +7,8 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   RecommendExhibitor,
-  FetchRecommendExhibitorParams
+  FetchRecommendExhibitorParams,
+  ExhibitorFilter
 } from '../models/exhibitor.model'
 
 import { environment } from '../../../environments/environment'
@@ -48,6 +49,7 @@ const fakeExhibitors: RecommendExhibitor[] = Array.from(
 @Injectable()
 export class ExhibitorService {
   private fetchUrl: string = '/data/get/exhibitor'
+  private fetchCountUrl = '/data/get/exhibitor/count'
 
   constructor(
     private http: HttpClient,
@@ -92,7 +94,7 @@ export class ExhibitorService {
               .map(e =>
                 e
                   .filter(e => e.TenantId !== tenantId)
-                  .map(RecommendExhibitor.convertFromResp).slice(0, 10)
+                  .map(RecommendExhibitor.convertFromResp)
               )
               .catch(e => {
                 return this.logger.httpError({
@@ -111,26 +113,32 @@ export class ExhibitorService {
    * @returns {Observable<number>}
    * @memberof ExhibitorService
    */
-  fetchExhibitorsCount(): Observable<number> {
-    // return environment.production
-    //   ? this.tenantService
-    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
-    //         return this.http
-    //           .get(this.fetchUrl + query)
-    //           .map(e => (e as APIResponse).result)
-    //           .map(e => e[0])
-    //           .catch(e => {
-    //             return this.logger.httpError({
-    //               module: 'ExhibitorService',
-    //               method: 'fetchExhibitorsCount',
-    //               error: e
-    //             })
-    //           })
-    //       })
-    //   : Observable.of(1)
-
-    return Observable.of(1000)
+  fetchExhibitorsCount(params: ExhibitorFilter): Observable<number> {
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+            if (params.area) {
+              query += `&province=${params.area}`
+            }
+            if (params.key) {
+              query += `&search=${params.key}`
+            }
+            if (params.acreage) {
+              query += `&acreage=${params.acreage}`
+            }
+            return this.http
+              .get(this.fetchCountUrl + query)
+              .map(e => (e as APIResponse).result)
+              .catch(e => {
+                return this.logger.httpError({
+                  module: 'ExhibitorService',
+                  method: 'fetchExhibitorsCount',
+                  error: e
+                })
+              })
+          })
+      : Observable.of(1000)
   }
 }

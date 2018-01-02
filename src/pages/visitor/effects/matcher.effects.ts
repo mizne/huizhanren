@@ -46,9 +46,10 @@ export class MatcherEffects {
 
     @Effect()
     fetchMatchersCount$ = this.actions$.ofType(fromMatcher.FETCH_MATCHERS_COUNT)
-    .mergeMap(() => {
+    .map((action: fromMatcher.FetchMatchersCountAction) => action.statuses)
+    .switchMap((statuses) => {
       return this.matcherService
-        .fetchMatcherCount()
+        .fetchMatcherCount(statuses)
         .map(number => {
           return new fromMatcher.FetchMatchersCountSuccessAction(number)
         })

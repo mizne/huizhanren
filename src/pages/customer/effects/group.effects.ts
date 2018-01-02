@@ -20,7 +20,7 @@ import { ToDeleteGroupModal } from '../modals/to-delete-group-modal.component'
 @Injectable()
 export class GroupEffects {
   @Effect()
-  toCreate$ = this.actions$.ofType(fromGroup.TO_CREATE).mergeMap(() => {
+  toCreate$ = this.actions$.ofType(fromGroup.TO_CREATE).switchMap(() => {
     return Observable.fromPromise(
       new Promise((res, _) => {
         const createGroupModal = this.modalCtrl.create(ToCreateGroupModal)
@@ -43,7 +43,7 @@ export class GroupEffects {
     .ofType(fromGroup.CREATE)
     .map((action: fromGroup.CreateAction) => action.groupName)
     .withLatestFrom(this.store.select(getSelectedExhibitionId))
-    .mergeMap(([groupName, exhibitionId]) =>
+    .switchMap(([groupName, exhibitionId]) =>
       this.groupService
         .createGroup(groupName, exhibitionId)
         .concatMap(() => [
@@ -77,7 +77,7 @@ export class GroupEffects {
   @Effect()
   fetchALl$ = this.actions$
     .ofType(fromGroup.FETCH_ALL)
-    .mergeMap(() =>
+    .switchMap(() =>
       this.groupService
         .fetchAllGroup()
         .map(res => new fromGroup.FetchAllSuccessAction(res))
@@ -116,7 +116,7 @@ export class GroupEffects {
   @Effect()
   ensureRenameGroup$ = this.actions$.ofType(fromGroup.ENSURE_RENAME_GROUP)
   .map((action: fromGroup.EnsureRenameGroupAction) => action.group)
-  .mergeMap(({ id, name }) => {
+  .switchMap(({ id, name }) => {
     return this.groupService.editGroup(id, name)
     .concatMap(() => [
       new fromGroup.RenameGroupSuccessAction(),
@@ -156,7 +156,7 @@ export class GroupEffects {
   @Effect()
   ensureDeleteGroup$ = this.actions$.ofType(fromGroup.ENSURE_DELETE_GROUP)
   .map((action: fromGroup.EnsureDeleteGroupAction) => action.groupId)
-  .mergeMap((groupId) => {
+  .switchMap((groupId) => {
     return this.groupService.delGroup(groupId)
     .concatMap(() => [
       new fromGroup.DeleteGroupSuccessAction(),

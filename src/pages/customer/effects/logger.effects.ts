@@ -18,7 +18,7 @@ export class LoggerEffects {
   @Effect()
   toCreateLogger$ = this.actions$
     .ofType(fromLogger.TO_CREATE_LOGGER)
-    .mergeMap(() => {
+    .switchMap(() => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
@@ -43,7 +43,7 @@ export class LoggerEffects {
     .ofType(fromLogger.CREATE_LOGGER)
     .map((action: fromLogger.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getShowDetailCustomerId))
-    .mergeMap(([log, customerId]) =>
+    .switchMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
@@ -90,7 +90,7 @@ export class LoggerEffects {
   toEditLogger$ = this.actions$
     .ofType(fromLogger.TO_EDIT_LOGGER)
     .map((action: fromLogger.EditLoggerAction) => action.log)
-    .mergeMap(log => {
+    .switchMap(log => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToEditLoggerModal, log)
@@ -114,7 +114,7 @@ export class LoggerEffects {
   editLogger$ = this.actions$
     .ofType(fromLogger.EDIT_LOGGER)
     .map((action: fromLogger.EditLoggerAction) => action.log)
-    .mergeMap(log =>
+    .switchMap(log =>
       this.loggerService
         .editLog(log)
         .concatMap(() => [
@@ -152,7 +152,7 @@ export class LoggerEffects {
   fetchLogger$ = this.actions$
     .ofType(fromLogger.FETCH_LOGGER)
     .withLatestFrom(this.store.select(getShowDetailCustomerId))
-    .mergeMap(([_, customerId]) =>
+    .switchMap(([_, customerId]) =>
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromLogger.FetchLoggerSuccessAction(logs))
@@ -189,7 +189,7 @@ export class LoggerEffects {
   batchCreateLogger$ = this.actions$
     .ofType(fromLogger.BATCH_CREATE_LOGGER)
     .map((action: fromLogger.BatchCreateLoggerAction) => action.payload)
-    .mergeMap(({ customerIds, log }) => {
+    .switchMap(({ customerIds, log }) => {
       return this.loggerService
         .batchCreateLog(customerIds, log)
         .map(() => new fromLogger.BatchCreateLoggerSuccessAction())

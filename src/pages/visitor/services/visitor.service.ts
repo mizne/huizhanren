@@ -7,7 +7,8 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   RecommendVisitor,
-  FetchRecommendVisitorParams
+  FetchRecommendVisitorParams,
+  VisitorFilter,
 } from '../models/visitor.model'
 
 import { environment } from '../../../environments/environment'
@@ -27,6 +28,7 @@ const fakeRecommendVisitors: RecommendVisitor[] = Array.from(
 @Injectable()
 export class VisitorService {
   private fetchUrl: string = '/data/RecVisInfo'
+  private fetchCountUrl = '/data/RecVisInfo/count'
 
   constructor(
     private http: HttpClient,
@@ -68,7 +70,7 @@ export class VisitorService {
             return this.http.get(this.fetchUrl + query)
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(RecommendVisitor.convertFromResp).slice(0, 10))
+          .map(e => e.map(RecommendVisitor.convertFromResp))
           .catch(e => {
             return this.logger.httpError({
               module: 'VisitorService',
@@ -84,25 +86,32 @@ export class VisitorService {
    * @returns {Observable<number>}
    * @memberof VisitorService
    */
-  fetchVisitorCount(): Observable<number> {
-    // return environment.production
-    //   ? this.tenantService
-    //       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-    //       .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-    //         const query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
-    //         return this.http
-    //           .get(this.fetchUrl + query)
-    //           .map(e => (e as APIResponse).result)
-    //           .map(e => e[0])
-    //           .catch(e => {
-    //             return this.logger.httpError({
-    //               module: 'VisitorService',
-    //               method: 'fetchVisitorCount',
-    //               error: e
-    //             })
-    //           })
-    //       })
-    //   : Observable.of(1)
-    return Observable.of(1000)
+  fetchVisitorCount(params: VisitorFilter): Observable<number> {
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+            if (params.area) {
+              query += `&province=${params.area}`
+            }
+            if (params.key) {
+              query += `&search=${params.key}`
+            }
+            if (params.type) {
+              query += `&objective=${params.type}`
+            }
+            return this.http
+              .get(this.fetchCountUrl + query)
+              .map(e => (e as APIResponse).result)
+              .catch(e => {
+                return this.logger.httpError({
+                  module: 'VisitorService',
+                  method: 'fetchVisitorCount',
+                  error: e
+                })
+              })
+          })
+      : Observable.of(1000)
   }
 }

@@ -16,7 +16,7 @@ import { Notification } from '../models/notification.model'
 export class NotificationEffects {
   @Effect()
   toCreateNotification$ = this.actions$.ofType(fromNotification.TO_CREATE_NOTIFICATION)
-  .mergeMap(() => {
+  .switchMap(() => {
     return Observable.fromPromise(new Promise((res, _) => {
       const notificationModal = this.modalCtrl.create(ToCreateNotificationModal, {})
 
@@ -38,7 +38,7 @@ export class NotificationEffects {
   createNotification$ = this.actions$.ofType(fromNotification.CREATE_NOTIFICATION)
   .map((action: fromNotification.CreateNotificationAction) => action.notification)
   .withLatestFrom(this.store.select(getShowDetailCustomerId))
-  .mergeMap(([notification, customerId]) =>
+  .switchMap(([notification, customerId]) =>
     this.notificationService.createNotification(notification, customerId)
     .concatMap(() => [
       new fromNotification.CreateNotificationSuccessAction(),
@@ -73,7 +73,7 @@ export class NotificationEffects {
   @Effect()
   toEditNotification$ = this.actions$.ofType(fromNotification.TO_EDIT_NOTIFICATION)
   .map((action: fromNotification.ToEditNotificationAction) => action.notification)
-  .mergeMap((notification: Notification) => {
+  .switchMap((notification: Notification) => {
     return Observable.fromPromise(new Promise((res, _) => {
       const notificationModal = this.modalCtrl.create(ToEditNotificationModal, notification)
 
@@ -95,7 +95,7 @@ export class NotificationEffects {
   @Effect()
   editNotification$ = this.actions$.ofType(fromNotification.EDIT_NOTIFICATION)
   .map((action: fromNotification.EditNotificationAction) => action.notification)
-  .mergeMap(notification =>
+  .switchMap(notification =>
     this.notificationService.editNotification(notification)
     .concatMap(() => [
       new fromNotification.EditNotificationSuccessAction(),
@@ -132,7 +132,7 @@ export class NotificationEffects {
   @Effect()
   fetchNotification$ = this.actions$.ofType(fromNotification.FETCH_NOTIFICATION)
   .withLatestFrom(this.store.select(getShowDetailCustomerId))
-  .mergeMap(([_, customerId]) =>
+  .switchMap(([_, customerId]) =>
     this.notificationService.fetchNotifications(customerId)
     .map(notifications => new fromNotification.FetchNotificationSuccessAction(notifications))
     .catch(() => Observable.of(new fromNotification.FetchNotificationFailureAction()))

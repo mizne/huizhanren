@@ -18,7 +18,7 @@ export interface State {
 
 export const initialState: State = {
   exhibitors: [],
-  exhibitorsTotalCount: 1,
+  exhibitorsTotalCount: 0,
   currentExhibitorsCount: 0,
 
   listStatus: ListStatus.EXHIBITOR,
@@ -48,14 +48,18 @@ export function reducer(
     case fromExhibitor.FETCH_EXHIBITORS_COUNT_SUCCESS:
       return {
         ...state,
-        exhibitorsTotalCount: action.count
+        exhibitorsTotalCount: action.count - 1 // 当前由于 前台显示展商列表需要过滤登录展商 故总数也-1
       }
 
     case fromExhibitor.LOAD_MORE_EXHIBITORS_SUCCESS:
       return {
         ...state,
-        exhibitors: deduplicate(state.exhibitors.concat(action.exhibitors), e => e.id),
-        currentExhibitorsCount: state.currentExhibitorsCount + action.exhibitors.length
+        exhibitors: deduplicate(
+          state.exhibitors.concat(action.exhibitors),
+          e => e.id
+        ),
+        currentExhibitorsCount:
+          state.currentExhibitorsCount + action.exhibitors.length
       }
 
     case fromExhibitor.CHANGE_LIST_STATUS:
@@ -100,8 +104,8 @@ export function reducer(
 export const getExhibitors = (state: State) => state.exhibitors
 export const getExhibitorsTotalCount = (state: State) =>
   state.exhibitorsTotalCount
-export const getCurrentExhibitorCount = (state: State) => state.currentExhibitorsCount
-
+export const getCurrentExhibitorCount = (state: State) =>
+  state.currentExhibitorsCount
 
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
@@ -109,4 +113,5 @@ export const getShowDetailID = (state: State) => state.showDetailID
 
 export const getLogs = (state: State) => state.logs
 export const getShowLoadMore = (state: State) =>
-  state.exhibitorsTotalCount > state.currentExhibitorsCount || state.exhibitors.length === 0
+  state.exhibitorsTotalCount > state.currentExhibitorsCount ||
+  state.exhibitors.length === 0
