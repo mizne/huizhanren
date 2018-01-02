@@ -64,13 +64,13 @@ export class RecommendVisitorResp {
   Email?: string
 }
 
-export interface RecommendVisitorFilter {
+export interface VisitorFilter {
   area?: string,
   type?: string,
   key?: string
 }
 
-export interface FetchRecommendVisitorParams extends RecommendVisitorFilter {
+export interface FetchRecommendVisitorParams extends VisitorFilter {
   pageSize?: number
   pageIndex?: number
 }

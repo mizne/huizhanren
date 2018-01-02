@@ -112,13 +112,13 @@ export interface PicResp {
   PicPath?: string
 }
 
-export interface RecommendExhibitorFilter {
+export interface ExhibitorFilter {
   area?: string
   acreage?: string
   key?: string
 }
 
-export interface FetchRecommendExhibitorParams extends RecommendExhibitorFilter {
+export interface FetchRecommendExhibitorParams extends ExhibitorFilter {
   pageSize?: number
   pageIndex?: number
 }

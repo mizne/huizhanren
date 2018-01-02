@@ -25,7 +25,7 @@ import {
   UpdateDetailIDAction,
   ToInviteVisitorAction,
   FetchLoggerAction,
-  LoadMoreVisitorsAction,
+  LoadMoreVisitorsAction
 } from './actions/visitor.action'
 import {
   FetchMatchersAction,
@@ -33,7 +33,7 @@ import {
   ToCancelMatcherAction,
   ToAgreeMatcherAction,
   ToRefuseMatcherAction,
-  LoadMoreMatchersAction,
+  LoadMoreMatchersAction
 } from './actions/matcher.action'
 
 import {
@@ -43,7 +43,7 @@ import {
   RecommendVisitor,
   Portray,
   FetchRecommendVisitorParams,
-  RecommendVisitorFilter,
+  VisitorFilter,
   AREA_OPTIONS
 } from './models/visitor.model'
 import { DestroyService } from '../../providers/destroy.service'
@@ -72,9 +72,7 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  visitorFilterSub: Subject<RecommendVisitorFilter> = new Subject<
-    RecommendVisitorFilter
-  >()
+  visitorFilterSub: Subject<VisitorFilter> = new Subject<VisitorFilter>()
   matcherFilterSub: Subject<VisitorMatcherStatus[]> = new Subject<
     VisitorMatcherStatus[]
   >()
@@ -108,7 +106,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private store: Store<State>,
-    private destroyService: DestroyService,
+    private destroyService: DestroyService
   ) {}
 
   ngOnInit() {
@@ -297,6 +295,13 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   private initRecommendFilter(): void {
     this.visitorFilterSub
+      .distinctUntilChanged((prev, curr) => {
+        return (
+          prev.area === curr.area &&
+          prev.type === curr.type &&
+          prev.key === curr.key
+        )
+      })
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log(recommendFilter)

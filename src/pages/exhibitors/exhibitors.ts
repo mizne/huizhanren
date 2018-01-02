@@ -43,7 +43,7 @@ import {
   ListHeaderEvent,
   Exhibitor,
   Portray,
-  RecommendExhibitorFilter,
+  ExhibitorFilter,
   RecommendExhibitor,
   Product,
   FetchRecommendExhibitorParams
@@ -77,9 +77,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
-  recommendFilterSub: Subject<RecommendExhibitorFilter> = new Subject<
-    RecommendExhibitorFilter
-  >()
+  exhibitorFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
   matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
     ExhibitorMatcherStatus[]
   >()
@@ -236,7 +234,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initListHeaderChange()
     this.initListHeaderEvent()
 
-    this.initRecommendFilter()
+    this.initExhibitorFilter()
     this.initMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
@@ -310,8 +308,15 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .present()
   }
 
-  private initRecommendFilter(): void {
-    this.recommendFilterSub
+  private initExhibitorFilter(): void {
+    this.exhibitorFilterSub
+      .distinctUntilChanged((prev, curr) => {
+        return (
+          prev.area === curr.area &&
+          prev.acreage === curr.acreage &&
+          prev.key === curr.key
+        )
+      })
       .takeUntil(this.destroyService)
       .subscribe(recommendFilter => {
         console.log(recommendFilter)
@@ -354,7 +359,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.EXHIBITOR)
       .withLatestFrom(
-        this.recommendFilterSub.startWith({
+        this.exhibitorFilterSub.startWith({
           acreage: '',
           area: '',
           key: ''

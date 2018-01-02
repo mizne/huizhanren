@@ -9,31 +9,31 @@
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
       <hz-grid-header type="exhibitors" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
-      <hz-grid-filter *ngIf="(listStatus$ | async) === 0" [showSearch]="(pageStatus$ | async) === 0" [filterSub]="recommendFilterSub"
+      <hz-grid-filter [hidden]="(listStatus$ | async) === 1" [showSearch]="(pageStatus$ | async) === 0" [filterSub]="exhibitorFilterSub"
         [filterOptions]="filterOptions" placeholder="请输入展商名">
       </hz-grid-filter>
-      <exhibitor-matcher-filter *ngIf="(listStatus$ | async) === 1" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
+      <exhibitor-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </exhibitor-matcher-filter>
 
-      <exhibitor-grid *ngIf="(listStatus$ | async) === 0" type="exhibitor" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
         [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
-      <exhibitor-grid *ngIf="(listStatus$ | async) === 1" type="matcher" (showDetail)="updateDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
         (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" [expand]="(pageStatus$ | async) === 0"
         [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
-      <p *ngIf="showLoadMore$ | async" tappable class="load-more" (click)="loadMore()">加载更多</p>
+      <p [hidden]="!(showLoadMore$ | async)" tappable class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <exhibitor-detail *ngIf="currentDetail$ | async" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
+      <exhibitor-detail *ngIf="(currentDetail$ | async)" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (createLog)="ensureCreateLogger()"
         (showProduct)="ensureShowProduct($event)" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)">
       </exhibitor-detail>
     </div>
 
-    <hz-toggle-detail *ngIf="(showDetailID$ | async)" [collapse]="(pageStatus$ | async) === 1" (toggle)="toggleLog()"></hz-toggle-detail>
+    <hz-toggle-detail [hidden]="!(showDetailID$ | async)" [collapse]="(pageStatus$ | async) === 1" (toggle)="toggleLog()"></hz-toggle-detail>
   </div>
 </ion-content>
