@@ -8,7 +8,7 @@ import {
   name: 'customerNamePrivacy'
 })
 export class CustomerNamePrivacyPipe implements PipeTransform {
-  transform(name: string, status: VisitorMatcherStatus): string {
+  transform(name: string, status?: VisitorMatcherStatus): string {
     if (!name) {
       return ''
     }

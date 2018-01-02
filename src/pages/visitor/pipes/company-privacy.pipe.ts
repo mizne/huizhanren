@@ -8,7 +8,10 @@ import {
   name: 'customerCompanyPrivacy'
 })
 export class CustomerCompanyPrivacyPipe implements PipeTransform {
-  transform(company: string, status: VisitorMatcherStatus): string {
+  transform(company: string, status?: VisitorMatcherStatus): string {
+    if (!company) {
+      return ''
+    }
     return status === VisitorMatcherStatus.AGREE ? company : '*'.repeat(6)
   }
 }

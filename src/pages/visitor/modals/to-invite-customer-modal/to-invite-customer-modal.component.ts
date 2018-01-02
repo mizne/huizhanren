@@ -34,6 +34,9 @@ export class ToInviteCustomerModal implements OnInit {
 
   private computeTpl(): string {
     return this.contentTpl.replace(/\{\{([^{}]*)\}\}/g, (_, c) => {
+      if (c === 'destName') {
+        return this[c].slice(0, 1) + '**'
+      }
       return this[c]
     })
   }

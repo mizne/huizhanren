@@ -10,7 +10,7 @@
     <div class="modal-body">
       <div class="field-item contact">
         <label for="">联系人:</label>
-        <span>{{destName}}( {{destTitle}} ) {{destCompany}}</span>
+        <span>{{destName | customerNamePrivacy}}( {{destTitle}} ) {{destCompany | customerCompanyPrivacy}}</span>
       </div>
 
       <div class="field-item address">
