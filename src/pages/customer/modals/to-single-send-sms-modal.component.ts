@@ -152,8 +152,6 @@ export class ToSingleSendSMSModal implements OnInit {
             boothNo
           )
         }
-
-        console.log(templates)
       })
 
     this.selectedTemplateCtrl.valueChanges

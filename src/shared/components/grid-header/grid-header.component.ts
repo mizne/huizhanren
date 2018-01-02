@@ -66,6 +66,16 @@ export class HzGridHeaderComponent implements OnInit {
     this.closeLeftMore()
   }
 
+  refresh(ev: Event, leftOrRight: string) {
+    ev.stopPropagation()
+    this.headerEventSub.next(ListHeaderEvent.REFRESH)
+    if (leftOrRight === 'left') {
+      this.closeLeftMore()
+    } else {
+      this.closeRigthMore()
+    }
+  }
+
   showRightMore(ev: Event) {
     ev.stopPropagation()
     this.activeRightMore = !this.activeRightMore
@@ -99,9 +109,4 @@ export class HzGridHeaderComponent implements OnInit {
     this.closeRigthMore()
   }
 
-  refresh(ev: Event) {
-    ev.stopPropagation()
-    this.headerEventSub.next(ListHeaderEvent.REFRESH)
-    this.closeRigthMore()
-  }
 }

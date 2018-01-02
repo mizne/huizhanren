@@ -237,50 +237,75 @@ export class VisitorPage implements OnInit, OnDestroy {
         headerEvent,
         listStatus
       }))
+      .withLatestFrom(
+        this.visitorFilterSub.startWith({
+          area: '',
+          type: '',
+          key: ''
+        }),
+        ({ headerEvent, listStatus }, visitorFilter) => ({
+          headerEvent,
+          listStatus,
+          visitorFilter
+        })
+      )
+      .withLatestFrom(
+        this.matcherFilterSub.startWith([]),
+        ({ headerEvent, listStatus, visitorFilter }, matcherFilter) => ({
+          headerEvent,
+          listStatus,
+          visitorFilter,
+          matcherFilter
+        })
+      )
       .takeUntil(this.destroyService)
-      .subscribe(({ headerEvent, listStatus }) => {
-        switch (headerEvent) {
-          case ListHeaderEvent.REFRESH:
-            if (listStatus === ListStatus.VISITOR) {
-              console.log(`to refresh visitor data`)
-              this.store.dispatch(new FetchVisitorsAction())
-            }
-            if (listStatus === ListStatus.MATCHER) {
-              console.log(`to refresh visitor matcher data`)
-              this.store.dispatch(new FetchMatchersAction())
-            }
-            break
+      .subscribe(
+        ({ headerEvent, listStatus, visitorFilter, matcherFilter }) => {
+          switch (headerEvent) {
+            case ListHeaderEvent.REFRESH:
+              if (listStatus === ListStatus.VISITOR) {
+                console.log(`to refresh visitor data`)
+                this.store.dispatch(new FetchVisitorsAction(visitorFilter))
+              }
+              if (listStatus === ListStatus.MATCHER) {
+                console.log(`to refresh visitor matcher data`)
+                this.store.dispatch(
+                  new FetchMatchersAction({ statuses: matcherFilter })
+                )
+              }
+              break
 
-          case ListHeaderEvent.BATCH_ACCEPT:
-            console.log('batch accept')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_CANCEL:
-            console.log('batch cancel')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_DELETE:
-            console.log('batch delete')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_HIDDEN:
-            console.log('batch hidden')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_INVITE:
-            console.log('batch invite')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_REFUSE:
-            console.log('batch refuse')
-            this.prompt()
-            break
+            case ListHeaderEvent.BATCH_ACCEPT:
+              console.log('batch accept')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_CANCEL:
+              console.log('batch cancel')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_DELETE:
+              console.log('batch delete')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_HIDDEN:
+              console.log('batch hidden')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_INVITE:
+              console.log('batch invite')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_REFUSE:
+              console.log('batch refuse')
+              this.prompt()
+              break
 
-          default:
-            console.warn(`Unknown recommend header event: ${headerEvent}`)
-            break
+            default:
+              console.warn(`Unknown recommend header event: ${headerEvent}`)
+              break
+          }
         }
-      })
+      )
   }
 
   private prompt(): void {

@@ -62,7 +62,7 @@ export class VisitorMatcherService {
             if (params.pageSize) {
               query += `&pageSize=${params.pageSize}`
             }
-            if (params.statuses) {
+            if (params.statuses && params.statuses.length > 0) {
               query += `&state=${params.statuses.map(
                 convertMatcherStatusFromModel
               )}`

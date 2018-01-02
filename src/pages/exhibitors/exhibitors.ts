@@ -253,49 +253,75 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         headerEvent,
         listStatus
       }))
+      .withLatestFrom(
+        this.exhibitorFilterSub.startWith({
+          area: '',
+          acreage: '',
+          key: ''
+        }),
+        ({ headerEvent, listStatus }, exhibitorFilter) => ({
+          headerEvent,
+          listStatus,
+          exhibitorFilter
+        })
+      )
+      .withLatestFrom(
+        this.matcherFilterSub.startWith([]),
+        ({ headerEvent, listStatus, exhibitorFilter }, matcherFilter) => ({
+          headerEvent,
+          listStatus,
+          exhibitorFilter,
+          matcherFilter
+        })
+      )
       .takeUntil(this.destroyService)
-      .subscribe(({ headerEvent, listStatus }) => {
-        switch (headerEvent) {
-          case ListHeaderEvent.BATCH_ACCEPT:
-            console.log('batch accept')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_CANCEL:
-            console.log('batch cancel')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_DELETE:
-            console.log('batch delete')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_HIDDEN:
-            console.log('batch hidden')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_INVITE:
-            console.log('batch invite')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_REFUSE:
-            console.log('batch refuse')
-            this.prompt()
-            break
+      .subscribe(
+        ({ headerEvent, listStatus, exhibitorFilter, matcherFilter }) => {
+          switch (headerEvent) {
+            case ListHeaderEvent.REFRESH:
+              if (listStatus === ListStatus.EXHIBITOR) {
+                console.log(`to refresh exhibitor data`)
+                this.store.dispatch(new FetchExhibitorsAction(exhibitorFilter))
+              }
+              if (listStatus === ListStatus.MATCHER) {
+                console.log(`to refresh exhibitor matcher data`)
+                console.log(matcherFilter)
+                this.store.dispatch(
+                  new FetchMatchersAction({ statuses: matcherFilter })
+                )
+              }
+              break
 
-          case ListHeaderEvent.REFRESH:
-            if (listStatus === ListStatus.EXHIBITOR) {
-              console.log(`to refresh exhibitor data`)
-              this.store.dispatch(new FetchExhibitorsAction())
-            }
-            if (listStatus === ListStatus.MATCHER) {
-              console.log(`to refresh exhibitor matcher data`)
-              this.store.dispatch(new FetchMatchersAction())
-            }
-            break
-          default:
-            console.warn(`Unknown recommend header event: ${headerEvent}`)
-            break
+            case ListHeaderEvent.BATCH_ACCEPT:
+              console.log('batch accept')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_CANCEL:
+              console.log('batch cancel')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_DELETE:
+              console.log('batch delete')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_HIDDEN:
+              console.log('batch hidden')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_INVITE:
+              console.log('batch invite')
+              this.prompt()
+              break
+            case ListHeaderEvent.BATCH_REFUSE:
+              console.log('batch refuse')
+              this.prompt()
+              break
+            default:
+              console.warn(`Unknown recommend header event: ${headerEvent}`)
+              break
+          }
         }
-      })
+      )
   }
 
   private prompt(): void {
