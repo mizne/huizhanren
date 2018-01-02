@@ -72,6 +72,11 @@
       <i class="iconfont icon-check"></i>
     </div>
   </div>
+
+  <p class="load-more" tappable *ngIf="showLoadMore; else noMoreData;" (click)="ensureLoadMore()">加载更多</p>
+  <ng-template #noMoreData>
+    <p class=load-more>没有更多数据了</p>
+  </ng-template>
 </div>
 <ng-template #noData>
   <p class="no-data">

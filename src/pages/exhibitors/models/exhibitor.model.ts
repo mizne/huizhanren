@@ -42,7 +42,7 @@ export class RecommendExhibitor extends Exhibitor {
         id: e.id,
         headImgUrl: e.HeadImgUrl
       })),
-      description: resp.description,
+      description: resp.Introduction,
       website: resp.website,
       organizer: resp.Organizer,
       organizerId: resp.OrganizerId,
@@ -95,6 +95,7 @@ export interface RecommendExhibitorResp {
   Industry?: string
   website?: string
   description?: string
+  Introduction?: string
 }
 
 export interface ProductResp {

@@ -14,7 +14,9 @@ import {
   getMatchers,
   getCurrentLogs,
   getShowExhibitorLoadMore,
-  getShowMatcherLoadMore
+  getShowMatcherLoadMore,
+  getCurrentExhibitorCount,
+  getCurrentMatcherCount,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -65,7 +67,9 @@ import { DestroyService } from '../../providers/destroy.service'
 })
 export class ExhibitorsPage implements OnInit, OnDestroy {
   exhibitors$: Observable<RecommendExhibitor[]>
+  currentExhibitorsTotal$: Observable<number>
   matchers$: Observable<ExhibitorMatcher[]>
+  currentMatchersTotal$: Observable<number>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
@@ -74,6 +78,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
+
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -91,19 +96,19 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         value: '0'
       },
       {
-        label: '9-18m2',
+        label: '9-18平米',
         value: '1'
       },
       {
-        label: '18-27m2',
+        label: '18-27平米',
         value: '2'
       },
       {
-        label: '27-54m2',
+        label: '27-54平米',
         value: '3'
       },
       {
-        label: '>54m2',
+        label: '>54平米',
         value: '4'
       }
     ],
@@ -173,6 +178,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
+    this.currentExhibitorsTotal$ = this.store.select(getCurrentExhibitorCount)
 
     // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
@@ -183,6 +189,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         ? matchers
         : matchers.filter(e => matcherFilter.indexOf(e.status) >= 0)
     })
+    this.currentMatchersTotal$ = this.store.select(getCurrentMatcherCount)
 
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.currentDetail$ = this.computeCurrentDetail()

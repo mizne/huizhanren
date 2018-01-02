@@ -55,4 +55,4 @@ export const getMatcherTotalCount = (state: State) => state.totalMatcherCount
 export const getCurrentMatcherCount = (state: State) => state.currentMatcherTotalCount
 
 export const getShowLoadMore = (state: State) =>
-  state.totalMatcherCount > state.currentMatcherTotalCount || state.matchers.length === 0
+  state.totalMatcherCount > state.currentMatcherTotalCount

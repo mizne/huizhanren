@@ -1,9 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 import { trigger, state, style, animate, transition } from '@angular/animations'
-
 import { ListHeaderEvent, ListStatus } from '../../../pages/visitor/models/visitor.model'
-
 
 @Component({
   selector: 'hz-grid-header',
@@ -31,6 +29,9 @@ export class HzGridHeaderComponent implements OnInit {
   activeLeftMore: boolean = false
   activeRightMore: boolean = false
   activeIndex: number
+
+  @Input() leftTotal: number
+  @Input() rightTotal: number
 
   @Input() activeIndexSub: Subject<ListStatus>
   @Input() headerEventSub: Subject<ListHeaderEvent>

@@ -14,7 +14,9 @@ import {
   getMatchers,
   getLogs,
   getShowMatcherLoadMore,
-  getShowVisitorLoadMore
+  getShowVisitorLoadMore,
+  getCurrentVisitorCount,
+  getCurrentMatcherCount,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -60,7 +62,9 @@ import { VisitorMatcher, VisitorMatcherStatus } from './models/matcher.model'
 })
 export class VisitorPage implements OnInit, OnDestroy {
   visitors$: Observable<RecommendVisitor[]>
+  currentVisitorsTotal$: Observable<number>
   matchers$: Observable<VisitorMatcher[]>
+  currentMatchersTotal$: Observable<number>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
@@ -86,12 +90,20 @@ export class VisitorPage implements OnInit, OnDestroy {
         value: ''
       },
       {
-        label: '自行车整车',
-        value: 'zixingchezhengche'
+        label: '糖酒',
+        value: '糖酒'
       },
       {
-        label: '零配件',
-        value: 'lingpeijian'
+        label: '餐饮食材',
+        value: '餐饮食材'
+      },
+      {
+        label: '酒店用品',
+        value: '酒店用品'
+      },
+      {
+        label: '食品机械',
+        value: '食品机械'
       }
     ],
     [
@@ -118,6 +130,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   loadMore() {
+    debugger
     this.loadMoreSub.next()
   }
 
@@ -156,6 +169,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
     this.visitors$ = this.store.select(getVisitors)
+    this.currentVisitorsTotal$ = this.store.select(getCurrentVisitorCount)
 
     // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
@@ -166,6 +180,7 @@ export class VisitorPage implements OnInit, OnDestroy {
         ? matchers
         : matchers.filter(e => matcherFilter.indexOf(e.status) >= 0)
     })
+    this.currentMatchersTotal$ = this.store.select(getCurrentMatcherCount)
 
     this.showDetailID$ = this.store.select(getShowDetailID)
     this.currentDetail$ = this.computeCurrentDetail()

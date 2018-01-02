@@ -1,5 +1,5 @@
 .visitor-grid-container {
-  max-height: calc(100vh - 240px);
+  max-height: calc(100vh - 190px);
   overflow: auto;
 
   .company {
@@ -94,6 +94,11 @@
     @include flexboxCenter;
     height: 50px;
     color: map-get($map: $gridColors, $key: grey);
+  }
+
+  .load-more {
+    color: #67686c;
+    text-align: center;
   }
 
   hz-customer-status.no-expand {

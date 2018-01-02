@@ -10,7 +10,7 @@
       {{detail.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="area" *ngIf="detail.boothNo; else noBooth;">{{detail.boothNo}}</span>
+      <span class="booth-no" *ngIf="detail.boothNo; else noBooth;">{{detail.boothNo}}</span>
       <ng-template #noBooth>
         <span class="no-item"></span>
       </ng-template>
@@ -52,12 +52,12 @@
     </ng-template>
   </div>
 
-  <div class="exhibitor-product" *ngIf="detail.products.length > 0; else noProduct;">
+  <div class="exhibitor-product">
     <div class="header" tappable (click)="toggleViewProduct()">
       <span>产品</span>
-      <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+      <!-- <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="viewProduct">
+    <div class="content" *ngIf="detail.products.length > 0 && viewProduct">
       <ul class="products">
         <li class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures && item.pictures[0]" alt="">
@@ -65,39 +65,37 @@
         </li>
       </ul>
     </div>
-  </div>
-  <ng-template #noProduct>
-    <div class="no-item no-product">暂未上传产品</div>
-  </ng-template>
 
-  <div class="exhibitor-jianjie" *ngIf="detail.description; else noDescription;">
+    <div *ngIf="detail.products.length === 0 && viewProduct" class="no-item no-product">暂未上传产品</div>
+  </div>
+
+  <div class="exhibitor-jianjie">
     <div class="header" tappable (click)="toggleViewDescription()">
       <span>简介</span>
-      <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+      <!-- <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="viewDescription">
+    <div class="content" *ngIf="detail.description && viewDescription">
       {{detail.description}}
     </div>
-  </div>
-  <ng-template #noDescription>
-    <div class="no-item no-description">暂未上传简介</div>
-  </ng-template>
 
-  <div class="exhibitor-visitors" *ngIf="detail.visitors.length > 0; else noVisitors;">
+    <div *ngIf="!detail.description && viewDescription" class="no-item no-description">暂未上传简介</div>
+  </div>
+
+
+  <div class="exhibitor-visitors">
     <div class="header" tappable (click)="toggleViewVisitors()">
       <span>访客</span>
-      <span>{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
-      <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i>
+      <span class="number">{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
+      <!-- <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="viewVisitors">
+    <div class="content" *ngIf="detail.visitors.length > 0 && viewVisitors">
       <ul class="visitors">
-        <li *ngFor="let visitor of detail.visitors" class="visitor">
+        <li *ngFor="let visitor of detail.visitors.slice(-10)" class="visitor">
           <img [src]="visitor.headImgUrl" alt="">
         </li>
       </ul>
     </div>
+
+    <div *ngIf="detail.visitors.length === 0 && viewVisitors" class="no-item no-visitor">暂无访客</div>
   </div>
-  <ng-template #noVisitors>
-    <div class="no-item no-visitor">暂无访客</div>
-  </ng-template>
 </div>

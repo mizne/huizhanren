@@ -17,14 +17,14 @@
         <label class="address-label" for="">预约地点:</label>
         <span>
           <ion-list>
-            <ion-item>
-              <ion-label>{{srcAddress}}</ion-label>
+            <ion-item class="radio-item">
               <ion-radio [value]="srcAddress"></ion-radio>
+              <ion-label>{{srcAddress}}</ion-label>
             </ion-item>
 
-            <ion-item *ngIf="destAddress">
-              <ion-label>{{destAddress}}</ion-label>
+            <ion-item *ngIf="destAddress" class="radio-item">
               <ion-radio [value]="destAddress"></ion-radio>
+              <ion-label>{{destAddress}}</ion-label>
             </ion-item>
           </ion-list>
         </span>

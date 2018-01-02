@@ -23,10 +23,29 @@
 
         ion-list {
           display: flex;
+          margin-left: -20px;
           ion-item {
             width: 160px;
             &:first-child {
               padding-left: 0;
+            }
+          }
+
+          .radio-item:first-child {
+            .input-wrapper {
+              transform: translateX(30%);
+            }
+            .radio-md {
+              transform: translateX(-680%);
+            }
+          }
+
+          .radio-item:last-child {
+            .input-wrapper {
+              transform: translateX(20%);
+            }
+            .radio-md {
+              transform: translateX(-680%);
             }
           }
         }

@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: #EFEFF4;
 
   .no-item {
-    color: map-get($map: $colors, $key: danger);
+    color: map-get($map: $colors, $key: grey);
   }
 
   .no-product,
@@ -34,8 +35,10 @@
   }
 
   .exhibitor-abstract {
-    margin-top: 40px;
+    padding-top: 40px;
+    padding-bottom: 10px;
     text-align: center;
+    background-color: white;
 
     .exhibitor-name {
       font-size: 1.5rem;
@@ -47,18 +50,21 @@
     .exhibitor-area {
       margin-top: 10px;
       display: flex;
-      padding: 0 80px;
-      justify-content: space-between;
+      padding: 0 40px;
+      justify-content: center;
       align-items: center;
-
+      .booth-no {
+        padding: 0 10px;
+      }
       .area {
-        @include textOverflow(60px);
+        @include textOverflow(auto);
+        padding: 0 10px;
         color: map-get($map: $colors, $key: grey);
       }
       .industry {
         border: 1px solid map-get($map: $colors, $key: primary);
         color: map-get($map: $colors, $key: primary);
-        padding: 1px 3px;
+        padding: 0 10px;
       }
     }
 
@@ -112,11 +118,16 @@
   }
 
   .exhibitor-product {
+    margin-top: 6px;
     padding: 0 10px;
+    background-color: white;
     .header {
       font-size: 1.5rem;
+      padding: 10px 0;
+      margin: 0 10px;
       text-align: left;
       font-weight: bold;
+      border-bottom: 1px solid #ECECEC;
     }
 
     .content {
@@ -144,12 +155,16 @@
   }
 
   .exhibitor-jianjie {
-    margin-top: 20px;
+    margin-top: 6px;
     padding: 0 10px;
+    background-color: white;
     .header {
+      padding: 10px 0;
+      margin: 0 10px;
       font-size: 1.5rem;
       text-align: left;
       font-weight: bold;
+      border-bottom: 1px solid #ECECEC;
     }
 
     .content {
@@ -164,12 +179,21 @@
   }
 
   .exhibitor-visitors {
-    margin-top: 20px;
+    margin-top: 6px;
     padding: 0 10px;
+    background-color: white;
     .header {
+      padding: 10px 0;
+      margin: 0 10px;
       font-size: 1.5rem;
       text-align: left;
       font-weight: bold;
+      border-bottom: 1px solid #ECECEC;
+
+      .number {
+        font-size: 12px;
+        font-weight: normal;
+      }
     }
 
     .content {

@@ -7,7 +7,7 @@
 <ion-content padding>
   <div class="visitor-container">
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
-      <hz-grid-header type="visitor" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
+      <hz-grid-header type="visitor" [leftTotal]="currentVisitorsTotal$ | async" [rightTotal]="currentMatchersTotal$ | async" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
       <hz-grid-filter [hidden]="(listStatus$ | async) === 1"
       [showSearch]="(pageStatus$ | async) === 0"
@@ -21,18 +21,22 @@
       </hz-matcher-filter>
 
       <visitor-grid [hidden]="(listStatus$ | async) === 1" type="visitor"
-        (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
+        (showDetail)="updateDetailID($event)"
+        (loadMore)="loadMore()"
+        [showLoadMore]="showLoadMore$ | async"
+        [expand]="(pageStatus$ | async) === 0"
         [dataItems]="visitors$ | async">
       </visitor-grid>
       <visitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher"
       (showDetail)="updateDetailID($event)"
       (agreeMatcher)="ensureAgreeMatcher($event)"
       (refuseMatcher)="ensureRefuseMatcher($event)"
+      (loadMore)="loadMore()"
+      [showLoadMore]="showLoadMore$ | async"
       [expand]="(pageStatus$ | async) === 0"
       [dataItems]="matchers$ | async">
     </visitor-grid>
 
-      <p class="load-more" tappable [hidden]="!(showLoadMore$ | async)" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">

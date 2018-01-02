@@ -3,8 +3,8 @@
     <ion-row>
       <ion-col col-1></ion-col>
       <ion-col col-1>姓名</ion-col>
-      <ion-col col-1>职务</ion-col>
-      <ion-col col-2>公司</ion-col>
+      <ion-col col-3>职务</ion-col>
+      <!-- <ion-col col-2>公司</ion-col> -->
       <ion-col col-2>行业</ion-col>
       <ion-col col-3 *ngIf="type === 'visitor'">地区</ion-col>
 
@@ -20,12 +20,11 @@
       (click)="ensureShow(item.id)">
       <ion-col col-1 class="checkbox-col">
         <ion-checkbox tappable [(ngModel)]="item.selected"></ion-checkbox>
-        <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']"
-        class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
+        <div *ngIf="type === 'matcher'" [ngClass]="['send-dir', item.isSender ? 'sender' : 'receiver']" class="send-dir" [class.sender]="item.isSender">{{item.isSender ? '发' : '收'}}</div>
       </ion-col>
       <ion-col col-1 class="name">{{item.name | customerNamePrivacy:item.status}}</ion-col>
-      <ion-col col-1 class="title">{{item.title}}</ion-col>
-      <ion-col col-2 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
+      <ion-col col-3 class="title">{{item.title}}</ion-col>
+      <!-- <ion-col col-2 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col> -->
       <ion-col col-2 class="industry">{{item.industry}}</ion-col>
 
       <ion-col col-3 *ngIf="type === 'visitor'">{{item.area}}</ion-col>
@@ -52,10 +51,15 @@
     </ion-row>
   </ion-grid>
 
-  <ng-template #noData>
+  <!-- <ng-template #noData>
     <div class="no-data">
       没有数据
     </div>
+  </ng-template> -->
+
+  <p class="load-more" tappable *ngIf="(showLoadMore); else noMoreData;" (click)="ensureLoadMore()">加载更多</p>
+  <ng-template #noMoreData>
+    <p class=load-more>没有更多数据了</p>
   </ng-template>
 </div>
 
@@ -64,8 +68,8 @@
     <ion-grid class="header">
       <ion-row class="header">
         <ion-col col-2>姓名</ion-col>
-        <ion-col col-2>职务</ion-col>
-        <ion-col col-5>公司</ion-col>
+        <ion-col col-3>职务</ion-col>
+        <ion-col col-4>行业</ion-col>
         <ion-col col-3></ion-col>
       </ion-row>
     </ion-grid>
@@ -74,19 +78,23 @@
       <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
         (click)="ensureShow(item.id)">
         <ion-col col-2>{{item.name | customerNamePrivacy:item.status}}</ion-col>
-        <ion-col col-2>{{item.title}}</ion-col>
-        <ion-col col-5 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col>
+        <ion-col col-3>{{item.title}}</ion-col>
+        <ion-col col-4 class="industry">{{item.industry}}</ion-col>
         <ion-col col-3>
           <hz-customer-status class="no-expand"></hz-customer-status>
         </ion-col>
       </ion-row>
     </ion-grid>
 
-    <ng-template #noData>
+    <!-- <ng-template #noData>
       <div class="no-data">
         没有数据
       </div>
-    </ng-template>
+    </ng-template> -->
 
+    <p class="load-more" tappable *ngIf="(showLoadMore); else noMoreData;" (click)="ensureLoadMore()">加载更多</p>
+    <ng-template #noMoreData>
+      <p class=load-more>没有更多数据了</p>
+    </ng-template>
   </div>
 </ng-template>

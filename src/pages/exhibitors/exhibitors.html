@@ -7,7 +7,8 @@
 <ion-content padding>
   <div class="exhibitors-container">
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
-      <hz-grid-header type="exhibitors" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
+      <hz-grid-header type="exhibitors" [leftTotal]="currentExhibitorsTotal$ | async" [rightTotal]="currentMatchersTotal$ | async"
+        [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
       <hz-grid-filter [hidden]="(listStatus$ | async) === 1" [showSearch]="(pageStatus$ | async) === 0" [filterSub]="exhibitorFilterSub"
         [filterOptions]="filterOptions" placeholder="请输入展商名">
@@ -15,15 +16,14 @@
       <exhibitor-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </exhibitor-matcher-filter>
 
-      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor" (showDetail)="updateDetailID($event)" [expand]="(pageStatus$ | async) === 0"
-        [dataItems]="exhibitors$ | async">
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor" (showDetail)="updateDetailID($event)" (loadMore)="loadMore()"
+        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0" [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
       <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
-        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" [expand]="(pageStatus$ | async) === 0"
-        [dataItems]="matchers$ | async">
+        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [showLoadMore]="showLoadMore$ | async"
+        [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
-      <p [hidden]="!(showLoadMore$ | async)" tappable class="load-more" (click)="loadMore()">加载更多</p>
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
