@@ -66,7 +66,7 @@ export class FetchExhibitorsFailureAction implements Action {
 export class FetchExhibitorsCountAction implements Action {
   readonly type = FETCH_EXHIBITORS_COUNT
   constructor(public params: ExhibitorFilter = {
-    acreage: '',
+    type: '',
     area: '',
     key: ''
   }) {}

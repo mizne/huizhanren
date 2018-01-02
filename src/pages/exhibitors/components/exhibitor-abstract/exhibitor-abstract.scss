@@ -52,6 +52,7 @@
       align-items: center;
 
       .area {
+        @include textOverflow(60px);
         color: map-get($map: $colors, $key: grey);
       }
       .industry {
