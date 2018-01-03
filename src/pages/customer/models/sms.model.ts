@@ -20,6 +20,14 @@ export interface SmsContent {
   content: SmsTemplateParams
 }
 
+export interface SingleSendSmsOptions {
+  customer: Customer
+  companyName: string
+  boothNo: string
+  phone: string
+  template: SmsTemplate
+}
+
 export class SingleSendSmsContext {
   static TEMPLATE_VARIABLES = [
     '展商名称', // 展商名称()，
@@ -31,13 +39,19 @@ export class SingleSendSmsContext {
 
   static VARIABLE_RE = /\$\{([^}]+)\}/g
 
-  constructor(
-    private customer: Customer,
-    private companyName: string,
-    private boothNo: string,
-    private phone: string,
-    private template: SmsTemplate
-  ) {}
+  private customer: Customer
+  private companyName: string
+  private boothNo: string
+  private phone: string
+  private template: SmsTemplate
+
+  constructor(options: SingleSendSmsOptions) {
+    this.customer = options.customer
+    this.companyName = options.companyName
+    this.boothNo = options.boothNo
+    this.phone = options.phone
+    this.template = options.template
+  }
 
   public getTemplate(): SmsTemplate {
     return this.template
@@ -112,13 +126,24 @@ export class SingleSendSmsContext {
   }
 }
 
+export interface BatchSendSmsOptions {
+  customers: Customer[]
+  companyName: string
+  boothNo: string
+  template: SmsTemplate
+}
+
 export class BatchSendSmsContext {
-  constructor(
-    private customers: Customer[],
-    private companyName: string,
-    private boothNo: string,
-    private template: SmsTemplate
-  ) {}
+  private customers: Customer[]
+  private companyName: string
+  private boothNo: string
+  private template: SmsTemplate
+  constructor(options: BatchSendSmsOptions) {
+    this.customers = options.customers
+    this.companyName = options.companyName
+    this.boothNo = options.boothNo
+    this.template = options.template
+  }
 
   public getCustomerIds(): string[] {
     return this.customers.map(e => e.id)
@@ -141,13 +166,13 @@ export class BatchSendSmsContext {
     }, [])
 
     const smsContents: SmsContent[] = phoneToSendWithCustomers.map(e => {
-      const sendContext = new SingleSendSmsContext(
-        e.customer,
-        this.companyName,
-        this.boothNo,
-        e.phone,
-        this.template
-      )
+      const sendContext = new SingleSendSmsContext({
+        customer: e.customer,
+        companyName: this.companyName,
+        boothNo: this.boothNo,
+        phone: e.phone,
+        template: this.template
+      })
       return {
         phone: e.phone,
         content: sendContext.computeTemplateParams()

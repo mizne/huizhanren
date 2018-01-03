@@ -5,11 +5,7 @@ import { Observable } from 'rxjs/Observable'
 import { ModalController, ToastController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
-import {
-  State,
-  getPhonesToSendOfCustomers,
-  getSmsTemplates
-} from '../reducers'
+import { State, getPhonesToSendOfCustomers, getSmsTemplates } from '../reducers'
 import { getSelectedExhibitionId } from '../../login/reducers'
 
 import * as fromSms from '../actions/sms.action'
@@ -81,7 +77,7 @@ export class SmsEffects {
       this.tenantService.getBatchSendSmsParams(),
       (template, { customers, companyName, boothNo }) => {
         return new EnsureBatchSendSMSAction(
-          new BatchSendSmsContext(customers, companyName, boothNo, template)
+          new BatchSendSmsContext({ customers, companyName, boothNo, template })
         )
       }
     )
@@ -112,7 +108,9 @@ export class SmsEffects {
               customerIds: context.getCustomerIds(),
               log: {
                 level: 'sys',
-                content: `系统: 发送 【${context.getTemplate().label}】 短信成功!`
+                content: `系统: 发送 【${
+                  context.getTemplate().label
+                }】 短信成功!`
               }
             }),
             new fromSms.MarkCustomerHasSendSMSAction(context.getCustomerIds()),
