@@ -16,10 +16,10 @@ import { isAdmin, getAdminName, getUserName } from '../login/reducers'
 import { UserManagementPage } from './user-management/user-management'
 import { SmsTemplatePage } from './sms-template/sms-template'
 
-import { LogoutModal } from './modals/logout-modal.component'
+import { ToLogoutModal } from './modals/to-logout-modal/to-logout-modal.component'
 import { HzAboutPage } from './about/about'
 
-import { ToDownloadModal } from './modals/to-download-modal.component'
+import { ToDownloadModal } from './modals/to-download-modal/to-download-modal.component'
 
 @Component({
   selector: 'page-settings',
@@ -210,7 +210,7 @@ export class SettingsPage implements OnInit, OnDestroy {
   }
 
   toLogout() {
-    const logoutModal = this.modalCtrl.create(LogoutModal)
+    const logoutModal = this.modalCtrl.create(ToLogoutModal)
 
     logoutModal.onDidDismiss(ensure => {
       if (ensure) {

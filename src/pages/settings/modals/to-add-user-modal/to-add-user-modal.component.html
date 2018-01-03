@@ -1,0 +1,32 @@
+<div class="hz-modal hz-add-user-modal">
+    <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        添加用户
+      </ion-title>
+
+    </ion-toolbar>
+    </ion-header>
+    <ion-content>
+    <div class="modal-body">
+      <div class="form-layer">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="name" placeholder="请输入用户姓名">
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="phone" placeholder="请输入手机号">
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="code" placeholder="验证码">
+            <button type="button" class="input-group-addon" (click)="fetchCode()">获取验证码</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="hz-btn" (click)="cancel()">取消</button>
+      <button type="button" class="hz-btn" (click)="complete()">完成</button>
+    </div>
+    </ion-content>
+  </div>

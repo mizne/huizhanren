@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable'
 
 import { ModalController, ToastController } from 'ionic-angular'
 
 import * as fromUserManagement from '../actions/user-management.action'
 import { UserService } from '../services/user.service'
 import { SmsService } from '../../../providers/sms.service'
-import { ToDeleteUserModal } from '../modals/to-delete-user-modal.component'
-import { ToAddUserModal } from '../modals/to-add-user-modal.component'
+import { ToDeleteUserModal } from '../modals/to-delete-user-modal/to-delete-user-modal.component'
+import { ToAddUserModal } from '../modals/to-add-user-modal/to-add-user-modal.component'
 
 import { Store } from '@ngrx/store'
 import { State, getUsers, getMaxUserCount } from '../reducers'
@@ -22,7 +22,9 @@ export class UserManagementEffects {
       this.userService
         .fetchAllUsers()
         .map(users => new fromUserManagement.FetchAllUserSuccessAction(users))
-        .catch(() => Observable.of(new fromUserManagement.FetchAllUserFailureAction([])))
+        .catch(() =>
+          Observable.of(new fromUserManagement.FetchAllUserFailureAction([]))
+        )
     )
 
   @Effect({ dispatch: false })
@@ -69,7 +71,9 @@ export class UserManagementEffects {
           new fromUserManagement.DeleteUserSuccessAction(),
           new fromUserManagement.FetchAllUserAction()
         ])
-        .catch(() => Observable.of(new fromUserManagement.DeleteUserFailureAction()))
+        .catch(() =>
+          Observable.of(new fromUserManagement.DeleteUserFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -178,7 +182,9 @@ export class UserManagementEffects {
             new fromUserManagement.FetchAllUserAction()
           ]
         })
-        .catch(() => Observable.of(new fromUserManagement.AddUserFailureAction()))
+        .catch(() =>
+          Observable.of(new fromUserManagement.AddUserFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })

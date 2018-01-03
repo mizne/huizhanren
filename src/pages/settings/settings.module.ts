@@ -13,10 +13,10 @@ import { OtherService } from './services/other.service'
 
 import { HzSettingItemComponent } from './hz-setting-item/hz-setting-item.component'
 
-import { LogoutModal } from './modals/logout-modal.component'
-import { ToAddUserModal } from './modals/to-add-user-modal.component'
-import { ToDeleteUserModal } from './modals/to-delete-user-modal.component'
-import { ToDownloadModal } from './modals/to-download-modal.component'
+import { ToLogoutModal } from './modals/to-logout-modal/to-logout-modal.component'
+import { ToDownloadModal } from './modals/to-download-modal/to-download-modal.component'
+import { ToDeleteUserModal } from './modals/to-delete-user-modal/to-delete-user-modal.component'
+import { ToAddUserModal } from './modals/to-add-user-modal/to-add-user-modal.component'
 
 import {
   UserManagementPage,
@@ -30,7 +30,7 @@ import {
 import { HzAboutPage } from './about/about'
 
 const modals = [
-  LogoutModal,
+  ToLogoutModal,
   ToAddUserModal,
   ToDeleteUserModal,
   ToDownloadModal
