@@ -83,14 +83,14 @@ export class SingleSendSmsContext {
         }
         if (curr === '专业买家职务') {
           if (this.customer.jobs.length > 0) {
-            accu['专业买家职务'] = this.customer.jobs[0].label
+            accu['专业买家职务'] = this.customer.jobs[0].value
           } else {
             accu['专业买家职务'] = `未知头衔`
           }
         }
         if (curr === '专业买家公司') {
           if (this.customer.companys.length > 0) {
-            accu['专业买家公司'] = this.customer.companys[0].label
+            accu['专业买家公司'] = this.customer.companys[0].value
           } else {
             accu['专业买家公司'] = `未知公司`
           }

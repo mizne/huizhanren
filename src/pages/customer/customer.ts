@@ -45,7 +45,7 @@ import {
   getCardBehindImg,
   needShowHelpOfToggleLog
 } from './reducers/index'
-import { CustomerPateStatus } from './reducers/customer.reducer'
+import { CustomerPateStatus, CustomerPageManageableStatus } from './models/customer.model'
 import { NestGroup, Group } from './models/group.model'
 import { CustomField } from './models/card.model'
 
@@ -65,11 +65,17 @@ import { environment } from '../../environments/environment'
   templateUrl: 'customer.html'
 })
 export class CustomerPage {
+  LISTABLE = CustomerPateStatus.LISTABLE
+  EDITABLE = CustomerPateStatus.EDITABLE
+  DETAILABLE = CustomerPateStatus.DETAILABLE
+  MANAGEABLE = CustomerPateStatus.MANAGEABLE
+  CREATEABLE = CustomerPateStatus.CREATEABLE
+
   customerCount$: Observable<number>
   nestGroups$: Observable<NestGroup[]>
 
   status$: Observable<CustomerPateStatus>
-  manageableStatus$: Observable<any>
+  manageableStatus$: Observable<CustomerPageManageableStatus>
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 

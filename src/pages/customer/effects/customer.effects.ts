@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-
 import {
   ModalController,
   ToastController,
   LoadingController
 } from 'ionic-angular'
-
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store'
+
 import {
   State,
   getCustomers,
@@ -32,7 +31,7 @@ import { ToDeleteCustomerModal } from '../modals/to-delete-customer-modal.compon
 import { ToDiscardModal } from '../modals/to-discard-modal.component'
 import { ToEditCustomerGroupModal } from '../modals/to-edit-customer-group-modal.component'
 
-import { Customer } from '../models/customer.model'
+import { Customer, CustomerPateStatus } from '../models/customer.model'
 import { createCustomerFromFields } from '../models/card.model'
 
 @Injectable()
@@ -58,23 +57,12 @@ export class CustomerEffects {
   })
 
   @Effect({ dispatch: false })
-  initialSuccess$ = this.actions$
-    .ofType(fromCustomer.INITIAL_SUCCESS)
-    .do(() => {
-      // this.toastCtrl.create({
-      //   message: '初始化获取客户信息成功',
-      //   duration: 3e3,
-      //   position: 'top'
-      // }).present()
-    })
-
-  @Effect({ dispatch: false })
   initialFailure$ = this.actions$
     .ofType(fromCustomer.INITIAL_FAILURE)
     .do(() => {
       this.toastCtrl
         .create({
-          message: '初始化获取客户信息失败',
+          message: '获取客户信息失败',
           duration: 3e3,
           position: 'top'
         })
@@ -93,10 +81,10 @@ export class CustomerEffects {
       if (!fields1[0].value) {
         return new fromCustomer.CancelCreateAction()
       }
-      if (pageStatus === 'createable') {
+      if (pageStatus === CustomerPateStatus.CREATEABLE) {
         return new fromCustomer.CreateAction()
       }
-      if (pageStatus === 'editable') {
+      if (pageStatus === CustomerPateStatus.EDITABLE) {
         return new fromCustomer.EditCustomerAction()
       }
     })
@@ -390,13 +378,13 @@ export class CustomerEffects {
       })
     )
     .map(({ pageStatus, customerId, groupId }) => {
-      if (pageStatus === 'editable') {
+      if (pageStatus === CustomerPateStatus.EDITABLE) {
         return new fromCustomer.ToDetailableStatusAction({
           groupId,
           customerId
         })
       }
-      if (pageStatus === 'createable') {
+      if (pageStatus === CustomerPateStatus.CREATEABLE) {
         return new fromCustomer.ToDiscardAction()
       }
     })

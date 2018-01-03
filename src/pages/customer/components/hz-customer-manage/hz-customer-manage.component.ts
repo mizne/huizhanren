@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { Group } from '../../models/group.model'
+import { CustomerPageManageableStatus } from '../../models/customer.model'
 
 @Component({
   selector: 'hz-customer-manage',
@@ -23,18 +24,12 @@ import { Group } from '../../models/group.model'
     </div>
   `
 })
-export class HzCustomerManageComponent implements OnInit {
-
+export class HzCustomerManageComponent {
   @Input()
-  set active(str: string) {
-    this._activeIndex = str === 'group' ? 1 : 0
+  set active(status: CustomerPageManageableStatus) {
+    this._activeIndex = status === CustomerPageManageableStatus.GROUP ? 1 : 0
   }
-
   _activeIndex: number = 0
-
-  constructor() { }
-
-  ngOnInit() { }
 
   tabClick(index): void {
     this._activeIndex = index
@@ -47,26 +42,19 @@ export class HzCustomerManageComponent implements OnInit {
   template: `
     <div class="hz-customer-manage-header">
       <span>已选择{{ item.number + '个' + item.label }}</span>
-      <span *ngIf="type !== 'group'" tappable class="select-all" (click)="toggleAll()">全选</span>
+      <span *ngIf="type !== GROUP_STATUS" tappable class="select-all" (click)="toggleAll()">全选</span>
     </div>
   `
 })
-export class HzCustomerManageHeader implements OnInit {
-  @Input() item: any
+export class HzCustomerManageHeader {
+  SMS_STATUS = CustomerPageManageableStatus.SMS
+  GROUP_STATUS = CustomerPageManageableStatus.GROUP
+  _selectAll: boolean = false
 
+  @Input() item: any
   @Input() type: string
 
   @Output() selectAll: EventEmitter<boolean> = new EventEmitter<boolean>()
-
-  _selectAll: boolean = false
-
-  constructor() {
-
-  }
-
-  ngOnInit() {
-
-  }
 
   toggleAll() {
     this._selectAll = !this._selectAll
@@ -84,15 +72,7 @@ export class HzCustomerManageHeader implements OnInit {
     </div>
   `
 })
-export class HzCustomerManageContentItem implements OnInit {
-  // @Input() item: any
-
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
+export class HzCustomerManageContentItem {
 }
 
 
@@ -103,14 +83,14 @@ export class HzCustomerManageContentItem implements OnInit {
     <div class="hz-customer-manage-template">
       <div class="left-area">
         <div class="header">
-          <span class="label">{{type === 'group' ? '选择标签' : '选择模板'}}
-            <span class="rename" tappable *ngIf="type === 'group' && validSelected" (click)="toRename()">重命名</span>
-            <span class="delete" tappable *ngIf="type === 'group' && validSelected" (click)="toDel()">删除</span>
+          <span class="label">{{type === GROUP_STATUS ? '选择标签' : '选择模板'}}
+            <span class="rename" tappable *ngIf="type === GROUP_STATUS && validSelected" (click)="toRename()">重命名</span>
+            <span class="delete" tappable *ngIf="type === GROUP_STATUS && validSelected" (click)="toDel()">删除</span>
           </span>
 
-          <span class="action" tappable *ngIf="type === 'group'" (click)="toCreateTemplate(type)">
+          <span class="action" tappable *ngIf="type === GROUP_STATUS" (click)="toCreateTemplate(type)">
             <ion-icon name="add-circle" color="primary"></ion-icon>
-            <span class="text">{{type === 'group' ? '新建标签' : '添加模板'}}</span>
+            <span class="text">{{type === GROUP_STATUS ? '新建标签' : '添加模板'}}</span>
           </span>
         </div>
         <div class="content">
@@ -119,7 +99,7 @@ export class HzCustomerManageContentItem implements OnInit {
         </div>
       </div>
 
-      <div class="right-area" *ngIf="type !== 'group'">
+      <div class="right-area" *ngIf="type !== GROUP_STATUS">
         <h4>预览</h4>
         <div class="preview">{{selectedTemplate?.preview}}</div>
         <div class="btn-group">
@@ -129,17 +109,17 @@ export class HzCustomerManageContentItem implements OnInit {
       </div>
     </div>
 
-    <div class="hz-btn-wrapper" *ngIf="type === 'group'">
+    <div class="hz-btn-wrapper" *ngIf="type === GROUP_STATUS">
       <button ion-button (click)="toCancelGroup()">取消</button>
       <button ion-button (click)="save()">保 存</button>
     </div>
   `
 })
-export class HzCustomerManageTemplate implements OnInit {
-
+export class HzCustomerManageTemplate {
+  SMS_STATUS = CustomerPageManageableStatus.SMS
+  GROUP_STATUS = CustomerPageManageableStatus.GROUP
   selectedTemplate: any
   _templates: any
-
   validSelected: boolean = false
 
   @Input()
@@ -151,26 +131,12 @@ export class HzCustomerManageTemplate implements OnInit {
   @Input() type: string
 
   @Output() sendSms: EventEmitter<string> = new EventEmitter<string>()
-
   @Output() cancelSms: EventEmitter<void> = new EventEmitter<void>()
-
   @Output() cancelGroup: EventEmitter<void> = new EventEmitter<void>()
-
   @Output() saveTemplate: EventEmitter<string> = new EventEmitter<string>()
-
   @Output() createTemplate: EventEmitter<string> = new EventEmitter<string>()
-
   @Output() renameGroup: EventEmitter<Group> = new EventEmitter<Group>()
-
   @Output() delGroup: EventEmitter<Group> = new EventEmitter<Group>()
-
-
-  constructor(
-  ) {
-  }
-
-  ngOnInit() {
-  }
 
   toCreateTemplate(type: string) {
     this.createTemplate.emit(type)

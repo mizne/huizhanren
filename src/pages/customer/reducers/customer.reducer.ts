@@ -4,18 +4,10 @@ import * as group from '../actions/group.action'
 
 import { remain, deduplicate, phoneRe } from '../services/utils'
 
-import { Customer } from '../models/customer.model'
+import { Customer, CustomerPateStatus, CustomerPageManageableStatus } from '../models/customer.model'
 import { Group } from '../models/group.model'
 
 type Action = customer.Actions | sms.Actions | group.Actions
-
-export type CustomerPateStatus =
-  | 'listable'
-  | 'editable'
-  | 'detailable'
-  | 'manageable'
-  | 'createable'
-export type CustomerPageManageableStatus = 'sms' | 'group'
 
 export interface State {
   customers: Customer[]
@@ -33,8 +25,8 @@ export const initialState: State = {
   customers: [],
   groups: [],
   loading: false,
-  pageStatus: 'listable',
-  manageableStatus: 'sms',
+  pageStatus: CustomerPateStatus.LISTABLE,
+  manageableStatus: CustomerPageManageableStatus.SMS,
   showDetailCustomerId: '',
   showDetailGroupId: '',
   showLog: false,
@@ -157,19 +149,19 @@ export function reducer(state: State = initialState, action: Action): State {
     case customer.TO_EDITABLE_STATUS:
       return {
         ...state,
-        pageStatus: 'editable'
+        pageStatus: CustomerPateStatus.EDITABLE
       }
 
     case customer.TO_CREATEABLE_STATUS:
       return {
         ...state,
-        pageStatus: 'createable'
+        pageStatus: CustomerPateStatus.CREATEABLE
       }
 
     case customer.TO_DETAILABLE_STATUS:
       return {
         ...state,
-        pageStatus: 'detailable',
+        pageStatus: CustomerPateStatus.DETAILABLE,
         showDetailCustomerId: action.payload.customerId,
         showDetailGroupId: action.payload.groupId
       }
@@ -177,27 +169,27 @@ export function reducer(state: State = initialState, action: Action): State {
     case customer.TO_MANAGEABLE_STATUS:
       return {
         ...state,
-        pageStatus: 'manageable'
+        pageStatus: CustomerPateStatus.MANAGEABLE
       }
 
     case customer.TO_LISTABLE_STATUS:
       return {
         ...state,
-        pageStatus: 'listable'
+        pageStatus: CustomerPateStatus.LISTABLE
       }
 
     case sms.TO_SEND_SMS_PAGE:
       return {
         ...state,
-        pageStatus: 'manageable',
-        manageableStatus: 'sms'
+        pageStatus: CustomerPateStatus.MANAGEABLE,
+        manageableStatus: CustomerPageManageableStatus.SMS
       }
 
     case group.TO_SET_GROUP:
       return {
         ...state,
-        pageStatus: 'manageable',
-        manageableStatus: 'group'
+        pageStatus: CustomerPateStatus.MANAGEABLE,
+        manageableStatus: CustomerPageManageableStatus.GROUP
       }
 
     case customer.SELECT_CUSTOMER:

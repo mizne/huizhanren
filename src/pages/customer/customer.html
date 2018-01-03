@@ -1,30 +1,6 @@
-<!--
-  Generated template for the CustomerPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<!-- <ion-header>
-
-  <ion-navbar>
-    <ion-title>客 户</ion-title>
-
-    <ion-buttons end>
-      <button ion-button *ngIf="(status$ | async) === 'editable'">
-        保 存
-      </button>
-      <button ion-button icon-only *ngIf="(status$ | async) === 'detailable'" (click)="toggleLog()">
-        <ion-icon name="switch"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-
-</ion-header> -->
-
-
 <ion-content padding>
   <div class="hz-customer-container">
-    <hz-toggle-detail *ngIf="(status$ | async) === 'detailable'" [collapse]="showLog$ | async" (toggle)="toggleLog()"></hz-toggle-detail>
+    <hz-toggle-detail *ngIf="(status$ | async) === DETAILABLE" [collapse]="showLog$ | async" (toggle)="toggleLog()"></hz-toggle-detail>
 
     <div class="hz-customer-left">
       <hz-list-header (sendSms)="toSendSms()" (setGroup)="toSetGroup()" (del)="toMultiDelete()" [totalCount]="customerCount$ | async"></hz-list-header>
@@ -50,7 +26,7 @@
     </div>
 
     <div class="hz-customer-right">
-      <div class="hz-customer-editable" *ngIf="((status$ | async) === 'editable') || ((status$ | async) === 'createable')">
+      <div class="hz-customer-editable" *ngIf="((status$ | async) === EDITABLE) || ((status$ | async) === CREATEABLE)">
         <div class="hz-customer-input-area">
           <div class="hz-customer-center">
             <div class="hz-card-container">
@@ -75,12 +51,12 @@
         </div>
 
         <div class="hz-customer-btn-wrapper">
-          <button ion-button color="light" (click)="delCard()">{{(status$ | async) === 'editable' ? '返回' : '放弃'}}</button>
+          <button ion-button color="light" (click)="delCard()">{{(status$ | async) === EDITABLE ? '返回' : '放弃'}}</button>
           <button ion-button (click)="saveCustomer()">保存</button>
         </div>
       </div>
 
-      <div class="hz-customer-detail" *ngIf="(status$ | async) === 'detailable'">
+      <div class="hz-customer-detail" *ngIf="(status$ | async) === DETAILABLE">
         <hz-card-detail (editCustomer)="toEditCustomer()" (delCustomer)="toDeleteCustomer()" (showNotification)="toShowNotification()"
           (toList)="toList()" [open]="!((showLog$ | async) || (showNotification$ | async))" [class.open]="!((showLog$ | async) || (showNotification$ | async))"
           [class.close]="(showLog$ | async) || (showNotification$ | async)">
@@ -93,7 +69,7 @@
         </hz-card-notification>
       </div>
 
-      <div class="hz-customer-manage-container" *ngIf="(status$ | async) === 'manageable'">
+      <div class="hz-customer-manage-container" *ngIf="(status$ | async) === MANAGEABLE">
         <hz-customer-manage [active]="manageableStatus$ | async"></hz-customer-manage>
       </div>
 

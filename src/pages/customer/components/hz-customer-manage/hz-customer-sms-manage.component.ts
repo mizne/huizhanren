@@ -14,7 +14,7 @@ import {
 import { ToListableStatusAction } from '../../actions/customer.action'
 
  import { SmsTemplate } from '../../models/sms.model'
-
+ import { CustomerPageManageableStatus } from '../../models/customer.model'
  import { phoneRe } from '../../services/utils'
 
 @Component({
@@ -37,12 +37,13 @@ import { ToListableStatusAction } from '../../actions/customer.action'
         </hz-customer-manage-content-item>
       </div>
 
-      <hz-customer-manage-template type="sms" [templates]="smsTemplates$ | async"
+      <hz-customer-manage-template [type]="TYPE" [templates]="smsTemplates$ | async"
       (sendSms)="send($event)" (cancelSms)="cancelSms()"></hz-customer-manage-template>
     </div>
   `,
 })
 export class HzCustomerSmsManageComponent implements OnInit {
+  TYPE = CustomerPageManageableStatus.SMS
   item$: Observable<any>
   contentItems$: Observable<any>
   headerItem$: Observable<any>

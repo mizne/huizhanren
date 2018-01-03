@@ -1,3 +1,17 @@
+export enum CustomerPateStatus {
+  LISTABLE,
+  EDITABLE,
+  DETAILABLE,
+  MANAGEABLE,
+  CREATEABLE
+}
+
+export enum CustomerPageManageableStatus {
+  SMS,
+  GROUP,
+  EMAIL
+}
+
 export class Customer {
   id?: string
   groups: string[]

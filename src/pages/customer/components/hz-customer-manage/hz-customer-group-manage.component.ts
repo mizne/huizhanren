@@ -7,6 +7,7 @@ import { CancelSelectCustomerAction, ToCreateAction, ToRenameGroupAction, ToDele
 import { PreBatchEditGroupAction, ToListableStatusAction } from '../../actions/customer.action'
 
 import { Group } from '../../models/group.model'
+import { CustomerPageManageableStatus } from '../../models/customer.model'
 
 @Component({
   selector: 'hz-customer-group-manage',
@@ -21,7 +22,7 @@ import { Group } from '../../models/group.model'
         </div>
       </div>
 
-      <hz-customer-manage-template type="group" [templates]="groups$ | async"
+      <hz-customer-manage-template [type]="TYPE" [templates]="groups$ | async"
       (createTemplate)="toCreateTemplate($event)" (saveTemplate)="saveGroup($event)"
       (renameGroup)="toRenameGroup($event)" (delGroup)="toDelGroup($event)"
       (cancelGroup)="cancelGroup()"></hz-customer-manage-template>
@@ -29,6 +30,7 @@ import { Group } from '../../models/group.model'
   `
 })
 export class HzCustomerGroupManageComponent implements OnInit {
+  TYPE = CustomerPageManageableStatus.GROUP
   item$: Observable<any>
   contentItems$: Observable<any>
   headerItem$: Observable<any>

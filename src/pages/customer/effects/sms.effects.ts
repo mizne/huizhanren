@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
-
 import { ModalController, ToastController } from 'ionic-angular'
-
 import { Store } from '@ngrx/store'
+
 import { State, getPhonesToSendOfCustomers, getSmsTemplates } from '../reducers'
 import { getSelectedExhibitionId } from '../../login/reducers'
 
@@ -19,7 +18,6 @@ import { SmsContent, BatchSendSmsContext } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
-import { EnsureBatchSendSMSAction } from '../actions/sms.action'
 
 @Injectable()
 export class SmsEffects {
@@ -76,7 +74,7 @@ export class SmsEffects {
     .withLatestFrom(
       this.tenantService.getBatchSendSmsParams(),
       (template, { customers, companyName, boothNo }) => {
-        return new EnsureBatchSendSMSAction(
+        return new fromSms.EnsureBatchSendSMSAction(
           new BatchSendSmsContext({ customers, companyName, boothNo, template })
         )
       }

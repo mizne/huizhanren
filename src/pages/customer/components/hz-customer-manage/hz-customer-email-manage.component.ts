@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CustomerPageManageableStatus } from '../../models/customer.model'
 
 @Component({
   selector: 'hz-customer-email-manage',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 
       <hz-customer-manage-content-item *ngFor="let item of contentItems">
         <div class="name">{{item.name}}</div>
-      
+
         <div class="content" *ngFor="let value of item.items">
           <div class="value">
             <span>{{value.value}}</span>
@@ -18,12 +19,13 @@ import { Component, OnInit } from '@angular/core';
         </div>
       </hz-customer-manage-content-item>
 
-      <hz-customer-manage-template type="email" [templates]="emailTemplates"></hz-customer-manage-template>
+      <hz-customer-manage-template [type]="TYPE" [templates]="emailTemplates"></hz-customer-manage-template>
     </div>
-    
+
   `,
 })
 export class HzCustomerEmailManageComponent implements OnInit {
+  TYPE = CustomerPageManageableStatus.EMAIL
   item = {
     headerLabel: '邮箱地址',
     customers: [
