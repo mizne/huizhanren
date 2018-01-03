@@ -231,7 +231,7 @@ export class CustomerService {
               setValue: {
                 ExhibitionInfo: exhibitionId,
                 GroupInfo: (() => {
-                  if (groupId === '无标签') {
+                  if (groupId === Group.NONE.id) {
                     return []
                   } else {
                     return deduplicate([...customer.groups, groupId])
@@ -327,7 +327,7 @@ export class CustomerService {
               setValue: {
                 ExhibitionInfo: exhibitionId,
                 GroupInfo: (() => {
-                  if (groupId === '无标签') {
+                  if (groupId === Group.NONE.id) {
                     return []
                   } else {
                     return deduplicate([...customer.groups, groupId])

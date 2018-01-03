@@ -110,7 +110,7 @@ export function reducer(
           if (customer.groups.length === 0) {
             return {
               ...customer,
-              selected: !!selectedGroups.find(e => e.id === '无标签')
+              selected: !!selectedGroups.find(e => e.id === Group.NONE.id)
             }
           }
 

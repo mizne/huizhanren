@@ -46,7 +46,7 @@ import {
   needShowHelpOfToggleLog
 } from './reducers/index'
 import { CustomerPateStatus } from './reducers/customer.reducer'
-import { NestGroup } from './models/group.model'
+import { NestGroup, Group } from './models/group.model'
 import { CustomField } from './models/card.model'
 
 import { fakeJson } from '../../fake/fake'
@@ -141,7 +141,7 @@ export class CustomerPage {
     ).map(([groups, customers, searchText]) => {
       return groups.map(group => {
         let currentGroupCustomers
-        if (group.id === '无标签') {
+        if (group.id === Group.NONE.id) {
           currentGroupCustomers = customers.filter(
             customer => customer.groups.length === 0
           )
