@@ -13,12 +13,14 @@ export interface SmsContent {
 
 export class SendSmsContext {
   static TEMPLATE_VARIABLES = [
-    'exhibitorName', // 展商名称()，
-    'exhibitorBoothNo', // 展位号()，
-    'visitorName', // 专业买家姓名()，
-    'visitorTitle', // 专业买家职务()，
-    'visitorCompanyName' // 专业买家公司()
+    '展商名称', // 展商名称()，
+    '展位号', // 展位号()，
+    '专业买家姓名', // 专业买家姓名()，
+    '专业买家职务', // 专业买家职务()，
+    '专业买家公司' // 专业买家公司()
   ]
+
+  static VARIABLE_RE = /\$\{([^}]+)\}/g
 
   constructor(
     private customer: Customer,
@@ -27,9 +29,11 @@ export class SendSmsContext {
   ) {}
 
   computeTemplateParams(preview): SmsTemplateParams {
-    const variableNames = preview
-      .match(/\$\{([^}]+)\}/g)
-      .map(e => e.slice(2, -1))
+    const matches = preview.match(SendSmsContext.VARIABLE_RE)
+    if (!matches) {
+      return {}
+    }
+    const variableNames = matches.map(e => e.slice(2, -1))
     let initV: SmsTemplateParams = {}
     const templateParams: SmsTemplateParams = variableNames.reduce(
       (accu, curr) => {
@@ -63,21 +67,26 @@ export class SendSmsContext {
     return templateParams
   }
 
-  computeTemplateContent(preview: string): string {
+  computeTemplate(
+    preview: string
+  ): { params: SmsTemplateParams; content: string } {
     const templateParams = this.computeTemplateParams(preview)
-    const content = preview.replace(/\$\{([^}]+)\}/g, function(m, c) {
+    const content = preview.replace(SendSmsContext.VARIABLE_RE, function(m, c) {
       return templateParams[c]
     })
-    return content
+    return {
+      params: templateParams,
+      content
+    }
   }
 }
 
 export interface SmsTemplateParams {
-  exhibitorName?: string
-  exhibitorBoothNo?: string
-  visitorName?: string
-  visitorTitle?: string
-  visitorCompanyName?: string
+  展商名称?: string
+  展位号?: string
+  专业买家姓名?: string
+  专业买家职务?: string
+  专业买家公司?: string
 }
 
 export const SMS_TEMPLATE_BASE_URL = 'http://t.cn'

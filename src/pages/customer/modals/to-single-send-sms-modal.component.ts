@@ -122,12 +122,9 @@ export class ToSingleSendSMSModal implements OnInit {
       .takeUntil(this.destroyService)
       .subscribe(([template, sendSmsContext]) => {
         this.selectedTemplateId = template.id
-        this.templateContent = sendSmsContext.computeTemplateContent(
-          template.preview
-        )
-        this.templateParams = sendSmsContext.computeTemplateParams(
-          template.preview
-        )
+        const { params, content } = sendSmsContext.computeTemplate(template.preview)
+        this.templateContent = content
+        this.templateParams = params
       })
   }
 
