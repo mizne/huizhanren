@@ -53,11 +53,10 @@
   </div>
 
   <div class="exhibitor-product">
-    <div class="header" tappable (click)="toggleViewProduct()">
+    <div class="header">
       <span>产品</span>
-      <!-- <i [ngClass]="['iconfont', viewProduct ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="detail.products.length > 0 && viewProduct">
+    <div class="content" *ngIf="detail.products.length > 0; else noProduct;">
       <ul class="products">
         <li class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures && item.pictures[0]" alt="">
@@ -66,15 +65,16 @@
       </ul>
     </div>
 
-    <div *ngIf="detail.products.length === 0 && viewProduct" class="no-item no-product">暂未上传产品</div>
+    <ng-template #noProduct>
+      <div class="no-item no-product">暂未上传产品</div>
+    </ng-template>
   </div>
 
   <div class="exhibitor-jianjie" [class.collapse]="!showMoreDesc">
-    <div class="header" tappable (click)="toggleViewDescription()">
+    <div class="header">
       <span>简介</span>
-      <!-- <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="detail.description && viewDescription">
+    <div class="content" *ngIf="detail.description; else noDesc;">
       {{detail.description}}
     </div>
     <div class="overlay" tappable (click)="toggleMoreDesc()">
@@ -84,17 +84,18 @@
       </ng-template>
     </div>
 
-    <div *ngIf="!detail.description && viewDescription" class="no-item no-description">暂未上传简介</div>
+    <ng-template #noDesc>
+      <div class="no-item no-description">暂未上传简介</div>
+    </ng-template>
   </div>
 
 
   <div class="exhibitor-visitors">
-    <div class="header" tappable (click)="toggleViewVisitors()">
+    <div class="header">
       <span>访客</span>
       <span class="number">{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
-      <!-- <i [ngClass]="['iconfont', viewVisitors ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
-    <div class="content" *ngIf="detail.visitors.length > 0 && viewVisitors">
+    <div class="content" *ngIf="detail.visitors.length > 0; else noVisitor;">
       <ul class="visitors">
         <li *ngFor="let visitor of detail.visitors.slice(-10)" class="visitor">
           <img [src]="visitor.headImgUrl" alt="">
@@ -102,6 +103,8 @@
       </ul>
     </div>
 
-    <div *ngIf="detail.visitors.length === 0 && viewVisitors" class="no-item no-visitor">暂无访客</div>
+    <ng-template #noVisitor>
+      <div class="no-item no-visitor">暂无访客</div>
+    </ng-template>
   </div>
 </div>
