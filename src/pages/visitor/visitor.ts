@@ -130,7 +130,6 @@ export class VisitorPage implements OnInit, OnDestroy {
   ngOnDestroy() {}
 
   loadMore() {
-    debugger
     this.loadMoreSub.next()
   }
 

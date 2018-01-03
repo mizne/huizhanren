@@ -8,7 +8,6 @@ export class HzLoadMoreComponent {
   loadMore: EventEmitter<void> = new EventEmitter<void>()
 
   ensureLoadMore() {
-    debugger
     this.loadMore.emit()
   }
 }

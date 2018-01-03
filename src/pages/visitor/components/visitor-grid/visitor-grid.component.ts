@@ -33,7 +33,6 @@ export class VisitorGridComponent {
   }
 
   ensureLoadMore() {
-    debugger
     this.loadMore.emit()
   }
 }
