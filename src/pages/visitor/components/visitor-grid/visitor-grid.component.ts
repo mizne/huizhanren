@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 
 import { RecommendVisitor } from '../../models/visitor.model'
 
@@ -6,7 +6,7 @@ import { RecommendVisitor } from '../../models/visitor.model'
   selector: 'visitor-grid',
   templateUrl: 'visitor-grid.component.html'
 })
-export class VisitorGridComponent implements OnInit {
+export class VisitorGridComponent {
   activeId: string
 
   @Input() expand: boolean
@@ -18,10 +18,6 @@ export class VisitorGridComponent implements OnInit {
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() loadMore: EventEmitter<void> = new EventEmitter<void>()
-
-  ngOnInit() {
-    console.log(this.showLoadMore)
-  }
 
   ensureShow(id: string) {
     this.showDetail.emit(id)

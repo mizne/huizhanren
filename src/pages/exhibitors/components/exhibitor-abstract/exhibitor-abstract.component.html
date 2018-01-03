@@ -69,13 +69,19 @@
     <div *ngIf="detail.products.length === 0 && viewProduct" class="no-item no-product">暂未上传产品</div>
   </div>
 
-  <div class="exhibitor-jianjie">
+  <div class="exhibitor-jianjie" [class.collapse]="!showMoreDesc">
     <div class="header" tappable (click)="toggleViewDescription()">
       <span>简介</span>
       <!-- <i [ngClass]="['iconfont', viewDescription ? 'icon-arrowdown' : 'icon-arrowright']"></i> -->
     </div>
     <div class="content" *ngIf="detail.description && viewDescription">
       {{detail.description}}
+    </div>
+    <div class="overlay" tappable (click)="toggleMoreDesc()">
+      <i *ngIf="showMoreDesc; else showLess;" class="iconfont icon-arrowup"></i>
+      <ng-template #showLess>
+        <i class="iconfont icon-arrowdown"></i>
+      </ng-template>
     </div>
 
     <div *ngIf="!detail.description && viewDescription" class="no-item no-description">暂未上传简介</div>
