@@ -159,6 +159,7 @@
     margin-top: 6px;
     padding: 0 10px;
     background-color: white;
+    margin-bottom: 20px;
     .header {
       padding: 10px 0;
       margin: 0 10px;
@@ -187,10 +188,11 @@
       height: 20px;
       background-color: white;
       text-align: center;
-      padding-top: 10px;
+      // padding-top: 10px;
     }
 
     &.collapse {
+      margin-bottom: 0;
       .content {
         height: 110px;
       }
