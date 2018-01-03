@@ -14,14 +14,12 @@ import {
   getExhibitorId,
   getBoothNo
 } from '../pages/login/reducers'
-import {
-  SingleSendSmsContext,
-  BatchSendSmsContext
-} from '../pages/customer/models/sms.model'
+
 import {
   getShowDetailCustomer,
   getSelectedCustomers
 } from '../pages/customer/reducers'
+import { Customer } from '../pages/customer/models/customer.model';
 
 @Injectable()
 export class TenantService {
@@ -91,18 +89,32 @@ export class TenantService {
     )
   }
 
-  public getSingleSendSmsContext(): Observable<SingleSendSmsContext> {
-    return Observable.zip(
-      this.store.select(getShowDetailCustomer),
-      this.store.select(getCompanyName),
-      this.store.select(getBoothNo)
-    ).map(
-      ([customer, companyName, boothNo]) =>
-        new SingleSendSmsContext(customer, companyName, boothNo)
-    )
+  public getSingleSendSmsParams(phone: string): Observable<{
+    phone: string,
+    customer: Customer,
+    companyName: string,
+    boothNo: string
+  }> {
+    return this.store
+      .select(getShowDetailCustomer)
+      .withLatestFrom(
+        Observable.zip(
+          this.store.select(getCompanyName),
+          this.store.select(getBoothNo)
+        ),
+        (customer, [companyName, boothNo]) => {
+          return {
+            phone, customer, companyName, boothNo
+          }
+        }
+      )
   }
 
-  public getBatchSendSmsContext(): Observable<BatchSendSmsContext> {
+  public getBatchSendSmsParams(): Observable<{
+    customers: Customer[],
+    companyName: string,
+    boothNo: string
+  }> {
     return this.store
       .select(getSelectedCustomers)
       .withLatestFrom(
@@ -111,7 +123,9 @@ export class TenantService {
           this.store.select(getBoothNo)
         ),
         (customers, [companyName, boothNo]) => {
-          return new BatchSendSmsContext(customers, companyName, boothNo)
+          return {
+            customers, companyName, boothNo
+          }
         }
       )
   }

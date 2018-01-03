@@ -13,7 +13,7 @@ import {
   EnsureSingleSendSMSAction,
   FetchAllTemplateAction
 } from '../actions/sms.action'
-import { SmsTemplate, SmsTemplateParams } from '../models/sms.model'
+import { SmsTemplate, SmsTemplateParams, SingleSendSmsContext } from '../models/sms.model'
 import { DestroyService } from '../../../providers/destroy.service'
 import { TenantService } from '../../../providers/tenant.service'
 
@@ -89,8 +89,11 @@ export class ToSingleSendSMSModal implements OnInit {
 
   selectedTemplateCtrl: FormControl = new FormControl('')
   selectedTemplateId: string
+  selectedTemplate: SmsTemplate
 
   templates$: Observable<SmsTemplate[]>
+
+  private singSendSmsContext: SingleSendSmsContext
 
   constructor(
     public params: NavParams,
@@ -118,13 +121,20 @@ export class ToSingleSendSMSModal implements OnInit {
         (label, templates) => templates.find(e => e.label === label)
       )
     )
-      .withLatestFrom(this.tenantService.getSingleSendSmsContext())
+      .withLatestFrom(this.tenantService.getSingleSendSmsParams(this.phone), (template, {
+        phone, customer, companyName, boothNo
+      }) => ({
+        phone, customer, companyName, boothNo, template
+      }))
       .takeUntil(this.destroyService)
-      .subscribe(([template, sendSmsContext]) => {
+      .subscribe(({ phone, customer, companyName, boothNo, template }) => {
         this.selectedTemplateId = template.id
-        const { params, content } = sendSmsContext.computeTemplate(template.preview)
+        const sendSmsContext = new SingleSendSmsContext(customer, companyName, boothNo, phone, template)
+        const {content, params} = sendSmsContext.computeTemplate()
         this.templateContent = content
         this.templateParams = params
+
+        this.singSendSmsContext = sendSmsContext
       })
   }
 
@@ -153,11 +163,7 @@ export class ToSingleSendSMSModal implements OnInit {
     } else {
       this.dismiss(true)
       this.store.dispatch(
-        new EnsureSingleSendSMSAction({
-          phone: this.phone,
-          content: this.templateParams,
-          templateId: this.selectedTemplateId
-        })
+        new EnsureSingleSendSMSAction(this.singSendSmsContext)
       )
     }
   }

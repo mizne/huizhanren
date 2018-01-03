@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { SmsTemplate, SmsTemplateParams } from '../models/sms.model'
+import { SmsTemplate, SingleSendSmsContext, BatchSendSmsContext } from '../models/sms.model'
 
 export const CREATE_TEMPLATE = '[sms] Create Template'
 export const CREATE_TEMPLATE_SUCCESS = '[sms] Create Template Success'
@@ -15,12 +15,12 @@ export const PRE_SEND_SMS = '[sms] Pre Send SMS'
 export const NO_PHONE_TO_SEND_SMS = '[sms] No Phone To Send SMS'
 export const TO_SEND_SMS = '[sms] To Send SMS'
 export const CANCEL_SEND_SMS = '[sms] Cancel Send SMS'
-export const ENSURE_SEND_SMS = '[sms] Ensure Send SMS'
-export const SEND_SMS_SUCCESS = '[sms] Send SMS Success'
+export const ENSURE_BATCH_SEND_SMS = '[sms] Ensure Send SMS'
+export const BATCH_SEND_SMS_SUCCESS = '[sms] Send SMS Success'
 export const MARK_CUSTOMER_HAS_SEND_SMS = '[sms] Mark Customer Has Send SMS'
 export const MARK_CUSTOMER_HAS_SEND_SMS_SUCCESS = '[sms] Mark Customer Has Send SMS Success'
 export const MARK_CUSTOMER_HAS_SEND_SMS_FAILURE = '[sms] Mark Customer Has Send SMS Failure'
-export const SEND_SMS_FAILURE = '[sms] Send SMS Failure'
+export const BATCH_SEND_SMS_FAILURE = '[sms] Send SMS Failure'
 
 export const TO_SINGLE_SEND_SMS = '[sms] To Single Send SMS'
 export const ENSURE_SINGLE_SEND_SMS = '[sms] Ensure Single Send SMS'
@@ -86,12 +86,12 @@ export class NoPhoneToSendSMSAction implements Action {
 export class CancelSendSMSAction implements Action {
   readonly type = CANCEL_SEND_SMS
 }
-export class EnsureSendSMSAction implements Action {
-  readonly type = ENSURE_SEND_SMS
-  constructor(public templateId: string) {}
+export class EnsureBatchSendSMSAction implements Action {
+  readonly type = ENSURE_BATCH_SEND_SMS
+  constructor(public context: BatchSendSmsContext) {}
 }
-export class SendSMSSuccessAction implements Action {
-  readonly type = SEND_SMS_SUCCESS
+export class BatchSendSMSSuccessAction implements Action {
+  readonly type = BATCH_SEND_SMS_SUCCESS
 }
 export class MarkCustomerHasSendSMSAction implements Action {
   readonly type = MARK_CUSTOMER_HAS_SEND_SMS
@@ -103,8 +103,8 @@ export class MarkCustomerHasSendSMSSuccessAction implements Action {
 export class MarkCustomerHasSendSMSFailureAction implements Action {
   readonly type = MARK_CUSTOMER_HAS_SEND_SMS_FAILURE
 }
-export class SendSMSFailureAction implements Action {
-  readonly type = SEND_SMS_FAILURE
+export class BatchSendSMSFailureAction implements Action {
+  readonly type = BATCH_SEND_SMS_FAILURE
 }
 
 
@@ -118,7 +118,7 @@ export class CancelSingleSendSMSAction implements Action {
 }
 export class EnsureSingleSendSMSAction implements Action {
   readonly type = ENSURE_SINGLE_SEND_SMS
-  constructor(public payload: { phone: string, content: SmsTemplateParams, templateId: string }) {}
+  constructor(public context: SingleSendSmsContext) {}
 }
 export class SingleSendSMSSuccessAction implements Action {
   readonly type = SINGLE_SEND_SMS_SUCCESS
@@ -164,12 +164,12 @@ ToSendSMSPageAction |
 PreSendSMSAction |
 ToSendSMSAction |
 NoPhoneToSendSMSAction |
-EnsureSendSMSAction |
-SendSMSSuccessAction |
+EnsureBatchSendSMSAction |
+BatchSendSMSSuccessAction |
 MarkCustomerHasSendSMSAction |
 MarkCustomerHasSendSMSSuccessAction |
 MarkCustomerHasSendSMSFailureAction |
-SendSMSFailureAction |
+BatchSendSMSFailureAction |
 
 ToSingleSendSMSAction |
 CancelSingleSendSMSAction |

@@ -7,6 +7,14 @@ export interface SmsTemplate {
   preview: string
 }
 
+export interface SmsTemplateParams {
+  展商名称?: string
+  展位号?: string
+  专业买家姓名?: string
+  专业买家职务?: string
+  专业买家公司?: string
+}
+
 export interface SmsContent {
   phone: string
   content: SmsTemplateParams
@@ -26,11 +34,23 @@ export class SingleSendSmsContext {
   constructor(
     private customer: Customer,
     private companyName: string,
-    private boothNo: string
+    private boothNo: string,
+    private phone: string,
+    private template: SmsTemplate
   ) {}
 
-  computeTemplateParams(preview): SmsTemplateParams {
-    const matches = preview.match(SingleSendSmsContext.VARIABLE_RE)
+  public getTemplate(): SmsTemplate {
+    return this.template
+  }
+
+  public getCustomer(): Customer {
+    return this.customer
+  }
+
+  public computeTemplateParams(): SmsTemplateParams {
+    const matches = this.template.preview.match(
+      SingleSendSmsContext.VARIABLE_RE
+    )
     if (!matches) {
       return {}
     }
@@ -68,20 +88,27 @@ export class SingleSendSmsContext {
     return templateParams
   }
 
-  computeTemplate(
-    preview: string
-  ): { params: SmsTemplateParams; content: string } {
-    const templateParams = this.computeTemplateParams(preview)
-    const content = preview.replace(SingleSendSmsContext.VARIABLE_RE, function(
-      _,
-      c
-    ) {
-      return templateParams[c]
-    })
+  public computeTemplate(): { params: SmsTemplateParams; content: string } {
+    const templateParams = this.computeTemplateParams()
+    const content = this.template.preview.replace(
+      SingleSendSmsContext.VARIABLE_RE,
+      function(_, c) {
+        return templateParams[c]
+      }
+    )
     return {
       params: templateParams,
       content
     }
+  }
+
+  public computeRequestParams(): SmsContent[] {
+    return [
+      {
+        phone: this.phone,
+        content: this.computeTemplateParams()
+      }
+    ]
   }
 }
 
@@ -89,14 +116,19 @@ export class BatchSendSmsContext {
   constructor(
     private customers: Customer[],
     private companyName: string,
-    private boothNo: string
+    private boothNo: string,
+    private template: SmsTemplate
   ) {}
 
   public getCustomerIds(): string[] {
     return this.customers.map(e => e.id)
   }
 
-  public computeRequestParams(preview: string): SmsContent[] {
+  public getTemplate(): SmsTemplate {
+    return this.template
+  }
+
+  public computeRequestParams(): SmsContent[] {
     const phoneToSendWithCustomers: {
       phone: string
       customer: Customer
@@ -112,24 +144,18 @@ export class BatchSendSmsContext {
       const sendContext = new SingleSendSmsContext(
         e.customer,
         this.companyName,
-        this.boothNo
+        this.boothNo,
+        e.phone,
+        this.template
       )
       return {
         phone: e.phone,
-        content: sendContext.computeTemplateParams(preview)
+        content: sendContext.computeTemplateParams()
       }
     })
 
     return smsContents
   }
-}
-
-export interface SmsTemplateParams {
-  展商名称?: string
-  展位号?: string
-  专业买家姓名?: string
-  专业买家职务?: string
-  专业买家公司?: string
 }
 
 export const SMS_TEMPLATE_BASE_URL = 'http://t.cn'

@@ -7,14 +7,10 @@ import { ModalController, ToastController } from 'ionic-angular'
 import { Store } from '@ngrx/store'
 import {
   State,
-  getCustomers,
   getPhonesToSendOfCustomers,
-  getShowDetailCustomerId,
-  getSmsTemplates,
+  getSmsTemplates
 } from '../reducers'
-import {
-  getSelectedExhibitionId,
-} from '../../login/reducers'
+import { getSelectedExhibitionId } from '../../login/reducers'
 
 import * as fromSms from '../actions/sms.action'
 import * as fromCustomer from '../actions/customer.action'
@@ -23,17 +19,18 @@ import * as fromLogger from '../actions/logger.action'
 import { SmsService } from '../../../providers/sms.service'
 import { TenantService } from '../../../providers/tenant.service'
 import { CustomerService } from '../services/customer.service'
-import { SmsContent } from '../models/sms.model'
+import { SmsContent, BatchSendSmsContext } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
+import { EnsureBatchSendSMSAction } from '../actions/sms.action'
 
 @Injectable()
 export class SmsEffects {
   @Effect()
   preSendSms$ = this.actions$
     .ofType(fromSms.PRE_SEND_SMS)
-    .map((action: fromSms.EnsureSendSMSAction) => action.templateId)
+    .map((action: fromSms.PreSendSMSAction) => action.templateId)
     .withLatestFrom(this.store.select(getPhonesToSendOfCustomers))
     .map(([templateId, customers]) => {
       const phones = customers.reduce(
@@ -70,14 +67,25 @@ export class SmsEffects {
           if (ok) {
             observer.next(templateId)
           } else {
-            observer.error()
+            observer.complete()
           }
         })
         modal.present()
       })
-        .map(templateId => new fromSms.EnsureSendSMSAction(templateId))
-        .catch(() => Observable.of(new fromSms.CancelSendSMSAction()))
     })
+    .withLatestFrom(
+      this.store.select(getSmsTemplates),
+      (templateId, templates) => templates.find(e => e.id === templateId)
+    )
+    .withLatestFrom(
+      this.tenantService.getBatchSendSmsParams(),
+      (template, { customers, companyName, boothNo }) => {
+        return new EnsureBatchSendSMSAction(
+          new BatchSendSmsContext(customers, companyName, boothNo, template)
+        )
+      }
+    )
+    .catch(() => Observable.of(new fromSms.CancelSendSMSAction()))
 
   @Effect({ dispatch: false })
   cancelSendSms$ = this.actions$.ofType(fromSms.CANCEL_SEND_SMS).do(() => {
@@ -92,33 +100,26 @@ export class SmsEffects {
 
   @Effect()
   ensureSendSms$ = this.actions$
-    .ofType(fromSms.ENSURE_SEND_SMS)
-    .map((action: fromSms.EnsureSendSMSAction) => action.templateId)
-    .withLatestFrom(
-      this.store.select(getSmsTemplates),
-      (templateId, templates) => templates.find(e => e.id === templateId)
-    )
-    .withLatestFrom(this.tenantService.getBatchSendSmsContext())
-    .switchMap(([template, batchSendSmsContext]) => {
-      const smsContents = batchSendSmsContext.computeRequestParams(template.preview)
-
+    .ofType(fromSms.ENSURE_BATCH_SEND_SMS)
+    .map((action: fromSms.EnsureBatchSendSMSAction) => action.context)
+    .switchMap(context => {
       return this.smsService
-        .sendMessage(template.id, smsContents)
+        .sendMessage(context.getTemplate().id, context.computeRequestParams())
         .concatMap(() => {
           return [
-            new fromSms.SendSMSSuccessAction(),
+            new fromSms.BatchSendSMSSuccessAction(),
             new fromLogger.BatchCreateLoggerAction({
-              customerIds: batchSendSmsContext.getCustomerIds(),
+              customerIds: context.getCustomerIds(),
               log: {
                 level: 'sys',
-                content: `系统: 发送 【${template.label}】 短信成功!`
+                content: `系统: 发送 【${context.getTemplate().label}】 短信成功!`
               }
             }),
-            new fromSms.MarkCustomerHasSendSMSAction(batchSendSmsContext.getCustomerIds()),
+            new fromSms.MarkCustomerHasSendSMSAction(context.getCustomerIds()),
             new fromCustomer.ToListableStatusAction()
           ]
         })
-        .catch(() => Observable.of(new fromSms.SendSMSFailureAction()))
+        .catch(() => Observable.of(new fromSms.BatchSendSMSFailureAction()))
     })
 
   @Effect()
@@ -142,7 +143,7 @@ export class SmsEffects {
 
   @Effect({ dispatch: false })
   sendSmsSuccess$ = this.actions$
-    .ofType(fromSms.SEND_SMS_SUCCESS, fromSms.SINGLE_SEND_SMS_SUCCESS)
+    .ofType(fromSms.BATCH_SEND_SMS_SUCCESS, fromSms.SINGLE_SEND_SMS_SUCCESS)
     .do(() => {
       this.toastCtrl
         .create({
@@ -155,7 +156,7 @@ export class SmsEffects {
 
   @Effect({ dispatch: false })
   sendSmsFailure$ = this.actions$
-    .ofType(fromSms.SEND_SMS_FAILURE, fromSms.SINGLE_SEND_SMS_FAILURE)
+    .ofType(fromSms.BATCH_SEND_SMS_FAILURE, fromSms.SINGLE_SEND_SMS_FAILURE)
     .do(() => {
       this.toastCtrl
         .create({
@@ -177,67 +178,19 @@ export class SmsEffects {
   @Effect()
   ensureSingleSendSMS$ = this.actions$
     .ofType(fromSms.ENSURE_SINGLE_SEND_SMS)
-    .map((action: fromSms.EnsureSingleSendSMSAction) => action.payload)
-    .withLatestFrom(
-      this.store.select(getShowDetailCustomerId),
-      ({ content, phone, templateId }, customerId) => ({
-        content,
-        phone,
-        templateId,
-        customerId
-      })
-    )
-    .withLatestFrom(
-      this.store.select(getCustomers),
-      ({ content, phone, customerId, templateId }, customers) => {
-        const customer = customers.find(e => e.id === customerId)
-        return {
-          content,
-          phone,
-          customer,
-          templateId
-        }
-      }
-    )
-    .withLatestFrom(
-      this.store.select(getSmsTemplates),
-      ({ content, phone, customer, templateId }, templates) => {
-        const template = templates.find(e => e.id === templateId)
-        return {
-          content,
-          phone,
-          customer,
-          template
-        }
-      }
-    )
-    .withLatestFrom(
-      this.store.select(getSelectedExhibitionId),
-      ({ content, phone, customer, template }, exhibitionId) => ({
-        content,
-        phone,
-        customer,
-        exhibitionId,
-        template
-      })
-    )
-    .mergeMap(({ content, phone, customer, exhibitionId, template }) => {
-      // TODO 模板变量从 customer中获取
-      const smsContents: SmsContent[] = [
-        {
-          phone,
-          content
-        }
-      ]
+    .map((action: fromSms.EnsureSingleSendSMSAction) => action.context)
+    .mergeMap(context => {
+      const smsContents: SmsContent[] = context.computeRequestParams()
+
       return this.smsService
-        .sendMessage(template.id, smsContents)
+        .sendMessage(context.getTemplate().id, smsContents)
         .concatMap(() => [
           new fromSms.SingleSendSMSSuccessAction(),
           new fromLogger.CreateLoggerAction({
             level: 'sys',
-            content: `系统: 发送 【${template.label}】 短信成功!`
+            content: `系统: 发送 【${context.getTemplate().label}】 短信成功!`
           }),
-          new fromSms.MarkCustomerHasSendSMSAction([customer.id])
+          new fromSms.MarkCustomerHasSendSMSAction([context.getCustomer().id])
         ])
         .catch(() => Observable.of(new fromSms.SingleSendSMSFailureAction()))
     })
@@ -254,31 +207,6 @@ export class SmsEffects {
         )
         .catch(() => Observable.of(new fromSms.FetchAllTemplateFailureAction()))
     )
-
-  @Effect({ dispatch: false })
-  fetchAllTemplateSuccess$ = this.actions$
-    .ofType(fromSms.FETCH_ALL_TEMPLATE_SUCCESS)
-    .do(() => {
-      // this.toastCtrl.create({
-      //   message: '获取短信模板列表成功',
-      //   duration: 3e3,
-      //   position: 'top'
-      // })
-      // .present()
-    })
-
-  @Effect({ dispatch: false })
-  fetchAllTemplateFailure$ = this.actions$
-    .ofType(fromSms.FETCH_ALL_TEMPLATE_FAILURE)
-    .do(() => {
-      // this.toastCtrl
-      //   .create({
-      //     message: '获取短信模板列表失败',
-      //     duration: 3e3,
-      //     position: 'top'
-      //   })
-      //   .present()
-    })
 
   constructor(
     private actions$: Actions,
