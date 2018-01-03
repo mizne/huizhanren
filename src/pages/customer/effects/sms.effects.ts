@@ -23,7 +23,7 @@ import { SmsService } from '../../../providers/sms.service'
 import { phoneRe } from '../services/utils'
 import { CustomerService } from '../services/customer.service'
 import { Customer } from '../models/customer.model'
-import { SmsContent, SMS_TEMPLATE_BASE_URL, SendSmsContext } from '../models/sms.model'
+import { SmsContent, SendSmsContext } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
