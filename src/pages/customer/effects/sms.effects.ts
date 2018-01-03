@@ -10,17 +10,20 @@ import {
   getCustomers,
   getPhonesToSendOfCustomers,
   getShowDetailCustomerId,
-  getSmsTemplates
+  getSmsTemplates,
+  getSelectedCustomers
 } from '../reducers'
-import { getSelectedExhibitionId } from '../../login/reducers'
+import { getSelectedExhibitionId, getCompanyName, getBoothNo } from '../../login/reducers'
 
 import * as fromSms from '../actions/sms.action'
 import * as fromCustomer from '../actions/customer.action'
 import * as fromLogger from '../actions/logger.action'
 
 import { SmsService } from '../../../providers/sms.service'
+import { phoneRe } from '../services/utils'
 import { CustomerService } from '../services/customer.service'
-import { SmsContent, SMS_TEMPLATE_BASE_URL } from '../models/sms.model'
+import { Customer } from '../models/customer.model'
+import { SmsContent, SMS_TEMPLATE_BASE_URL, SendSmsContext } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
@@ -82,7 +85,7 @@ export class SmsEffects {
       (templateId, templates) => templates.find(e => e.id === templateId)
     )
     .withLatestFrom(
-      this.store.select(getPhonesToSendOfCustomers),
+      this.store.select(getSelectedCustomers),
       (template, customers) => ({ template, customers })
     )
     .withLatestFrom(
@@ -93,16 +96,32 @@ export class SmsEffects {
         exhibitionId
       })
     )
-    .mergeMap(({ template, customers, exhibitionId }) => {
-      const customerPhones = customers
-        .map(e => e.phones.map(f => ({ phone: f, name: e.customerName })))
-        .reduce((accu, curr) => (accu.push(...curr), accu), [])
-
-      // TODO 模板变量从 customer中获取
-      const smsContents: SmsContent[] = customerPhones.map(e => ({
-        phone: e.phone,
-        content: [e.name, `${SMS_TEMPLATE_BASE_URL}/${exhibitionId}`]
-      }))
+    .withLatestFrom(this.store.select(getCompanyName), ({template, customers, exhibitionId}, companyName) => ({
+      template,
+      customers,
+      exhibitionId,
+      companyName
+    }))
+    .withLatestFrom(this.store.select(getBoothNo), ({template, customers, exhibitionId, companyName}, boothNo) => ({
+      template,
+      customers,
+      exhibitionId,
+      companyName,
+      boothNo
+    }))
+    .mergeMap(({ template, customers, exhibitionId, companyName, boothNo }) => {
+      const phoneToSendWithCustomers: {phone: string, customer: Customer}[] = customers.reduce((accu, curr) => {
+        const phones = curr.phones.filter(e => e.selected && phoneRe.test(e.value))
+        accu.push(...phones.map(f => ({ phone: f.value, customer: curr })))
+        return accu
+      }, [])
+      const smsContents: SmsContent[] = phoneToSendWithCustomers.map(e => {
+        const sendContext = new SendSmsContext(e.customer, companyName, boothNo)
+        return {
+          phone: e.phone,
+          content: sendContext.computeTemplateParams(template.preview)
+        }
+      })
 
       return this.smsService
         .sendMessage(template.id, smsContents)
@@ -110,14 +129,14 @@ export class SmsEffects {
           return [
             new fromSms.SendSMSSuccessAction(),
             new fromLogger.BatchCreateLoggerAction({
-              customerIds: customers.map(e => e.customerId),
+              customerIds: customers.map(e => e.id),
               log: {
                 level: 'sys',
                 content: `系统: 发送 【${template.label}】 短信成功!`
               }
             }),
             new fromSms.MarkCustomerHasSendSMSAction(
-              customers.map(e => e.customerId)
+              customers.map(e => e.id)
             ),
             new fromCustomer.ToListableStatusAction()
           ]

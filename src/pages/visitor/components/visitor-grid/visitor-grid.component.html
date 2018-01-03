@@ -51,15 +51,9 @@
     </ion-row>
   </ion-grid>
 
-  <!-- <ng-template #noData>
-    <div class="no-data">
-      没有数据
-    </div>
-  </ng-template> -->
-
-  <p class="load-more" tappable *ngIf="(showLoadMore); else noMoreData;" (click)="ensureLoadMore()">加载更多</p>
+  <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more>
   <ng-template #noMoreData>
-    <p class=load-more>没有更多数据了</p>
+      <p class="not-more-data">没有更多数据了</p>
   </ng-template>
 </div>
 
@@ -86,15 +80,9 @@
       </ion-row>
     </ion-grid>
 
-    <!-- <ng-template #noData>
-      <div class="no-data">
-        没有数据
-      </div>
-    </ng-template> -->
-
-    <p class="load-more" tappable *ngIf="(showLoadMore); else noMoreData;" (click)="ensureLoadMore()">加载更多</p>
+    <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more>
     <ng-template #noMoreData>
-      <p class=load-more>没有更多数据了</p>
+      <p class="not-more-data">没有更多数据了</p>
     </ng-template>
   </div>
 </ng-template>

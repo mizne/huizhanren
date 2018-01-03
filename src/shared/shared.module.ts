@@ -14,6 +14,8 @@ import { HzLoggerItemAddComponent } from './components/logger-item-add/logger-it
 import { HzLoggerListComponent } from './components/logger-list/logger-list.component'
 import { HzToggleDetailComponent } from './components/toggle-detail/toggle-detail.component'
 
+import { HzLoadMoreComponent } from './components/load-more/load-more.component'
+
 import { ClickOutSideDirective } from './directives/click-outside.directive'
 
 const pipes = []
@@ -28,6 +30,7 @@ const components = [
   HzLoggerItemAddComponent,
   HzLoggerListComponent,
   HzToggleDetailComponent,
+  HzLoadMoreComponent,
 ]
 
 const directives = [ClickOutSideDirective]

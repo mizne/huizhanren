@@ -2,7 +2,7 @@ import * as customer from '../actions/customer.action'
 import * as sms from '../actions/sms.action'
 import * as group from '../actions/group.action'
 
-import { remain, phoneRe, deduplicate } from '../services/utils'
+import { remain, deduplicate, phoneRe } from '../services/utils'
 
 import {
   Customer,
@@ -325,8 +325,7 @@ export const getPhonesToSendOfCustomers = (state: State) => {
   return state.customers
     .filter(e => e.selected)
     .map(e => ({
-      customerId: e.id,
-      customerName: e.name,
+      ...e,
       phones: e.phones.filter(e => {
         return e.selected && phoneRe.test(e.value)
       }).map(e => e.value)

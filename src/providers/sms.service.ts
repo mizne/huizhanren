@@ -109,16 +109,16 @@ export class SmsService {
    * 发送短信
    *
    * @param {string} templateId
-   * @param {SmsContent[]} objects
+   * @param {SmsContent[]} smsContents
    * @returns {Observable<any>}
    * @memberof SmsService
    */
-  sendMessage(templateId: string, objects: SmsContent[]): Observable<any> {
+  sendMessage(templateId: string, smsContents: SmsContent[]): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(this.sendUrl, {
-          content: objects.map(e => ({
+          content: smsContents.map(e => ({
             phoneNumbers: e.phone,
             code: e.content
           })),

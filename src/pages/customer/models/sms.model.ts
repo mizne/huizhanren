@@ -33,27 +33,27 @@ export class SendSmsContext {
     let initV: SmsTemplateParams = {}
     const templateParams: SmsTemplateParams = variableNames.reduce(
       (accu, curr) => {
-        if (curr === 'exhibitorName') {
-          accu.exhibitorName = this.companyName
+        if (curr === '展商名称') {
+          accu['展商名称'] = this.companyName
         }
-        if (curr === 'exhibitorBoothNo') {
-          accu.exhibitorBoothNo = this.boothNo
+        if (curr === '展位号') {
+          accu['展位号'] = this.boothNo
         }
-        if (curr === 'visitorName') {
-          accu.visitorName = this.customer.name
+        if (curr === '专业买家姓名') {
+          accu['专业买家姓名'] = this.customer.name
         }
-        if (curr === 'visitorTitle') {
+        if (curr === '专业买家职务') {
           if (this.customer.jobs.length > 0) {
-            accu.visitorTitle = this.customer.jobs[0].label
+            accu['专业买家职务'] = this.customer.jobs[0].label
           } else {
-            accu.visitorTitle = `未知头衔`
+            accu['专业买家职务'] = `未知头衔`
           }
         }
-        if (curr === 'visitorCompanyName') {
+        if (curr === '专业买家公司') {
           if (this.customer.companys.length > 0) {
-            accu.visitorCompanyName = this.customer.companys[0].label
+            accu['专业买家公司'] = this.customer.companys[0].label
           } else {
-            accu.visitorCompanyName = `未知公司`
+            accu['专业买家公司'] = `未知公司`
           }
         }
         return accu
