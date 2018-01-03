@@ -115,4 +115,8 @@
   box-shadow: none !important;
 }
 
+.hz-confirm-modal {
+  @include confirmModal;
+}
+
 

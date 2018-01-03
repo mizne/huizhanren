@@ -118,7 +118,7 @@ export class ToSingleSendSMSModal implements OnInit {
         (label, templates) => templates.find(e => e.label === label)
       )
     )
-      .withLatestFrom(this.tenantService.getSendSmsContext())
+      .withLatestFrom(this.tenantService.getSingleSendSmsContext())
       .takeUntil(this.destroyService)
       .subscribe(([template, sendSmsContext]) => {
         this.selectedTemplateId = template.id

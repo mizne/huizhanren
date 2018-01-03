@@ -1,4 +1,5 @@
 import { Customer } from './customer.model'
+import { phoneRe } from '../services/utils'
 
 export interface SmsTemplate {
   id?: string
@@ -11,7 +12,7 @@ export interface SmsContent {
   content: SmsTemplateParams
 }
 
-export class SendSmsContext {
+export class SingleSendSmsContext {
   static TEMPLATE_VARIABLES = [
     '展商名称', // 展商名称()，
     '展位号', // 展位号()，
@@ -29,7 +30,7 @@ export class SendSmsContext {
   ) {}
 
   computeTemplateParams(preview): SmsTemplateParams {
-    const matches = preview.match(SendSmsContext.VARIABLE_RE)
+    const matches = preview.match(SingleSendSmsContext.VARIABLE_RE)
     if (!matches) {
       return {}
     }
@@ -71,13 +72,55 @@ export class SendSmsContext {
     preview: string
   ): { params: SmsTemplateParams; content: string } {
     const templateParams = this.computeTemplateParams(preview)
-    const content = preview.replace(SendSmsContext.VARIABLE_RE, function(m, c) {
+    const content = preview.replace(SingleSendSmsContext.VARIABLE_RE, function(
+      _,
+      c
+    ) {
       return templateParams[c]
     })
     return {
       params: templateParams,
       content
     }
+  }
+}
+
+export class BatchSendSmsContext {
+  constructor(
+    private customers: Customer[],
+    private companyName: string,
+    private boothNo: string
+  ) {}
+
+  public getCustomerIds(): string[] {
+    return this.customers.map(e => e.id)
+  }
+
+  public computeRequestParams(preview: string): SmsContent[] {
+    const phoneToSendWithCustomers: {
+      phone: string
+      customer: Customer
+    }[] = this.customers.reduce((accu, curr) => {
+      const phones = curr.phones.filter(
+        e => e.selected && phoneRe.test(e.value)
+      )
+      accu.push(...phones.map(f => ({ phone: f.value, customer: curr })))
+      return accu
+    }, [])
+
+    const smsContents: SmsContent[] = phoneToSendWithCustomers.map(e => {
+      const sendContext = new SingleSendSmsContext(
+        e.customer,
+        this.companyName,
+        this.boothNo
+      )
+      return {
+        phone: e.phone,
+        content: sendContext.computeTemplateParams(preview)
+      }
+    })
+
+    return smsContents
   }
 }
 

@@ -4,16 +4,9 @@ import {
   ViewController,
 } from 'ionic-angular'
 
-import { Store } from '@ngrx/store'
-import { State } from '../reducers/index'
-import {
-  CancelSendSMSAction,
-  EnsureSendSMSAction
- } from '../actions/sms.action'
-
 @Component({
   template: `
-<div class="hz-modal to-send-sms-modal">
+<div class="hz-modal to-send-sms-modal hz-confirm-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
@@ -32,30 +25,15 @@ import {
   </div>
   </ion-content>
 </div>
-`,
-styles: [`
-  .modal-wrapper {
-    height: 300px;
-  }
-  .to-send-sms-modal {
-    height: 300px;
-  }
-  .to-send-sms-modal .modal-body {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-  }
-`]
+`
 })
 export class ToSendSMSModal {
-  private templateId: string
+  // private templateId: string
   count: string
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
-    private store: Store<State>
   ) {
-    this.templateId = params.get('templateId')
     this.count = params.get('count')
   }
 
@@ -65,11 +43,9 @@ export class ToSendSMSModal {
 
   cancel() {
     this.dismiss()
-    this.store.dispatch(new CancelSendSMSAction())
   }
 
   complete() {
     this.dismiss(true)
-    this.store.dispatch(new EnsureSendSMSAction(this.templateId))
   }
 }

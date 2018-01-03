@@ -14,8 +14,14 @@ import {
   getExhibitorId,
   getBoothNo
 } from '../pages/login/reducers'
-import { SendSmsContext } from '../pages/customer/models/sms.model'
-import { getShowDetailCustomer } from '../pages/customer/reducers'
+import {
+  SingleSendSmsContext,
+  BatchSendSmsContext
+} from '../pages/customer/models/sms.model'
+import {
+  getShowDetailCustomer,
+  getSelectedCustomers
+} from '../pages/customer/reducers'
 
 @Injectable()
 export class TenantService {
@@ -85,14 +91,28 @@ export class TenantService {
     )
   }
 
-  public getSendSmsContext(): Observable<SendSmsContext> {
+  public getSingleSendSmsContext(): Observable<SingleSendSmsContext> {
     return Observable.zip(
       this.store.select(getShowDetailCustomer),
       this.store.select(getCompanyName),
       this.store.select(getBoothNo)
     ).map(
       ([customer, companyName, boothNo]) =>
-        new SendSmsContext(customer, companyName, boothNo)
+        new SingleSendSmsContext(customer, companyName, boothNo)
     )
+  }
+
+  public getBatchSendSmsContext(): Observable<BatchSendSmsContext> {
+    return this.store
+      .select(getSelectedCustomers)
+      .withLatestFrom(
+        Observable.zip(
+          this.store.select(getCompanyName),
+          this.store.select(getBoothNo)
+        ),
+        (customers, [companyName, boothNo]) => {
+          return new BatchSendSmsContext(customers, companyName, boothNo)
+        }
+      )
   }
 }

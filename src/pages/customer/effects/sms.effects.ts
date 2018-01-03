@@ -11,19 +11,19 @@ import {
   getPhonesToSendOfCustomers,
   getShowDetailCustomerId,
   getSmsTemplates,
-  getSelectedCustomers
 } from '../reducers'
-import { getSelectedExhibitionId, getCompanyName, getBoothNo } from '../../login/reducers'
+import {
+  getSelectedExhibitionId,
+} from '../../login/reducers'
 
 import * as fromSms from '../actions/sms.action'
 import * as fromCustomer from '../actions/customer.action'
 import * as fromLogger from '../actions/logger.action'
 
 import { SmsService } from '../../../providers/sms.service'
-import { phoneRe } from '../services/utils'
+import { TenantService } from '../../../providers/tenant.service'
 import { CustomerService } from '../services/customer.service'
-import { Customer } from '../models/customer.model'
-import { SmsContent, SendSmsContext } from '../models/sms.model'
+import { SmsContent } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
@@ -57,12 +57,26 @@ export class SmsEffects {
       }
     })
 
-  @Effect({ dispatch: false })
+  @Effect()
   toSendSms$ = this.actions$
     .ofType(fromSms.TO_SEND_SMS)
     .map((action: fromSms.ToSendSMSAction) => action.payload)
-    .do(({ templateId, count }) => {
-      this.modalCtrl.create(ToSendSMSModal, { templateId, count }).present()
+    .switchMap(({ templateId, count }) => {
+      return Observable.create(observer => {
+        const modal = this.modalCtrl.create(ToSendSMSModal, {
+          count
+        })
+        modal.onDidDismiss(ok => {
+          if (ok) {
+            observer.next(templateId)
+          } else {
+            observer.error()
+          }
+        })
+        modal.present()
+      })
+        .map(templateId => new fromSms.EnsureSendSMSAction(templateId))
+        .catch(() => Observable.of(new fromSms.CancelSendSMSAction()))
     })
 
   @Effect({ dispatch: false })
@@ -84,44 +98,9 @@ export class SmsEffects {
       this.store.select(getSmsTemplates),
       (templateId, templates) => templates.find(e => e.id === templateId)
     )
-    .withLatestFrom(
-      this.store.select(getSelectedCustomers),
-      (template, customers) => ({ template, customers })
-    )
-    .withLatestFrom(
-      this.store.select(getSelectedExhibitionId),
-      ({ template, customers }, exhibitionId) => ({
-        template,
-        customers,
-        exhibitionId
-      })
-    )
-    .withLatestFrom(this.store.select(getCompanyName), ({template, customers, exhibitionId}, companyName) => ({
-      template,
-      customers,
-      exhibitionId,
-      companyName
-    }))
-    .withLatestFrom(this.store.select(getBoothNo), ({template, customers, exhibitionId, companyName}, boothNo) => ({
-      template,
-      customers,
-      exhibitionId,
-      companyName,
-      boothNo
-    }))
-    .mergeMap(({ template, customers, exhibitionId, companyName, boothNo }) => {
-      const phoneToSendWithCustomers: {phone: string, customer: Customer}[] = customers.reduce((accu, curr) => {
-        const phones = curr.phones.filter(e => e.selected && phoneRe.test(e.value))
-        accu.push(...phones.map(f => ({ phone: f.value, customer: curr })))
-        return accu
-      }, [])
-      const smsContents: SmsContent[] = phoneToSendWithCustomers.map(e => {
-        const sendContext = new SendSmsContext(e.customer, companyName, boothNo)
-        return {
-          phone: e.phone,
-          content: sendContext.computeTemplateParams(template.preview)
-        }
-      })
+    .withLatestFrom(this.tenantService.getBatchSendSmsContext())
+    .switchMap(([template, batchSendSmsContext]) => {
+      const smsContents = batchSendSmsContext.computeRequestParams(template.preview)
 
       return this.smsService
         .sendMessage(template.id, smsContents)
@@ -129,15 +108,13 @@ export class SmsEffects {
           return [
             new fromSms.SendSMSSuccessAction(),
             new fromLogger.BatchCreateLoggerAction({
-              customerIds: customers.map(e => e.id),
+              customerIds: batchSendSmsContext.getCustomerIds(),
               log: {
                 level: 'sys',
                 content: `系统: 发送 【${template.label}】 短信成功!`
               }
             }),
-            new fromSms.MarkCustomerHasSendSMSAction(
-              customers.map(e => e.id)
-            ),
+            new fromSms.MarkCustomerHasSendSMSAction(batchSendSmsContext.getCustomerIds()),
             new fromCustomer.ToListableStatusAction()
           ]
         })
@@ -203,7 +180,12 @@ export class SmsEffects {
     .map((action: fromSms.EnsureSingleSendSMSAction) => action.payload)
     .withLatestFrom(
       this.store.select(getShowDetailCustomerId),
-      ({ content, phone, templateId }, customerId) => ({ content, phone, templateId, customerId })
+      ({ content, phone, templateId }, customerId) => ({
+        content,
+        phone,
+        templateId,
+        customerId
+      })
     )
     .withLatestFrom(
       this.store.select(getCustomers),
@@ -266,7 +248,10 @@ export class SmsEffects {
     .mergeMap(() =>
       this.smsService
         .fetchAllTemplate()
-        .map(smsTemplates => new fromSms.FetchAllTemplateSuccessAction(smsTemplates))
+        .map(
+          smsTemplates =>
+            new fromSms.FetchAllTemplateSuccessAction(smsTemplates)
+        )
         .catch(() => Observable.of(new fromSms.FetchAllTemplateFailureAction()))
     )
 
@@ -301,6 +286,7 @@ export class SmsEffects {
     private toastCtrl: ToastController,
     private smsService: SmsService,
     private store: Store<State>,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private tenantService: TenantService
   ) {}
 }

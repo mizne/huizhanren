@@ -89,9 +89,9 @@ img {
   max-width: 100%;
 }
 
+@import '../styles/mixins';
 @import '../styles/modal';
 @import '../styles/button';
-@import '../styles/mixins';
 @import '../styles/fix';
 @import '../styles/iconfont';
 @import '../styles/popup';
