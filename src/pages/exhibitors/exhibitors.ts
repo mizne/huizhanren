@@ -48,7 +48,6 @@ import {
   ExhibitorFilter,
   RecommendExhibitor,
   Product,
-  FetchRecommendExhibitorParams
 } from './models/exhibitor.model'
 import { Logger } from '../customer/models/logger.model'
 import {
@@ -160,17 +159,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   }
 
   ensureCancelMatcher(id: string) {
-    console.log(`ensure cancel matcher id: ${id}`)
     this.store.dispatch(new ToCancelMatcherAction(id))
   }
 
   ensureAgreeMatcher(id: string) {
-    console.log(`ensure agree matcher id: ${id}`)
     this.store.dispatch(new ToAgreeMatcherAction(id))
   }
 
   ensureRefuseMatcher(id: string) {
-    console.log(`ensure refuse matcher id: ${id}`)
     this.store.dispatch(new ToRefuseMatcherAction(id))
   }
 
@@ -296,7 +292,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
           switch (headerEvent) {
             case ListHeaderEvent.REFRESH:
               if (listStatus === ListStatus.EXHIBITOR) {
-                console.log(`to refresh exhibitor data`)
                 this.store.dispatch(
                   new FetchExhibitorsAction({
                     ...exhibitorFilter,
@@ -306,7 +301,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
                 )
               }
               if (listStatus === ListStatus.MATCHER) {
-                console.log(`to refresh exhibitor matcher data`)
                 console.log(matcherFilter)
                 this.store.dispatch(
                   new FetchMatchersAction({
@@ -371,14 +365,11 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       })
       .takeUntil(this.destroyService)
       .subscribe(exhibitorFilter => {
-        console.log(exhibitorFilter)
-
-        const params: FetchRecommendExhibitorParams = {
+        this.store.dispatch(new FetchExhibitorsAction({
           ...exhibitorFilter,
           pageIndex: 1,
           pageSize: 10
-        }
-        this.store.dispatch(new FetchExhibitorsAction(params))
+        }))
         this.store.dispatch(new FetchExhibitorsCountAction(exhibitorFilter))
       })
   }
@@ -387,8 +378,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.matcherFilterSub
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        console.log(matcherFilter)
-
         this.store.dispatch(
           new FetchMatchersAction({
             pageIndex: 1,
@@ -396,7 +385,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
             statuses: matcherFilter
           })
         )
-
         this.store.dispatch(new FetchMatchersCountAction(matcherFilter))
       })
   }
@@ -422,9 +410,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         (_, recommendFilter) => recommendFilter
       )
       .takeUntil(this.destroyService)
-      .subscribe(recommendFilter => {
-        console.log('to load more with exhibitor filter, ', recommendFilter)
-        this.store.dispatch(new LoadMoreExhibitorsAction(recommendFilter))
+      .subscribe(exhibitorFilter => {
+        this.store.dispatch(new LoadMoreExhibitorsAction(exhibitorFilter))
       })
   }
 
@@ -437,7 +424,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        console.log('to load more with matcher filter, ', matcherFilter)
         this.store.dispatch(new LoadMoreMatchersAction(matcherFilter))
       })
   }

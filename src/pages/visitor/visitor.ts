@@ -44,7 +44,6 @@ import {
   ListHeaderEvent,
   RecommendVisitor,
   Portray,
-  FetchRecommendVisitorParams,
   VisitorFilter,
   AREA_OPTIONS
 } from './models/visitor.model'
@@ -150,17 +149,14 @@ export class VisitorPage implements OnInit, OnDestroy {
   }
 
   ensureCancelMatcher(id: string) {
-    console.log(`ensure cancel matcher id: ${id}`)
     this.store.dispatch(new ToCancelMatcherAction(id))
   }
 
   ensureAgreeMatcher(id: string) {
-    console.log(`ensure agree matcher id: ${id}`)
     this.store.dispatch(new ToAgreeMatcherAction(id))
   }
 
   ensureRefuseMatcher(id: string) {
-    console.log(`ensure refuse matcher id: ${id}`)
     this.store.dispatch(new ToRefuseMatcherAction(id))
   }
 
@@ -286,7 +282,6 @@ export class VisitorPage implements OnInit, OnDestroy {
           switch (headerEvent) {
             case ListHeaderEvent.REFRESH:
               if (listStatus === ListStatus.VISITOR) {
-                console.log(`to refresh visitor data`)
                 this.store.dispatch(
                   new FetchVisitorsAction({
                     ...visitorFilter,
@@ -296,7 +291,6 @@ export class VisitorPage implements OnInit, OnDestroy {
                 )
               }
               if (listStatus === ListStatus.MATCHER) {
-                console.log(`to refresh visitor matcher data`)
                 this.store.dispatch(
                   new FetchMatchersAction({
                     statuses: matcherFilter,
@@ -361,14 +355,11 @@ export class VisitorPage implements OnInit, OnDestroy {
       })
       .takeUntil(this.destroyService)
       .subscribe(visitorFilter => {
-        console.log(visitorFilter)
-
-        const params: FetchRecommendVisitorParams = {
+        this.store.dispatch(new FetchVisitorsAction({
           ...visitorFilter,
           pageIndex: 1,
           pageSize: 10
-        }
-        this.store.dispatch(new FetchVisitorsAction(params))
+        }))
         this.store.dispatch(new FetchVisitorsCountAction(visitorFilter))
       })
   }
@@ -377,8 +368,6 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.matcherFilterSub
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        console.log(matcherFilter)
-
         this.store.dispatch(
           new FetchMatchersAction({
             pageIndex: 1,
@@ -386,7 +375,6 @@ export class VisitorPage implements OnInit, OnDestroy {
             statuses: matcherFilter
           })
         )
-
         this.store.dispatch(new FetchMatchersCountAction(matcherFilter))
       })
   }
@@ -412,9 +400,8 @@ export class VisitorPage implements OnInit, OnDestroy {
         (_, recommendFilter) => recommendFilter
       )
       .takeUntil(this.destroyService)
-      .subscribe(recommendFilter => {
-        console.log('to load more with recommend filter, ', recommendFilter)
-        this.store.dispatch(new LoadMoreVisitorsAction(recommendFilter))
+      .subscribe(visitorFilter => {
+        this.store.dispatch(new LoadMoreVisitorsAction(visitorFilter))
       })
   }
 
@@ -427,23 +414,20 @@ export class VisitorPage implements OnInit, OnDestroy {
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        console.log('to load more with matcher filter, ', matcherFilter)
         this.store.dispatch(new LoadMoreMatchersAction(matcherFilter))
       })
   }
 
   private initFetchLogger(): void {
-    this.showDetailID$.takeUntil(this.destroyService).subscribe(customerId => {
-      if (customerId) {
-        this.store.dispatch(new FetchLoggerAction(customerId))
+    this.showDetailID$.takeUntil(this.destroyService).subscribe(visitorId => {
+      if (visitorId) {
+        this.store.dispatch(new FetchLoggerAction(visitorId))
       }
     })
   }
 
   private initDispatch(): void {
     this.store.dispatch(new FetchVisitorsAction())
-    // this.store.dispatch(new FetchMatchersAction())
     this.store.dispatch(new FetchVisitorsCountAction())
-    // this.store.dispatch(new FetchMatchersCountAction())
   }
 }

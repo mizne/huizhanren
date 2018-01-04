@@ -20,21 +20,19 @@
 
   .body {
     .row-item {
-      color: map-get($map: $gridColors, $key: grey);
       height: 50px;
+      color: map-get($map: $gridColors, $key: grey);
+      transition: background-color .3s;
       &.even {
-        background-color: #27272a;
+        background-color: map-get($map: $gridColors, $key: evenRow);
       }
-
       &.active {
         background-color: map-get($map: $gridColors, $key: activeRow);
       }
 
       ion-col {
         display: flex;
-
         align-items: center;
-
         &:last-child {
           justify-content: space-evenly;
         }

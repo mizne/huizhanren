@@ -1,10 +1,12 @@
 .hz-customer-item {
   display: flex;
   padding: 10px;
-  background-color: #18181a;
-
-  &.choosed {
-    background-color: rgba(98, 136, 213, 0.19);
+  transition: background-color .3s;
+  &.even {
+    background-color: map-get($map: $gridColors, $key: evenRow);
+  }
+  &.active {
+    background-color: map-get($map: $gridColors, $key: activeRow);
   }
 
   .left-area {
@@ -36,11 +38,11 @@
     align-items: center;
 
     .icon-wrapper {
+      @include flexboxCenter;
       border: 1px solid map-get($colors, grey);
       border-radius: 50%;
       width: 20px;
       height: 20px;
-      @include flexboxCenter;
 
       &.active {
         border-color: map-get($colors, primary);

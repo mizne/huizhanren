@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable'
 @Component({
   selector: 'hz-customer-item',
   template: `
-    <div class="hz-customer-item" tappable (click)="showDetail(customer.id)" [class.choosed]="hasChoosed$ | async">
+    <div class="hz-customer-item" tappable (click)="showDetail(customer.id)" [class.active]="hasChoosed$ | async" [class.even]="even">
       <div class="left-area">
         <ion-checkbox tappable [(ngModel)]="selected" (ionChange)="change($event)"></ion-checkbox>
       </div>
@@ -35,13 +35,12 @@ import { Observable } from 'rxjs/Observable'
 export class HzCustomerItemComponent implements OnInit {
 
   @Input() customer: Customer
+  @Input() even: boolean
 
   @Output() select: EventEmitter<any> = new EventEmitter<any>()
-
   @Output() toShowDetail: EventEmitter<string> = new EventEmitter<string>()
 
   selected: boolean
-
   hasChoosed$: Observable<boolean>
 
   constructor(private store: Store<State>) {

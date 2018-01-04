@@ -28,21 +28,23 @@ $app-direction: ltr;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary: #6288d5,
+  primary: #6288D5,
   secondary: #54A574,
   danger: #D5626D,
-  light: #f4f4f4,
+  light: #F4F4F4,
   dark: #222,
   grey: #666,
-  golden: #ef9c64
+  golden: #EF9C64,
+  white: #F6F7FC
 );
 
 $gridColors: (
-  header: #6288d5,
-  grey: #aaa,
+  header: #6288D5,
+  grey: #AAA,
   sender: #0EC5A9,
   receiver: #A66CB9,
-  activeRow: #524e4e,
+  activeRow: #524E4E,
+  evenRow: #27272A,
   secondary: #54A574,
   danger: #D5626D
 );
@@ -76,15 +78,15 @@ $checkbox-md-icon-background-color-off: transparent;
 @import 'noto-sans';
 
 $normalLogger: (
-  primary: #6288d5,
+  primary: #6288D5,
   addBorderColor: #AFC2EA,
   timeText: #666,
-  contentText: #fff
+  contentText: #F6F7FC
 );
 
 $primaryLogger: (
-  primary: #fff,
+  primary: #F6F7FC,
   addBorderColor: #93A1BB,
-  timeText: #fff,
-  contentText: #fff
+  timeText: #F6F7FC,
+  contentText: #F6F7FC
 )
