@@ -36,7 +36,7 @@
     border: 3px solid map-get($map: $primaryLogger, $key: addBorderColor);
   }
 
-  &.has-log:after {
+  &.has-item:after {
     position: absolute;
     top: 7px;
     left: 9px;

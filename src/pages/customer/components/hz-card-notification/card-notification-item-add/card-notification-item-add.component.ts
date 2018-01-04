@@ -8,9 +8,9 @@ import { Notification } from '../../../models/notification.model'
 @Component({
   selector: 'hz-card-notification-item-add',
   template: `
-    <div class="hz-card-notification-item-add" [ngClass]="[hasItem ? 'has-item' : '']">
-      添加
-      <ion-icon name="add-circle" tappable (click)="createNotification()"></ion-icon>
+    <div class="hz-card-notification-item-add primary" [ngClass]="[hasItem ? 'has-item' : '']">
+      <span class="text">添加</span>
+      <i class="iconfont icon-add-circle" tappable (click)="createNotification()"></i>
     </div>
   `
 })
