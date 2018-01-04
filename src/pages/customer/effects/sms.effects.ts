@@ -55,7 +55,6 @@ export class SmsEffects {
     .ofType(fromSms.CREATE_TEMPLATE)
     .map((action: fromSms.CreateTemplateAction) => action.template)
     .switchMap(template => {
-      debugger
       return this.smsService
         .createSmsTemplate(template)
         .concatMap(() => [

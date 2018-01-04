@@ -103,6 +103,7 @@ hz-customer-manage {
     flex: 1;
     width: 50%;
     min-height: 220px;
+    max-height: 290px;
     float: left;
     padding: 24px;
     position: relative;
@@ -168,7 +169,7 @@ hz-customer-manage {
     text-align: center;
 
     .preview {
-      max-height: 300px;
+      max-height: 250px;
       min-height: 100px;
       overflow: auto;
       text-align: left;

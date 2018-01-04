@@ -1,9 +1,10 @@
-import { Component, OnInit, ElementRef } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { NavParams, ViewController, ToastController } from 'ionic-angular'
 
 import { DestroyService } from '../../../providers/destroy.service'
 import { SingleSendSmsContext } from '../models/sms.model'
+import { Observable } from 'rxjs/Observable'
 
 @Component({
   template: `
@@ -21,16 +22,16 @@ import { SingleSendSmsContext } from '../models/sms.model'
       <div class="form-layer">
         <div class="form-group">
           <div class="input-group">
-            <input type="text" class="form-control" [(ngModel)]="label" placeholder="请输入模版名称">
+            <input type="text" class="form-control" [formControl]="labelCtrl" placeholder="请输入模版名称">
           </div>
           <ion-item>
             <ion-label>插入关键字</ion-label>
-            <ion-select [formControl]="selectedKey" okText="确定" cancelText="取消">
+            <ion-select [formControl]="keyCtrl" placeholder="选择关键字" okText="确定" cancelText="取消">
               <ion-option *ngFor="let key of keys" [value]="key">{{key}}</ion-option>
             </ion-select>
           </ion-item>
           <div class="input-group">
-            <textarea rows="4" [(ngModel)]="preview" placeholder="请输入模版内容"></textarea>
+            <textarea rows="4" [formControl]="previewCtrl" placeholder="请输入模版内容"></textarea>
           </div>
         </div>
       </div>
@@ -57,18 +58,22 @@ import { SingleSendSmsContext } from '../models/sms.model'
   providers: [DestroyService]
 })
 export class ToCreateTemplateModal implements OnInit {
-  label = ''
-  preview = ''
+  private label = ''
+  private preview = ''
 
   keys = SingleSendSmsContext.TEMPLATE_VARIABLES
-  selectedKey: FormControl = new FormControl('')
+  keyCtrl: FormControl = new FormControl('')
+
+  labelCtrl: FormControl = new FormControl('')
+  previewCtrl: FormControl = new FormControl('')
+
+  MAX_LABEL_LENGTH = 15
 
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
     private toastCtrl: ToastController,
-    private destroyService: DestroyService,
-    private el: ElementRef
+    private destroyService: DestroyService
   ) {}
 
   private dismiss(data?): void {
@@ -76,10 +81,48 @@ export class ToCreateTemplateModal implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedKey.valueChanges
+    this.initLabel()
+    this.initPreview()
+  }
+
+  private initLabel() {
+    this.labelCtrl.valueChanges
+      .do(e => {
+        this.label = e.slice(0, this.MAX_LABEL_LENGTH)
+      })
       .takeUntil(this.destroyService)
-      .subscribe(key => {
-        this.preview += '${' + key + '}'
+      .subscribe(e => {
+        if (e.length > this.MAX_LABEL_LENGTH) {
+          this.toastCtrl
+            .create({
+              message: '模版名称过长',
+              duration: 3e3,
+              position: 'top'
+            })
+            .present()
+
+          this.labelCtrl.patchValue(e.slice(0, this.MAX_LABEL_LENGTH), {
+            emitEvent: false
+          })
+        }
+      })
+  }
+
+  private initPreview() {
+    Observable.merge(
+      this.previewCtrl.valueChanges,
+      this.keyCtrl.valueChanges
+        .withLatestFrom(this.previewCtrl.valueChanges.startWith(''))
+        .map(([key, preview]) => {
+          return preview + '${' + key + '}'
+        })
+        .do(newPreview => {
+          this.previewCtrl.patchValue(newPreview)
+        })
+    )
+      .takeUntil(this.destroyService)
+      .subscribe(preview => {
+        this.preview = preview
       })
   }
 

@@ -18,7 +18,6 @@ export class HzLoggerListComponent {
   }
 
   ensureEditLog(log: Logger) {
-    debugger
     this.editLog.emit(log)
   }
 }
