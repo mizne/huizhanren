@@ -80,14 +80,6 @@ export class ToCreateTemplateModal implements OnInit {
       .takeUntil(this.destroyService)
       .subscribe(key => {
         this.preview += '${' + key + '}'
-
-        const textarea = this.el.nativeElement.querySelector('textarea')
-        console.log(textarea)
-        if (textarea) {
-          setTimeout(() => {
-            textarea.focus()
-          }, 1000)
-        }
       })
   }
 
