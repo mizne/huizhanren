@@ -89,18 +89,26 @@ export class ToCreateTemplateModal implements OnInit {
 
   complete() {
     if (!this.label) {
-      this.toastCtrl
+      return this.toastCtrl
         .create({
           message: '还没有填写模版名称呢',
           duration: 3e3,
           position: 'top'
         })
         .present()
-    } else {
-      this.dismiss({
-        label: this.label,
-        preview: this.preview
-      })
     }
+    if (!this.preview) {
+      return this.toastCtrl
+        .create({
+          message: '还没有填写模版内容呢',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    }
+    this.dismiss({
+      label: this.label,
+      preview: this.preview
+    })
   }
 }

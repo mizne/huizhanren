@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
-// import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable'
 
-// import { TenantServiceProvider } from '../../../providers/tenant-service/tenant.service'
+import { TenantService } from '../../../providers/tenant.service'
 
 @Injectable()
 export class OtherService {
@@ -14,7 +14,7 @@ export class OtherService {
    * 检查 版本更新
    *
    * @returns {Observable<any>}
-   * @memberof UserService
+   * @memberof OtherService
    */
   checkUpdate(): Observable<any> {
     // return this.tenantService.getTenantIdAndUserId()

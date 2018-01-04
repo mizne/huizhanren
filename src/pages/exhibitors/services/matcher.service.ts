@@ -32,15 +32,14 @@ export class ExhibitorMatcherService {
   /**
    * 获取 发出的或收到的约请记录
    *
-   * @param {number} pageIndex
-   * @param {number} pageSize
+   * @param {FetchMatcherParams} params
    * @returns {Observable<ExhibitorMatcher[]>}
-   * @memberof MatcherService
+   * @memberof ExhibitorMatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<ExhibitorMatcher[]> {
     return this.tenantService
       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+      .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
         let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
 
         if (params.pageIndex) {
@@ -99,7 +98,7 @@ export class ExhibitorMatcherService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (statuses && statuses.length > 0) {
               query += `&state=${statuses.map(convertMatcherStatusFromModel)}`
@@ -121,17 +120,11 @@ export class ExhibitorMatcherService {
   /**
    * 新建约请
    *
-   * @param {RecommendExhibitor} exhibitor
-   * @param {string} boothNo
-   * @param {string} tenantId
+   * @param {string} receiverId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof ExhibitorMatcherService
    */
-  createMatcher(
-    exhibitor: RecommendExhibitor,
-    boothNo: string,
-    tenantId: string
-  ): Observable<any> {
+  createMatcher(receiverId: string): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
       .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
@@ -143,7 +136,7 @@ export class ExhibitorMatcherService {
               ),
               Type: '1',
               Initator: exhibitorId,
-              Receiver: exhibitor.id,
+              Receiver: receiverId,
               ExhibitionId: exhibitionId
             }
           }
@@ -163,7 +156,7 @@ export class ExhibitorMatcherService {
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof ExhibitorMatcherService
    */
   cancelMatcher(matcherId: string): Observable<any> {
     const params = {
@@ -176,7 +169,7 @@ export class ExhibitorMatcherService {
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .mergeMap(([_, __]) => {
         return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
@@ -193,7 +186,7 @@ export class ExhibitorMatcherService {
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof ExhibitorMatcherService
    */
   agreeMatcher(matcherId: string): Observable<any> {
     const params = {
@@ -206,7 +199,7 @@ export class ExhibitorMatcherService {
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .mergeMap(([_, __]) => {
         return this.http.put(this.updateUrl, params)
       })
       .catch(e => {
@@ -223,7 +216,7 @@ export class ExhibitorMatcherService {
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof ExhibitorMatcherService
    */
   refuseMatcher(matcherId: string): Observable<any> {
     const params = {
@@ -236,7 +229,7 @@ export class ExhibitorMatcherService {
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .mergeMap(([_, __]) => {
         return this.http.put(this.updateUrl, params)
       })
       .catch(e => {

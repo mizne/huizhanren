@@ -68,6 +68,6 @@ export class ToInviteExhibitorModal implements OnInit {
   }
 
   complete() {
-    this.dismiss(this.addressCtrl.value)
+    this.dismiss(true)
   }
 }

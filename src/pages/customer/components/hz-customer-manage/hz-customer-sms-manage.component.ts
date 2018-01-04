@@ -93,7 +93,6 @@ export class HzCustomerSmsManageComponent implements OnInit {
   }
 
   toCreateTemplate(type: CustomerPageManageableStatus) {
-    console.log('to create sms template')
     this.store.dispatch(new ToCreateTemplateAction())
   }
 

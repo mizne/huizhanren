@@ -77,7 +77,7 @@ export class VisitorService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (params.area) {
               query += `&province=${params.area}`

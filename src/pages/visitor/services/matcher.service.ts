@@ -44,10 +44,9 @@ export class VisitorMatcherService {
   /**
    * 获取 发出的或收到的约请记录
    *
-   * @param {number} pageIndex
-   * @param {number} pageSize
+   * @param {FetchMatcherParams} params
    * @returns {Observable<VisitorMatcher[]>}
-   * @memberof MatcherService
+   * @memberof VisitorMatcherService
    */
   public fetchMatchers(
     params: FetchMatcherParams
@@ -103,9 +102,11 @@ export class VisitorMatcherService {
             }))
         )
   }
+
   /**
    * 获取所有约请 条数
    *
+   * @param {VisitorMatcherStatus[]} statuses
    * @returns {Observable<number>}
    * @memberof VisitorMatcherService
    */
@@ -113,7 +114,7 @@ export class VisitorMatcherService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (statuses && statuses.length > 0) {
               query += `&state=${statuses.map(
@@ -137,23 +138,17 @@ export class VisitorMatcherService {
   /**
    * 新建约请
    *
-   * @param {Visitor} recommend
-   * @param {string} boothArea
-   * @param {string} tenantId
-   * @param {string} customerId
+   * @param {string} visitorId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof VisitorMatcherService
    */
   public createMatcher(
-    recommend: Visitor,
-    boothArea: string,
-    tenantId: string,
-    customerId: string
+    visitorId: string
   ): Observable<any> {
     const params = {
       State: convertMatcherStatusFromModel(VisitorMatcherStatus.UN_AUDIT),
       Type: '1', // 约请的发起方向
-      Receiver: customerId
+      Receiver: visitorId
     }
 
     return this.tenantService
@@ -177,12 +172,13 @@ export class VisitorMatcherService {
         })
       })
   }
+
   /**
    * 取消约请
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof VisitorMatcherService
    */
   public cancelMatcher(matcherId: string): Observable<any> {
     const params = {
@@ -212,7 +208,7 @@ export class VisitorMatcherService {
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof VisitorMatcherService
    */
   public agreeMatcher(matcherId: string): Observable<any> {
     const params = {
@@ -242,7 +238,7 @@ export class VisitorMatcherService {
    *
    * @param {string} matcherId
    * @returns {Observable<any>}
-   * @memberof MatcherService
+   * @memberof VisitorMatcherService
    */
   public refuseMatcher(matcherId: string): Observable<any> {
     const params = {

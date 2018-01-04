@@ -165,33 +165,9 @@ export class VisitorEffects {
   inviteVisitor$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR)
     .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-    .withLatestFrom(this.store.select(getVisitors), (id, recommends) =>
-      recommends.find(e => e.id === id)
-    )
-    .withLatestFrom(this.store.select(getBoothNo), (recommend, boothArea) => ({
-      recommend,
-      boothArea
-    }))
-    .withLatestFrom(
-      this.store.select(getTenantId),
-      ({ recommend, boothArea }, tenantId) => ({
-        recommend,
-        boothArea,
-        tenantId
-      })
-    )
-    .withLatestFrom(
-      this.store.select(getShowDetailID),
-      ({ recommend, boothArea, tenantId }, customerId) => ({
-        recommend,
-        boothArea,
-        tenantId,
-        customerId
-      })
-    )
-    .mergeMap(({ recommend, boothArea, tenantId, customerId }) =>
+    .mergeMap((visitorId) =>
       this.matcherService
-        .createMatcher(recommend, boothArea, tenantId, customerId)
+        .createMatcher(visitorId)
         .concatMap(() => [
           new fromVisitor.InviteVisitorSuccessAction(),
           new fromMatcher.FetchMatchersAction()

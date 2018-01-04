@@ -101,7 +101,6 @@ export class CancelInviteExhibitorAction implements Action {
 }
 export class InviteExhibitorAction implements Action {
   readonly type = INVITE_EXHIBITOR
-  constructor(public boothNo: string) {}
 }
 export class InviteExhibitorSuccessAction implements Action {
   readonly type = INVITE_EXHIBITOR_SUCCESS

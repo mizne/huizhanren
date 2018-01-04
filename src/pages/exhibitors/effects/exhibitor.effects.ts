@@ -129,63 +129,27 @@ export class ExhibitorEffects {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToInviteExhibitorModal, params)
-          modal.onDidDismiss(boothNo => {
-            res(boothNo)
+          modal.onDidDismiss(ok => {
+            res(ok)
           })
           modal.present()
         })
-      ).map((boothNo: string) => {
-        if (boothNo) {
-          return new fromExhibitor.InviteExhibitorAction(boothNo)
+      ).map((ok: boolean) => {
+        if (ok) {
+          return new fromExhibitor.InviteExhibitorAction()
         } else {
           return new fromExhibitor.CancelInviteExhibitorAction()
         }
       })
     })
 
-  // @Effect()
-  // inviteExhibitor$ = this.actions$
-  //   .ofType(fromExhibitor.INVITE_EXHIBITOR)
-  //   .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
-  //   .mergeMap(exhibitorID =>
-  //     this.exhibitorService
-  //       .inviteExhibitor(exhibitorID)
-  //       .concatMap(() => [
-  //         new fromExhibitor.InviteExhibitorSuccessAction(),
-  //         new fromMatcher.FetchMatchersAction()
-  //       ])
-  //       .catch(() =>
-  //         Observable.of(new fromExhibitor.InviteExhibitorFailureAction())
-  //       )
-  //   )
-
   @Effect()
   inviteRecommend$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
-    .map((action: fromExhibitor.InviteExhibitorAction) => action.boothNo)
-    .withLatestFrom(this.store.select(getShowDetailID), (boothNo, id) => ({
-      boothNo,
-      id
-    }))
-    .withLatestFrom(
-      this.store.select(getExhibitors),
-      ({ boothNo, id }, exhibitors) => ({
-        boothNo,
-        exhibitor: exhibitors.find(e => e.id === id)
-      })
-    )
-
-    .withLatestFrom(
-      this.store.select(getTenantId),
-      ({ boothNo, exhibitor }, tenantId) => ({
-        exhibitor,
-        tenantId,
-        boothNo
-      })
-    )
-    .mergeMap(({ exhibitor, boothNo, tenantId }) =>
+    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .switchMap((id) =>
       this.matcherService
-        .createMatcher(exhibitor, boothNo, tenantId)
+        .createMatcher(id)
         .concatMap(() => [
           new fromExhibitor.InviteExhibitorSuccessAction(),
           new fromMatcher.FetchMatchersAction()

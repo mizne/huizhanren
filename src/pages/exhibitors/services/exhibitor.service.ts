@@ -30,7 +30,7 @@ export class ExhibitorService {
    * @param {number} pageIndex
    * @param {number} pageSize
    * @returns {Observable<Recommend[]>}
-   * @memberof RecommendService
+   * @memberof ExhibitorService
    */
   fetchExhibitors(
     params: FetchRecommendExhibitorParams
@@ -84,7 +84,7 @@ export class ExhibitorService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
+          .mergeMap(([_,__, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (params.area) {
               query += `&province=${params.area}`

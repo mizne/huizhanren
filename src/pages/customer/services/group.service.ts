@@ -25,6 +25,7 @@ export class GroupService {
    * 新建 group
    *
    * @param {string} name
+   * @param {string} exhibitionId
    * @returns {Observable<Group[]>}
    * @memberof GroupService
    */

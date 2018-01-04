@@ -58,11 +58,11 @@ export class CustomerService {
   /**
    * 将base64Img上传 返回文件的路径地址
    *
-   * @param {any} base64Img
+   * @param {string} base64Img
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  uploadCardImage(base64Img): Observable<any> {
+  uploadCardImage(base64Img: string): Observable<any> {
     return this.http
       .post(this.uploadImgUrl, {
         rawBody: base64Img
@@ -81,6 +81,7 @@ export class CustomerService {
    * 新建 customer
    *
    * @param {Customer} customer
+   * @param {string} exhibitionId
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
@@ -126,6 +127,7 @@ export class CustomerService {
    *
    * @param {Customer} customer
    * @param {string} customerId
+   * @param {string} exhibitionId
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
@@ -174,6 +176,7 @@ export class CustomerService {
    * 批量标记 哪些客户已经发过短信
    *
    * @param {string[]} customerIds
+   * @param {any} exhibitionId
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
@@ -212,7 +215,9 @@ export class CustomerService {
   /**
    * 批量设置分组
    *
+   * @param {Customer[]} customers
    * @param {string} groupId
+   * @param {string} exhibitionId
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
@@ -307,8 +312,9 @@ export class CustomerService {
   /**
    * 单条删除分组
    *
-   * @param {string} customerId
+   * @param {Customer} customer
    * @param {string} groupId
+   * @param {string} exhibitionId
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
@@ -376,7 +382,7 @@ export class CustomerService {
    * @returns {Observable<any>}
    * @memberof CustomerService
    */
-  singleDeleteCustomer(customerId): Observable<any> {
+  singleDeleteCustomer(customerId: string): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {

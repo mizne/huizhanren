@@ -23,6 +23,7 @@ export class NotificationService {
    * 在当前客户下 创建notification
    *
    * @param {Notification} notification
+   * @param {string} customerId
    * @returns {Observable<any>}
    * @memberof NotificationService
    */
@@ -77,10 +78,10 @@ export class NotificationService {
     })
   }
 
-
   /**
    * 获取当前客户的 所有notifications
    *
+   * @param {any} customerId
    * @returns {Observable<Notification[]>}
    * @memberof NotificationService
    */

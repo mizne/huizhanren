@@ -30,7 +30,7 @@ export class SmsService {
   ) {}
 
   /**
-   * 发送验证码
+   * 获取验证码
    *
    * @param {string} phone
    * @returns {Observable<any>}
@@ -69,8 +69,14 @@ export class SmsService {
     // : Observable.of({})
     return Observable.of({})
   }
-
-  createSmsTemplate(template: SmsTemplate): Observable<any> {
+/**
+ * 新增短信模版
+ *
+ * @param {SmsTemplate} template
+ * @returns {Observable<any>}
+ * @memberof SmsService
+ */
+createSmsTemplate(template: SmsTemplate): Observable<any> {
     return this.tenantService
     .getTenantIdAndUserId()
     .mergeMap(([tenantId, userId]) => {
