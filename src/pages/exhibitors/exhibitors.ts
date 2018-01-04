@@ -16,7 +16,7 @@ import {
   getShowExhibitorLoadMore,
   getShowMatcherLoadMore,
   getCurrentExhibitorCount,
-  getCurrentMatcherCount,
+  getCurrentMatcherCount
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -47,7 +47,7 @@ import {
   Portray,
   ExhibitorFilter,
   RecommendExhibitor,
-  Product,
+  Product
 } from './models/exhibitor.model'
 import { Logger } from '../customer/models/logger.model'
 import {
@@ -77,7 +77,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
-
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -150,8 +149,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.store.dispatch(new ToInviteExhibitorAction())
   }
 
-  ensureCreateLogger() {
+  ensureCreateLog() {
     this.store.dispatch(new ToCreateLoggerAction())
+  }
+
+  ensureEditLog(log: Logger) {
+    console.log(`exhibitor edit log: ${log}`)
   }
 
   ensureShowProduct(product: Product) {
@@ -365,11 +368,13 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       })
       .takeUntil(this.destroyService)
       .subscribe(exhibitorFilter => {
-        this.store.dispatch(new FetchExhibitorsAction({
-          ...exhibitorFilter,
-          pageIndex: 1,
-          pageSize: 10
-        }))
+        this.store.dispatch(
+          new FetchExhibitorsAction({
+            ...exhibitorFilter,
+            pageIndex: 1,
+            pageSize: 10
+          })
+        )
         this.store.dispatch(new FetchExhibitorsCountAction(exhibitorFilter))
       })
   }

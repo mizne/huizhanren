@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store'
 import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams, VisitorFilter } from '../models/visitor.model'
-import { Logger } from '../../customer/models/logger.model'
+import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'
 export const FETCH_VISITORS_SUCCESS = '[Visitor] Fetch Visitors Success'
@@ -137,6 +137,7 @@ export class CreateLoggerAction implements Action {
 }
 export class CreateLoggerSuccessAction implements Action {
   readonly type = CREATE_LOGGER_SUCCESS
+  constructor(public level: LoggerLevel) {}
 }
 export class CreateLoggerFailureAction implements Action {
   readonly type = CREATE_LOGGER_FAILURE

@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Logger } from '../models/logger.model'
+import { Logger, LoggerLevel } from '../models/logger.model'
 
 export const TO_CREATE_LOGGER = '[Logger] To Create Logger'
 export const CANCEL_CREATE_LOGGER = '[Logger] Cancel Create Logger'
@@ -36,6 +36,7 @@ export class CreateLoggerAction implements Action {
 
 export class CreateLoggerSuccessAction implements Action {
   readonly type = CREATE_LOGGER_SUCCESS
+  constructor(public level: LoggerLevel) {}
 }
 
 export class CreateLoggerFailureAction implements Action {
@@ -95,12 +96,12 @@ export class BatchCreateLoggerFailureAction implements Action {
   readonly type = BATCH_CREATE_LOGGER_FAILURE
 }
 
-export type Actions = 
+export type Actions =
 ToCreateLoggerAction |
-CancelCreateLoggerAction | 
+CancelCreateLoggerAction |
 CreateLoggerAction |
 CreateLoggerSuccessAction |
-CreateLoggerFailureAction | 
+CreateLoggerFailureAction |
 
 ToEditLoggerAction |
 CancelEditLoggerAction |
@@ -108,8 +109,8 @@ EditLoggerAction |
 EditLoggerSuccessAction |
 EditLoggerFailureAction |
 
-FetchLoggerAction | 
-FetchLoggerSuccessAction | 
+FetchLoggerAction |
+FetchLoggerSuccessAction |
 FetchLoggerFailureAction |
 
 BatchCreateLoggerAction |

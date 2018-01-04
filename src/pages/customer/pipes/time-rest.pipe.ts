@@ -5,6 +5,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TimeRestPipe implements PipeTransform {
   transform(futureTime: string): string {
+    if (!futureTime) {
+      return ''
+    }
 
     const now = new Date().getTime()
     const d = new Date(futureTime).getTime()

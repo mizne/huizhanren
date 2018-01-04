@@ -103,6 +103,7 @@ export class LoggerService {
    * @memberof LoggerService
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
+    // return Observable.of(Logger.generateFakeLogs(100))
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserId()

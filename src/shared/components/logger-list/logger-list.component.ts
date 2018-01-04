@@ -11,8 +11,14 @@ export class HzLoggerListComponent {
   @Input() theme: string
 
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
+  @Output() editLog: EventEmitter<Logger> = new EventEmitter<Logger>()
 
   ensureCreateLog() {
     this.createLog.emit()
+  }
+
+  ensureEditLog(log: Logger) {
+    debugger
+    this.editLog.emit(log)
   }
 }

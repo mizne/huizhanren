@@ -21,7 +21,7 @@ export { HzCardNotificationItemAddComponent } from './card-notification-item-add
       </div>
 
       <div class="hz-notification-container">
-        <hz-card-notification-item-add></hz-card-notification-item-add>
+        <hz-card-notification-item-add [hasItem]="(notifications$ | async)?.length > 0"></hz-card-notification-item-add>
         <hz-card-notification-item *ngFor="let notification of notifications$ | async" [notification]="notification"></hz-card-notification-item>
         <p class="no-notification" *ngIf="(notifications$ | async).length === 0">还没有提醒呢</p>
       </div>

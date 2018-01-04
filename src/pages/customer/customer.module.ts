@@ -29,8 +29,6 @@ import {
 } from './components/hz-card-detail/hz-card-detail.component'
 import {
   HzCardLogComponent,
-  HzCardLogItemAddComponent,
-  HzCardLogItemComponent
 } from './components/hz-card-log/hz-card-log.component'
 
 import { HzHelpToggleLogComponent } from './components/helps/hz-help-toggle-log.component'
@@ -105,8 +103,6 @@ const pipes = [
     HzCardDetailComponent,
     HzCardLogComponent,
     HzCardDetailFieldItemComponent,
-    HzCardLogItemAddComponent,
-    HzCardLogItemComponent,
 
     HzCardNotificationComponent,
     HzCardNotificationItemAddComponent,

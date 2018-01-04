@@ -16,6 +16,7 @@ export class VisitorDetailComponent implements OnInit {
 
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
+  @Output() editLog: EventEmitter<Logger> = new EventEmitter<Logger>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -41,6 +42,10 @@ export class VisitorDetailComponent implements OnInit {
 
   ensureCreateLog() {
     this.createLog.emit()
+  }
+
+  ensureEditLog(log: Logger) {
+    this.editLog.emit(log)
   }
 
   ensureCancelMatcher(id: string) {

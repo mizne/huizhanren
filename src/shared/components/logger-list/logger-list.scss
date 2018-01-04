@@ -1,7 +1,17 @@
 .hz-logger-list {
   .no-log {
     text-align: center;
-    color: map-get($map: $colors, $key: grey);
+  }
+
+  &.normal {
+    .no-log {
+      color: map-get($map: $colors, $key: grey);
+    }
+  }
+
+  &.primary {
+    .no-log {
+      color: map-get($map: $colors, $key: white);
+    }
   }
 }
-

@@ -62,6 +62,10 @@
     max-height: calc(100vh - 140px);
     overflow: auto;
   }
+
+  .no-#{$itemName} {
+    text-align: center;
+  }
 }
 
 @mixin cardExtractAdd($itemName) {
@@ -88,7 +92,7 @@
     border: 3px solid rgba(108, 140, 220, 0.51);
   }
 
-  &:after {
+  &.has-item:after {
     position: absolute;
     top: 7px;
     left: 9px;

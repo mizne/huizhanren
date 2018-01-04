@@ -11,7 +11,7 @@ import * as fromLogger from '../actions/logger.action'
 import { ToCreateLoggerModal } from '../modals/to-create-logger-modal.component'
 import { ToEditLoggerModal } from '../modals/to-edit-logger-modal.component'
 import { LoggerService } from '../../../providers/logger.service'
-import { Logger } from '../models/logger.model'
+import { Logger, LoggerLevel } from '../models/logger.model'
 
 @Injectable()
 export class LoggerEffects {
@@ -47,31 +47,28 @@ export class LoggerEffects {
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
-          // 系统日志 不弹出toast
-          if (log.level === 'sys') {
-            return [new fromLogger.FetchLoggerAction()]
-          } else {
-            return [
-              new fromLogger.CreateLoggerSuccessAction(),
-              new fromLogger.FetchLoggerAction()
-            ]
-          }
+          return [
+            new fromLogger.CreateLoggerSuccessAction(log.level),
+            new fromLogger.FetchLoggerAction()
+          ]
         })
-        .catch(() =>
-          Observable.of(new fromLogger.CreateLoggerFailureAction())
-        )
+        .catch(() => Observable.of(new fromLogger.CreateLoggerFailureAction()))
     )
 
   @Effect({ dispatch: false })
   createLoggerSuccess$ = this.actions$
     .ofType(fromLogger.CREATE_LOGGER_SUCCESS)
-    .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志成功',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+    .map((action: fromLogger.CreateLoggerSuccessAction) => action.level)
+    .do(level => {
+      // 系统日志 不弹出toast
+      if (level !== LoggerLevel.SYS) {
+        let toast = this.toastCtrl.create({
+          message: '添加日志成功',
+          duration: 3000,
+          position: 'top'
+        })
+        toast.present()
+      }
     })
 
   @Effect({ dispatch: false })
@@ -94,11 +91,9 @@ export class LoggerEffects {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToEditLoggerModal, log)
-
           loggerModal.onDidDismiss((log: Logger) => {
             res(log)
           })
-
           loggerModal.present()
         })
       ).map((log: Logger) => {
@@ -156,9 +151,7 @@ export class LoggerEffects {
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromLogger.FetchLoggerSuccessAction(logs))
-        .catch(() =>
-          Observable.of(new fromLogger.FetchLoggerFailureAction())
-        )
+        .catch(() => Observable.of(new fromLogger.FetchLoggerFailureAction()))
     )
 
   @Effect({ dispatch: false })

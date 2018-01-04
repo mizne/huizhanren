@@ -27,6 +27,20 @@ export class Logger {
     }
   }
 
+  static generateSysLoggerForSms(templateLabel: string): Logger {
+    return {
+      level: LoggerLevel.SYS,
+      content: `系统: 发送 【${templateLabel}】 短信成功!`
+    }
+  }
+
+  static generateSysLoggerForScanCard(): Logger {
+    return {
+      level: LoggerLevel.SYS,
+      content: '系统: 扫描名片并保存成功'
+    }
+  }
+
   static generateFakeLogs(length: number): Logger[] {
     return Array.from({ length }, (_, i) => ({
       id: String(i),

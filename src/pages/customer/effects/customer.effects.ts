@@ -33,6 +33,7 @@ import { ToEditCustomerGroupModal } from '../modals/to-edit-customer-group-modal
 
 import { Customer, CustomerPateStatus } from '../models/customer.model'
 import { createCustomerFromFields } from '../models/card.model'
+import { Logger } from '../models/logger.model';
 
 @Injectable()
 export class CustomerEffects {
@@ -139,10 +140,7 @@ export class CustomerEffects {
           return [
             new fromCustomer.CreateSuccessAction(res),
             new fromCustomer.CreateSysLoggerAction({
-              log: {
-                level: 'sys',
-                content: '系统: 扫描名片并保存成功'
-              },
+              log: Logger.generateSysLoggerForScanCard(),
               customerId: res.RecordId
             }),
             new fromCustomer.FetchAllAction(),

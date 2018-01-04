@@ -148,6 +148,10 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
+  ensureEditLog(log: Logger) {
+    console.log(`visitor to edit log: ${log}`)
+  }
+
   ensureCancelMatcher(id: string) {
     this.store.dispatch(new ToCancelMatcherAction(id))
   }

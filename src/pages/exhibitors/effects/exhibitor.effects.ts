@@ -9,7 +9,7 @@ import * as fromExhibitor from '../actions/exhibitor.action'
 import * as fromMatcher from '../actions/matcher.action'
 
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
-import { Logger } from '../../customer/models/logger.model'
+import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 
 import { ExhibitorService } from '../services/exhibitor.service'
 import { ExhibitorMatcherService } from '../services/matcher.service'
@@ -21,12 +21,13 @@ import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-i
 import { ToShowProductModal } from '../modals/to-show-product-modal/to-show-product-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getShowDetailID, getExhibitors, getCurrentExhibitorCount } from '../reducers'
 import {
-  getTenantId,
-  getCompanyName,
-  getBoothNo
-} from '../../login/reducers'
+  State,
+  getShowDetailID,
+  getExhibitors,
+  getCurrentExhibitorCount
+} from '../reducers'
+import { getTenantId, getCompanyName, getBoothNo } from '../../login/reducers'
 
 @Injectable()
 export class ExhibitorEffects {
@@ -34,7 +35,7 @@ export class ExhibitorEffects {
   fetchExhibitors$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
     .map((action: fromExhibitor.FetchExhibitorsAction) => action.params)
-    .mergeMap((params) => {
+    .mergeMap(params => {
       const loading = this.loadCtrl.create({
         content: '获取展商中...',
         spinner: 'bubbles'
@@ -53,17 +54,20 @@ export class ExhibitorEffects {
         })
     })
 
-    @Effect()
-    fetchExhibitorsCount$ = this.actions$.ofType(fromExhibitor.FETCH_EXHIBITORS_COUNT)
+  @Effect()
+  fetchExhibitorsCount$ = this.actions$
+    .ofType(fromExhibitor.FETCH_EXHIBITORS_COUNT)
     .map((action: fromExhibitor.FetchExhibitorsCountAction) => action.params)
-    .mergeMap((params) => {
+    .mergeMap(params => {
       return this.exhibitorService
         .fetchExhibitorsCount(params)
         .map(number => {
           return new fromExhibitor.FetchExhibitorsCountSuccessAction(number)
         })
         .catch(() => {
-          return Observable.of(new fromExhibitor.FetchExhibitorsCountFailureAction())
+          return Observable.of(
+            new fromExhibitor.FetchExhibitorsCountFailureAction()
+          )
         })
     })
 
@@ -93,7 +97,9 @@ export class ExhibitorEffects {
         })
         .catch(() => {
           loadingCtrl.dismiss()
-          return Observable.of(new fromExhibitor.LoadMoreExhibitorsFailureAction())
+          return Observable.of(
+            new fromExhibitor.LoadMoreExhibitorsFailureAction()
+          )
         })
     })
 
@@ -161,17 +167,22 @@ export class ExhibitorEffects {
       boothNo,
       id
     }))
-    .withLatestFrom(this.store.select(getExhibitors), ({ boothNo, id }, exhibitors) => ({
-      boothNo,
-      exhibitor: exhibitors.find(e => e.id === id)
-    })
+    .withLatestFrom(
+      this.store.select(getExhibitors),
+      ({ boothNo, id }, exhibitors) => ({
+        boothNo,
+        exhibitor: exhibitors.find(e => e.id === id)
+      })
     )
 
-    .withLatestFrom(this.store.select(getTenantId), ({ boothNo, exhibitor }, tenantId) => ({
-      exhibitor,
-      tenantId,
-      boothNo
-    }))
+    .withLatestFrom(
+      this.store.select(getTenantId),
+      ({ boothNo, exhibitor }, tenantId) => ({
+        exhibitor,
+        tenantId,
+        boothNo
+      })
+    )
     .mergeMap(({ exhibitor, boothNo, tenantId }) =>
       this.matcherService
         .createMatcher(exhibitor, boothNo, tenantId)
@@ -242,15 +253,10 @@ export class ExhibitorEffects {
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
-          // 系统日志 不弹出toast
-          if (log.level === 'sys') {
-            return [new fromExhibitor.FetchLoggerAction(customerId)]
-          } else {
-            return [
-              new fromExhibitor.CreateLoggerSuccessAction(),
-              new fromExhibitor.FetchLoggerAction(customerId)
-            ]
-          }
+          return [
+            new fromExhibitor.CreateLoggerSuccessAction(log.level),
+            new fromExhibitor.FetchLoggerAction(customerId)
+          ]
         })
         .catch(() =>
           Observable.of(new fromExhibitor.CreateLoggerFailureAction())
@@ -260,13 +266,17 @@ export class ExhibitorEffects {
   @Effect({ dispatch: false })
   createLoggerSuccess$ = this.actions$
     .ofType(fromExhibitor.CREATE_LOGGER_SUCCESS)
-    .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志成功',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+    .map((action: fromExhibitor.CreateLoggerSuccessAction) => action.level)
+    .do(level => {
+      // 系统日志 不弹出toast
+      if (level !== LoggerLevel.SYS) {
+        let toast = this.toastCtrl.create({
+          message: '添加日志成功',
+          duration: 3000,
+          position: 'top'
+        })
+        toast.present()
+      }
     })
 
   @Effect({ dispatch: false })
@@ -294,10 +304,11 @@ export class ExhibitorEffects {
         )
     )
 
-    @Effect({ dispatch: false })
-    toShowProduct$ = this.actions$.ofType(fromExhibitor.TO_SHOW_PRODUCT)
+  @Effect({ dispatch: false })
+  toShowProduct$ = this.actions$
+    .ofType(fromExhibitor.TO_SHOW_PRODUCT)
     .map((action: fromExhibitor.ToShowProcuctAction) => action.product)
-    .do((product) => {
+    .do(product => {
       this.modalCtrl.create(ToShowProductModal, product).present()
     })
 

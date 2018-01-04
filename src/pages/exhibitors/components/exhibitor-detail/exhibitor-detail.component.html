@@ -20,7 +20,10 @@
         </div>
 
         <div class="content">
-          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal" [logs]="logs" (createLog)="ensureCreateLogger()"></hz-logger-list>
+          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal"
+          [logs]="logs" (createLog)="ensureCreateLogger()"
+          (editLog)="ensureEditLog($event)"
+          ></hz-logger-list>
           <hz-exhibitor-analysis *ngIf="activeHeaderIndex === 1" [portray]="portray"></hz-exhibitor-analysis>
         </div>
       </div>
@@ -38,7 +41,10 @@
     </div>
 
     <div class="content">
-      <hz-logger-list *ngIf="activeDetailHeaderIndex === 0" theme="primary" [logs]="logs" (createLog)="ensureCreateLogger()"></hz-logger-list>
+      <hz-logger-list *ngIf="activeDetailHeaderIndex === 0" theme="primary"
+      [logs]="logs" (createLog)="ensureCreateLogger()"
+      (editLog)="ensureEditLog($event)"
+      ></hz-logger-list>
       <hz-exhibitor-analysis *ngIf="activeDetailHeaderIndex === 1" [portray]="portray"></hz-exhibitor-analysis>
     </div>
   </div>

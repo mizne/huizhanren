@@ -8,8 +8,6 @@
     position: absolute;
   }
 
-
-
   &.normal {
     color: map-get($map: $normalLogger, $key: primary);
   }

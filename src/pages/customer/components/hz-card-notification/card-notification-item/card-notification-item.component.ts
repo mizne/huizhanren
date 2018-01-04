@@ -18,9 +18,7 @@ import { Notification } from '../../../models/notification.model'
   `
 })
 export class HzCardNotificationItemComponent {
-
   @Input() notification: Notification
-
   constructor(private store: Store<State>) {
   }
 

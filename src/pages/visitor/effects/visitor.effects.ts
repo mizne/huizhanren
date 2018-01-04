@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable'
 import * as fromVisitor from '../actions/visitor.action'
 import * as fromMatcher from '../actions/matcher.action'
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
-import { Logger } from '../../customer/models/logger.model'
+import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 import { VisitorService } from '../services/visitor.service'
 import { VisitorMatcherService } from '../services/matcher.service'
 import { LoggerService } from '../../../providers/logger.service'
@@ -65,7 +65,7 @@ export class VisitorEffects {
   fetchVisitorsCount$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS_COUNT)
     .map((action: fromVisitor.FetchVisitorsCountAction) => action.params)
-    .mergeMap((params) => {
+    .mergeMap(params => {
       return this.visitorService
         .fetchVisitorCount(params)
         .map(number => {
@@ -259,15 +259,10 @@ export class VisitorEffects {
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
-          // 系统日志 不弹出toast
-          if (log.level === 'sys') {
-            return [new fromVisitor.FetchLoggerAction(customerId)]
-          } else {
-            return [
-              new fromVisitor.CreateLoggerSuccessAction(),
-              new fromVisitor.FetchLoggerAction(customerId)
-            ]
-          }
+          return [
+            new fromVisitor.CreateLoggerSuccessAction(log.level),
+            new fromVisitor.FetchLoggerAction(customerId)
+          ]
         })
         .catch(() => Observable.of(new fromVisitor.CreateLoggerFailureAction()))
     )
@@ -275,13 +270,17 @@ export class VisitorEffects {
   @Effect({ dispatch: false })
   createLoggerSuccess$ = this.actions$
     .ofType(fromVisitor.CREATE_LOGGER_SUCCESS)
-    .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志成功',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+    .map((action: fromVisitor.CreateLoggerSuccessAction) => action.level)
+    .do(level => {
+      // 系统日志 不弹出toast
+      if (level !== LoggerLevel.SYS) {
+        let toast = this.toastCtrl.create({
+          message: '添加日志成功',
+          duration: 3000,
+          position: 'top'
+        })
+        toast.present()
+      }
     })
 
   @Effect({ dispatch: false })

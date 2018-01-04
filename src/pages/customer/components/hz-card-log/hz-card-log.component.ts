@@ -8,11 +8,10 @@ import {
   ToggleShowNotificationAction
 } from '../../actions/customer.action'
 import { Logger } from '../../models/logger.model'
-
-export { HzCardLogItemComponent } from './card-log-item/card-log-item.component'
-export {
-  HzCardLogItemAddComponent
-} from './card-log-item-add/card-log-item-add.component'
+import {
+  ToCreateLoggerAction,
+  ToEditLoggerAction
+} from '../../actions/logger.action'
 
 @Component({
   selector: 'hz-card-log',
@@ -25,13 +24,19 @@ export {
       </div>
 
       <div class="hz-log-container">
-        <hz-card-log-item-add></hz-card-log-item-add>
-        <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
-        <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
+        <hz-logger-list theme="primary" [logs]="logs$ | async"
+          (createLog)="ensureCreateLog()"
+          (editLog)="ensureEditLog($event)"
+          >
+        </hz-logger-list>
       </div>
     </div>
   `
 })
+
+// <hz-card-log-item-add></hz-card-log-item-add>
+//         <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
+//         <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
 export class HzCardLogComponent {
   @Input() open: boolean
 
@@ -40,10 +45,7 @@ export class HzCardLogComponent {
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
-  constructor(
-    private store: Store<State>,
-    private toastCtrl: ToastController
-  ) {
+  constructor(private store: Store<State>, private toastCtrl: ToastController) {
     this.logs$ = store.select(getLogs)
 
     this.showLog$ = store.select(getShowLog)
@@ -59,10 +61,20 @@ export class HzCardLogComponent {
   }
 
   toggleAnasisy() {
-    this.toastCtrl.create({
-      message: '吐血研发中...',
-      duration: 3e3,
-      position: 'top'
-    }).present()
+    this.toastCtrl
+      .create({
+        message: '吐血研发中...',
+        duration: 3e3,
+        position: 'top'
+      })
+      .present()
+  }
+
+  ensureCreateLog() {
+    this.store.dispatch(new ToCreateLoggerAction())
+  }
+
+  ensureEditLog(log: Logger) {
+    this.store.dispatch(new ToEditLoggerAction(log))
   }
 }

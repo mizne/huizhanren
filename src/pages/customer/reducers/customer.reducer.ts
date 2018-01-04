@@ -1,9 +1,7 @@
 import * as customer from '../actions/customer.action'
 import * as sms from '../actions/sms.action'
 import * as group from '../actions/group.action'
-
 import { remain, deduplicate, phoneRe } from '../services/utils'
-
 import { Customer, CustomerPateStatus, CustomerPageManageableStatus } from '../models/customer.model'
 import { Group } from '../models/group.model'
 

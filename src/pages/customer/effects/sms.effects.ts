@@ -18,6 +18,7 @@ import { SmsContent, BatchSendSmsContext } from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
+import { Logger } from '../models/logger.model';
 
 @Injectable()
 export class SmsEffects {
@@ -104,12 +105,7 @@ export class SmsEffects {
             new fromSms.BatchSendSMSSuccessAction(),
             new fromLogger.BatchCreateLoggerAction({
               customerIds: context.getCustomerIds(),
-              log: {
-                level: 'sys',
-                content: `系统: 发送 【${
-                  context.getTemplate().label
-                }】 短信成功!`
-              }
+              log: Logger.generateSysLoggerForSms(context.getTemplate().label)
             }),
             new fromSms.MarkCustomerHasSendSMSAction(context.getCustomerIds()),
             new fromCustomer.ToListableStatusAction()
@@ -182,10 +178,7 @@ export class SmsEffects {
         .sendMessage(context.getTemplate().id, smsContents)
         .concatMap(() => [
           new fromSms.SingleSendSMSSuccessAction(),
-          new fromLogger.CreateLoggerAction({
-            level: 'sys',
-            content: `系统: 发送 【${context.getTemplate().label}】 短信成功!`
-          }),
+          new fromLogger.CreateLoggerAction(Logger.generateSysLoggerForSms(context.getTemplate().label)),
           new fromSms.MarkCustomerHasSendSMSAction([context.getCustomer().id])
         ])
         .catch(() => Observable.of(new fromSms.SingleSendSMSFailureAction()))
