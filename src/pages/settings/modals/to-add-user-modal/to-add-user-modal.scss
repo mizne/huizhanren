@@ -1,1 +1,10 @@
-
+.hz-add-user-modal {
+  height: 400px;
+  .modal-body {
+    font-size: 18px;
+    .input-group {
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+  }
+}

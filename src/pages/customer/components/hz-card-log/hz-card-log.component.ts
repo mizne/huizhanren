@@ -33,15 +33,9 @@ import {
     </div>
   `
 })
-
-// <hz-card-log-item-add></hz-card-log-item-add>
-//         <hz-card-log-item *ngFor="let log of logs$ | async" [log]="log"></hz-card-log-item>
-//         <p class="no-log" *ngIf="(logs$ | async).length === 0">还没有日志呢</p>
 export class HzCardLogComponent {
   @Input() open: boolean
-
   logs$: Observable<Logger[]>
-
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 

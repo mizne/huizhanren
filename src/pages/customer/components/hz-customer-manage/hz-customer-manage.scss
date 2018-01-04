@@ -169,11 +169,10 @@ hz-customer-manage {
 
     .preview {
       max-height: 300px;
-      overflow: auto;
-    }
-
-    div {
       min-height: 100px;
+      overflow: auto;
+      text-align: left;
+      line-height: 25px;
     }
 
     .btn-group {

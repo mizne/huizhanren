@@ -1,10 +1,33 @@
 import { Customer } from './customer.model'
 import { phoneRe } from '../services/utils'
 
-export interface SmsTemplate {
+export class SmsTemplate {
   id?: string
-  label: string
+  label?: string
   preview: string
+
+  static convertFromResp(resp: SmsTemplateResp): SmsTemplate {
+    return {
+      id: resp.RecordId,
+      label: resp.Name,
+      preview: resp.Content
+    }
+  }
+
+  static convertFromModal(model: SmsTemplate): SmsTemplateResp {
+    return {
+      Name: model.label,
+      Content: model.preview,
+      IsActive: true
+    }
+  }
+}
+
+export interface SmsTemplateResp {
+  RecordId?: string
+  Name?: string
+  Content?: string
+  IsActive: boolean
 }
 
 export interface SmsTemplateParams {
@@ -107,7 +130,7 @@ export class SingleSendSmsContext {
     const content = this.template.preview.replace(
       SingleSendSmsContext.VARIABLE_RE,
       function(_, c) {
-        return templateParams[c]
+        return templateParams[c] || ''
       }
     )
     return {

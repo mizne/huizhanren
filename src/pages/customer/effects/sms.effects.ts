@@ -14,14 +14,83 @@ import * as fromLogger from '../actions/logger.action'
 import { SmsService } from '../../../providers/sms.service'
 import { TenantService } from '../../../providers/tenant.service'
 import { CustomerService } from '../services/customer.service'
-import { SmsContent, BatchSendSmsContext } from '../models/sms.model'
+import {
+  SmsContent,
+  BatchSendSmsContext,
+  SmsTemplate
+} from '../models/sms.model'
 
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
+import { ToCreateTemplateModal } from '../modals/to-create-template-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
-import { Logger } from '../models/logger.model';
+import { Logger } from '../models/logger.model'
 
 @Injectable()
 export class SmsEffects {
+  @Effect()
+  toCreateTemplate$ = this.actions$
+    .ofType(fromSms.TO_CREATE_TEMPLATE)
+    .switchMap(() => {
+      const obs: Observable<SmsTemplate> = Observable.fromPromise(
+        new Promise((res, rej) => {
+          const modal = this.modalCtrl.create(ToCreateTemplateModal)
+          modal.onDidDismiss((template: SmsTemplate) => {
+            res(template)
+          })
+          modal.present()
+        })
+      )
+      return obs
+    })
+    .map(template => {
+      if (template) {
+        return new fromSms.CreateTemplateAction(template)
+      } else {
+        return new fromSms.CancelCreateTemplateAction()
+      }
+    })
+
+  @Effect()
+  createTemplate$ = this.actions$
+    .ofType(fromSms.CREATE_TEMPLATE)
+    .map((action: fromSms.CreateTemplateAction) => action.template)
+    .switchMap(template => {
+      debugger
+      return this.smsService
+        .createSmsTemplate(template)
+        .concatMap(() => [
+          new fromSms.CreateTemplateSuccessAction(),
+          new fromSms.FetchAllTemplateAction()
+        ])
+        .catch(() => Observable.of(new fromSms.CreateTemplateFailureAction()))
+    })
+
+  @Effect({ dispatch: false })
+  createTemplateSuccess$ = this.actions$
+    .ofType(fromSms.CREATE_TEMPLATE_SUCCESS)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '新增短信模版成功',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  createTemplateFailure$ = this.actions$
+    .ofType(fromSms.CREATE_TEMPLATE_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '新增短信模版失败',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
   @Effect()
   preSendSms$ = this.actions$
     .ofType(fromSms.PRE_SEND_SMS)
@@ -178,7 +247,9 @@ export class SmsEffects {
         .sendMessage(context.getTemplate().id, smsContents)
         .concatMap(() => [
           new fromSms.SingleSendSMSSuccessAction(),
-          new fromLogger.CreateLoggerAction(Logger.generateSysLoggerForSms(context.getTemplate().label)),
+          new fromLogger.CreateLoggerAction(
+            Logger.generateSysLoggerForSms(context.getTemplate().label)
+          ),
           new fromSms.MarkCustomerHasSendSMSAction([context.getCustomer().id])
         ])
         .catch(() => Observable.of(new fromSms.SingleSendSMSFailureAction()))

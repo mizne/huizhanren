@@ -88,7 +88,7 @@ export class HzCustomerManageContentItem {
             <span class="delete" tappable *ngIf="type === GROUP_STATUS && validSelected" (click)="toDel()">删除</span>
           </span>
 
-          <span class="action" tappable *ngIf="type === GROUP_STATUS" (click)="toCreateTemplate(type)">
+          <span class="action" tappable (click)="toCreateTemplate(type)">
             <ion-icon name="add-circle" color="primary"></ion-icon>
             <span class="text">{{type === GROUP_STATUS ? '新建标签' : '添加模板'}}</span>
           </span>
@@ -128,17 +128,17 @@ export class HzCustomerManageTemplate {
     this._templates = tmps
   }
 
-  @Input() type: string
+  @Input() type: CustomerPageManageableStatus
 
   @Output() sendSms: EventEmitter<string> = new EventEmitter<string>()
   @Output() cancelSms: EventEmitter<void> = new EventEmitter<void>()
   @Output() cancelGroup: EventEmitter<void> = new EventEmitter<void>()
   @Output() saveTemplate: EventEmitter<string> = new EventEmitter<string>()
-  @Output() createTemplate: EventEmitter<string> = new EventEmitter<string>()
+  @Output() createTemplate: EventEmitter<CustomerPageManageableStatus> = new EventEmitter<CustomerPageManageableStatus>()
   @Output() renameGroup: EventEmitter<Group> = new EventEmitter<Group>()
   @Output() delGroup: EventEmitter<Group> = new EventEmitter<Group>()
 
-  toCreateTemplate(type: string) {
+  toCreateTemplate(type: CustomerPageManageableStatus) {
     this.createTemplate.emit(type)
   }
 

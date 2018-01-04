@@ -72,7 +72,7 @@ export class HzCustomerGroupManageComponent implements OnInit {
     this.store.dispatch(new ToListableStatusAction())
   }
 
-  toCreateTemplate() {
+  toCreateTemplate(type: CustomerPageManageableStatus) {
     this.store.dispatch(new ToCreateAction())
   }
 

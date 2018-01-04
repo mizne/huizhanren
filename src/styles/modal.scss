@@ -66,6 +66,10 @@
             margin-bottom: 0;
             padding: 4px 20px;
             border: 1px solid #ccc;
+
+            &:focus {
+              border: 1px solid map-get($map: $colors, $key: primary);
+            }
           }
 
           .input-group-addon {
@@ -82,9 +86,20 @@
             font-size: 14px;
             font-weight: normal;
             line-height: 1;
-            color: #555555;
+            color: map-get($map: $colors, $key: white);
             text-align: center;
             border: 1px solid #ccc;
+            background-color: map-get($map: $colors, $key: primary);
+          }
+
+          textarea {
+            width: 100%;
+            font-size: 16px;
+            padding: 4px 20px;
+            border: 1px solid #ccc;
+            &:focus {
+              border: 1px solid map-get($map: $colors, $key: primary);
+            }
           }
         }
       }
@@ -93,10 +108,10 @@
     .modal-footer {
       display: flex;
       height: 66px;
-      border-top: 1px solid #E6E6E6;
+      border-top: 1px solid #e6e6e6;
 
       .hz-btn:first-child {
-        border-right: 1px solid #E6E6E6;
+        border-right: 1px solid #e6e6e6;
         color: map-get($map: $colors, $key: grey);
       }
 
@@ -118,5 +133,3 @@
 .hz-confirm-modal {
   @include confirmModal;
 }
-
-

@@ -19,6 +19,7 @@ import { ErrorLoggerService } from './error-logger.service'
 @Injectable()
 export class SmsService {
   private fetchUrl: string = '/data/smscode'
+  private insertUrl = '/data/insert/SmsTemplate'
   private sendUrl: string = '/data/smsSend'
   private queryUrl: string = '/data/querybycondition/SmsTemplate'
 
@@ -69,7 +70,24 @@ export class SmsService {
     return Observable.of({})
   }
 
-  createSmsTemplate() {}
+  createSmsTemplate(template: SmsTemplate): Observable<any> {
+    return this.tenantService
+    .getTenantIdAndUserId()
+    .mergeMap(([tenantId, userId]) => {
+      return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        params: {
+          record: SmsTemplate.convertFromModal(template)
+        }
+      })
+    })
+    .catch(e => {
+      return this.logger.httpError({
+        module: 'SmsService',
+        method: 'createSmsTemplate',
+        error: e
+      })
+    })
+  }
 
   editSmsTemplate() {}
 
@@ -91,11 +109,7 @@ export class SmsService {
       })
       .map(res => {
         const results = (res as APIResponse).result
-        return results.map(e => ({
-          id: e.RecordId,
-          label: e.Name,
-          preview: e.Content
-        }))
+        return results.map(SmsTemplate.convertFromResp)
       })
       .catch(e => {
         return this.logger.httpError({

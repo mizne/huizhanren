@@ -56,6 +56,7 @@ import { NotificationService } from './services/notification.service'
 import { TimeRestPipe } from './pipes/time-rest.pipe'
 
 import { ToCreateGroupModal } from './modals/to-create-group-modal.component'
+import { ToCreateTemplateModal } from './modals/to-create-template-modal.component'
 import { ToCreateLoggerModal } from './modals/to-create-logger-modal.component'
 import { ToCreateNotificationModal } from './modals/to-create-notification-modal.component'
 import { ToDeleteCustomerModal } from './modals/to-delete-customer-modal.component'
@@ -70,6 +71,7 @@ import { ToSingleSendSMSModal } from './modals/to-single-send-sms-modal.componen
 
 const modals = [
   ToCreateGroupModal,
+  ToCreateTemplateModal,
   ToCreateLoggerModal,
   ToCreateNotificationModal,
   ToDeleteCustomerModal,

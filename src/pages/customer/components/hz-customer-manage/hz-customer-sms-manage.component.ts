@@ -9,7 +9,8 @@ import {
   CancelSelectPhoneAction,
   FetchAllTemplateAction,
   SelectAllPhoneAction,
-  CancelSelectAllPhoneAction
+  CancelSelectAllPhoneAction,
+  ToCreateTemplateAction,
  } from '../../actions/sms.action'
 import { ToListableStatusAction } from '../../actions/customer.action'
 
@@ -38,7 +39,7 @@ import { ToListableStatusAction } from '../../actions/customer.action'
       </div>
 
       <hz-customer-manage-template [type]="TYPE" [templates]="smsTemplates$ | async"
-      (sendSms)="send($event)" (cancelSms)="cancelSms()"></hz-customer-manage-template>
+      (sendSms)="send($event)" (cancelSms)="cancelSms()" (createTemplate)="toCreateTemplate($event)"></hz-customer-manage-template>
     </div>
   `,
 })
@@ -89,6 +90,11 @@ export class HzCustomerSmsManageComponent implements OnInit {
 
   cancelSms() {
     this.store.dispatch(new ToListableStatusAction())
+  }
+
+  toCreateTemplate(type: CustomerPageManageableStatus) {
+    console.log('to create sms template')
+    this.store.dispatch(new ToCreateTemplateAction())
   }
 
   select(phone, customer) {
