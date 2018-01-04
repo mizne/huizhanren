@@ -68,7 +68,8 @@ import { TenantService } from '../../../providers/tenant.service'
     width: 100%;
   }
   .to-single-send-sms-modal .modal-body .template-content {
-    width: 100%;
+    width: 99%;
+    margin-left: 1%;
     padding-left: 8px;
     color: #666;
   }

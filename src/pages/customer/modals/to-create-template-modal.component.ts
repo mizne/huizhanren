@@ -49,7 +49,7 @@ import { Observable } from 'rxjs/Observable'
     height: 420px;
   }
   .template-modal .modal-body {
-    padding: 60px 34px;
+    padding: 40px 34px;
   }
 
 
