@@ -13,33 +13,8 @@ import {
   ExhibitorMatcherResp,
   FetchMatcherParams
 } from '../models/matcher.model'
-import { RecommendExhibitor, } from '../models/exhibitor.model'
-
+import { RecommendExhibitor } from '../models/exhibitor.model'
 import { environment } from '../../../environments/environment'
-
-const fakeMatchers: ExhibitorMatcher[] = Array.from(
-  { length: 100 },
-  (_, i) => ({
-    id: String(i),
-    name: `展商${i}`,
-    logo: './assets/images/card.jpg',
-    title: `经理${i}`,
-    booth: `0-2AAA${i}`,
-    company: `移动公司${i}`,
-    industry: `大数据${i}`,
-    area: `东京${i}`,
-    status: i % 5,
-    senderId: i % 2 === 0 ? '1aed77d156448e784da0affd6eda84e1' : '111',
-    receiverId: i % 2 === 1 ? '1aed77d156448e784da0affd6eda84e1' : '222',
-    products: [
-      // {
-      //   id: '0',
-      //   name: 'product1',
-      // }
-    ],
-    visitors: []
-  })
-)
 
 @Injectable()
 export class ExhibitorMatcherService {
@@ -62,63 +37,56 @@ export class ExhibitorMatcherService {
    * @returns {Observable<ExhibitorMatcher[]>}
    * @memberof MatcherService
    */
-  fetchMatchers(
-    params: FetchMatcherParams
-  ): Observable<ExhibitorMatcher[]> {
-    return environment.production
-      ? this.tenantService
-          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+  fetchMatchers(params: FetchMatcherParams): Observable<ExhibitorMatcher[]> {
+    return this.tenantService
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+        let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
 
-            if (params.pageIndex) {
-              query += `&pageIndex=${params.pageIndex}`
-            }
-            if (params.pageSize) {
-              query += `&pageSize=${params.pageSize}`
-            }
-            if (params.statuses && params.statuses.length > 0) {
-              query += `&state=${params.statuses.map(
-                convertMatcherStatusFromModel
-              )}`
-            }
-
-            return this.http.get(
-              this.fetchUrl + query)
-          })
-          .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
-          .map(e =>
-            e.filter(f => f.State !== '5' && f.State !== '6')
-            .filter(f => f.Initator && f.Initator.length > 0 && f.Receiver && f.Receiver.length > 0)
-            .map(ExhibitorMatcher.convertFromResp)
+        if (params.pageIndex) {
+          query += `&pageIndex=${params.pageIndex}`
+        }
+        if (params.pageSize) {
+          query += `&pageSize=${params.pageSize}`
+        }
+        if (params.statuses && params.statuses.length > 0) {
+          query += `&state=${params.statuses.map(
+            convertMatcherStatusFromModel
+          )}`
+        }
+        return this.http.get(this.fetchUrl + query)
+      })
+      .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
+      .map(e =>
+        e
+          .filter(f => f.State !== '5' && f.State !== '6')
+          .filter(
+            f =>
+              f.Initator &&
+              f.Initator.length > 0 &&
+              f.Receiver &&
+              f.Receiver.length > 0
           )
-          .withLatestFrom(
-            this.tenantService.getExhibitorId(),
-            (results, exhibitorId) => {
-              return results.map(e => ({
-                ...e,
-                ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
-                isSender: e.sender.id === exhibitorId,
-                isReceiver: e.receiver.id === exhibitorId
-              }))
-            }
-          )
-          .catch(e => {
-            return this.logger.httpError({
-              module: 'ExhibitorMatcherService',
-              method: 'fetchMatchers',
-              error: e
-            })
-          })
-      : Observable.of(fakeMatchers).withLatestFrom(
-          this.tenantService.getExhibitorId(),
-          (matchers, exhibitorId) =>
-            matchers.map(e => ({
-              ...e,
-              isSender: e.senderId === exhibitorId,
-              isReceiver: e.receiverId === exhibitorId
-            }))
-        )
+          .map(ExhibitorMatcher.convertFromResp)
+      )
+      .withLatestFrom(
+        this.tenantService.getExhibitorId(),
+        (results, exhibitorId) => {
+          return results.map(e => ({
+            ...e,
+            ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
+            isSender: e.sender.id === exhibitorId,
+            isReceiver: e.receiver.id === exhibitorId
+          }))
+        }
+      )
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'fetchMatchers',
+          error: e
+        })
+      })
   }
 
   /**
@@ -134,9 +102,7 @@ export class ExhibitorMatcherService {
           .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (statuses && statuses.length > 0) {
-              query += `&state=${statuses.map(
-                convertMatcherStatusFromModel
-              )}`
+              query += `&state=${statuses.map(convertMatcherStatusFromModel)}`
             }
             return this.http
               .get(this.fetchCountUrl + query)

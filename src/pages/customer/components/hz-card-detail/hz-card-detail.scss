@@ -3,16 +3,16 @@ hz-card-detail {
 }
 
 .hz-card-detail {
-  background-color: #fff;
+  position: relative;
+  background-color: map-get($map: $colors, $key: white);
   width: 100%;
   height: calc(100vh - 90px);
-  position: relative;
 
   .card-icon-wrapper {
     position: absolute;
     top: 10px;
     right: 2px;
-    color: white;
+    color: map-get($map: $colors, $key: white);
     width: 30px;
     display: flex;
     justify-content: center;
@@ -30,7 +30,7 @@ hz-card-detail {
     transition: all ease .8s;
 
     ion-label {
-      color: white;
+      color: map-get($map: $colors, $key: white);
     }
 
     .hz-img-wrapper {
@@ -48,7 +48,7 @@ hz-card-detail {
 
   &.open .hz-card-box {
     padding-left: 22px;
-    background-color: #6288d5;
+    background-color: map-get($map: $colors, $key: primary);
     background-size: cover;
 
     .hz-img-wrapper {
@@ -57,7 +57,7 @@ hz-card-detail {
   }
 
   &.close .hz-card-box {
-    background-color: #6288d5;
+    background-color: map-get($map: $colors, $key: primary);
     background-size: cover;
     .hz-img-wrapper {
       width: 100%;
@@ -71,7 +71,7 @@ hz-card-detail {
     width: 317px;
     height: 210px;
     padding: 10px 15px;
-    color: #fff;
+    color: map-get($map: $colors, $key: white);
     background: rgba(47, 94, 189, 0.8);
     z-index: 100;
     transition: none;
@@ -100,15 +100,18 @@ hz-card-detail {
       font-size: 16px;
       .hz-msg-tag {
         margin-bottom: 10px;
+        display: flex;
+        align-items: center;
         @include textOverflow(100%);
 
         ion-icon {
-          margin-right: 8px;
+          margin-right: 13px;
         }
       }
 
       .hz-msg-notification {
         display: flex;
+        align-items: center;
 
         ion-icon {
           margin-right: 13px;
@@ -129,11 +132,11 @@ hz-card-detail {
 
 
   .hz-field-container {
-    padding: 10px 50px;
     display: flex;
     flex-wrap: wrap;
     max-height: calc(100% - 260px);
     overflow: auto;
+    padding: 10px 50px;
 
     hz-card-detail-field-item {
       min-width: 280px;

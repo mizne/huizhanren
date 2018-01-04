@@ -6,13 +6,13 @@
     display: flex;
     .hz-title-text {
       flex: 8;
-      color: #6288d5;
+      color: map-get($map: $colors, $key: primary);
     }
 
     .hz-icon {
       flex: 1;
       text-align: right;
-      color: #6288d5;
+      color: map-get($map: $colors, $key: primary);
     }
   }
 
@@ -49,8 +49,6 @@
         position: absolute;
         bottom: -1px;
         right: -3px;
-        -webkit-transform: rotate(135deg);
-        -ms-transform: rotate(135deg);
         transform: rotate(135deg);
         height: 0;
         width: 0;

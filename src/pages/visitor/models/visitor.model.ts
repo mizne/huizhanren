@@ -45,6 +45,17 @@ export class RecommendVisitor extends Visitor {
       VisitorAddr: model.companyAddr
     }
   }
+
+  static generateFakeVisitors(length: number): RecommendVisitor[] {
+    return Array.from({ length }, (_, i) => ({
+      id: 'recommend-' + String(i),
+      name: `张${i}`,
+      title: `经理${i}`,
+      company: `移动公司${i}`,
+      industry: i % 2 === 0 ? `互联网${i}` : '',
+      area: `上海${i}`
+    }))
+  }
 }
 
 export class RecommendVisitorResp {
@@ -65,8 +76,8 @@ export class RecommendVisitorResp {
 }
 
 export interface VisitorFilter {
-  area?: string,
-  type?: string,
+  area?: string
+  type?: string
   key?: string
 }
 
@@ -76,14 +87,14 @@ export interface FetchRecommendVisitorParams extends VisitorFilter {
 }
 
 export interface CreateMatcherParams {
-  Organizer?: string,
-  OrganizerId?: string,
-  Name?: string,
-  CompName?: string,
-  Mob?: string,
-  JobTitle?: string,
-  Province?: string,
-  Email?: string,
+  Organizer?: string
+  OrganizerId?: string
+  Name?: string
+  CompName?: string
+  Mob?: string
+  JobTitle?: string
+  Province?: string
+  Email?: string
   VisitorAddr?: string
 }
 
@@ -115,7 +126,7 @@ export enum ListHeaderEvent {
 export const AREA_OPTIONS = [
   {
     label: '不限区域',
-    value:　''
+    value: ''
   },
   {
     label: '北京市',

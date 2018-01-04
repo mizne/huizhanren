@@ -21,7 +21,7 @@ import { ToListableStatusAction } from '../../actions/customer.action'
   selector: 'hz-customer-sms-manage',
   template: `
     <div class="hz-customer-sms-manage">
-      <hz-customer-manage-header type="sms" [item]="headerItem$ | async" (selectAll)="selectAll($event)"></hz-customer-manage-header>
+      <hz-customer-manage-header [type]="Type" [item]="headerItem$ | async" (selectAll)="selectAll($event)"></hz-customer-manage-header>
 
       <div class="hz-customer-sms-content">
         <hz-customer-manage-content-item *ngFor="let item of (contentItems$ | async)">

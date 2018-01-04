@@ -10,20 +10,7 @@ import {
   FetchRecommendVisitorParams,
   VisitorFilter,
 } from '../models/visitor.model'
-
 import { environment } from '../../../environments/environment'
-
-const fakeRecommendVisitors: RecommendVisitor[] = Array.from(
-  { length: 100 },
-  (_, i) => ({
-    id: 'recommend-' + String(i),
-    name: `张${i}`,
-    title: `经理${i}`,
-    company: `移动公司${i}`,
-    industry: i % 2 === 0 ? `互联网${i}` : '',
-    area: `上海${i}`
-  })
-)
 
 @Injectable()
 export class VisitorService {
@@ -78,7 +65,7 @@ export class VisitorService {
               error: e
             })
           })
-      : Observable.of(fakeRecommendVisitors)
+      : Observable.of(RecommendVisitor.generateFakeVisitors(100))
   }
   /**
    * 获取所有观众 个数

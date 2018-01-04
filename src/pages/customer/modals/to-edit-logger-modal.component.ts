@@ -15,11 +15,11 @@ import { Logger, LoggerLevel } from '../models/logger.model'
     </ion-header>
     <ion-content>
     <div class="modal-body">
-      <div class="modal-panel" [ngClass]="{'primary': level === 'info', 'success': level === 'warn', 'warn': level === 'error'}">
+      <div class="modal-panel" [ngClass]="{'primary': level === INFO, 'success': level === WARN, 'warn': level === ERROR}">
         <div class="logger-level-wrapper">
-          <i class="logger-icon logger-icon-primary" [class.active]="level === 'info'" (click)="active('info')"></i>
-          <i class="logger-icon logger-icon-success" [class.active]="level === 'warn'" (click)="active('warn')"></i>
-          <i class="logger-icon logger-icon-warn" [class.active]="level === 'error'" (click)="active('error')"></i>
+          <i class="logger-icon logger-icon-primary" [class.active]="level === INFO" (click)="active(INFO)"></i>
+          <i class="logger-icon logger-icon-success" [class.active]="level === WARN" (click)="active(WARN)"></i>
+          <i class="logger-icon logger-icon-warn" [class.active]="level === ERROR" (click)="active(ERROR)"></i>
         </div>
 
         <textarea #text rows="5" cols="75" [(ngModel)]="content" placeholder="请输入日志"></textarea>
@@ -126,14 +126,15 @@ import { Logger, LoggerLevel } from '../models/logger.model'
   `]
 })
 export class ToEditLoggerModal {
-  private level: LoggerLevel = 'info'
+  INFO = LoggerLevel.INFO
+  WARN = LoggerLevel.WARN
+  ERROR = LoggerLevel.ERROR
+  SYS = LoggerLevel.SYS
 
-  private content: string
-
+  level: LoggerLevel = LoggerLevel.INFO
+  content: string
   private id: string
-
   private time: string
-
   @ViewChild('text') el: ElementRef
 
   constructor(

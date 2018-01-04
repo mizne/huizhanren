@@ -5,7 +5,7 @@ import { CustomerPageManageableStatus } from '../../models/customer.model'
   selector: 'hz-customer-email-manage',
   template: `
     <div class="hz-customer-email-manage">
-      <hz-customer-manage-header type="email" [item]="headerItem" (selectAll)="selectAll($event)"></hz-customer-manage-header>
+      <hz-customer-manage-header [type]="TYPE" [item]="headerItem" (selectAll)="selectAll($event)"></hz-customer-manage-header>
 
       <hz-customer-manage-content-item *ngFor="let item of contentItems">
         <div class="name">{{item.name}}</div>

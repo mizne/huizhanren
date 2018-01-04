@@ -13,7 +13,7 @@ import { CustomerPageManageableStatus } from '../../models/customer.model'
   selector: 'hz-customer-group-manage',
   template: `
     <div class="hz-customer-group-manage">
-      <hz-customer-manage-header type="group" [item]="headerItem$ | async"></hz-customer-manage-header>
+      <hz-customer-manage-header [type]="TYPE" [item]="headerItem$ | async"></hz-customer-manage-header>
 
       <div class="hz-group-content">
         <div class="hz-group-item" *ngFor="let item of contentItems$ | async">
