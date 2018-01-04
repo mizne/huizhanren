@@ -6,6 +6,7 @@ import { Component, Input } from '@angular/core'
 })
 export class HzCustomerPortrayComponent {
   @Input() portray: any
+  @Input() theme: string
 
   constructor() {}
 

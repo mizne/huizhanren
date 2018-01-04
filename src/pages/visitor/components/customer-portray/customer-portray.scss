@@ -1,5 +1,11 @@
 .customer-portray-container {
   width: 100%;
   @include flexboxCenter;
-  color: map-get($map: $colors, $key: grey);
+
+  &.normal {
+    color: map-get($map: $colors, $key: grey);
+  }
+  &.primary {
+    color: map-get($map: $colors, $key: white);
+  }
 }
