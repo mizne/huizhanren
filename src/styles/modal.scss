@@ -65,7 +65,7 @@
             margin-bottom: 0;
             padding: 4px 20px;
             border: 1px solid #ccc;
-            transition: border-color .3s;
+            transition: border-color 0.3s;
 
             &:focus {
               border: 1px solid map-get($map: $colors, $key: primary);
@@ -91,18 +91,18 @@
             border: 1px solid #ccc;
             background-color: map-get($map: $colors, $key: primary);
           }
+        }
+      }
 
-          textarea {
-            width: 100%;
-            font-size: 16px;
-            padding: 4px 20px;
-            border: 1px solid #ccc;
-            transition: border-color .3s;
-            resize: none;
-            &:focus {
-              border: 1px solid map-get($map: $colors, $key: primary);
-            }
-          }
+      textarea {
+        width: 100%;
+        font-size: 16px;
+        padding: 4px 20px;
+        border: 1px solid #ccc;
+        transition: border-color 0.3s;
+        resize: none;
+        &:focus {
+          border: 1px solid map-get($map: $colors, $key: primary);
         }
       }
     }
