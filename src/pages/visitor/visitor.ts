@@ -9,7 +9,7 @@ import {
   State,
   getListStatus,
   getPageStatus,
-  getShowDetailID,
+  getVisitorShowDetailID,
   getVisitors,
   getMatchers,
   getLogs,
@@ -17,6 +17,9 @@ import {
   getShowVisitorLoadMore,
   getCurrentVisitorCount,
   getCurrentMatcherCount,
+  getVisitorShouldScrollToTop,
+  getMatcherShowDetailID,
+  getMatcherShouldScrollToTop,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -24,7 +27,7 @@ import {
   ChangeListStatusAction,
   FetchVisitorsAction,
   FetchVisitorsCountAction,
-  UpdateDetailIDAction,
+  UpdateVisitorDetailIDAction,
   ToInviteVisitorAction,
   FetchLoggerAction,
   LoadMoreVisitorsAction
@@ -35,7 +38,8 @@ import {
   ToCancelMatcherAction,
   ToAgreeMatcherAction,
   ToRefuseMatcherAction,
-  LoadMoreMatchersAction
+  LoadMoreMatchersAction,
+  UpdateMatcherDetailIDAction
 } from './actions/matcher.action'
 
 import {
@@ -72,6 +76,8 @@ export class VisitorPage implements OnInit, OnDestroy {
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
+  visitorShouldScrollToTop$: Observable<boolean>
+  matcherShouldScrollToTop$: Observable<boolean>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -132,8 +138,12 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.loadMoreSub.next()
   }
 
-  updateDetailID(id: string) {
-    this.store.dispatch(new UpdateDetailIDAction(id))
+  updateVisitorDetailID(id: string) {
+    this.store.dispatch(new UpdateVisitorDetailIDAction(id))
+  }
+
+  updateMatcherDetailID(id: string) {
+    this.store.dispatch(new UpdateMatcherDetailIDAction(id))
   }
 
   toggleLog() {
@@ -169,6 +179,12 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.listStatus$ = this.store.select(getListStatus)
     this.visitors$ = this.store.select(getVisitors)
     this.currentVisitorsTotal$ = this.store.select(getCurrentVisitorCount)
+    this.visitorShouldScrollToTop$ = this.store.select(
+      getVisitorShouldScrollToTop
+    )
+    this.matcherShouldScrollToTop$ = this.store.select(
+      getMatcherShouldScrollToTop
+    )
 
     // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
@@ -181,7 +197,10 @@ export class VisitorPage implements OnInit, OnDestroy {
     })
     this.currentMatchersTotal$ = this.store.select(getCurrentMatcherCount)
 
-    this.showDetailID$ = this.store.select(getShowDetailID)
+    this.showDetailID$ = Observable.merge(
+      this.store.select(getVisitorShowDetailID),
+      this.store.select(getMatcherShowDetailID)
+    )
     this.currentDetail$ = this.computeCurrentDetail()
     this.currentLogs$ = this.store.select(getLogs)
     this.showLoadMore$ = Observable.merge(
@@ -196,36 +215,35 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   private computeCurrentDetail(): Observable<RecommendVisitor> {
     // 根据list status和 show detail ID寻找当前推荐客户
-    const latestItems$: Observable<Visitor[]> = Observable.combineLatest(
-      Observable.merge(
-        this.visitors$.withLatestFrom(this.matchers$, (visitors, matchers) => [
-          visitors,
-          matchers
-        ]),
-        this.matchers$.withLatestFrom(this.visitors$, (matchers, visitors) => [
-          visitors,
-          matchers
-        ])
-      ),
-      this.listStatus$,
-      ([visitors, matchers], listStatus) => {
-        if (listStatus === ListStatus.VISITOR) {
-          return visitors
-        }
-        if (listStatus === ListStatus.MATCHER) {
-          return matchers
-        }
-      }
+    const latestVisitor$ = Observable.combineLatest(
+      this.store.select(getVisitors),
+      this.store.select(getVisitorShowDetailID)
     )
-
-    const clickGridItem$ = this.showDetailID$.withLatestFrom(
-      latestItems$,
-      (detailId, items) => {
-        return items.find(e => e.id === detailId)
-      }
+    .map(([visitors, id]) => {
+      const visitor = visitors.find(e => e.id === id)
+      return visitor
+    })
+    const latestMatcher$ = Observable.combineLatest(
+      this.store.select(getMatchers),
+      this.store.select(getMatcherShowDetailID)
     )
+    .map(([matchers, id]) => {
+      const matcher = matchers.find(e => e.id === id)
+      return matcher
+    })
 
-    return Observable.merge(clickGridItem$)
+    return Observable.combineLatest(
+      latestVisitor$,
+      latestMatcher$
+    )
+    .withLatestFrom(this.listStatus$, ([visitor, matcher], listStatus) => {
+      if (listStatus === ListStatus.VISITOR) {
+        return visitor
+      }
+      if (listStatus === ListStatus.MATCHER) {
+        return matcher
+      }
+    })
   }
 
   private initSubscriber() {
@@ -359,11 +377,13 @@ export class VisitorPage implements OnInit, OnDestroy {
       })
       .takeUntil(this.destroyService)
       .subscribe(visitorFilter => {
-        this.store.dispatch(new FetchVisitorsAction({
-          ...visitorFilter,
-          pageIndex: 1,
-          pageSize: 10
-        }))
+        this.store.dispatch(
+          new FetchVisitorsAction({
+            ...visitorFilter,
+            pageIndex: 1,
+            pageSize: 10
+          })
+        )
         this.store.dispatch(new FetchVisitorsCountAction(visitorFilter))
       })
   }

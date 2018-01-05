@@ -23,7 +23,7 @@ export const INVITE_VISITOR_FAILURE = '[Visitor] Invite Visitor Failure'
 export const CHANGE_LIST_STATUS = '[Visitor] Change List Status'
 export const CHANGE_PAGE_STATUS = '[Visitor] Change Page Status'
 export const TOGGLE_PAGE_STATUS = '[Visitor] Toggle Page Status'
-export const UPDATE_DETAIL_ID = '[Visitor] Update Detail ID'
+export const UPDATE_VISITOR_DETAIL_ID = '[Visitor] Update Visitor Detail ID'
 
 export const TO_CREATE_LOGGER = '[Visitor] To Create Logger'
 export const CANCEL_CREATE_LOGGER = '[Visitor] Cancel Create Logger'
@@ -119,8 +119,8 @@ export class ChangePageStatusAction implements Action {
 export class TogglePageStatusAction implements Action {
   readonly type = TOGGLE_PAGE_STATUS
 }
-export class UpdateDetailIDAction implements Action {
-  readonly type = UPDATE_DETAIL_ID
+export class UpdateVisitorDetailIDAction implements Action {
+  readonly type = UPDATE_VISITOR_DETAIL_ID
   constructor(public detailID: string) {}
 }
 
@@ -182,7 +182,7 @@ InviteVisitorFailureAction |
 ChangeListStatusAction |
 ChangePageStatusAction |
 TogglePageStatusAction |
-UpdateDetailIDAction |
+UpdateVisitorDetailIDAction |
 
 ToCreateLoggerAction |
 CancelCreateLoggerAction |

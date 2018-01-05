@@ -18,7 +18,7 @@ import { LoggerService } from '../../../providers/logger.service'
 import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
 import {
   State,
-  getShowDetailID,
+  getVisitorShowDetailID,
   getVisitors,
   getCurrentVisitorCount
 } from '../reducers'
@@ -124,7 +124,7 @@ export class VisitorEffects {
   @Effect()
   toInviteVisitor$ = this.actions$
     .ofType(fromVisitor.TO_INVITE_VISITOR)
-    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getVisitorShowDetailID), (_, id) => id)
     .withLatestFrom(this.store.select(getVisitors), (id, recommends) =>
       recommends.find(e => e.id === id)
     )
@@ -164,7 +164,7 @@ export class VisitorEffects {
   @Effect()
   inviteVisitor$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR)
-    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getVisitorShowDetailID), (_, id) => id)
     .mergeMap((visitorId) =>
       this.matcherService
         .createMatcher(visitorId)
@@ -230,7 +230,7 @@ export class VisitorEffects {
   createLogger$ = this.actions$
     .ofType(fromVisitor.CREATE_LOGGER)
     .map((action: fromVisitor.CreateLoggerAction) => action.log)
-    .withLatestFrom(this.store.select(getShowDetailID))
+    .withLatestFrom(this.store.select(getVisitorShowDetailID))
     .mergeMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)

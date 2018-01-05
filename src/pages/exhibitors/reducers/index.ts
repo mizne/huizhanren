@@ -32,7 +32,8 @@ export const getCurrentExhibitorCount = createSelector(
 )
 export const getListStatus = createSelector(selectExhibitorState, fromExhibitor.getListStatus)
 export const getPageStatus = createSelector(selectExhibitorState, fromExhibitor.getPageStatus)
-export const getShowDetailID = createSelector(selectExhibitorState, fromExhibitor.getShowDetailID)
+export const getExhibitorShowDetailID = createSelector(selectExhibitorState, fromExhibitor.getShowDetailID)
+export const getExhibitorShouldScrollToTop = createSelector(selectExhibitorState, fromExhibitor.getShouldScrollToTop)
 export const getCurrentLogs = createSelector(selectExhibitorState, fromExhibitor.getLogs)
 export const getShowExhibitorLoadMore = createSelector(
   selectExhibitorState,
@@ -51,3 +52,5 @@ export const getShowMatcherLoadMore = createSelector(
   selectMatcherState,
   fromMatcher.getShowLoadMore
 )
+export const getMatcherShowDetailID = createSelector(selectMatcherState, fromMatcher.getShowDetailID)
+export const getMatcherShouldScrollToTop = createSelector(selectMatcherState, fromMatcher.getShouldScrollToTop)

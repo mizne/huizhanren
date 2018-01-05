@@ -1,6 +1,11 @@
 // 从 新数组里 过滤某些原来有的项目 将其某些字段保留
 // 用于保留 customers groups中的 界面状态字段
-const remain = function (oldItems: any[], newItems: any[], remainFields: string[] = [], resolver = (e) => e.id) {
+const remain = function(
+  oldItems: any[],
+  newItems: any[],
+  remainFields: string[] = [],
+  resolver = e => e.id
+) {
   const retItems = newItems.map(newItem => {
     const oldItem = oldItems.find(e => resolver(e) === resolver(newItem))
     if (oldItem) {
@@ -20,7 +25,7 @@ const remain = function (oldItems: any[], newItems: any[], remainFields: string[
   return retItems
 }
 
-const deduplicate = function (arr, resolver = (e) => e) {
+const deduplicate = function(arr, resolver = e => e) {
   const ret = []
   for (const e of arr) {
     if (!ret.find(remain => resolver(remain) === resolver(e))) {
@@ -31,6 +36,18 @@ const deduplicate = function (arr, resolver = (e) => e) {
   return ret
 }
 
-const phoneRe = /^1[3|4|5|7|8][0-9]{9}$/ 
+const phoneRe = /^1[3|4|5|7|8][0-9]{9}$/
 
-export { remain, deduplicate, phoneRe }
+const isInViewport = function(elem: HTMLElement, offsetHeight = 52) {
+  var distance = elem.getBoundingClientRect()
+  return (
+    distance.top >= 0 &&
+    distance.left >= 0 &&
+    distance.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) - offsetHeight &&
+    distance.right <=
+      (window.innerWidth || document.documentElement.clientWidth)
+  )
+}
+
+export { remain, deduplicate, phoneRe, isInViewport }

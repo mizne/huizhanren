@@ -1,4 +1,4 @@
-<div *ngIf="expand; else noExpand;" class="visitor-grid-container">
+<div *ngIf="expand; else noExpand;" #gridExpand class="visitor-grid-container">
   <ion-grid class="header">
     <ion-row>
       <ion-col col-1></ion-col>
@@ -51,14 +51,16 @@
     </ion-row>
   </ion-grid>
 
-  <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more>
+  <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more expand" tappable (click)="ensureLoadMore()">加载更多</p>
+
+  <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
   <ng-template #noMoreData>
       <p class="not-more-data">没有更多数据了</p>
   </ng-template>
 </div>
 
 <ng-template #noExpand>
-  <div class="visitor-grid-container">
+  <div class="visitor-grid-container" #gridNoExpand>
     <ion-grid class="header">
       <ion-row class="header">
         <ion-col col-2>姓名</ion-col>
@@ -80,7 +82,8 @@
       </ion-row>
     </ion-grid>
 
-    <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more>
+    <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more no-expand" tappable (click)="ensureLoadMore()">加载更多</p>
+    <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
     <ng-template #noMoreData>
       <p class="not-more-data">没有更多数据了</p>
     </ng-template>

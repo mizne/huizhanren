@@ -12,7 +12,7 @@ export interface State {
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
   showDetailID: string // 表明 右边显示详细信息的 id
-
+  shouldScrollToTop: boolean
   logs: Logger[]
 }
 
@@ -24,6 +24,7 @@ export const initialState: State = {
   listStatus: ListStatus.EXHIBITOR,
   pageStatus: PageStatus.LIST,
   showDetailID: '',
+  shouldScrollToTop: false,
 
   logs: []
 }
@@ -37,12 +38,15 @@ export function reducer(
       return {
         ...state,
         exhibitors: action.exhibitors,
-        currentExhibitorsCount: action.exhibitors.length
+        currentExhibitorsCount: action.exhibitors.length,
+        showDetailID: '',
+        shouldScrollToTop:  true
       }
     case fromExhibitor.FETCH_EXHIBITORS_FAILURE:
       return {
         ...state,
-        exhibitors: []
+        exhibitors: [],
+        showDetailID: ''
       }
 
     case fromExhibitor.FETCH_EXHIBITORS_COUNT_SUCCESS:
@@ -59,13 +63,15 @@ export function reducer(
           e => e.id
         ),
         currentExhibitorsCount:
-          state.currentExhibitorsCount + action.exhibitors.length
+          state.currentExhibitorsCount + action.exhibitors.length,
+          shouldScrollToTop: false
       }
 
     case fromExhibitor.CHANGE_LIST_STATUS:
       return {
         ...state,
-        listStatus: action.listStatus
+        listStatus: action.listStatus,
+        showDetailID: ''
       }
 
     case fromExhibitor.CHANGE_PAGE_STATUS:
@@ -83,7 +89,7 @@ export function reducer(
             : PageStatus.LIST
       }
 
-    case fromExhibitor.UPDATE_DETAIL_ID:
+    case fromExhibitor.UPDATE_EXHIBITOR_DETAIL_ID:
       return {
         ...state,
         showDetailID: action.detailID
@@ -110,6 +116,7 @@ export const getCurrentExhibitorCount = (state: State) =>
 export const getListStatus = (state: State) => state.listStatus
 export const getPageStatus = (state: State) => state.pageStatus
 export const getShowDetailID = (state: State) => state.showDetailID
+export const getShouldScrollToTop = (state: State) => state.shouldScrollToTop
 
 export const getLogs = (state: State) => state.logs
 export const getShowLoadMore = (state: State) =>

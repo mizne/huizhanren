@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef
+} from '@angular/core'
 
 import { RecommendExhibitor } from '../../models/exhibitor.model'
 
@@ -7,11 +15,26 @@ import { RecommendExhibitor } from '../../models/exhibitor.model'
   templateUrl: 'exhibitor-grid.component.html'
 })
 export class ExhibitorGridComponent implements OnInit {
+  private gridContainers: HTMLElement[] = []
+  @ViewChild('gridContainer')
+  set gridContainer(v: ElementRef) {
+    if (v) {
+      this.gridContainers.push(v.nativeElement)
+    }
+  }
 
   @Input() expand: boolean
   @Input() type: string
   @Input() dataItems: RecommendExhibitor[]
   @Input() showLoadMore: boolean
+  @Input()
+  set shouldScrollToTop(v: boolean) {
+    if (v) {
+      this.gridContainers.forEach(e => {
+        e.scrollTo(0, 0)
+      })
+    }
+  }
 
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()

@@ -9,26 +9,29 @@ import {
   State,
   getListStatus,
   getPageStatus,
-  getShowDetailID,
+  getExhibitorShowDetailID,
+  getMatcherShowDetailID,
   getExhibitors,
   getMatchers,
   getCurrentLogs,
   getShowExhibitorLoadMore,
   getShowMatcherLoadMore,
   getCurrentExhibitorCount,
-  getCurrentMatcherCount
+  getCurrentMatcherCount,
+  getExhibitorShouldScrollToTop,
+  getMatcherShouldScrollToTop,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
   TogglePageStatusAction,
   ChangeListStatusAction,
   FetchExhibitorsAction,
-  UpdateDetailIDAction,
+  UpdateExhibitorDetailIDAction,
   ToInviteExhibitorAction,
   ToShowProcuctAction,
   FetchLoggerAction,
   FetchExhibitorsCountAction,
-  LoadMoreExhibitorsAction
+  LoadMoreExhibitorsAction,
 } from './actions/exhibitor.action'
 import {
   FetchMatchersAction,
@@ -36,7 +39,8 @@ import {
   ToCancelMatcherAction,
   ToRefuseMatcherAction,
   FetchMatchersCountAction,
-  LoadMoreMatchersAction
+  LoadMoreMatchersAction,
+  UpdateMatcherDetailIDAction,
 } from './actions/matcher.action'
 
 import {
@@ -77,6 +81,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
+  exhibitorShouldScrollToTop$: Observable<boolean>
+  matcherShouldScrollToTop$: Observable<boolean>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -137,8 +143,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.loadMoreSub.next()
   }
 
-  updateDetailID(id: string) {
-    this.store.dispatch(new UpdateDetailIDAction(id))
+  updateExhibitorDetailID(id: string) {
+    this.store.dispatch(new UpdateExhibitorDetailIDAction(id))
+  }
+
+  updateMatcherDetailID(id: string) {
+    this.store.dispatch(new UpdateMatcherDetailIDAction(id))
   }
 
   toggleLog() {
@@ -178,6 +188,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
     this.currentExhibitorsTotal$ = this.store.select(getCurrentExhibitorCount)
+    this.exhibitorShouldScrollToTop$ = this.store.select(getExhibitorShouldScrollToTop)
+    this.matcherShouldScrollToTop$ = this.store.select(getMatcherShouldScrollToTop)
 
     // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
@@ -190,7 +202,10 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     })
     this.currentMatchersTotal$ = this.store.select(getCurrentMatcherCount)
 
-    this.showDetailID$ = this.store.select(getShowDetailID)
+    this.showDetailID$ = Observable.merge(
+      this.store.select(getExhibitorShowDetailID),
+      this.store.select(getMatcherShowDetailID)
+    )
     this.currentDetail$ = this.computeCurrentDetail()
     this.currentLogs$ = this.store.select(getCurrentLogs)
     this.showLoadMore$ = Observable.merge(
@@ -204,37 +219,36 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   }
 
   private computeCurrentDetail(): Observable<RecommendExhibitor> {
-    // 根据list status和 show detail ID寻找当前推荐客户
-    const latestItems$: Observable<Exhibitor[]> = Observable.combineLatest(
-      Observable.merge(
-        this.exhibitors$.withLatestFrom(
-          this.matchers$,
-          (exhibitors, matchers) => [exhibitors, matchers]
-        ),
-        this.matchers$.withLatestFrom(
-          this.exhibitors$,
-          (matchers, exhibitors) => [exhibitors, matchers]
-        )
-      ),
-      this.listStatus$,
-      ([exhibitors, matchers], listStatus) => {
-        if (listStatus === ListStatus.EXHIBITOR) {
-          return exhibitors
-        }
-        if (listStatus === ListStatus.MATCHER) {
-          return matchers
-        }
-      }
+    // 根据list status和 show detail ID寻找当前推荐展商
+    const latestExhibitor$ = Observable.combineLatest(
+      this.store.select(getExhibitors),
+      this.store.select(getExhibitorShowDetailID)
     )
-
-    const clickGridItem$ = this.showDetailID$.withLatestFrom(
-      latestItems$,
-      (detailId, items) => {
-        return items.find(e => e.id === detailId)
-      }
+    .map(([exhibitors, id]) => {
+      const exhibitor = exhibitors.find(e => e.id === id)
+      return exhibitor
+    })
+    const latestMatcher$ = Observable.combineLatest(
+      this.store.select(getMatchers),
+      this.store.select(getMatcherShowDetailID)
     )
+    .map(([matchers, id]) => {
+      const matcher = matchers.find(e => e.id === id)
+      return matcher
+    })
 
-    return Observable.merge(clickGridItem$)
+    return Observable.combineLatest(
+      latestExhibitor$,
+      latestMatcher$
+    )
+    .withLatestFrom(this.listStatus$, ([exhibitor, matcher], listStatus) => {
+      if (listStatus === ListStatus.EXHIBITOR) {
+        return exhibitor
+      }
+      if (listStatus === ListStatus.MATCHER) {
+        return matcher
+      }
+    })
   }
 
   private initSubscriber() {

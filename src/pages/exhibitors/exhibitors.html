@@ -16,11 +16,18 @@
       <exhibitor-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </exhibitor-matcher-filter>
 
-      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor" (showDetail)="updateDetailID($event)" (loadMore)="loadMore()"
-        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0" [dataItems]="exhibitors$ | async">
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor"
+        (showDetail)="updateExhibitorDetailID($event)" (loadMore)="loadMore()"
+        [shouldScrollToTop]="exhibitorShouldScrollToTop$ | async"
+        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0"
+        [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
-      <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
-        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [showLoadMore]="showLoadMore$ | async"
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher"
+      (showDetail)="updateMatcherDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()"
+        [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
+        [showLoadMore]="showLoadMore$ | async"
         [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async">
       </exhibitor-grid>
 

@@ -13,6 +13,8 @@ export const LOAD_MORE_MATCHERS = '[Exhibitor] Load More Matchers'
 export const LOAD_MORE_MATCHERS_SUCCESS = '[Exhibitor] Load More Matchers Success'
 export const LOAD_MORE_MATCHERS_FAILURE = '[Exhibitor] Load More Matchers Failure'
 
+export const UPDATE_MATCHER_DETAIL_ID = '[Exhibitor] Update Matcher Detail ID'
+
 export const TO_AGREE_MATCHER = '[Exhibitor] To Agree Matcher'
 export const CANCEL_AGREE_MATCHER = '[Exhibitor] Cancel Agree Matcher'
 export const AGREE_MATCHER = '[Exhibitor] Agree Matcher'
@@ -79,6 +81,12 @@ export class LoadMoreMatchersSuccessAction implements Action {
 }
 export class LoadMoreMatchersFailureAction implements Action {
   readonly type = LOAD_MORE_MATCHERS_FAILURE
+}
+
+
+export class UpdateMatcherDetailIDAction implements Action {
+  readonly type = UPDATE_MATCHER_DETAIL_ID
+  constructor(public detailID: string) {}
 }
 
 
@@ -154,6 +162,8 @@ FetchMatchersCountFailureAction |
 LoadMoreMatchersAction |
 LoadMoreMatchersSuccessAction |
 LoadMoreMatchersFailureAction |
+
+UpdateMatcherDetailIDAction |
 
 ToAgreeMatcherAction |
 CancelAgreeMatcherAction |

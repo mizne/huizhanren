@@ -23,7 +23,7 @@ export const INVITE_EXHIBITOR_FAILURE = '[Exhibitor] Invite Exhibitor Failure'
 export const CHANGE_LIST_STATUS = '[Exhibitor] Change List Status'
 export const CHANGE_PAGE_STATUS = '[Exhibitor] Change Page Status'
 export const TOGGLE_PAGE_STATUS = '[Exhibitor] Toggle Page Status'
-export const UPDATE_DETAIL_ID = '[Exhibitor] Update Detail ID'
+export const UPDATE_EXHIBITOR_DETAIL_ID = '[Exhibitor] Update Exhibitor Detail ID'
 
 export const TO_CREATE_LOGGER = '[Exhibitor] To Create Logger'
 export const CANCEL_CREATE_LOGGER = '[Exhibitor] Cancel Create Logger'
@@ -121,8 +121,8 @@ export class ChangePageStatusAction implements Action {
 export class TogglePageStatusAction implements Action {
   readonly type = TOGGLE_PAGE_STATUS
 }
-export class UpdateDetailIDAction implements Action {
-  readonly type = UPDATE_DETAIL_ID
+export class UpdateExhibitorDetailIDAction implements Action {
+  readonly type = UPDATE_EXHIBITOR_DETAIL_ID
   constructor(public detailID: string) {}
 }
 
@@ -193,7 +193,7 @@ InviteExhibitorFailureAction |
 ChangeListStatusAction |
 ChangePageStatusAction |
 TogglePageStatusAction |
-UpdateDetailIDAction |
+UpdateExhibitorDetailIDAction |
 
 ToCreateLoggerAction |
 CancelCreateLoggerAction |

@@ -23,7 +23,7 @@ import { ToShowProductModal } from '../modals/to-show-product-modal/to-show-prod
 import { Store } from '@ngrx/store'
 import {
   State,
-  getShowDetailID,
+  getExhibitorShowDetailID,
   getExhibitors,
   getCurrentExhibitorCount
 } from '../reducers'
@@ -106,7 +106,7 @@ export class ExhibitorEffects {
   @Effect()
   toInviteExhibitor$ = this.actions$
     .ofType(fromExhibitor.TO_INVITE_EXHIBITOR)
-    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getExhibitorShowDetailID), (_, id) => id)
     .withLatestFrom(this.store.select(getExhibitors), (id, exhibitors) =>
       exhibitors.find(e => e.id === id)
     )
@@ -146,7 +146,7 @@ export class ExhibitorEffects {
   @Effect()
   inviteRecommend$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
-    .withLatestFrom(this.store.select(getShowDetailID), (_, id) => id)
+    .withLatestFrom(this.store.select(getExhibitorShowDetailID), (_, id) => id)
     .switchMap((id) =>
       this.matcherService
         .createMatcher(id)
@@ -212,7 +212,7 @@ export class ExhibitorEffects {
   createLogger$ = this.actions$
     .ofType(fromExhibitor.CREATE_LOGGER)
     .map((action: fromExhibitor.CreateLoggerAction) => action.log)
-    .withLatestFrom(this.store.select(getShowDetailID))
+    .withLatestFrom(this.store.select(getExhibitorShowDetailID))
     .mergeMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
