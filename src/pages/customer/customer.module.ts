@@ -125,7 +125,7 @@ const pipes = [
   ],
   imports: [
     SharedModule,
-    StoreModule.forFeature('customer', reducers),
+    StoreModule.forFeature('customerModule', reducers),
     EffectsModule.forFeature([LoggerEffects, CustomerEffects, SmsEffects, GroupEffects, NotificationEffects]),
     IonicPageModule.forChild(CustomerPage)
   ],

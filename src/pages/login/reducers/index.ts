@@ -17,7 +17,7 @@ export const reducers = {
   exhibitions: fromExhibitions.reducer
 }
 
-export const selectLoginModuleState = createFeatureSelector<LoginState>('login')
+export const selectLoginModuleState = createFeatureSelector<LoginState>('loginModule')
 export const selectVerifyCodeState = createSelector(
   selectLoginModuleState,
   (state: LoginState) => state.verifyCode

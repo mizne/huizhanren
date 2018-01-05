@@ -14,6 +14,19 @@ export class ExhibitorMatcher extends Exhibitor {
   sender?: RecommendExhibitor
   receiver?: RecommendExhibitor
 
+  static filterDirtyData(resp: ExhibitorMatcherResp): boolean {
+    return (
+      resp.Initator &&
+      resp.Initator.length > 0 &&
+      resp.Receiver &&
+      resp.Receiver.length > 0
+    )
+  }
+
+  static filterState(resp: ExhibitorMatcherResp): boolean {
+    return resp.State !== '5' && resp.State !== '6'
+  }
+
   static convertFromResp(resp: ExhibitorMatcherResp): ExhibitorMatcher {
     return {
       id: resp.RecordId || resp._id,

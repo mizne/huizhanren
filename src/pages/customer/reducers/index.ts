@@ -31,7 +31,7 @@ export const reducers = {
   helper: fromHelper.reducer
 }
 
-export const selectCustomerModuleState = createFeatureSelector<CustomerState>('customer')
+export const selectCustomerModuleState = createFeatureSelector<CustomerState>('customerModule')
 export const selectCustomerState = createSelector(
   selectCustomerModuleState,
   (state: CustomerState) => state.customer

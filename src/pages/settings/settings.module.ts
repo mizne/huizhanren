@@ -53,7 +53,7 @@ const pages = [
     ...pages,
   ],
   imports: [
-    StoreModule.forFeature('settings', reducers),
+    StoreModule.forFeature('settingsModule', reducers),
     EffectsModule.forFeature([UserManagementEffects, OtherEffects]),
     IonicPageModule.forChild(SettingsPage),
   ],

@@ -23,7 +23,7 @@ const modals = [VerifyCodeModal, WelcomeModal]
   declarations: [LoginPage, ...modals, ...pipes],
   imports: [
     SharedModule,
-    StoreModule.forFeature('login', reducers),
+    StoreModule.forFeature('loginModule', reducers),
     EffectsModule.forFeature([VerifyCodeEffects, ExhibitionsEffects]),
     IonicPageModule.forChild(LoginPage)
   ],

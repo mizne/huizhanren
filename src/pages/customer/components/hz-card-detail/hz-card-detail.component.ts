@@ -1,12 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from '@angular/animations';
+import { trigger, state, style, animate, transition } from '@angular/animations'
 
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
@@ -18,7 +12,10 @@ import {
   getShowDetailGroupId,
   getNotifications
 } from '../../reducers/index'
-import { ToSingleEditGroupAction, ToggleShowNotificationAction } from '../../actions/customer.action'
+import {
+  ToSingleEditGroupAction,
+  ToggleShowNotificationAction
+} from '../../actions/customer.action'
 import { ToSingleSendSMSAction } from '../../actions/sms.action'
 import { Customer } from '../../models/customer.model'
 import { Notification } from '../../models/notification.model'
@@ -94,14 +91,20 @@ interface Field {
       </div>
     </div>
   `,
-  animations   : [
+  animations: [
     trigger('collapseState', [
-      state('inactive', style({
-        display: 'none'
-      })),
-      state('active', style({
-        display: 'block'
-      })),
+      state(
+        'inactive',
+        style({
+          display: 'none'
+        })
+      ),
+      state(
+        'active',
+        style({
+          display: 'block'
+        })
+      ),
       transition('inactive => active', animate('150ms ease-in')),
       transition('active => inactive', animate('150ms ease-out'))
     ])
@@ -109,53 +112,25 @@ interface Field {
 })
 export class HzCardDetailComponent implements OnInit {
   @Input() open: boolean
-
   private _active: boolean = false
 
   @Output() editCustomer: EventEmitter<void> = new EventEmitter<void>()
-
   @Output() delCustomer: EventEmitter<void> = new EventEmitter<void>()
-
   @Output() showNotification: EventEmitter<void> = new EventEmitter<void>()
-
   @Output() toList: EventEmitter<void> = new EventEmitter<void>()
 
   customer$: Observable<Customer>
-
   currentGroupName$: Observable<string>
-
   earliestNotificationContent$: Observable<string>
-
   notifications$: Observable<Notification[]>
-
   restTime$: Observable<string>
-
   fields$: Observable<Field[]>
-
-  fields = [
-    {
-      icon: 'person',
-      label: '手机',
-      value: '12345678910'
-    },
-    {
-      icon: 'person',
-      label: '邮箱',
-      value: '12345678910'
-    },
-    {
-      icon: 'person',
-      label: '地址',
-      value: '12345678910'
-    }
-  ]
 
   constructor(private store: Store<State>) {
     this.currentGroupName$ = Observable.combineLatest(
       store.select(getShowDetailGroupId),
       store.select(getGroups)
-    )
-    .map(([groupId, groups]) => {
+    ).map(([groupId, groups]) => {
       const group = groups.find(e => e.id === groupId)
 
       return group ? group.name : ''
@@ -163,10 +138,11 @@ export class HzCardDetailComponent implements OnInit {
 
     this.notifications$ = store.select(getNotifications)
 
-    const earliestNotification$ = store.select(getNotifications)
-    .map((notifications: Notification[]) => {
-      return notifications[0]
-    })
+    const earliestNotification$ = store
+      .select(getNotifications)
+      .map((notifications: Notification[]) => {
+        return notifications[0]
+      })
 
     this.earliestNotificationContent$ = earliestNotification$.map(e => {
       if (e) {
@@ -191,16 +167,45 @@ export class HzCardDetailComponent implements OnInit {
       (customers, id) => customers.find(e => e.id === id)
     )
 
-    this.fields$ = this.customer$.map((customer) => {
+    this.fields$ = this.customer$.map(customer => {
       const fields: Field[] = []
 
-      fields.push(...customer.phones.map(p => ({icon: 'phone-portrait', label: p.label, value: p.value})))
-      fields.push(...customer.emails.map(p => ({icon: 'mail', label: p.label, value: p.value})))
-      fields.push(...customer.addresses.map(p => ({icon: 'locate', label: p.label, value: p.value})))
-      fields.push(...customer.departments.map(p => ({icon: 'people', label: p.label, value: p.value})))
-      fields.push(...customer.jobs.map(p => ({icon: 'cafe', label: p.label, value: p.value})))
+      fields.push(
+        ...customer.phones.map(p => ({
+          icon: 'phone-portrait',
+          label: p.label,
+          value: p.value
+        }))
+      )
+      fields.push(
+        ...customer.emails.map(p => ({
+          icon: 'mail',
+          label: p.label,
+          value: p.value
+        }))
+      )
+      fields.push(
+        ...customer.addresses.map(p => ({
+          icon: 'locate',
+          label: p.label,
+          value: p.value
+        }))
+      )
+      fields.push(
+        ...customer.departments.map(p => ({
+          icon: 'people',
+          label: p.label,
+          value: p.value
+        }))
+      )
+      fields.push(
+        ...customer.jobs.map(p => ({
+          icon: 'cafe',
+          label: p.label,
+          value: p.value
+        }))
+      )
       // fields.push(...customer.company.map(p => ({icon: 'pin', label: p.label, value: p.value})))
-
 
       return fields
     })
@@ -210,7 +215,7 @@ export class HzCardDetailComponent implements OnInit {
     this._active = false
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   showMore() {
     this._active = !this._active
@@ -223,7 +228,6 @@ export class HzCardDetailComponent implements OnInit {
   toShowNotification() {
     this.store.dispatch(new ToggleShowNotificationAction(true))
   }
-
 }
 
 @Component({
@@ -242,7 +246,8 @@ export class HzCardDetailComponent implements OnInit {
       </div>
     </div>
   `,
-  styles: [`
+  styles: [
+    `
     :host {
       margin: 5px 0;
     }
@@ -288,10 +293,10 @@ export class HzCardDetailComponent implements OnInit {
     .hz-card-detail-field-item .icon-wrapper .icon {
       font-size: 20px;
     }
-  `],
+  `
+  ]
 })
 export class HzCardDetailFieldItemComponent implements OnInit {
-
   @Input() field: any
 
   get isPhone() {
@@ -299,10 +304,12 @@ export class HzCardDetailFieldItemComponent implements OnInit {
   }
 
   get telHref(): string {
-    return phoneRe.test(this.field.value) ? `tel:${this.field.value}` : 'javascript:;'
+    return phoneRe.test(this.field.value)
+      ? `tel:${this.field.value}`
+      : 'javascript:;'
   }
 
-  constructor(private store: Store<State>) { }
+  constructor(private store: Store<State>) {}
 
   ngOnInit() {}
 

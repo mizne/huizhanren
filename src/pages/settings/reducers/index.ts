@@ -17,7 +17,7 @@ export const reducers = {
   other: fromOther.reducer
 }
 
-export const selectSettingsModuleState = createFeatureSelector<SettingsState>('settings')
+export const selectSettingsModuleState = createFeatureSelector<SettingsState>('settingsModule')
 
 
 export const selectUserManagementState = createSelector(

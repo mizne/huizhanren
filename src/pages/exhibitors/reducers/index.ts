@@ -17,7 +17,7 @@ export const reducers = {
   matcher: fromMatcher.reducer
 }
 
-export const selectExhibitorModuleState = createFeatureSelector<ExhibitorState>('exhibitorsModule')
+export const selectExhibitorModuleState = createFeatureSelector<ExhibitorState>('exhibitorModule')
 
 
 export const selectExhibitorState = createSelector(

@@ -45,7 +45,7 @@ const modals = [
   ],
   imports: [
     SharedModule,
-    StoreModule.forFeature('exhibitorsModule', reducers),
+    StoreModule.forFeature('exhibitorModule', reducers),
     EffectsModule.forFeature(effects),
     IonicPageModule.forChild(ExhibitorsPage)
   ],
