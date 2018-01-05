@@ -22,7 +22,7 @@ export class MatcherEffects {
   fetchMatchers$ = this.actions$
     .ofType(fromMatcher.FETCH_MATCHERS)
     .map((action: fromMatcher.FetchMatchersAction) => action.payload)
-    .mergeMap(params => {
+    .switchMap(params => {
       const loading = this.loadCtrl.create({
         content: '获取展商约请中...',
         spinner: 'bubbles'
@@ -45,7 +45,7 @@ export class MatcherEffects {
   fetchMatchersCount$ = this.actions$
     .ofType(fromMatcher.FETCH_MATCHERS_COUNT)
     .map((action: fromMatcher.FetchMatchersCountAction) => action.statuses)
-    .mergeMap((statuses) => {
+    .switchMap((statuses) => {
       return this.matcherService
         .fetchMatcherCount(statuses)
         .map(number => {
@@ -70,7 +70,7 @@ export class MatcherEffects {
         statuses
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多展商约请中...',
         spinner: 'bubbles'
@@ -92,7 +92,7 @@ export class MatcherEffects {
   toCancelMatcher$ = this.actions$
     .ofType(fromMatcher.TO_CANCEL_MATCHER)
     .map((action: fromMatcher.ToCancelMatcherAction) => action.matcherId)
-    .mergeMap(matcherId => {
+    .switchMap(matcherId => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToCancelMatcherModal)
@@ -114,7 +114,7 @@ export class MatcherEffects {
   cancelMatcher$ = this.actions$
     .ofType(fromMatcher.CANCEL_MATCHER)
     .map((action: fromMatcher.CancelMatcherAction) => action.matcherId)
-    .mergeMap(matcherId =>
+    .switchMap(matcherId =>
       this.matcherService
         .cancelMatcher(matcherId)
         .concatMap(() => [
@@ -156,7 +156,7 @@ export class MatcherEffects {
   toAgreeMatcher$ = this.actions$
     .ofType(fromMatcher.TO_AGREE_MATCHER)
     .map((action: fromMatcher.ToAgreeMatcherAction) => action.matcherId)
-    .mergeMap(matcherId => {
+    .switchMap(matcherId => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToAgreeMatcherModal)
@@ -178,7 +178,7 @@ export class MatcherEffects {
   agreeMatcher$ = this.actions$
     .ofType(fromMatcher.AGREE_MATCHER)
     .map((action: fromMatcher.AgreeMatcherAction) => action.matcherId)
-    .mergeMap(matcherId => {
+    .switchMap(matcherId => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取约请信息中...',
         spinner: 'bubbles'
@@ -229,7 +229,7 @@ export class MatcherEffects {
   toRefuseMatcher$ = this.actions$
     .ofType(fromMatcher.TO_REFUSE_MATCHER)
     .map((action: fromMatcher.ToRefuseMatcherAction) => action.matcherId)
-    .mergeMap(matcherId => {
+    .switchMap(matcherId => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToRefuseMatcherModal)
@@ -251,7 +251,7 @@ export class MatcherEffects {
   refuseMatcher$ = this.actions$
     .ofType(fromMatcher.REFUSE_MATCHER)
     .map((action: fromMatcher.RefuseMatcherAction) => action.matcherId)
-    .mergeMap(matcherId =>
+    .switchMap(matcherId =>
       this.matcherService
         .refuseMatcher(matcherId)
         .concatMap(() => [

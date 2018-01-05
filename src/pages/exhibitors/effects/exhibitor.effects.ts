@@ -35,7 +35,7 @@ export class ExhibitorEffects {
   fetchExhibitors$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS)
     .map((action: fromExhibitor.FetchExhibitorsAction) => action.params)
-    .mergeMap(params => {
+    .switchMap(params => {
       const loading = this.loadCtrl.create({
         content: '获取展商中...',
         spinner: 'bubbles'
@@ -58,7 +58,7 @@ export class ExhibitorEffects {
   fetchExhibitorsCount$ = this.actions$
     .ofType(fromExhibitor.FETCH_EXHIBITORS_COUNT)
     .map((action: fromExhibitor.FetchExhibitorsCountAction) => action.params)
-    .mergeMap(params => {
+    .switchMap(params => {
       return this.exhibitorService
         .fetchExhibitorsCount(params)
         .map(number => {
@@ -83,7 +83,7 @@ export class ExhibitorEffects {
         ...params
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多展商中...',
         spinner: 'bubbles'
@@ -125,7 +125,7 @@ export class ExhibitorEffects {
         srcAddress: exhibitionAddress
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToInviteExhibitorModal, params)
@@ -188,7 +188,7 @@ export class ExhibitorEffects {
   @Effect()
   toCreateLogger$ = this.actions$
     .ofType(fromExhibitor.TO_CREATE_LOGGER)
-    .mergeMap(() => {
+    .switchMap(() => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
@@ -213,7 +213,7 @@ export class ExhibitorEffects {
     .ofType(fromExhibitor.CREATE_LOGGER)
     .map((action: fromExhibitor.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getExhibitorShowDetailID))
-    .mergeMap(([log, customerId]) =>
+    .switchMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
@@ -259,7 +259,7 @@ export class ExhibitorEffects {
   fetchLogger$ = this.actions$
     .ofType(fromExhibitor.FETCH_LOGGER)
     .map((action: fromExhibitor.FetchLoggerAction) => action.exhibitionID)
-    .mergeMap(exhibitionID =>
+    .switchMap(exhibitionID =>
       this.loggerService
         .fetchLogger(exhibitionID)
         .map(logs => new fromExhibitor.FetchLoggerSuccessAction(logs))

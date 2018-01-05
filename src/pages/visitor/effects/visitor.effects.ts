@@ -30,7 +30,7 @@ export class VisitorEffects {
   fetchVisitors$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS)
     .map((action: fromVisitor.FetchVisitorsAction) => action.params)
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取客户中...',
         spinner: 'bubbles'
@@ -65,7 +65,7 @@ export class VisitorEffects {
   fetchVisitorsCount$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS_COUNT)
     .map((action: fromVisitor.FetchVisitorsCountAction) => action.params)
-    .mergeMap(params => {
+    .switchMap(params => {
       return this.visitorService
         .fetchVisitorCount(params)
         .map(number => {
@@ -90,7 +90,7 @@ export class VisitorEffects {
         ...params
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多客户中...',
         spinner: 'bubbles'
@@ -143,7 +143,7 @@ export class VisitorEffects {
         boothNo
       }
     })
-    .mergeMap(params => {
+    .switchMap(params => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const modal = this.modalCtrl.create(ToInviteCustomerModal, params)
@@ -165,7 +165,7 @@ export class VisitorEffects {
   inviteVisitor$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR)
     .withLatestFrom(this.store.select(getVisitorShowDetailID), (_, id) => id)
-    .mergeMap((visitorId) =>
+    .switchMap((visitorId) =>
       this.matcherService
         .createMatcher(visitorId)
         .concatMap(() => [
@@ -206,7 +206,7 @@ export class VisitorEffects {
   @Effect()
   toCreateLogger$ = this.actions$
     .ofType(fromVisitor.TO_CREATE_LOGGER)
-    .mergeMap(() => {
+    .switchMap(() => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
@@ -231,7 +231,7 @@ export class VisitorEffects {
     .ofType(fromVisitor.CREATE_LOGGER)
     .map((action: fromVisitor.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getVisitorShowDetailID))
-    .mergeMap(([log, customerId]) =>
+    .switchMap(([log, customerId]) =>
       this.loggerService
         .createLog(log, customerId)
         .concatMap(() => {
@@ -275,7 +275,7 @@ export class VisitorEffects {
   fetchLogger$ = this.actions$
     .ofType(fromVisitor.FETCH_LOGGER)
     .map((action: fromVisitor.FetchLoggerAction) => action.customerID)
-    .mergeMap(customerId =>
+    .switchMap(customerId =>
       this.loggerService
         .fetchLogger(customerId)
         .map(logs => new fromVisitor.FetchLoggerSuccessAction(logs))

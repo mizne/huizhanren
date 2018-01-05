@@ -19,7 +19,7 @@ export class VerifyCodeEffects {
   toVerifyCode$ = this.actions$
     .ofType(fromVerifyCode.TO_VERIFY_CODE)
     .map(toPayload)
-    .mergeMap(() => {
+    .switchMap(() => {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const verifyCodeModal = this.modalCtrl.create(VerifyCodeModal, {})
@@ -41,7 +41,7 @@ export class VerifyCodeEffects {
   fetchCode$ = this.actions$
     .ofType(fromVerifyCode.FETCH_CODE)
     .withLatestFrom(this.store.select(getPhone))
-    .mergeMap(([_, phone]) =>
+    .switchMap(([_, phone]) =>
       this.smsService
       .fetchVerifyCode(phone)
       .map(() => new fromVerifyCode.FetchCodeSuccessAction())
@@ -78,7 +78,7 @@ export class VerifyCodeEffects {
   verifyCode$ = this.actions$
     .ofType(fromVerifyCode.VERIFY_CODE)
     .map(toPayload)
-    .mergeMap(({ phone, code }) =>
+    .switchMap(({ phone, code }) =>
       this.smsService
         .verifyCode(phone, code)
         .concatMap(() => [

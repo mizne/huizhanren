@@ -187,7 +187,7 @@ export class SmsEffects {
     .ofType(fromSms.MARK_CUSTOMER_HAS_SEND_SMS)
     .map((action: fromSms.MarkCustomerHasSendSMSAction) => action.customerIds)
     .withLatestFrom(this.store.select(getSelectedExhibitionId))
-    .mergeMap(([customerIds, exhibitionId]) => {
+    .switchMap(([customerIds, exhibitionId]) => {
       return this.customerService
         .markCustomersHasSendSms(customerIds, exhibitionId)
         .map(() => new fromSms.MarkCustomerHasSendSMSSuccessAction())
@@ -239,7 +239,7 @@ export class SmsEffects {
   ensureSingleSendSMS$ = this.actions$
     .ofType(fromSms.ENSURE_SINGLE_SEND_SMS)
     .map((action: fromSms.EnsureSingleSendSMSAction) => action.context)
-    .mergeMap(context => {
+    .switchMap(context => {
       const smsContents: SmsContent[] = context.computeRequestParams()
 
       return this.smsService
@@ -257,7 +257,7 @@ export class SmsEffects {
   @Effect()
   fetchAllTemplate$ = this.actions$
     .ofType(fromSms.FETCH_ALL_TEMPLATE)
-    .mergeMap(() =>
+    .switchMap(() =>
       this.smsService
         .fetchAllTemplate()
         .map(

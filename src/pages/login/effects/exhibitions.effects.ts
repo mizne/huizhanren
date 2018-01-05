@@ -14,7 +14,7 @@ export class ExhibitionsEffects {
   FetchAllExhibitions$ = this.actions$
     .ofType(fromExhibitions.FETCH_ALL_EXHIBITIONS)
     .map((action: fromExhibitions.FetchAllExhibitionsAction) => action.phone)
-    .mergeMap(phone => {
+    .switchMap(phone => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取展会信息中...',
         spinner: 'bubbles'
@@ -50,7 +50,8 @@ export class ExhibitionsEffects {
     })
 
   @Effect({ dispatch: false })
-  toWelcome$ = this.actions$.ofType(fromExhibitions.TO_WELCOME).mergeMap(() => {
+  toWelcome$ = this.actions$.ofType(fromExhibitions.TO_WELCOME)
+  .switchMap(() => {
     return Observable.fromPromise(
       new Promise((res, _) => {
         const welcomeModal = this.modalCtrl.create(WelcomeModal, {})
