@@ -74,7 +74,6 @@ export function attachScrollEvent(
   return Observable.fromEvent(options.container, 'scroll')
     .sampleTime(options.throttleDuration)
     .mergeMap((ev: any) => {
-      debugger
       return Observable.of(options.mergeMap(ev))
     })
     .subscribe(options.scrollHandler);

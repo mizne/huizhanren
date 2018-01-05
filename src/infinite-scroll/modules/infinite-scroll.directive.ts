@@ -50,7 +50,6 @@ export class InfiniteScrollDirective
     infiniteScrollDisabled,
     infiniteScrollDistance
   }: SimpleChanges) {
-    debugger
     const containerChanged = inputPropChanged(infiniteScrollContainer)
     const disabledChanged = inputPropChanged(infiniteScrollDisabled)
     const distanceChanged = inputPropChanged(infiniteScrollDistance)

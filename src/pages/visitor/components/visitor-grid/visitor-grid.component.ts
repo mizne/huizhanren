@@ -42,7 +42,7 @@ export class VisitorGridComponent implements OnInit {
   set shouldScrollToTop(v: boolean) {
     if (v) {
       this.gridContainers.forEach(e => {
-        e.scrollTo(0, 0)
+        e.scrollTop = 0
       })
     }
   }
