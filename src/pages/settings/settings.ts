@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import {
-  NavController,
-  ToastController,
-  ModalController,
-} from 'ionic-angular'
+import { NavController, ToastController, ModalController } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
