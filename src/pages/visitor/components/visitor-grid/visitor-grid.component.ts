@@ -57,6 +57,10 @@ export class VisitorGridComponent implements OnInit {
   ngOnInit() {
   }
 
+  onScroll() {
+    this.loadMore.emit()
+  }
+
   ensureShow(id: string) {
     this.showDetail.emit(id)
     this.activeId = id

@@ -1,4 +1,8 @@
-<div class="exhibitor-grid-container" #gridContainer *ngIf="dataItems.length > 0; else noData;">
+<div class="exhibitor-grid-container" #gridContainer  [ngClass]="[type]"
+  infiniteScroll
+  [infiniteScrollContainer]="'.exhibitor-grid-container.' + type"
+  [fromRoot]="true" (scrolled)="onScroll()"
+*ngIf="dataItems.length > 0; else noData;">
   <div class="exhibitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
     (click)="ensureShow(item)">
     <div class="logo">
@@ -73,7 +77,8 @@
     </div>
   </div>
 
-  <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more>
+  <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>
+  <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
   <ng-template #noMoreData>
     <p class="not-more-data">没有更多数据了</p>
   </ng-template>

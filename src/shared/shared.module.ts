@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
+import { InfiniteScrollModule } from '../infinite-scroll/modules/ngx-infinite-scroll.module'
 
 import { HzSearchInputComponent } from './components/search-input/search-input.component'
 import { HzSelectorComponent } from './components/selector/selector.component'
@@ -36,7 +37,7 @@ const components = [
 const directives = [ClickOutSideDirective]
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InfiniteScrollModule],
   declarations: [...pipes, ...components, ...directives],
   providers: [],
   exports: [
@@ -44,6 +45,7 @@ const directives = [ClickOutSideDirective]
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    InfiniteScrollModule,
     ...pipes,
     ...components,
     ...directives

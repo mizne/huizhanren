@@ -46,6 +46,10 @@ export class ExhibitorGridComponent implements OnInit {
 
   ngOnInit() {}
 
+  onScroll() {
+    this.loadMore.emit()
+  }
+
   ensureShow(item: RecommendExhibitor) {
     item.selected = !item.selected
     this.showDetail.emit(item.id)

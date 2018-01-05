@@ -37,49 +37,56 @@ export class ExhibitorMatcherService {
    * @memberof ExhibitorMatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<ExhibitorMatcher[]> {
-    return this.tenantService
-      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-      .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-        let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+    return environment.production
+      ? this.tenantService
+          .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
+            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
 
-        if (params.pageIndex) {
-          query += `&pageIndex=${params.pageIndex}`
-        }
-        if (params.pageSize) {
-          query += `&pageSize=${params.pageSize}`
-        }
-        if (params.statuses && params.statuses.length > 0) {
-          query += `&state=${params.statuses.map(
-            convertMatcherStatusFromModel
-          )}`
-        }
-        return this.http.get(this.fetchUrl + query)
-      })
-      .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
-      .map(e =>
-        e
-          .filter(ExhibitorMatcher.filterDirtyData)
-          .filter(ExhibitorMatcher.filterState)
-          .map(ExhibitorMatcher.convertFromResp)
-      )
-      .withLatestFrom(
-        this.tenantService.getExhibitorId(),
-        (results, exhibitorId) => {
-          return results.map(e => ({
-            ...e,
-            ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
-            isSender: e.sender.id === exhibitorId,
-            isReceiver: e.receiver.id === exhibitorId
-          }))
-        }
-      )
-      .catch(e => {
-        return this.logger.httpError({
-          module: 'ExhibitorMatcherService',
-          method: 'fetchMatchers',
-          error: e
-        })
-      })
+            if (params.pageIndex) {
+              query += `&pageIndex=${params.pageIndex}`
+            }
+            if (params.pageSize) {
+              query += `&pageSize=${params.pageSize}`
+            }
+            if (params.statuses && params.statuses.length > 0) {
+              query += `&state=${params.statuses.map(
+                convertMatcherStatusFromModel
+              )}`
+            }
+            return this.http.get(this.fetchUrl + query)
+          })
+          .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
+          .map(e =>
+            e
+              .filter(ExhibitorMatcher.filterDirtyData)
+              .filter(ExhibitorMatcher.filterState)
+              .map(ExhibitorMatcher.convertFromResp)
+          )
+          .withLatestFrom(
+            this.tenantService.getExhibitorId(),
+            (results, exhibitorId) => {
+              return results.map(e => ({
+                ...e,
+                ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
+                isSender: e.sender.id === exhibitorId,
+                isReceiver: e.receiver.id === exhibitorId
+              }))
+            }
+          )
+          .catch(e => {
+            return this.logger.httpError({
+              module: 'ExhibitorMatcherService',
+              method: 'fetchMatchers',
+              error: e
+            })
+          })
+      : Observable.of(
+          ExhibitorMatcher.generateFakeMatchers(
+            (params.pageIndex - 1) * params.pageSize,
+            params.pageIndex * params.pageSize
+          )
+        ).delay(Math.random() * 1e3)
   }
 
   /**

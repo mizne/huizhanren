@@ -12,7 +12,6 @@ import {
 } from '../models/exhibitor.model'
 import { environment } from '../../../environments/environment'
 
-
 @Injectable()
 export class ExhibitorService {
   private fetchUrl: string = '/data/get/exhibitor'
@@ -71,7 +70,12 @@ export class ExhibitorService {
                 })
               })
           })
-      : Observable.of(RecommendExhibitor.generateFakeExhibitors(100))
+      : Observable.of(
+          RecommendExhibitor.generateFakeExhibitors(
+            (params.pageIndex - 1) * params.pageSize,
+            params.pageIndex * params.pageSize
+          )
+        ).delay(Math.random() * 1e3)
   }
 
   /**
@@ -84,7 +88,7 @@ export class ExhibitorService {
     return environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_,__, exhibitorId, exhibitionId]) => {
+          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
             let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
             if (params.area) {
               query += `&province=${params.area}`

@@ -14,6 +14,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { reducers } from '../reducers/index'
 import { MyApp } from './app.component'
@@ -61,6 +62,7 @@ export class RavenErrorHandler implements ErrorHandler {
     ReactiveFormsModule,
     HttpClientModule,
     NgxQRCodeModule,
+    InfiniteScrollModule,
     LoginPageModule,
     CustomerPageModule,
     SettingsPageModule,

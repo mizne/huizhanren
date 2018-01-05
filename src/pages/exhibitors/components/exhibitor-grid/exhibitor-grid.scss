@@ -171,6 +171,12 @@
   color: map-get($map: $gridColors, $key: grey);
 }
 
+.hz-load-more {
+  width: 100%;
+  color: #67686c;
+  text-align: center;
+}
+
 .not-more-data {
   width: 100%;
   color: #67686c;

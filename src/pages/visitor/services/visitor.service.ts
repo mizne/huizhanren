@@ -8,7 +8,7 @@ import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   RecommendVisitor,
   FetchRecommendVisitorParams,
-  VisitorFilter,
+  VisitorFilter
 } from '../models/visitor.model'
 import { environment } from '../../../environments/environment'
 
@@ -65,7 +65,12 @@ export class VisitorService {
               error: e
             })
           })
-      : Observable.of(RecommendVisitor.generateFakeVisitors(100))
+      : Observable.of(
+          RecommendVisitor.generateFakeVisitors(
+            (params.pageIndex - 1) * params.pageSize,
+            params.pageIndex * params.pageSize
+          )
+        ).delay(Math.random() * 1e3)
   }
   /**
    * 获取所有观众 个数

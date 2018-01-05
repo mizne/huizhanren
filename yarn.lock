@@ -2328,6 +2328,10 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
+ngx-infinite-scroll@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-0.8.0.tgz#7649482f2336c5310920468b2ac2e9a2f2a92326"
+
 ngx-qrcode2@0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/ngx-qrcode2/-/ngx-qrcode2-0.0.5.tgz#ea3e6956ee918fe1085b8c83ba339039a54a0866"

@@ -61,9 +61,11 @@ export class RecommendExhibitor extends Exhibitor {
     }
   }
 
-  static generateFakeExhibitors(length: number): RecommendExhibitor[] {
-    return Array.from({ length }, (_, i) => ({
-      id: String(i),
+  static generateFakeExhibitors(start: number, end: number): RecommendExhibitor[] {
+    const results = []
+    for (let i = start; i < end; i += 1) {
+      results.push({
+        id: String(i),
       name: `展商特别长特别长特别长的名字${i}`,
       logo: './assets/images/card.jpg',
       booth: Math.random() > 0.5 ? `0-2AAA${i}` : '',
@@ -90,7 +92,9 @@ export class RecommendExhibitor extends Exhibitor {
               headImgUrl: './assets/images/camera.jpg'
             }))
           : []
-    }))
+      })
+    }
+    return results
   }
 }
 

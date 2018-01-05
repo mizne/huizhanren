@@ -72,6 +72,42 @@ export class ExhibitorMatcher extends Exhibitor {
       organizerId: toShow.organizerId
     }
   }
+
+  static generateFakeMatchers(start: number, end: number): ExhibitorMatcher[] {
+    const results = []
+    for (let i = start; i < end; i += 1) {
+      results.push({
+        id: String(i),
+        name: `展商特别长特别长特别长的名字${i}`,
+        logo: './assets/images/card.jpg',
+        booth: Math.random() > 0.5 ? `0-2AAA${i}` : '',
+        industry: Math.random() > 0.5 ? `大数据${i}` : '',
+        area: Math.random() > 0.5 ? `东京${i}` : '',
+        heat: Math.round(Math.random() * 1000),
+        description:
+          Math.random() > 0.5
+            ? '上海联展软件技术有限公司是会展互联网、信息化及营销解决方案的领先服务商' +
+              '。成立于2004年，总部位于上海，在长沙、广州等设有分支或代理机构。'
+            : '',
+        products:
+          Math.random() > 0.5
+            ? Array.from({ length: 100 }, (_, i) => ({
+                id: String(i),
+                name: 'product1product1product1product1product1product1',
+                pictures: ['./assets/images/camera.jpg']
+              }))
+            : [],
+        visitors:
+          Math.random() > 0.5
+            ? Array.from({ length: 30 }, (_, i) => ({
+                id: String(i),
+                headImgUrl: './assets/images/camera.jpg'
+              }))
+            : []
+      })
+    }
+    return results
+  }
 }
 
 export interface ExhibitorMatcherResp {

@@ -13,20 +13,7 @@ import {
   VisitorMatcherResp
 } from '../models/matcher.model'
 import { Visitor } from '../models/visitor.model'
-
 import { environment } from '../../../environments/environment'
-
-const fakeMatchers: VisitorMatcher[] = Array.from({ length: 100 }, (_, i) => ({
-  id: 'matcher-' + String(i),
-  name: `李${i}`,
-  title: `经理${i}`,
-  company: `移动公司${i}`,
-  industry: `互联网${i}`,
-  area: `北京${i}`,
-  status: i % 5,
-  senderId: i % 2 === 0 ? '1aed77d156448e784da0affd6eda84e1' : '111',
-  receiverId: i % 2 === 1 ? '1aed77d156448e784da0affd6eda84e1' : '222'
-}))
 
 @Injectable()
 export class VisitorMatcherService {
@@ -92,15 +79,10 @@ export class VisitorMatcherService {
               error: e
             })
           })
-      : Observable.of(fakeMatchers).withLatestFrom(
-          this.tenantService.getExhibitorId(),
-          (matchers, exhibitorId) =>
-            matchers.map(e => ({
-              ...e,
-              isSender: e.senderId === exhibitorId,
-              isReceiver: e.receiverId === exhibitorId
-            }))
-        )
+      : Observable.of(VisitorMatcher.generateFakeMatchers(
+        (params.pageIndex - 1) * params.pageSize,
+        params.pageIndex * params.pageSize
+      )).delay(Math.random() * 1e3)
   }
 
   /**

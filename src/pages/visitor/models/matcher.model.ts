@@ -79,6 +79,22 @@ export class VisitorMatcher extends Visitor {
       email: toShow.email
     }
   }
+
+  static generateFakeMatchers(start: number, end: number): VisitorMatcher[] {
+    const results = []
+    for (let i = start; i < end; i += 1) {
+      results.push({
+        id: 'matcher-' + String(i),
+        name: `李${i}`,
+        title: `经理${i}`,
+        company: `移动公司${i}`,
+        industry: `互联网${i}`,
+        area: `北京${i}`,
+        status: i % 5,
+      })
+    }
+    return results
+  }
 }
 
 export class VisitorMatcherResp {
