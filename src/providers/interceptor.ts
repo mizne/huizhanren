@@ -26,6 +26,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
     return next.handle(req.clone({
       url: /http/.test(req.url) ? req.url : `${this.url}${req.url}`
     }))
+    .timeout(5e3)
     .do((event: HttpEvent<any>) => {
       if (event instanceof HttpResponse) {
         if (event.body && event.url.indexOf(HOST) >= 0) {
