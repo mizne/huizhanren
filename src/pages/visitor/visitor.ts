@@ -53,7 +53,6 @@ import {
   RecommendVisitor,
   Portray,
   VisitorFilter,
-  AREA_OPTIONS,
   FilterOptions,
 } from './models/visitor.model'
 import { DestroyService } from '../../providers/destroy.service'
