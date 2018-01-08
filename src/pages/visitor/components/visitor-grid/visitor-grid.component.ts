@@ -5,8 +5,9 @@ import {
   EventEmitter,
   ElementRef,
   OnInit,
+  OnDestroy,
   AfterViewInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 
@@ -16,21 +17,27 @@ import { HzLoadMoreComponent } from '../../../../shared/components/load-more/loa
 
 @Component({
   selector: 'visitor-grid',
-  templateUrl: 'visitor-grid.component.html',
+  templateUrl: 'visitor-grid.component.html'
 })
-export class VisitorGridComponent implements OnInit {
+export class VisitorGridComponent implements OnInit, OnDestroy {
   activeId: string
   private gridContainers: HTMLElement[] = []
   @ViewChild('gridExpand')
   set gridExpand(v: ElementRef) {
     if (v) {
-      this.gridContainers.push(v.nativeElement)
+      const index = this.gridContainers.indexOf(v.nativeElement)
+      if (index === -1) {
+        this.gridContainers.push(v.nativeElement)
+      }
     }
   }
   @ViewChild('gridNoExpand')
   set gridNoExpand(v: ElementRef) {
     if (v) {
-      this.gridContainers.push(v.nativeElement)
+      const index = this.gridContainers.indexOf(v.nativeElement)
+      if (index === -1) {
+        this.gridContainers.push(v.nativeElement)
+      }
     }
   }
 
@@ -54,7 +61,10 @@ export class VisitorGridComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnDestroy() {
+    this.gridContainers.length = 0
   }
 
   onScroll() {

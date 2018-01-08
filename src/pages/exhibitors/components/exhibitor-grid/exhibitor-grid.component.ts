@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Output,
   EventEmitter,
@@ -14,12 +15,15 @@ import { RecommendExhibitor } from '../../models/exhibitor.model'
   selector: 'exhibitor-grid',
   templateUrl: 'exhibitor-grid.component.html'
 })
-export class ExhibitorGridComponent implements OnInit {
+export class ExhibitorGridComponent implements OnInit, OnDestroy {
   private gridContainers: HTMLElement[] = []
   @ViewChild('gridContainer')
   set gridContainer(v: ElementRef) {
     if (v) {
-      this.gridContainers.push(v.nativeElement)
+      const index = this.gridContainers.indexOf(v.nativeElement)
+      if (index === -1) {
+        this.gridContainers.push(v.nativeElement)
+      }
     }
   }
 
@@ -45,6 +49,10 @@ export class ExhibitorGridComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  ngOnDestroy() {
+    this.gridContainers.length = 0
+  }
 
   onScroll() {
     this.loadMore.emit()

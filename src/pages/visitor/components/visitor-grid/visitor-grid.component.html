@@ -1,4 +1,4 @@
-<div *ngIf="expand; else noExpand;" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]"
+<div [hidden]="!expand" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]"
   infiniteScroll
   [infiniteScrollContainer]="'.visitor-grid-container.expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()">
@@ -62,8 +62,8 @@
   </ng-template>
 </div>
 
-<ng-template #noExpand>
-  <div class="visitor-grid-container no-expand" [ngClass]="[type]"
+<!-- <ng-template #noExpand> -->
+  <div [hidden]="expand" class="visitor-grid-container no-expand" [ngClass]="[type]"
   infiniteScroll
   [infiniteScrollContainer]="'.visitor-grid-container.no-expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()" #gridNoExpand>
@@ -94,4 +94,4 @@
       <p class="not-more-data">没有更多数据了</p>
     </ng-template>
   </div>
-</ng-template>
+<!-- </ng-template> -->
