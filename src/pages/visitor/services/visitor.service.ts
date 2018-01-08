@@ -8,7 +8,8 @@ import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   RecommendVisitor,
   FetchRecommendVisitorParams,
-  VisitorFilter
+  VisitorFilter,
+  FilterOptions
 } from '../models/visitor.model'
 import { environment } from '../../../environments/environment'
 
@@ -105,5 +106,63 @@ export class VisitorService {
               })
           })
       : Observable.of(1000)
+  }
+
+  fetchAreaFilters(): Observable<FilterOptions[]> {
+    return Observable.of([
+      {
+        label: '北京市',
+        value: '北京市'
+      },
+      {
+        label: '天津市',
+        value: '天津市'
+      },
+      {
+        label: '上海市',
+        value: '上海市'
+      },
+      {
+        label: '江苏省',
+        value: '江苏省'
+      },
+      {
+        label: '浙江省',
+        value: '浙江省'
+      },
+      {
+        label: '山东省',
+        value: '山东省'
+      },
+      {
+        label: '湖北省',
+        value: '湖北省'
+      },
+      {
+        label: '安徽省',
+        value: '安徽省'
+      }
+    ])
+  }
+
+  fetchTypeFilters(): Observable<FilterOptions[]> {
+    return Observable.of([
+      {
+        label: '糖酒',
+        value: '糖酒'
+      },
+      {
+        label: '餐饮食材',
+        value: '餐饮食材'
+      },
+      {
+        label: '酒店用品',
+        value: '酒店用品'
+      },
+      {
+        label: '食品机械',
+        value: '食品机械'
+      }
+    ])
   }
 }

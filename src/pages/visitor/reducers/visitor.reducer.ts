@@ -2,7 +2,8 @@ import * as fromVisitor from '../actions/visitor.action'
 import {
   RecommendVisitor,
   ListStatus,
-  PageStatus
+  PageStatus,
+  FilterOptions
 } from '../models/visitor.model'
 import { Logger } from '../../customer/models/logger.model'
 import { deduplicate } from '../../customer/services/utils'
@@ -11,6 +12,9 @@ export interface State {
   visitors: RecommendVisitor[]
   totalVisitorsCount: number
   currentVisitorsTotalCount: number
+
+  areaFilters: FilterOptions[]
+  typeFilters: FilterOptions[]
 
   listStatus: ListStatus // 表明 左边列表显示 推荐买家 还是 约请信息
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
@@ -24,6 +28,9 @@ export const initialState: State = {
   visitors: [],
   totalVisitorsCount: 0,
   currentVisitorsTotalCount: 0,
+
+  areaFilters: [{ label: '不限区域', value: '0' }],
+  typeFilters: [{ label: '不限分类', value: '0' }],
 
   listStatus: ListStatus.VISITOR,
   pageStatus: PageStatus.LIST,
@@ -50,7 +57,7 @@ export function reducer(
       return {
         ...state,
         visitors: [],
-        showDetailID: '',
+        showDetailID: ''
       }
 
     case fromVisitor.FETCH_VISITORS_COUNT_SUCCESS:
@@ -63,8 +70,24 @@ export function reducer(
       return {
         ...state,
         shouldScrollToTop: false,
-        visitors: deduplicate(state.visitors.concat(action.visitors), e => e.id),
-        currentVisitorsTotalCount: state.currentVisitorsTotalCount + action.visitors.length
+        visitors: deduplicate(
+          state.visitors.concat(action.visitors),
+          e => e.id
+        ),
+        currentVisitorsTotalCount:
+          state.currentVisitorsTotalCount + action.visitors.length
+      }
+
+    case fromVisitor.FETCH_AREA_FILTER_OPTIONS_SUCCESS:
+      return {
+        ...state,
+        areaFilters: state.areaFilters.concat(action.areaFilters)
+      }
+
+    case fromVisitor.FETCH_TYPE_FILTER_OPTIONS_SUCCESS:
+      return {
+        ...state,
+        typeFilters: state.typeFilters.concat(action.typeFilters)
       }
 
     case fromVisitor.CHANGE_LIST_STATUS:
@@ -109,7 +132,11 @@ export function reducer(
 
 export const getVisitors = (state: State) => state.visitors
 export const getTotalVisitorCount = (state: State) => state.totalVisitorsCount
-export const getCurrentVisitorCount = (state: State) => state.currentVisitorsTotalCount
+export const getCurrentVisitorCount = (state: State) =>
+  state.currentVisitorsTotalCount
+
+export const getAreaFilters = (state: State) => state.areaFilters
+export const getTypeFilters = (state: State) => state.typeFilters
 
 export const getShouldScrollToTop = (state: State) => state.shouldScrollToTop
 export const getListStatus = (state: State) => state.listStatus

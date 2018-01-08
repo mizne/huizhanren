@@ -30,6 +30,8 @@ export const getCurrentExhibitorCount = createSelector(
   selectExhibitorState,
   fromExhibitor.getCurrentExhibitorCount
 )
+export const getExhibitorAreaFilters = createSelector(selectExhibitorState, fromExhibitor.getAreaFilters)
+export const getExhibitorTypeFilters = createSelector(selectExhibitorState, fromExhibitor.getTypeFilters)
 export const getListStatus = createSelector(selectExhibitorState, fromExhibitor.getListStatus)
 export const getPageStatus = createSelector(selectExhibitorState, fromExhibitor.getPageStatus)
 export const getExhibitorShowDetailID = createSelector(selectExhibitorState, fromExhibitor.getShowDetailID)

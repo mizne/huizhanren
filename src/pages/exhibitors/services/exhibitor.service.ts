@@ -8,7 +8,8 @@ import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   RecommendExhibitor,
   FetchRecommendExhibitorParams,
-  ExhibitorFilter
+  ExhibitorFilter,
+  FilterOptions
 } from '../models/exhibitor.model'
 import { environment } from '../../../environments/environment'
 
@@ -111,5 +112,67 @@ export class ExhibitorService {
               })
           })
       : Observable.of(1000)
+  }
+
+  fetchAreaFilters(): Observable<FilterOptions[]> {
+    return Observable.of([
+      {
+        label: '北京市',
+        value: '北京市'
+      },
+      {
+        label: '天津市',
+        value: '天津市'
+      },
+      {
+        label: '上海市',
+        value: '上海市'
+      },
+      {
+        label: '江苏省',
+        value: '江苏省'
+      },
+      {
+        label: '浙江省',
+        value: '浙江省'
+      },
+      {
+        label: '山东省',
+        value: '山东省'
+      },
+      {
+        label: '湖北省',
+        value: '湖北省'
+      },
+      {
+        label: '安徽省',
+        value: '安徽省'
+      }
+    ])
+  }
+
+  fetchTypeFilters(): Observable<FilterOptions[]> {
+    return Observable.of([
+      {
+        label: '不限面积',
+        value: '0'
+      },
+      {
+        label: '9-18平米',
+        value: '1'
+      },
+      {
+        label: '18-27平米',
+        value: '2'
+      },
+      {
+        label: '27-54平米',
+        value: '3'
+      },
+      {
+        label: '>54平米',
+        value: '4'
+      }
+    ])
   }
 }

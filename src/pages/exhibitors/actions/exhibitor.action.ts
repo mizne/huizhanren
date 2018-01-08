@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Exhibitor, ListStatus, PageStatus, Product, FetchRecommendExhibitorParams, ExhibitorFilter } from '../models/exhibitor.model'
+import { Exhibitor, ListStatus, PageStatus, Product, FetchRecommendExhibitorParams, ExhibitorFilter, FilterOptions } from '../models/exhibitor.model'
 import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 
 export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
@@ -9,6 +9,14 @@ export const FETCH_EXHIBITORS_FAILURE = '[Exhibitor] Fetch Exhibitors Failure'
 export const FETCH_EXHIBITORS_COUNT = '[Exhibitor] Fetch Exhibitors Count'
 export const FETCH_EXHIBITORS_COUNT_SUCCESS = '[Exhibitor] Fetch Exhibitors Count Success'
 export const FETCH_EXHIBITORS_COUNT_FAILURE = '[Exhibitor] Fetch Exhibitors Count Failure'
+
+export const FETCH_AREA_FILTER_OPTIONS = '[Exhibitor] Fetch Area Filter Options'
+export const FETCH_AREA_FILTER_OPTIONS_SUCCESS = '[Exhibitor] Fetch Area Filter Options Success'
+export const FETCH_AREA_FILTER_OPTIONS_FAILURE = '[Exhibitor] Fetch Area Filter Options Failure'
+
+export const FETCH_TYPE_FILTER_OPTIONS = '[Exhibitor] Fetch Type Filter Options'
+export const FETCH_TYPE_FILTER_OPTIONS_SUCCESS = '[Exhibitor] Fetch Type Filter Options Success'
+export const FETCH_TYPE_FILTER_OPTIONS_FAILURE = '[Exhibitor] Fetch Type Filter Options Failure'
 
 export const LOAD_MORE_EXHIBITORS = '[Exhibitor] Load More Exhibitors'
 export const LOAD_MORE_EXHIBITORS_SUCCESS = '[Exhibitor] Load More Exhibitors Success'
@@ -77,6 +85,30 @@ export class FetchExhibitorsCountSuccessAction implements Action {
 }
 export class FetchExhibitorsCountFailureAction implements Action {
   readonly type = FETCH_EXHIBITORS_COUNT_FAILURE
+}
+
+
+export class FetchAreaFilterOptionsAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS
+}
+export class FetchAreaFilterOptionsSuccessAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS_SUCCESS
+  constructor(public areaFilters: FilterOptions[]) {}
+}
+export class FetchAreaFilterOptionsFailureAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS_FAILURE
+}
+
+
+export class FetchTypeFilterOptionsAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS
+}
+export class FetchTypeFilterOptionsSuccessAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS_SUCCESS
+  constructor(public typeFilters: FilterOptions[]) {}
+}
+export class FetchTypeFilterOptionsFailureAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS_FAILURE
 }
 
 
@@ -179,6 +211,14 @@ FetchExhibitorsFailureAction |
 FetchExhibitorsCountAction |
 FetchExhibitorsCountSuccessAction |
 FetchExhibitorsCountFailureAction |
+
+FetchAreaFilterOptionsAction |
+FetchAreaFilterOptionsSuccessAction |
+FetchAreaFilterOptionsFailureAction |
+
+FetchTypeFilterOptionsAction |
+FetchTypeFilterOptionsSuccessAction |
+FetchTypeFilterOptionsFailureAction |
 
 LoadMoreExhibitorsAction |
 LoadMoreExhibitorsSuccessAction |

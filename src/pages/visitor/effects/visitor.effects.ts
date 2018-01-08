@@ -79,6 +79,42 @@ export class VisitorEffects {
     })
 
   @Effect()
+  fetchAreaFilters$ = this.actions$
+    .ofType(fromVisitor.FETCH_AREA_FILTER_OPTIONS)
+    .switchMap(() => {
+      return this.visitorService
+        .fetchAreaFilters()
+        .map(areaFilters => {
+          return new fromVisitor.FetchAreaFilterOptionsSuccessAction(
+            areaFilters
+          )
+        })
+        .catch(() => {
+          return Observable.of(
+            new fromVisitor.FetchAreaFilterOptionsFailureAction()
+          )
+        })
+    })
+
+  @Effect()
+  fetchTypeFilters$ = this.actions$
+    .ofType(fromVisitor.FETCH_TYPE_FILTER_OPTIONS)
+    .switchMap(() => {
+      return this.visitorService
+        .fetchTypeFilters()
+        .map(typeFilters => {
+          return new fromVisitor.FetchTypeFilterOptionsSuccessAction(
+            typeFilters
+          )
+        })
+        .catch(() => {
+          return Observable.of(
+            new fromVisitor.FetchTypeFilterOptionsFailureAction()
+          )
+        })
+    })
+
+  @Effect()
   loadMoreVisitors$ = this.actions$
     .ofType(fromVisitor.LOAD_MORE_VISITORS)
     .map((action: fromVisitor.LoadMoreVisitorsAction) => action.params)
@@ -165,7 +201,7 @@ export class VisitorEffects {
   inviteVisitor$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR)
     .withLatestFrom(this.store.select(getVisitorShowDetailID), (_, id) => id)
-    .switchMap((visitorId) =>
+    .switchMap(visitorId =>
       this.matcherService
         .createMatcher(visitorId)
         .concatMap(() => [

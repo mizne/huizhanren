@@ -72,6 +72,42 @@ export class ExhibitorEffects {
     })
 
   @Effect()
+  fetchExhibitorAreaFilters$ = this.actions$
+    .ofType(fromExhibitor.FETCH_AREA_FILTER_OPTIONS)
+    .switchMap(() => {
+      return this.exhibitorService
+        .fetchAreaFilters()
+        .map(areaFilters => {
+          return new fromExhibitor.FetchAreaFilterOptionsSuccessAction(
+            areaFilters
+          )
+        })
+        .catch(() => {
+          return Observable.of(
+            new fromExhibitor.FetchAreaFilterOptionsFailureAction()
+          )
+        })
+    })
+
+  @Effect()
+  fetchExhibitorTypeFilters$ = this.actions$
+    .ofType(fromExhibitor.FETCH_TYPE_FILTER_OPTIONS)
+    .switchMap(() => {
+      return this.exhibitorService
+        .fetchTypeFilters()
+        .map(typeFilters => {
+          return new fromExhibitor.FetchTypeFilterOptionsSuccessAction(
+            typeFilters
+          )
+        })
+        .catch(() => {
+          return Observable.of(
+            new fromExhibitor.FetchTypeFilterOptionsFailureAction()
+          )
+        })
+    })
+
+  @Effect()
   loadMoreExhibitors$ = this.actions$
     .ofType(fromExhibitor.LOAD_MORE_EXHIBITORS)
     .map((action: fromExhibitor.LoadMoreExhibitorsAction) => action.params)
@@ -147,7 +183,7 @@ export class ExhibitorEffects {
   inviteRecommend$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR)
     .withLatestFrom(this.store.select(getExhibitorShowDetailID), (_, id) => id)
-    .switchMap((id) =>
+    .switchMap(id =>
       this.matcherService
         .createMatcher(id)
         .concatMap(() => [

@@ -20,6 +20,8 @@ import {
   getCurrentMatcherCount,
   getExhibitorShouldScrollToTop,
   getMatcherShouldScrollToTop,
+  getExhibitorAreaFilters,
+  getExhibitorTypeFilters
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -32,6 +34,8 @@ import {
   FetchLoggerAction,
   FetchExhibitorsCountAction,
   LoadMoreExhibitorsAction,
+  FetchAreaFilterOptionsAction,
+  FetchTypeFilterOptionsAction
 } from './actions/exhibitor.action'
 import {
   FetchMatchersAction,
@@ -40,7 +44,7 @@ import {
   ToRefuseMatcherAction,
   FetchMatchersCountAction,
   LoadMoreMatchersAction,
-  UpdateMatcherDetailIDAction,
+  UpdateMatcherDetailIDAction
 } from './actions/matcher.action'
 
 import {
@@ -51,14 +55,14 @@ import {
   Portray,
   ExhibitorFilter,
   RecommendExhibitor,
-  Product
+  Product,
+  FilterOptions
 } from './models/exhibitor.model'
 import { Logger } from '../customer/models/logger.model'
 import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus
 } from './models/matcher.model'
-import { AREA_OPTIONS } from '../visitor/models/visitor.model'
 
 import { DestroyService } from '../../providers/destroy.service'
 
@@ -83,6 +87,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   showLoadMore$: Observable<boolean>
   exhibitorShouldScrollToTop$: Observable<boolean>
   matcherShouldScrollToTop$: Observable<boolean>
+  filterOptions$: Observable<FilterOptions[][]>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -91,38 +96,6 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     ExhibitorMatcherStatus[]
   >()
   loadMoreSub: Subject<void> = new Subject<void>()
-
-  filterOptions = [
-    AREA_OPTIONS,
-    [
-      {
-        label: '不限面积',
-        value: '0'
-      },
-      {
-        label: '9-18平米',
-        value: '1'
-      },
-      {
-        label: '18-27平米',
-        value: '2'
-      },
-      {
-        label: '27-54平米',
-        value: '3'
-      },
-      {
-        label: '>54平米',
-        value: '4'
-      }
-    ],
-    [
-      {
-        label: '默认排序',
-        value: '0'
-      }
-    ]
-  ]
 
   constructor(
     public navCtrl: NavController,
@@ -188,8 +161,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
     this.currentExhibitorsTotal$ = this.store.select(getCurrentExhibitorCount)
-    this.exhibitorShouldScrollToTop$ = this.store.select(getExhibitorShouldScrollToTop)
-    this.matcherShouldScrollToTop$ = this.store.select(getMatcherShouldScrollToTop)
+    this.exhibitorShouldScrollToTop$ = this.store.select(
+      getExhibitorShouldScrollToTop
+    )
+    this.matcherShouldScrollToTop$ = this.store.select(
+      getMatcherShouldScrollToTop
+    )
 
     // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
     this.matchers$ = Observable.combineLatest(
@@ -216,6 +193,13 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         .filter(e => e === ListStatus.MATCHER)
         .mergeMap(() => this.store.select(getShowMatcherLoadMore))
     )
+
+    this.filterOptions$ = Observable.combineLatest(
+      this.store.select(getExhibitorAreaFilters),
+      this.store.select(getExhibitorTypeFilters)
+    ).map(([areaFilters, typeFilters]) => {
+      return [areaFilters, typeFilters, [{ label: '默认排序', value: '0' }]]
+    })
   }
 
   private computeCurrentDetail(): Observable<RecommendExhibitor> {
@@ -223,16 +207,14 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     const latestExhibitor$ = Observable.combineLatest(
       this.store.select(getExhibitors),
       this.store.select(getExhibitorShowDetailID)
-    )
-    .map(([exhibitors, id]) => {
+    ).map(([exhibitors, id]) => {
       const exhibitor = exhibitors.find(e => e.id === id)
       return exhibitor
     })
     const latestMatcher$ = Observable.combineLatest(
       this.store.select(getMatchers),
       this.store.select(getMatcherShowDetailID)
-    )
-    .map(([matchers, id]) => {
+    ).map(([matchers, id]) => {
       const matcher = matchers.find(e => e.id === id)
       return matcher
     })
@@ -240,8 +222,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     return Observable.combineLatest(
       latestExhibitor$,
       latestMatcher$
-    )
-    .withLatestFrom(this.listStatus$, ([exhibitor, matcher], listStatus) => {
+    ).withLatestFrom(this.listStatus$, ([exhibitor, matcher], listStatus) => {
       if (listStatus === ListStatus.EXHIBITOR) {
         return exhibitor
       }
@@ -458,5 +439,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   private initDispatch(): void {
     this.store.dispatch(new FetchExhibitorsAction())
     this.store.dispatch(new FetchExhibitorsCountAction())
+
+    this.store.dispatch(new FetchAreaFilterOptionsAction())
+    this.store.dispatch(new FetchTypeFilterOptionsAction())
   }
 }

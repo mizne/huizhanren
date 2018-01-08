@@ -127,41 +127,8 @@ export enum ListHeaderEvent {
   REFRESH
 }
 
-export const AREA_OPTIONS = [
-  {
-    label: '不限区域',
-    value: ''
-  },
-  {
-    label: '北京市',
-    value: '北京市'
-  },
-  {
-    label: '天津市',
-    value: '天津市'
-  },
-  {
-    label: '上海市',
-    value: '上海市'
-  },
-  {
-    label: '江苏省',
-    value: '江苏省'
-  },
-  {
-    label: '浙江省',
-    value: '浙江省'
-  },
-  {
-    label: '山东省',
-    value: '山东省'
-  },
-  {
-    label: '湖北省',
-    value: '湖北省'
-  },
-  {
-    label: '安徽省',
-    value: '安徽省'
-  }
-]
+export interface FilterOptions {
+  label: string
+  value: string
+}
+

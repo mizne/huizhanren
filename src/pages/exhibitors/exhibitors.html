@@ -11,7 +11,7 @@
         [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
 
       <hz-grid-filter [hidden]="(listStatus$ | async) === 1" [showSearch]="(pageStatus$ | async) === 0" [filterSub]="exhibitorFilterSub"
-        [filterOptions]="filterOptions" placeholder="请输入展商名">
+        [filterOptions]="filterOptions$ | async" placeholder="请输入展商名">
       </hz-grid-filter>
       <exhibitor-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </exhibitor-matcher-filter>

@@ -185,3 +185,8 @@ export enum ListHeaderEvent {
   BATCH_DELETE,
   REFRESH
 }
+
+export interface FilterOptions {
+  label: string
+  value: string
+}

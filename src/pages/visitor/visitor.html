@@ -12,7 +12,7 @@
       <hz-grid-filter [hidden]="(listStatus$ | async) === 1"
       [showSearch]="(pageStatus$ | async) === 0"
         [filterSub]="visitorFilterSub"
-        [filterOptions]="filterOptions"
+        [filterOptions]="filterOptions$ | async"
         placeholder="请输入客户名">
       </hz-grid-filter>
       <hz-matcher-filter [hidden]="(listStatus$ | async) === 0"

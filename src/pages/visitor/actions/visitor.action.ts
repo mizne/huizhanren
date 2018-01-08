@@ -1,5 +1,12 @@
 import { Action } from '@ngrx/store'
-import { RecommendVisitor, ListStatus, PageStatus, FetchRecommendVisitorParams, VisitorFilter } from '../models/visitor.model'
+import {
+  RecommendVisitor,
+  ListStatus,
+  PageStatus,
+  FetchRecommendVisitorParams,
+  VisitorFilter,
+  FilterOptions
+} from '../models/visitor.model'
 import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'
@@ -7,8 +14,22 @@ export const FETCH_VISITORS_SUCCESS = '[Visitor] Fetch Visitors Success'
 export const FETCH_VISITORS_FAILURE = '[Visitor] Fetch Visitors Failure'
 
 export const FETCH_VISITORS_COUNT = '[Visitor] Fetch Visitors Count'
-export const FETCH_VISITORS_COUNT_SUCCESS = '[Visitor] Fetch Visitors Count Success'
-export const FETCH_VISITORS_COUNT_FAILURE = '[Visitor] Fetch Visitors Count Failure'
+export const FETCH_VISITORS_COUNT_SUCCESS =
+  '[Visitor] Fetch Visitors Count Success'
+export const FETCH_VISITORS_COUNT_FAILURE =
+  '[Visitor] Fetch Visitors Count Failure'
+
+export const FETCH_AREA_FILTER_OPTIONS = '[Visitor] Fetch Area Filter Options'
+export const FETCH_AREA_FILTER_OPTIONS_SUCCESS =
+  '[Visitor] Fetch Area Filter Options Success'
+export const FETCH_AREA_FILTER_OPTIONS_FAILURE =
+  '[Visitor] Fetch Area Filter Options Failure'
+
+export const FETCH_TYPE_FILTER_OPTIONS = '[Visitor] Fetch Type Filter Options'
+export const FETCH_TYPE_FILTER_OPTIONS_SUCCESS =
+  '[Visitor] Fetch Type Filter Options Success'
+export const FETCH_TYPE_FILTER_OPTIONS_FAILURE =
+  '[Visitor] Fetch Type Filter Options Failure'
 
 export const LOAD_MORE_VISITORS = '[Visitor] Load More Visitors'
 export const LOAD_MORE_VISITORS_SUCCESS = '[Visitor] Load More Visitors Success'
@@ -35,7 +56,6 @@ export const FETCH_LOGGER = '[Visitor] Fetch Logger'
 export const FETCH_LOGGER_SUCCESS = '[Visitor] Fetch Logger Success'
 export const FETCH_LOGGER_FAILURE = '[Visitor] Fetch Logger Failure'
 
-
 /**
  * Every action is comprised of at least a type and an optional
  * payload. Expressing actions as classes enables powerful
@@ -44,13 +64,14 @@ export const FETCH_LOGGER_FAILURE = '[Visitor] Fetch Logger Failure'
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
-
 export class FetchVisitorsAction implements Action {
   readonly type = FETCH_VISITORS
-  constructor(public params: FetchRecommendVisitorParams = {
-    pageIndex: 1,
-    pageSize: 10
-  }) {}
+  constructor(
+    public params: FetchRecommendVisitorParams = {
+      pageIndex: 1,
+      pageSize: 10
+    }
+  ) {}
 }
 export class FetchVisitorsSuccessAction implements Action {
   readonly type = FETCH_VISITORS_SUCCESS
@@ -60,14 +81,15 @@ export class FetchVisitorsFailureAction implements Action {
   readonly type = FETCH_VISITORS_FAILURE
 }
 
-
 export class FetchVisitorsCountAction implements Action {
   readonly type = FETCH_VISITORS_COUNT
-  constructor(public params: VisitorFilter = {
-    key: '',
-    area: '',
-    type: ''
-  }) {}
+  constructor(
+    public params: VisitorFilter = {
+      key: '',
+      area: '',
+      type: ''
+    }
+  ) {}
 }
 export class FetchVisitorsCountSuccessAction implements Action {
   readonly type = FETCH_VISITORS_COUNT_SUCCESS
@@ -77,6 +99,27 @@ export class FetchVisitorsCountFailureAction implements Action {
   readonly type = FETCH_VISITORS_COUNT_FAILURE
 }
 
+export class FetchAreaFilterOptionsAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS
+}
+export class FetchAreaFilterOptionsSuccessAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS_SUCCESS
+  constructor(public areaFilters: FilterOptions[]) {}
+}
+export class FetchAreaFilterOptionsFailureAction implements Action {
+  readonly type = FETCH_AREA_FILTER_OPTIONS_FAILURE
+}
+
+export class FetchTypeFilterOptionsAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS
+}
+export class FetchTypeFilterOptionsSuccessAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS_SUCCESS
+  constructor(public typeFilters: FilterOptions[]) {}
+}
+export class FetchTypeFilterOptionsFailureAction implements Action {
+  readonly type = FETCH_TYPE_FILTER_OPTIONS_FAILURE
+}
 
 export class LoadMoreVisitorsAction implements Action {
   readonly type = LOAD_MORE_VISITORS
@@ -89,7 +132,6 @@ export class LoadMoreVisitorsSuccessAction implements Action {
 export class LoadMoreVisitorsFailureAction implements Action {
   readonly type = LOAD_MORE_VISITORS_FAILURE
 }
-
 
 export class ToInviteVisitorAction implements Action {
   readonly type = TO_INVITE_VISITOR
@@ -107,7 +149,6 @@ export class InviteVisitorFailureAction implements Action {
   readonly type = INVITE_VISITOR_FAILURE
 }
 
-
 export class ChangeListStatusAction implements Action {
   readonly type = CHANGE_LIST_STATUS
   constructor(public listStatus: ListStatus) {}
@@ -123,7 +164,6 @@ export class UpdateVisitorDetailIDAction implements Action {
   readonly type = UPDATE_VISITOR_DETAIL_ID
   constructor(public detailID: string) {}
 }
-
 
 export class ToCreateLoggerAction implements Action {
   readonly type = TO_CREATE_LOGGER
@@ -143,7 +183,6 @@ export class CreateLoggerFailureAction implements Action {
   readonly type = CREATE_LOGGER_FAILURE
 }
 
-
 export class FetchLoggerAction implements Action {
   readonly type = FETCH_LOGGER
   constructor(public customerID: string) {}
@@ -161,35 +200,43 @@ export class FetchLoggerFailureAction implements Action {
  * so that reducers can easily compose action types
  */
 export type Actions =
-FetchVisitorsAction |
-FetchVisitorsSuccessAction |
-FetchVisitorsFailureAction |
+  | FetchVisitorsAction
+  | FetchVisitorsSuccessAction
+  | FetchVisitorsFailureAction
 
-FetchVisitorsCountAction |
-FetchVisitorsCountSuccessAction |
-FetchVisitorsCountFailureAction |
+  | FetchVisitorsCountAction
+  | FetchVisitorsCountSuccessAction
+  | FetchVisitorsCountFailureAction
 
-LoadMoreVisitorsAction |
-LoadMoreVisitorsSuccessAction |
-LoadMoreVisitorsFailureAction |
+  | FetchAreaFilterOptionsAction
+  | FetchAreaFilterOptionsSuccessAction
+  | FetchAreaFilterOptionsFailureAction
 
-ToInviteVisitorAction |
-CancelInviteVisitorAction |
-InviteVisitorAction |
-InviteVisitorSuccessAction |
-InviteVisitorFailureAction |
+  | FetchTypeFilterOptionsAction
+  | FetchTypeFilterOptionsSuccessAction
+  | FetchTypeFilterOptionsFailureAction
 
-ChangeListStatusAction |
-ChangePageStatusAction |
-TogglePageStatusAction |
-UpdateVisitorDetailIDAction |
+  | LoadMoreVisitorsAction
+  | LoadMoreVisitorsSuccessAction
+  | LoadMoreVisitorsFailureAction
 
-ToCreateLoggerAction |
-CancelCreateLoggerAction |
-CreateLoggerAction |
-CreateLoggerSuccessAction |
-CreateLoggerFailureAction |
+  | ToInviteVisitorAction
+  | CancelInviteVisitorAction
+  | InviteVisitorAction
+  | InviteVisitorSuccessAction
+  | InviteVisitorFailureAction
 
-FetchLoggerAction |
-FetchLoggerSuccessAction |
-FetchLoggerFailureAction
+  | ChangeListStatusAction
+  | ChangePageStatusAction
+  | TogglePageStatusAction
+  | UpdateVisitorDetailIDAction
+
+  | ToCreateLoggerAction
+  | CancelCreateLoggerAction
+  | CreateLoggerAction
+  | CreateLoggerSuccessAction
+  | CreateLoggerFailureAction
+
+  | FetchLoggerAction
+  | FetchLoggerSuccessAction
+  | FetchLoggerFailureAction

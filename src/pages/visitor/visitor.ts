@@ -20,6 +20,8 @@ import {
   getVisitorShouldScrollToTop,
   getMatcherShowDetailID,
   getMatcherShouldScrollToTop,
+  getVisitorAreaFilters,
+  getVisitorTypeFilters,
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -30,7 +32,9 @@ import {
   UpdateVisitorDetailIDAction,
   ToInviteVisitorAction,
   FetchLoggerAction,
-  LoadMoreVisitorsAction
+  LoadMoreVisitorsAction,
+  FetchAreaFilterOptionsAction,
+  FetchTypeFilterOptionsAction,
 } from './actions/visitor.action'
 import {
   FetchMatchersAction,
@@ -49,7 +53,8 @@ import {
   RecommendVisitor,
   Portray,
   VisitorFilter,
-  AREA_OPTIONS
+  AREA_OPTIONS,
+  FilterOptions,
 } from './models/visitor.model'
 import { DestroyService } from '../../providers/destroy.service'
 
@@ -78,6 +83,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   showLoadMore$: Observable<boolean>
   visitorShouldScrollToTop$: Observable<boolean>
   matcherShouldScrollToTop$: Observable<boolean>
+  filterOptions$: Observable<FilterOptions[][]>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
   headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
@@ -86,38 +92,6 @@ export class VisitorPage implements OnInit, OnDestroy {
     VisitorMatcherStatus[]
   >()
   loadMoreSub: Subject<void> = new Subject<void>()
-
-  filterOptions = [
-    AREA_OPTIONS,
-    [
-      {
-        label: '不限分类',
-        value: ''
-      },
-      {
-        label: '糖酒',
-        value: '糖酒'
-      },
-      {
-        label: '餐饮食材',
-        value: '餐饮食材'
-      },
-      {
-        label: '酒店用品',
-        value: '酒店用品'
-      },
-      {
-        label: '食品机械',
-        value: '食品机械'
-      }
-    ],
-    [
-      {
-        label: '默认排序',
-        value: '0'
-      }
-    ]
-  ]
 
   constructor(
     public navCtrl: NavController,
@@ -211,6 +185,23 @@ export class VisitorPage implements OnInit, OnDestroy {
         .filter(e => e === ListStatus.MATCHER)
         .mergeMap(() => this.store.select(getShowMatcherLoadMore))
     )
+
+    this.filterOptions$ = Observable.combineLatest(
+      this.store.select(getVisitorAreaFilters),
+      this.store.select(getVisitorTypeFilters)
+    )
+    .map(([areaFilters, typeFilters]) => {
+      return [
+        areaFilters,
+        typeFilters,
+        [
+          {
+            label: '默认排序',
+            value: '0'
+          }
+        ]
+      ]
+    })
   }
 
   private computeCurrentDetail(): Observable<RecommendVisitor> {
@@ -453,5 +444,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   private initDispatch(): void {
     this.store.dispatch(new FetchVisitorsAction())
     this.store.dispatch(new FetchVisitorsCountAction())
+    this.store.dispatch(new FetchAreaFilterOptionsAction())
+    this.store.dispatch(new FetchTypeFilterOptionsAction())
   }
 }
