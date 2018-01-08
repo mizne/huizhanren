@@ -93,14 +93,19 @@ export class ErrorLoggerService {
    * https://docs.sentry.io/clients/javascript/integrations/angular/
    *
    * @private
-   * @param {any} module
-   * @param {any} level
-   * @param {any} method
-   * @param {any} description
+   * @param {string} module
+   * @param {string} level
+   * @param {string} method
+   * @param {string} description
    * @returns {Promise<any>}
    * @memberof ErrorLoggerService
    */
-  private postErrorMessage(module, level, method, description): Promise<any> {
+  private postErrorMessage(
+    module: string,
+    level: string,
+    method: string,
+    description: string
+  ): Promise<any> {
     return this.tenantService.getLoginName().then(loginName => {
       const msg = `Module: ${module}, Method: ${method}, LoginName: ${loginName}, description: ${description}`
 
