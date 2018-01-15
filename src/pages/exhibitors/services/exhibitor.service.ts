@@ -155,7 +155,7 @@ export class ExhibitorService {
     return Observable.of([
       {
         label: '不限面积',
-        value: '0'
+        value: ''
       },
       {
         label: '9-18平米',

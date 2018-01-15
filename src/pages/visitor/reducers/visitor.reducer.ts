@@ -29,8 +29,8 @@ export const initialState: State = {
   totalVisitorsCount: 0,
   currentVisitorsTotalCount: 0,
 
-  areaFilters: [{ label: '不限区域', value: '0' }],
-  typeFilters: [{ label: '不限分类', value: '0' }],
+  areaFilters: [{ label: '不限区域', value: '' }],
+  typeFilters: [{ label: '不限分类', value: '' }],
 
   listStatus: ListStatus.VISITOR,
   pageStatus: PageStatus.LIST,

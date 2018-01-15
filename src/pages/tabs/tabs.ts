@@ -42,9 +42,9 @@ export class TabsPage {
     encodingType: this.camera.EncodingType.PNG,
     mediaType: this.camera.MediaType.PICTURE,
     correctOrientation: true,
-    cameraDirection: 1,
-    targetWidth: 1920,
-    targetHeight: 1080
+    // cameraDirection: 1,
+    targetWidth: 600,
+    targetHeight: 980
   }
 
   constructor(
