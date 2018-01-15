@@ -116,6 +116,7 @@ export class ExhibitorService {
 
   fetchAreaFilters(): Observable<FilterOptions[]> {
     return Observable.of([
+      { label: '不限区域', value: '' },
       {
         label: '北京市',
         value: '北京市'

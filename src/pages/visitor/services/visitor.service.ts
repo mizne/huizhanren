@@ -110,6 +110,7 @@ export class VisitorService {
 
   fetchAreaFilters(): Observable<FilterOptions[]> {
     return Observable.of([
+      { label: '不限区域', value: '' },
       {
         label: '北京市',
         value: '北京市'
@@ -147,6 +148,7 @@ export class VisitorService {
 
   fetchTypeFilters(): Observable<FilterOptions[]> {
     return Observable.of([
+      { label: '不限分类', value: '' },
       {
         label: '糖酒',
         value: '糖酒'

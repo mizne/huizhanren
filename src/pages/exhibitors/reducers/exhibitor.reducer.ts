@@ -24,7 +24,7 @@ export const initialState: State = {
   exhibitorsTotalCount: 0,
   currentExhibitorsCount: 0,
 
-  areaFilters: [{label: '不限区域', value: ''}],
+  areaFilters: [],
   typeFilters: [],
 
   listStatus: ListStatus.EXHIBITOR,
