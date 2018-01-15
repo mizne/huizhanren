@@ -126,7 +126,7 @@ export class ToSingleSendSMSModal implements OnInit {
         this.selectedTemplateId = template.id
         const sendSmsContext = new SingleSendSmsContext({customer, companyName, boothNo, phone, template})
         const {content, params} = sendSmsContext.computeTemplate()
-        this.templateContent = content
+        this.templateContent = content.indexOf('【慕渊智能】') === 0 ? content.slice(6) : content
         this.templateParams = params
 
         this.singSendSmsContext = sendSmsContext
