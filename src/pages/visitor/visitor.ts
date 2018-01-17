@@ -203,8 +203,8 @@ export class VisitorPage implements OnInit, OnDestroy {
     })
   }
 
+  // 根据list status和 show detail ID寻找当前显示详情
   private computeCurrentDetail(): Observable<RecommendVisitor> {
-    // 根据list status和 show detail ID寻找当前推荐客户
     const latestVisitor$ = Observable.combineLatest(
       this.store.select(getVisitors),
       this.store.select(getVisitorShowDetailID)

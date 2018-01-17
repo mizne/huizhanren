@@ -202,8 +202,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     })
   }
 
+  // 根据list status和 show detail ID寻找当前显示详情
   private computeCurrentDetail(): Observable<RecommendExhibitor> {
-    // 根据list status和 show detail ID寻找当前推荐展商
     const latestExhibitor$ = Observable.combineLatest(
       this.store.select(getExhibitors),
       this.store.select(getExhibitorShowDetailID)
