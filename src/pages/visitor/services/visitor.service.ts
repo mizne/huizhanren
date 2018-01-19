@@ -34,7 +34,7 @@ export class VisitorService {
   public fetchVisitors(
     params: FetchRecommendVisitorParams
   ): Observable<RecommendVisitor[]> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
@@ -80,7 +80,7 @@ export class VisitorService {
    * @memberof VisitorService
    */
   fetchVisitorCount(params: VisitorFilter): Observable<number> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {

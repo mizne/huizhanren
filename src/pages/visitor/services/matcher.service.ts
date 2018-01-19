@@ -38,7 +38,7 @@ export class VisitorMatcherService {
   public fetchMatchers(
     params: FetchMatcherParams
   ): Observable<VisitorMatcher[]> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
@@ -93,7 +93,7 @@ export class VisitorMatcherService {
    * @memberof VisitorMatcherService
    */
   fetchMatcherCount(statuses: VisitorMatcherStatus[]): Observable<number> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {

@@ -37,7 +37,7 @@ export class ExhibitorMatcherService {
    * @memberof ExhibitorMatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<ExhibitorMatcher[]> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
@@ -96,7 +96,7 @@ export class ExhibitorMatcherService {
    * @memberof ExhibitorMatcherService
    */
   fetchMatcherCount(statuses: ExhibitorMatcherStatus[]): Observable<number> {
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([_, __, exhibitorId, exhibitionId]) => {

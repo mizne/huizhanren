@@ -104,7 +104,7 @@ export class LoggerService {
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
     // return Observable.of(Logger.generateFakeLogs(100))
-    return environment.production
+    return (!environment.mock || environment.production)
       ? this.tenantService
           .getTenantIdAndUserId()
           .mergeMap(([tenantId, userId]) =>

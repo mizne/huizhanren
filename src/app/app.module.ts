@@ -72,12 +72,10 @@ export class RavenErrorHandler implements ErrorHandler {
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     environment.production
-      ? StoreDevtoolsModule.instrument({
-        maxAge: 42
-      })
+      ? []
       : StoreDevtoolsModule.instrument({
-          maxAge: 42
-        }),
+        maxAge: 42
+      }),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
@@ -91,8 +89,9 @@ export class RavenErrorHandler implements ErrorHandler {
     SplashScreen,
     Camera,
     Network,
-    { provide: ErrorHandler, useClass: IonicErrorHandler },
-    { provide: ErrorHandler, useClass: RavenErrorHandler },
+    environment.production
+      ? { provide: ErrorHandler, useClass: RavenErrorHandler }
+      : { provide: ErrorHandler, useClass: IonicErrorHandler },
     OcrService,
     SmsService,
     LoginService,
@@ -103,4 +102,4 @@ export class RavenErrorHandler implements ErrorHandler {
     { provide: HTTP_INTERCEPTORS, useClass: ApiErrorInterceptor, multi: true }
   ]
 })
-export class AppModule {}
+export class AppModule { }
