@@ -30,7 +30,7 @@ export class HzGridFilterComponent implements OnInit {
     this.sortOptions = options[2]
   }
 
-  constructor(private destroyService: DestroyService) {}
+  constructor(private destroyService: DestroyService) { }
 
   ngOnInit() {
     this.initAreaSelectorChange()

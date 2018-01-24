@@ -94,7 +94,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   exhibitorFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
   matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
     ExhibitorMatcherStatus[]
-  >()
+    >()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   constructor(
@@ -102,7 +102,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private store: Store<State>,
     private destroyService: DestroyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initDataSource()
@@ -110,7 +110,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initDispatch()
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   loadMore() {
     this.loadMoreSub.next()
@@ -264,81 +264,81 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
         listStatus
       }))
       .withLatestFrom(
-        this.exhibitorFilterSub.startWith({
-          area: '',
-          type: '',
-          key: ''
-        }),
-        ({ headerEvent, listStatus }, exhibitorFilter) => ({
-          headerEvent,
-          listStatus,
-          exhibitorFilter
-        })
+      this.exhibitorFilterSub.startWith({
+        area: '',
+        type: '',
+        key: ''
+      }),
+      ({ headerEvent, listStatus }, exhibitorFilter) => ({
+        headerEvent,
+        listStatus,
+        exhibitorFilter
+      })
       )
       .withLatestFrom(
-        this.matcherFilterSub.startWith([]),
-        ({ headerEvent, listStatus, exhibitorFilter }, matcherFilter) => ({
-          headerEvent,
-          listStatus,
-          exhibitorFilter,
-          matcherFilter
-        })
+      this.matcherFilterSub.startWith([]),
+      ({ headerEvent, listStatus, exhibitorFilter }, matcherFilter) => ({
+        headerEvent,
+        listStatus,
+        exhibitorFilter,
+        matcherFilter
+      })
       )
       .takeUntil(this.destroyService)
       .subscribe(
-        ({ headerEvent, listStatus, exhibitorFilter, matcherFilter }) => {
-          switch (headerEvent) {
-            case ListHeaderEvent.REFRESH:
-              if (listStatus === ListStatus.EXHIBITOR) {
-                this.store.dispatch(
-                  new FetchExhibitorsAction({
-                    ...exhibitorFilter,
-                    pageIndex: 1,
-                    pageSize: 10
-                  })
-                )
-              }
-              if (listStatus === ListStatus.MATCHER) {
-                console.log(matcherFilter)
-                this.store.dispatch(
-                  new FetchMatchersAction({
-                    statuses: matcherFilter,
-                    pageIndex: 1,
-                    pageSize: 10
-                  })
-                )
-              }
-              break
+      ({ headerEvent, listStatus, exhibitorFilter, matcherFilter }) => {
+        switch (headerEvent) {
+          case ListHeaderEvent.REFRESH:
+            if (listStatus === ListStatus.EXHIBITOR) {
+              this.store.dispatch(
+                new FetchExhibitorsAction({
+                  ...exhibitorFilter,
+                  pageIndex: 1,
+                  pageSize: 10
+                })
+              )
+            }
+            if (listStatus === ListStatus.MATCHER) {
+              console.log(matcherFilter)
+              this.store.dispatch(
+                new FetchMatchersAction({
+                  statuses: matcherFilter,
+                  pageIndex: 1,
+                  pageSize: 10
+                })
+              )
+            }
+            break
 
-            case ListHeaderEvent.BATCH_ACCEPT:
-              console.log('batch accept')
-              this.prompt()
-              break
-            case ListHeaderEvent.BATCH_CANCEL:
-              console.log('batch cancel')
-              this.prompt()
-              break
-            case ListHeaderEvent.BATCH_DELETE:
-              console.log('batch delete')
-              this.prompt()
-              break
-            case ListHeaderEvent.BATCH_HIDDEN:
-              console.log('batch hidden')
-              this.prompt()
-              break
-            case ListHeaderEvent.BATCH_INVITE:
-              console.log('batch invite')
-              this.prompt()
-              break
-            case ListHeaderEvent.BATCH_REFUSE:
-              console.log('batch refuse')
-              this.prompt()
-              break
-            default:
-              console.warn(`Unknown recommend header event: ${headerEvent}`)
-              break
-          }
+          case ListHeaderEvent.BATCH_ACCEPT:
+            console.log('batch accept')
+            this.prompt()
+            break
+          case ListHeaderEvent.BATCH_CANCEL:
+            console.log('batch cancel')
+            this.prompt()
+            break
+          case ListHeaderEvent.BATCH_DELETE:
+            console.log('batch delete')
+            this.prompt()
+            break
+          case ListHeaderEvent.BATCH_HIDDEN:
+            console.log('batch hidden')
+            this.prompt()
+            break
+          case ListHeaderEvent.BATCH_INVITE:
+            console.log('batch invite')
+            this.prompt()
+            break
+          case ListHeaderEvent.BATCH_REFUSE:
+            console.log('batch refuse')
+            this.prompt()
+            break
+          default:
+            console.warn(`Unknown recommend header event: ${headerEvent}`)
+            break
         }
+      }
       )
   }
 
@@ -402,12 +402,12 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.EXHIBITOR)
       .withLatestFrom(
-        this.exhibitorFilterSub.startWith({
-          type: '',
-          area: '',
-          key: ''
-        }),
-        (_, recommendFilter) => recommendFilter
+      this.exhibitorFilterSub.startWith({
+        type: '',
+        area: '',
+        key: ''
+      }),
+      (_, recommendFilter) => recommendFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(exhibitorFilter => {
@@ -419,8 +419,8 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     loadMore
       .filter(e => e === ListStatus.MATCHER)
       .withLatestFrom(
-        this.matcherFilterSub.startWith([]),
-        (_, matcherFilter) => matcherFilter
+      this.matcherFilterSub.startWith([]),
+      (_, matcherFilter) => matcherFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
