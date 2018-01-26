@@ -12,11 +12,8 @@ import { ErrorLoggerService } from './error-logger.service'
 */
 @Injectable()
 export class OcrService {
-  private url: string = 'http://dm-57.data.aliyun.com/rest/160601/ocr/ocr_business_card.json'
-  constructor(
-    public http: HttpClient,
-    private logger: ErrorLoggerService
-  ) {}
+  private url: string = '//dm-57.data.aliyun.com/rest/160601/ocr/ocr_business_card.json'
+  constructor(public http: HttpClient, private logger: ErrorLoggerService) {}
 
   fetchCardInfo(base64Image): Observable<any> {
     const params = {
@@ -30,15 +27,11 @@ export class OcrService {
       ]
     }
     return this.http
-      .post(
-        this.url,
-        params,
-        {
-          headers: new HttpHeaders({
-            Authorization: 'APPCODE 6227ab3f96e84029bee837fc79d8dfb6'
-          })
-        }
-      )
+      .post(this.url, params, {
+        headers: new HttpHeaders({
+          Authorization: 'APPCODE 6227ab3f96e84029bee837fc79d8dfb6'
+        })
+      })
       .catch(e => {
         return this.logger.httpError({
           module: 'OcrService',

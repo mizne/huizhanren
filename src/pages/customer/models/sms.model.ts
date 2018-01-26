@@ -206,4 +206,4 @@ export class BatchSendSmsContext {
   }
 }
 
-export const SMS_TEMPLATE_BASE_URL = 'http://t.cn'
+export const SMS_TEMPLATE_BASE_URL = '//t.cn'

@@ -12,7 +12,7 @@ const urls = ['www.baidu.com', 'www.baidu1.com', 'www.baidu2.com']
 export class MorePage {
   activeQRCode: boolean = false
 
-  url: string = 'http://dm.huizhanren.com/grant/location/D23F4FC0-6335-47BC-B05C-606F387235F0'
+  url: string = '//dm.huizhanren.com/grant/location/D23F4FC0-6335-47BC-B05C-606F387235F0'
 
   constructor(public navCtrl: NavController) {}
 
