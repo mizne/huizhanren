@@ -14,7 +14,7 @@ import { NgxQRCodeModule } from 'ngx-qrcode2'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 
 import { reducers } from '../reducers/index'
 import { MyApp } from './app.component'
@@ -50,11 +50,7 @@ export class RavenErrorHandler implements ErrorHandler {
 }
 
 @NgModule({
-  declarations: [
-    MyApp,
-    TabsPage,
-    MorePage
-  ],
+  declarations: [MyApp, TabsPage, MorePage],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
@@ -74,16 +70,12 @@ export class RavenErrorHandler implements ErrorHandler {
     environment.production
       ? []
       : StoreDevtoolsModule.instrument({
-        maxAge: 42
-      }),
+          maxAge: 42
+        }),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    TabsPage,
-    MorePage
-  ],
+  entryComponents: [MyApp, TabsPage, MorePage],
   providers: [
     StatusBar,
     SplashScreen,
@@ -102,4 +94,4 @@ export class RavenErrorHandler implements ErrorHandler {
     { provide: HTTP_INTERCEPTORS, useClass: ApiErrorInterceptor, multi: true }
   ]
 })
-export class AppModule { }
+export class AppModule {}

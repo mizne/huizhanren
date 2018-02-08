@@ -16,19 +16,13 @@
       <exhibitor-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </exhibitor-matcher-filter>
 
-      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor"
-        (showDetail)="updateExhibitorDetailID($event)" (loadMore)="loadMore()"
-        [shouldScrollToTop]="exhibitorShouldScrollToTop$ | async"
-        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0"
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 1" type="exhibitor" (showDetail)="updateExhibitorDetailID($event)" (loadMore)="loadMore()"
+        [shouldScrollToTop]="exhibitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0"
         [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
-      <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher"
-      (showDetail)="updateMatcherDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
-        (agreeMatcher)="ensureAgreeMatcher($event)"
-        (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()"
-        [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
-        [showLoadMore]="showLoadMore$ | async"
-        [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async">
+      <exhibitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateMatcherDetailID($event)" (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
+        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async">
       </exhibitor-grid>
 
     </div>
@@ -36,9 +30,8 @@
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
       <exhibitor-detail *ngIf="(currentDetail$ | async)" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
         [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (createLog)="ensureCreateLog()"
-        (editLog)="ensureEditLog($event)"
-        (showProduct)="ensureShowProduct($event)" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
-        (refuseMatcher)="ensureRefuseMatcher($event)">
+        (editLog)="ensureEditLog($event)" (showProduct)="ensureShowProduct($event)" (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)">
       </exhibitor-detail>
     </div>
 

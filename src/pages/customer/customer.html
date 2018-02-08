@@ -6,16 +6,17 @@
       <hz-list-header (sendSms)="toSendSms()" (setGroup)="toSetGroup()" (del)="toMultiDelete()" [totalCount]="customerCount$ | async"></hz-list-header>
       <hz-list-search>
         <div class="input-wrapper">
-          <input class="search-input" [formControl]="searchControl" type="text" placeholder="请输入公司名/客户名/电话" [(ngModel)]="name">
+          <input class="search-input" [formControl]="searchControl" type="text" placeholder="请输入公司名/客户名/电话">
           <ion-icon class="search-icon" name="search"></ion-icon>
         </div>
       </hz-list-search>
 
       <hz-collapseset>
         <hz-collapse *ngFor="let group of (nestGroups$ | async)" [nzTitle]="group.name" [num]="group.num" [nzActive]="group.active"
-          [nzDisabled]="group.disabled" [nzSelected]="group.selected" (toggleActive)="toggleActiveGroup(group.id)" (toggleSelect)="toggleSelectGroup(group.id)"
+          [nzSelected]="group.selected" (toggleActive)="toggleActiveGroup(group.id)" (toggleSelect)="toggleSelectGroup(group.id)"
           (scrollTop)="onScrollTop($event, group.id)" [scrollTopHeight]="group.scrollTop">
-          <hz-customer-item *ngFor="let customer of (group.customers); even as even;" [even]="even" [customer]="customer" (select)="onSelectCustomer($event)" (toShowDetail)="toShowDetail($event, group.id)">
+          <hz-customer-item *ngFor="let customer of (group.customers); even as even;" [even]="even" [customer]="customer" (select)="onSelectCustomer($event)"
+            (toShowDetail)="toShowDetail($event, group.id)">
           </hz-customer-item>
 
           <p class="no-customer" *ngIf="group.customers.length === 0">

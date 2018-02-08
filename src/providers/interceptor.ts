@@ -9,7 +9,7 @@ import {
 import { ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs/Observable'
 
-export const HOST = '//huizhanren.xiaovbao.cn'
+export const HOST = 'http://huizhanren.xiaovbao.cn'
 // export const HOST = '//192.168.0.129:3012'
 // export const HOST = '//192.168.1.6:3012'
 
@@ -30,7 +30,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
     return next
       .handle(
         req.clone({
-          url: /^\/\//.test(req.url) ? req.url : `${this.url}${req.url}`
+          url: /^http/.test(req.url) ? req.url : `${this.url}${req.url}`
         })
       )
       .timeout(TIME_OUT)

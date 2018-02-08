@@ -12,7 +12,7 @@ import { ErrorLoggerService } from './error-logger.service'
 */
 @Injectable()
 export class OcrService {
-  private url: string = '//dm-57.data.aliyun.com/rest/160601/ocr/ocr_business_card.json'
+  private url: string = 'http://dm-57.data.aliyun.com/rest/160601/ocr/ocr_business_card.json'
   constructor(public http: HttpClient, private logger: ErrorLoggerService) {}
 
   fetchCardInfo(base64Image): Observable<any> {
