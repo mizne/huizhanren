@@ -30,7 +30,9 @@ export class UserService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
           params: {
             record: {
               Name: user.name,
@@ -60,7 +62,9 @@ export class UserService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+        this.http.post(this.queryUrl, {
+          tenantId,
+          userId,
           params: {
             condition: {
               Admin: '0'
@@ -96,7 +100,9 @@ export class UserService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.deleteUrl + `/${id}/${tenantId}/${userId}`, {
+        return this.http.post(this.deleteUrl, {
+          tenantId,
+          userId,
           params: {
             recordId: id
           }

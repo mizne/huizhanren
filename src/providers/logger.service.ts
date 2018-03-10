@@ -10,10 +10,10 @@ import { environment } from '../environments/environment'
 
 @Injectable()
 export class LoggerService {
-  private queryUrl: string = '/data/querybycondition/ContactLog'
-  private insertUrl: string = '/data/insert/ContactLog'
-  private updateUrl: string = '/data/update/ContactLog'
-  private insertListUrl: string = '/data/insertList/ContactLog'
+  private queryUrl: string = '/data/querybycondition/ExhibitorContactLog'
+  private insertUrl: string = '/data/insert/ExhibitorContactLog'
+  private updateUrl: string = '/data/update/ExhibitorContactLog'
+  private insertListUrl: string = '/data/insertList/ExhibitorContactLog'
 
   constructor(
     private http: HttpClient,
@@ -32,7 +32,9 @@ export class LoggerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
           params: {
             record: {
               ...Logger.convertFromModel(log),
@@ -54,7 +56,9 @@ export class LoggerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.insertListUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.insertListUrl, {
+          tenantId,
+          userId,
           params: {
             recordlist: customerIds.map(e => ({
               ...Logger.convertFromModel(log),
@@ -76,16 +80,16 @@ export class LoggerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.updateUrl + `/${log.id}/${tenantId}/${userId}`,
-          {
-            params: {
-              setValue: {
-                ...Logger.convertFromModel(log)
-              }
+        return this.http.post(this.updateUrl, {
+          tenantId,
+          userId,
+          params: {
+            RecordId: log.id,
+            setValue: {
+              ...Logger.convertFromModel(log)
             }
           }
-        )
+        })
       })
       .catch(e => {
         return this.errorLogger.httpError({
@@ -104,11 +108,13 @@ export class LoggerService {
    */
   fetchLogger(customerId: string): Observable<Logger[]> {
     // return Observable.of(Logger.generateFakeLogs(100))
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserId()
           .mergeMap(([tenantId, userId]) =>
-            this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+            this.http.post(this.queryUrl, {
+              tenantId,
+              userId,
               params: {
                 condition: {
                   ContactInfo: customerId

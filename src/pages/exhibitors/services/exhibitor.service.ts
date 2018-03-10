@@ -15,8 +15,8 @@ import { environment } from '../../../environments/environment'
 
 @Injectable()
 export class ExhibitorService {
-  private fetchUrl: string = '/data/get/exhibitor'
-  private fetchCountUrl = '/data/get/exhibitor/count'
+  private fetchUrl: string = '/data/queryList/Exhibitor'
+  private fetchCountUrl = '/data/queryCount/Exhibitor'
 
   constructor(
     private http: HttpClient,
@@ -35,28 +35,41 @@ export class ExhibitorService {
   fetchExhibitors(
     params: FetchRecommendExhibitorParams
   ): Observable<RecommendExhibitor[]> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([tenantId, _, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId
+            }
+            const options: { [key: string]: number } = {}
             if (params.area) {
-              query += `&province=${params.area}`
+              condition.Province = params.area
             }
             if (params.key) {
-              query += `&search=${params.key}`
+              condition.CompanyName = `/${params.key}/`
             }
             if (params.type) {
-              query += `&acreage=${params.type}`
+              condition.ShowArea = params.type
             }
+
             if (params.pageIndex) {
-              query += `&pageIndex=${params.pageIndex}`
+              options.pageIndex = params.pageIndex
             }
             if (params.pageSize) {
-              query += `&pageSize=${params.pageSize}`
+              options.pageSize = params.pageSize
             }
+
             return this.http
-              .get(this.fetchUrl + query)
+              .post(this.fetchUrl, {
+                tenantId,
+                userId,
+                params: {
+                  condition,
+                  options
+                }
+              })
               .map(e => (e as APIResponse).result)
               .map(e =>
                 e
@@ -86,22 +99,32 @@ export class ExhibitorService {
    * @memberof ExhibitorService
    */
   fetchExhibitorsCount(params: ExhibitorFilter): Observable<number> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId
+            }
+            const options: { [key: string]: number } = {}
             if (params.area) {
-              query += `&province=${params.area}`
+              condition.Province = params.area
             }
             if (params.key) {
-              query += `&search=${params.key}`
+              condition.CompanyName = `/${params.key}/`
             }
             if (params.type) {
-              query += `&acreage=${params.type}`
+              condition.ShowArea = params.type
             }
+
             return this.http
-              .get(this.fetchCountUrl + query)
+              .post(this.fetchCountUrl, {
+                tenantId,
+                userId,
+                params: {
+                  condition
+                }
+              })
               .map(e => (e as APIResponse).result)
               .catch(e => {
                 return this.logger.httpError({

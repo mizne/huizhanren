@@ -45,7 +45,10 @@ import {
   getCardBehindImg,
   needShowHelpOfToggleLog
 } from './reducers/index'
-import { CustomerPateStatus, CustomerPageManageableStatus } from './models/customer.model'
+import {
+  CustomerPateStatus,
+  CustomerPageManageableStatus
+} from './models/customer.model'
 import { NestGroup, Group } from './models/group.model'
 import { CustomField } from './models/card.model'
 
@@ -141,9 +144,9 @@ export class CustomerPage {
       this.store.select(getGroups),
       this.store.select(getCustomers),
       this.searchControl.valueChanges
-      .startWith('')
-      .debounceTime(3e2)
-      .distinctUntilChanged()
+        .startWith('')
+        .debounceTime(3e2)
+        .distinctUntilChanged()
     ).map(([groups, customers, searchText]) => {
       return groups.map(group => {
         let currentGroupCustomers

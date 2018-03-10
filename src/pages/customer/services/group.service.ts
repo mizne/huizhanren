@@ -33,7 +33,9 @@ export class GroupService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
           params: {
             record: {
               Name: name,
@@ -63,7 +65,9 @@ export class GroupService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.deleteUrl + `/${groupId}/${tenantId}/${userId}`, {
+        this.http.post(this.deleteUrl, {
+          tenantId,
+          userId,
           params: {
             recordId: groupId
           }
@@ -91,7 +95,9 @@ export class GroupService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.updateUrl + `/${groupId}/${tenantId}/${userId}`, {
+        this.http.post(this.updateUrl, {
+          tenantId,
+          userId,
           params: {
             setValue: {
               Name: groupName
@@ -118,10 +124,7 @@ export class GroupService {
   fetchAllGroup(): Observable<Group[]> {
     return this.fetchGroup({})
       .map(groups => {
-        return [
-          Group.NONE,
-          ...groups
-        ]
+        return [Group.NONE, ...groups]
       })
       .catch(e => {
         return this.logger.httpError({
@@ -136,7 +139,9 @@ export class GroupService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.queryUrl, {
+          tenantId,
+          userId,
           params: {
             condition
           }

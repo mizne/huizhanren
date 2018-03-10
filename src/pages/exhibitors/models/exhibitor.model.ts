@@ -23,15 +23,15 @@ export class RecommendExhibitor extends Exhibitor {
   static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
     return {
       id: resp.RecordId || resp._id,
-      name: resp.companyName,
-      logo: resp.logo || './assets/images/default_exhibitor.png',
-      booth: resp.boothArea,
+      name: resp.CompanyName,
+      logo: resp.Logo || './assets/images/default_exhibitor.png',
+      booth: resp.BoothArea,
       boothNo: resp.BoothNo,
       exHall: resp.ExHall,
       industry: resp.Industry,
-      area: resp.province,
-      city: resp.city,
-      heat: resp.heat || Math.round(Math.random() * 1000),
+      area: resp.Province,
+      city: resp.City,
+      heat: resp.Heat || Math.round(Math.random() * 1000),
       products: (resp.ProductList || []).map(e => ({
         id: e.Name,
         name: e.Name,
@@ -43,7 +43,7 @@ export class RecommendExhibitor extends Exhibitor {
         headImgUrl: e.HeadImgUrl
       })),
       description: resp.Introduction,
-      website: resp.website,
+      website: resp.Website,
       organizer: resp.Organizer,
       organizerId: resp.OrganizerId,
       selected: false
@@ -54,44 +54,47 @@ export class RecommendExhibitor extends Exhibitor {
     return {
       Organizer: model.organizer,
       OrganizerId: model.organizerId,
-      companyName: model.name,
-      city: model.city,
-      boothArea: model.booth,
+      CompanyName: model.name,
+      City: model.city,
+      BoothArea: model.booth,
       ExHall: model.exHall
     }
   }
 
-  static generateFakeExhibitors(start: number, end: number): RecommendExhibitor[] {
+  static generateFakeExhibitors(
+    start: number,
+    end: number
+  ): RecommendExhibitor[] {
     const results = []
     for (let i = start; i < end; i += 1) {
       results.push({
         id: String(i),
-      name: `展商特别长特别长特别长的名字${i}`,
-      logo: './assets/images/card.jpg',
-      booth: Math.random() > 0.5 ? `0-2AAA${i}` : '',
-      industry: Math.random() > 0.5 ? `大数据${i}` : '',
-      area: Math.random() > 0.5 ? `东京${i}` : '',
-      heat: Math.round(Math.random() * 1000),
-      description:
-        Math.random() > 0.5
-          ? '上海联展软件技术有限公司是会展互联网、信息化及营销解决方案的领先服务商' +
-            '。成立于2004年，总部位于上海，在长沙、广州等设有分支或代理机构。'
-          : '',
-      products:
-        Math.random() > 0.5
-          ? Array.from({ length: 100 }, (_, i) => ({
-              id: String(i),
-              name: 'product1product1product1product1product1product1',
-              pictures: ['./assets/images/camera.jpg']
-            }))
-          : [],
-      visitors:
-        Math.random() > 0.5
-          ? Array.from({ length: 30 }, (_, i) => ({
-              id: String(i),
-              headImgUrl: './assets/images/camera.jpg'
-            }))
-          : []
+        name: `展商特别长特别长特别长的名字${i}`,
+        logo: './assets/images/card.jpg',
+        booth: Math.random() > 0.5 ? `0-2AAA${i}` : '',
+        industry: Math.random() > 0.5 ? `大数据${i}` : '',
+        area: Math.random() > 0.5 ? `东京${i}` : '',
+        heat: Math.round(Math.random() * 1000),
+        description:
+          Math.random() > 0.5
+            ? '上海联展软件技术有限公司是会展互联网、信息化及营销解决方案的领先服务商' +
+              '。成立于2004年，总部位于上海，在长沙、广州等设有分支或代理机构。'
+            : '',
+        products:
+          Math.random() > 0.5
+            ? Array.from({ length: 100 }, (_, i) => ({
+                id: String(i),
+                name: 'product1product1product1product1product1product1',
+                pictures: ['./assets/images/camera.jpg']
+              }))
+            : [],
+        visitors:
+          Math.random() > 0.5
+            ? Array.from({ length: 30 }, (_, i) => ({
+                id: String(i),
+                headImgUrl: './assets/images/camera.jpg'
+              }))
+            : []
       })
     }
     return results
@@ -114,22 +117,22 @@ export interface RecommendExhibitorResp {
   _id?: string
   TenantId?: string
   RecordId?: string
-  companyName?: string
-  logo?: string
-  boothArea?: string
+  CompanyName?: string
+  Logo?: string
+  BoothArea?: string
   BoothNo?: string
   categories2?: string
   Product?: string
-  province?: string
-  city?: string
+  Province?: string
+  City?: string
   ExHall?: string
-  heat?: number
+  Heat?: number
   ProductList?: ProductResp[]
   Visitors?: VisitorResp[]
   Organizer?: string
   OrganizerId?: string
   Industry?: string
-  website?: string
+  Website?: string
   description?: string
   Introduction?: string
 }

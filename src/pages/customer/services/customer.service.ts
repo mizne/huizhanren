@@ -90,6 +90,8 @@ export class CustomerService {
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
+          tenantId,
+          userId,
           params: {
             record: {
               Name: customer.name,
@@ -106,7 +108,7 @@ export class CustomerService {
             }
           }
         }
-        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, params)
+        return this.http.post(this.insertUrl, params)
       })
       .map(res => {
         const result = (res as APIResponse).result
@@ -144,7 +146,10 @@ export class CustomerService {
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
+          tenantId,
+          userId,
           params: {
+            RecordId: customerId,
             setValue: {
               ExhibitionInfo: exhibitionId,
               Name: customer.name,
@@ -158,10 +163,7 @@ export class CustomerService {
             }
           }
         }
-        return this.http.post(
-          this.updateUrl + `/${customerId}/${tenantId}/${userId}`,
-          params
-        )
+        return this.http.post(this.updateUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -188,6 +190,8 @@ export class CustomerService {
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
+          tenantId,
+          userId,
           params: customerIds.map(id => {
             return {
               recordId: id,
@@ -198,10 +202,7 @@ export class CustomerService {
             }
           })
         }
-        return this.http.post(
-          this.updateListUrl + `/${tenantId}/${userId}`,
-          params
-        )
+        return this.http.post(this.updateListUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -230,6 +231,8 @@ export class CustomerService {
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
+          tenantId,
+          userId,
           params: customers.map(customer => {
             return {
               recordId: customer.id,
@@ -247,10 +250,7 @@ export class CustomerService {
           })
         }
 
-        return this.http.post(
-          this.updateListUrl + `/${tenantId}/${userId}`,
-          params
-        )
+        return this.http.post(this.updateListUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -279,6 +279,8 @@ export class CustomerService {
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
+          tenantId,
+          userId,
           params: customers
             .filter(customer => customer.groups.indexOf(groupId) >= 0)
             .map(customer => {
@@ -295,10 +297,7 @@ export class CustomerService {
             })
         }
 
-        return this.http.post(
-          this.updateListUrl + `/${tenantId}/${userId}`,
-          params
-        )
+        return this.http.post(this.updateListUrl, params)
       })
       .catch(e => {
         return this.logger.httpError({
@@ -326,23 +325,23 @@ export class CustomerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.updateUrl + `/${customer.id}/${tenantId}/${userId}`,
-          {
-            params: {
-              setValue: {
-                ExhibitionInfo: exhibitionId,
-                GroupInfo: (() => {
-                  if (groupId === Group.NONE.id) {
-                    return []
-                  } else {
-                    return deduplicate([...customer.groups, groupId])
-                  }
-                })()
-              }
+        return this.http.post(this.updateUrl, {
+          tenantId,
+          userId,
+          params: {
+            RecordId: customer.id,
+            setValue: {
+              ExhibitionInfo: exhibitionId,
+              GroupInfo: (() => {
+                if (groupId === Group.NONE.id) {
+                  return []
+                } else {
+                  return deduplicate([...customer.groups, groupId])
+                }
+              })()
             }
           }
-        )
+        })
       })
       .catch(e => {
         return this.logger.httpError({
@@ -363,7 +362,9 @@ export class CustomerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.deleteListUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.deleteListUrl, {
+          tenantId,
+          userId,
           params: customerIds.map(e => ({ recordId: e }))
         })
       })
@@ -386,14 +387,13 @@ export class CustomerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(
-          this.deleteUrl + `/${customerId}/${tenantId}/${userId}`,
-          {
-            params: {
-              recordId: customerId
-            }
+        return this.http.post(this.deleteUrl, {
+          tenantId,
+          userId,
+          params: {
+            recordId: customerId
           }
-        )
+        })
       })
       .catch(e => {
         return this.logger.httpError({
@@ -446,7 +446,9 @@ export class CustomerService {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) =>
-        this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+        this.http.post(this.queryUrl, {
+          tenantId,
+          userId,
           params: {
             condition
           }

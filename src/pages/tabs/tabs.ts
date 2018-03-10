@@ -43,7 +43,8 @@ export class TabsPage {
     mediaType: this.camera.MediaType.PICTURE,
     targetWidth: 1024,
     targetHeight: 768,
-    saveToPhotoAlbum: true
+    saveToPhotoAlbum: true,
+    allowEdit: true
   }
 
   constructor(

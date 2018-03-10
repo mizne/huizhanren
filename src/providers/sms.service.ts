@@ -69,30 +69,32 @@ export class SmsService {
     // : Observable.of({})
     return Observable.of({})
   }
-/**
- * 新增短信模版
- *
- * @param {SmsTemplate} template
- * @returns {Observable<any>}
- * @memberof SmsService
- */
-createSmsTemplate(template: SmsTemplate): Observable<any> {
+  /**
+   * 新增短信模版
+   *
+   * @param {SmsTemplate} template
+   * @returns {Observable<any>}
+   * @memberof SmsService
+   */
+  createSmsTemplate(template: SmsTemplate): Observable<any> {
     return this.tenantService
-    .getTenantIdAndUserId()
-    .mergeMap(([tenantId, userId]) => {
-      return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
-        params: {
-          record: SmsTemplate.convertFromModal(template)
-        }
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
+          params: {
+            record: SmsTemplate.convertFromModal(template)
+          }
+        })
       })
-    })
-    .catch(e => {
-      return this.logger.httpError({
-        module: 'SmsService',
-        method: 'createSmsTemplate',
-        error: e
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'SmsService',
+          method: 'createSmsTemplate',
+          error: e
+        })
       })
-    })
   }
 
   editSmsTemplate() {}
@@ -107,7 +109,9 @@ createSmsTemplate(template: SmsTemplate): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.post(this.queryUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.queryUrl, {
+          tenantId,
+          userId,
           params: {
             condition: {}
           }

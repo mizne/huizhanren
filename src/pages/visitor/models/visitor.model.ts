@@ -6,8 +6,6 @@ export class Visitor {
   companyAddr?: string
   industry?: string
   area?: string
-  organizer?: string
-  organizerId?: string
   mobile?: string
   cardImg?: string
   email?: string
@@ -20,12 +18,10 @@ export class RecommendVisitor extends Visitor {
     return {
       id: resp.RecordId || resp._id,
       name: resp.Name,
-      title: resp.JobTitle,
-      company: resp.CompName,
+      title: resp.Job,
+      company: resp.CompanyName,
       industry: resp.Industry,
       area: resp.Province,
-      organizer: resp.Organizer,
-      organizerId: resp.OrganizerId,
       mobile: resp.Mob,
       cardImg: resp.Card,
       email: resp.Email
@@ -34,8 +30,6 @@ export class RecommendVisitor extends Visitor {
 
   static convertFromModel(model: RecommendVisitor): CreateMatcherParams {
     return {
-      Organizer: model.organizer,
-      OrganizerId: model.organizerId,
       Name: model.name,
       CompName: model.company,
       Mob: model.mobile,
@@ -67,12 +61,9 @@ export class RecommendVisitorResp {
   TenantId?: string
   RecordId?: string
   Name?: string
-  JobTitle?: string
-  CompName?: string
-  CompAddr?: string
+  Job?: string
+  CompanyName?: string
   Industry?: string
-  Organizer?: string
-  OrganizerId?: string
   Mob?: string
   Province?: string
   Card?: string
@@ -131,4 +122,3 @@ export interface FilterOptions {
   label: string
   value: string
 }
-

@@ -33,7 +33,7 @@ export class Customer {
   static convertFromResp(resp: CustomerResp): Customer {
     return {
       id: resp.RecordId,
-      groups: resp.GroupInfo,
+      groups: resp.ContactGroupId,
       name: resp.Name,
       selected: false,
       phones: resp.Phone.map(e => ({ ...e, selected: true })),
@@ -57,10 +57,9 @@ export interface SubField {
   selected?: boolean
 }
 
-
 export interface CustomerResp {
   RecordId: string
-  GroupInfo: string[]
+  ContactGroupId: string[]
   Name: string
   Phone: SubFieldResp[]
   Email: SubFieldResp[]
@@ -79,5 +78,3 @@ export interface SubFieldResp {
   label: string
   value: string
 }
-
-

@@ -18,10 +18,10 @@ import { environment } from '../../../environments/environment'
 
 @Injectable()
 export class ExhibitorMatcherService {
-  private fetchUrl: string = '/data/get/ExhibitionInvitationInfo'
-  private fetchCountUrl = '/data/get/ExhibitionInvitationInf/count'
-  private insertUrl = '/sys/insert/ExhibitionInvitationInfo'
-  private updateUrl: string = '/data/update/exhiinviinfo'
+  private fetchUrl: string = '/data/insert/InvitationInfoExhi'
+  private fetchCountUrl = '/data/queryCount/InvitationInfoExhi'
+  private insertUrl = '/data/queryList/InvitationInfoExhi'
+  private updateUrl: string = '/data/update/InvitationInfoExhi'
 
   constructor(
     private http: HttpClient,
@@ -37,24 +37,35 @@ export class ExhibitorMatcherService {
    * @memberof ExhibitorMatcherService
    */
   fetchMatchers(params: FetchMatcherParams): Observable<ExhibitorMatcher[]> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId
+            }
+            const options: { [key: string]: number } = {}
 
             if (params.pageIndex) {
-              query += `&pageIndex=${params.pageIndex}`
+              options.pageIndex = params.pageIndex
             }
             if (params.pageSize) {
-              query += `&pageSize=${params.pageSize}`
+              options.pageSize = params.pageSize
             }
             if (params.statuses && params.statuses.length > 0) {
-              query += `&state=${params.statuses.map(
-                convertMatcherStatusFromModel
-              )}`
+              condition.State = params.statuses
+                .map(convertMatcherStatusFromModel)
+                .toString()
             }
-            return this.http.get(this.fetchUrl + query)
+            return this.http.post(this.fetchUrl, {
+              tenantId,
+              userId,
+              params: {
+                condition,
+                options
+              }
+            })
           })
           .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
           .map(e =>
@@ -96,16 +107,28 @@ export class ExhibitorMatcherService {
    * @memberof ExhibitorMatcherService
    */
   fetchMatcherCount(statuses: ExhibitorMatcherStatus[]): Observable<number> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId
+            }
+
             if (statuses && statuses.length > 0) {
-              query += `&state=${statuses.map(convertMatcherStatusFromModel)}`
+              condition.State = statuses
+                .map(convertMatcherStatusFromModel)
+                .toString()
             }
             return this.http
-              .get(this.fetchCountUrl + query)
+              .post(this.fetchCountUrl, {
+                tenantId,
+                userId,
+                params: {
+                  condition
+                }
+              })
               .map(e => (e as APIResponse).result)
               .catch(e => {
                 return this.logger.httpError({
@@ -129,9 +152,11 @@ export class ExhibitorMatcherService {
     return this.tenantService
       .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
       .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
           params: {
-            records: {
+            record: {
               State: convertMatcherStatusFromModel(
                 ExhibitorMatcherStatus.UN_AUDIT
               ),
@@ -165,13 +190,22 @@ export class ExhibitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.CANCEL)
         },
-        ExhiInvInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([_, __]) => {
-        return this.http.put(this.updateUrl, params)
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({
@@ -195,13 +229,22 @@ export class ExhibitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.AGREE)
         },
-        ExhiInvInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([_, __]) => {
-        return this.http.put(this.updateUrl, params)
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({
@@ -225,13 +268,22 @@ export class ExhibitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.REFUSE)
         },
-        ExhiInvInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([_, __]) => {
-        return this.http.put(this.updateUrl, params)
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({

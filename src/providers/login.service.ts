@@ -18,6 +18,7 @@ interface LoginResp {
   exhibitorId: string
   companyName: string
   boothNo: string
+  exhibitionIds: string[]
 }
 /*
   Generated class for the OcrServiceProvider provider.
@@ -27,8 +28,8 @@ interface LoginResp {
 */
 @Injectable()
 export class LoginService {
-  private exhibitionsUrl: string = '/sys/exhibitions'
-  private loginUrl: string = '/sys/exhibitionLogin'
+  private exhibitionsUrl: string = '/data/queryList/Exhibition'
+  private loginUrl: string = '/data/boxLogin'
 
   /**
    * 最大 http请求错误 重试次数
@@ -59,41 +60,61 @@ export class LoginService {
    * @memberof LoginService
    */
   fetchExhibitionsAndLogin(phone): Observable<FetchExhibitionsAndLoginResp> {
-    return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
-      .map(([exhibitons, loginResp]) => {
-        return {
-          adminName: loginResp.adminName,
-          userName: loginResp.userName,
-          tenantId: loginResp.tenantId,
-          userId: loginResp.userId,
-          exhibitorId: loginResp.exhibitorId,
-          companyName: loginResp.companyName,
-          boothNo: loginResp.boothNo,
-          exhibitions: exhibitons
-        }
-      })
-      .catch(e => {
-        return this.logger.httpError({
-          module: 'LoginService',
-          method: 'fetchExhibitionsAndLogin',
-          error: e
+    return (
+      this.login(phone)
+        .mergeMap(loginResp => {
+          return this.fetchExhibitions(loginResp.exhibitionIds).map(
+            exhibitions => {
+              return {
+                adminName: loginResp.adminName,
+                userName: loginResp.userName,
+                tenantId: loginResp.tenantId,
+                userId: loginResp.userId,
+                exhibitorId: loginResp.exhibitorId,
+                companyName: loginResp.companyName,
+                boothNo: loginResp.boothNo,
+                exhibitions: exhibitions
+              }
+            }
+          )
         })
-      })
+
+        // return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
+        //   .map(([exhibitons, loginResp]) => {
+        //     return {
+        //       adminName: loginResp.adminName,
+        //       userName: loginResp.userName,
+        //       tenantId: loginResp.tenantId,
+        //       userId: loginResp.userId,
+        //       exhibitorId: loginResp.exhibitorId,
+        //       companyName: loginResp.companyName,
+        //       boothNo: loginResp.boothNo,
+        //       exhibitions: exhibitons
+        //     }
+        //   })
+        .catch(e => {
+          return this.logger.httpError({
+            module: 'LoginService',
+            method: 'fetchExhibitionsAndLogin',
+            error: e
+          })
+        })
+    )
   }
 
   /**
    * 获取所有展会信息
    *
    * @private
-   * @param {any} phone
+   * @param {any} ids
    * @returns {Observable<any[]>}
    * @memberof LoginService
    */
-  private fetchExhibitions(phone): Observable<Exhibition[]> {
+  private fetchExhibitions(ids: string[]): Observable<Exhibition[]> {
     return this.http
       .post(this.exhibitionsUrl, {
         params: {
-          UserName: phone
+          recordIdList: ids
         }
       })
       .map(res => {
@@ -131,7 +152,7 @@ export class LoginService {
    * @returns {Observable<LoginResp>}
    * @memberof LoginService
    */
-  private login(phone): Observable<LoginResp> {
+  private login(phone: string): Observable<LoginResp> {
     return this.http
       .post(this.loginUrl, {
         params: {
@@ -140,14 +161,18 @@ export class LoginService {
       })
       .map(res => {
         const results = (res as APIResponse).result
+        const adminName = results[0].LinkList.find(e => e.admin === 1).LinkName
+        const userName = results[0].LinkList.find(e => e.LinkMob === phone)
+          .LinkName
         return {
-          adminName: results[0].adminName,
-          userName: results[0].Name,
+          adminName: adminName,
+          userName: userName,
           tenantId: results[0].TenantId,
           userId: results[0].UserId,
           exhibitorId: results[0].RecordId,
           companyName: results[0].CompanyName,
-          boothNo: results[0].BoothNo
+          boothNo: results[0].BoothNo,
+          exhibitionIds: results.map(e => e.ExhibitionId)
         }
       })
       .retryWhen(errStream =>

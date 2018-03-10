@@ -13,7 +13,7 @@ export const HOST = 'http://huizhanren.xiaovbao.cn'
 // export const HOST = '//192.168.0.129:3012'
 // export const HOST = '//192.168.1.6:3012'
 
-export const API_VERSION = 'v1'
+export const API_VERSION = 'v2'
 export const BASE_URL = `${HOST}/${API_VERSION}`
 export const TIME_OUT = 1e4
 

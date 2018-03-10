@@ -17,10 +17,10 @@ import { environment } from '../../../environments/environment'
 
 @Injectable()
 export class VisitorMatcherService {
-  private fetchUrl: string = '/data/get/invitationInfo'
-  private fetchCountUrl = '/data/get/invitationInfo/count'
-  private insertUrl = '/sys/insert/InvitationInfo'
-  private updateUrl: string = '/data/update/inviinfo'
+  private fetchUrl: string = '/data/queryList/InvitationInfo'
+  private fetchCountUrl = '/data/queryCount/InvitationInfo'
+  private insertUrl = '/data/insert/InvitationInfo'
+  private updateUrl: string = '/data/update/InvitationInfo'
 
   constructor(
     private http: HttpClient,
@@ -38,29 +38,48 @@ export class VisitorMatcherService {
   public fetchMatchers(
     params: FetchMatcherParams
   ): Observable<VisitorMatcher[]> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitionId=${exhibitionId}&exhibitorId=${exhibitorId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId
+            }
+            const options: { [key: string]: number } = {}
+
             if (params.pageIndex) {
-              query += `&pageIndex=${params.pageIndex}`
+              options.pageIndex = params.pageIndex
             }
             if (params.pageSize) {
-              query += `&pageSize=${params.pageSize}`
+              options.pageSize = params.pageSize
             }
             if (params.statuses && params.statuses.length > 0) {
-              query += `&state=${params.statuses.map(
-                convertMatcherStatusFromModel
-              )}`
+              condition.State = params.statuses
+                .map(convertMatcherStatusFromModel)
+                .toString()
             }
-            return this.http.get(this.fetchUrl + query)
+            return this.http.post(this.fetchUrl, {
+              tenantId,
+              userId,
+              params: {
+                condition,
+                options
+              }
+            })
           })
           .map(e => (e as APIResponse).result as VisitorMatcherResp[])
           .map(e =>
-            e.filter(f => f.State !== '5' && f.State !== '6')
-            .filter(f => f.Initator && f.Initator.length > 0 && f.Receiver && f.Receiver.length > 0)
-            .map(VisitorMatcher.convertFromResp)
+            e
+              .filter(f => f.State !== '5' && f.State !== '6')
+              .filter(
+                f =>
+                  f.Initator &&
+                  f.Initator.length > 0 &&
+                  f.Receiver &&
+                  f.Receiver.length > 0
+              )
+              .map(VisitorMatcher.convertFromResp)
           )
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
@@ -79,10 +98,12 @@ export class VisitorMatcherService {
               error: e
             })
           })
-      : Observable.of(VisitorMatcher.generateFakeMatchers(
-        (params.pageIndex - 1) * params.pageSize,
-        params.pageIndex * params.pageSize
-      )).delay(Math.random() * 1e3)
+      : Observable.of(
+          VisitorMatcher.generateFakeMatchers(
+            (params.pageIndex - 1) * params.pageSize,
+            params.pageIndex * params.pageSize
+          )
+        ).delay(Math.random() * 1e3)
   }
 
   /**
@@ -93,18 +114,28 @@ export class VisitorMatcherService {
    * @memberof VisitorMatcherService
    */
   fetchMatcherCount(statuses: VisitorMatcherStatus[]): Observable<number> {
-    return (!environment.mock || environment.production)
+    return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
-          .mergeMap(([_, __, exhibitorId, exhibitionId]) => {
-            let query = `?exhibitorId=${exhibitorId}&exhibitionId=${exhibitionId}`
+          .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId
+            }
+
             if (statuses && statuses.length > 0) {
-              query += `&state=${statuses.map(
-                convertMatcherStatusFromModel
-              )}`
+              condition.State = statuses
+                .map(convertMatcherStatusFromModel)
+                .toString()
             }
             return this.http
-              .get(this.fetchCountUrl + query)
+              .post(this.fetchCountUrl, {
+                tenantId,
+                userId,
+                params: {
+                  condition
+                }
+              })
               .map(e => (e as APIResponse).result)
               .catch(e => {
                 return this.logger.httpError({
@@ -124,9 +155,7 @@ export class VisitorMatcherService {
    * @returns {Observable<any>}
    * @memberof VisitorMatcherService
    */
-  public createMatcher(
-    visitorId: string
-  ): Observable<any> {
+  public createMatcher(visitorId: string): Observable<any> {
     const params = {
       State: convertMatcherStatusFromModel(VisitorMatcherStatus.UN_AUDIT),
       Type: '1', // 约请的发起方向
@@ -140,9 +169,14 @@ export class VisitorMatcherService {
           ExhibitionId: exhibitionId,
           Initator: exhibitorId
         })
-        return this.http.post(this.insertUrl + `/${tenantId}/${userId}`, {
+        return this.http.post(this.insertUrl, {
+          tenantId,
+          userId,
           params: {
-            records: params
+            record: Object.assign(params, {
+              ExhibitionId: exhibitionId,
+              Initator: exhibitorId
+            })
           }
         })
       })
@@ -168,13 +202,22 @@ export class VisitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(VisitorMatcherStatus.CANCEL)
         },
-        InvitationInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
-      .mergeMap(([_, __]) => {
-        return this.http.put(this.updateUrl, params)
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({
@@ -198,13 +241,24 @@ export class VisitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(VisitorMatcherStatus.AGREE)
         },
-        InvitationInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(this.updateUrl, params)
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            {
+              params
+            }
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({
@@ -228,13 +282,24 @@ export class VisitorMatcherService {
         setValue: {
           State: convertMatcherStatusFromModel(VisitorMatcherStatus.REFUSE)
         },
-        InvitationInfoId: matcherId
+        recordId: matcherId
       }
     }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
-        return this.http.put(this.updateUrl, params)
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            {
+              params
+            }
+          )
+        )
       })
       .catch(e => {
         return this.logger.httpError({
