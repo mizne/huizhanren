@@ -18,9 +18,9 @@ import { environment } from '../../../environments/environment'
 
 @Injectable()
 export class ExhibitorMatcherService {
-  private fetchUrl: string = '/data/insert/InvitationInfoExhi'
+  private fetchUrl: string = '/data/queryList/InvitationInfoExhi'
   private fetchCountUrl = '/data/queryCount/InvitationInfoExhi'
-  private insertUrl = '/data/queryList/InvitationInfoExhi'
+  private insertUrl = '/data/insert/InvitationInfoExhi'
   private updateUrl: string = '/data/update/InvitationInfoExhi'
 
   constructor(
