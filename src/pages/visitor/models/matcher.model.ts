@@ -24,11 +24,25 @@ export class VisitorMatcher extends Visitor {
       id: resp.RecordId || resp._id,
       type: resp.Type,
       status: convertMatcherStatusFromResp(resp.State),
-      senderId: resp.Initator[0].RecordId || resp.Initator[0]._id,
-      receiverId: resp.Receiver[0].RecordId || resp.Receiver[0]._id,
+      senderId: (() => {
+        if (resp.Type === '0') {
+          return resp.VisitorInitator[0].RecordId
+        }
+        if (resp.Type === '1') {
+          return resp.Initator[0].RecordId
+        }
+      })(),
+      receiverId: (() => {
+        if (resp.Type === '0') {
+          return resp.Receiver[0].RecordId
+        }
+        if (resp.Type === '1') {
+          return resp.VisitorReceiver[0].RecordId
+        }
+      })(),
       sender: (() => {
         if (resp.Type === '0') {
-          return RecommendVisitor.convertFromResp(resp.Initator[0])
+          return RecommendVisitor.convertFromResp(resp.VisitorInitator[0])
         }
         if (resp.Type === '1') {
           return RecommendExhibitor.convertFromResp(resp.Initator[0])
@@ -39,7 +53,7 @@ export class VisitorMatcher extends Visitor {
           return RecommendExhibitor.convertFromResp(resp.Receiver[0])
         }
         if (resp.Type === '1') {
-          return RecommendVisitor.convertFromResp(resp.Receiver[0])
+          return RecommendVisitor.convertFromResp(resp.VisitorReceiver[0])
         }
       })()
     }
@@ -73,7 +87,6 @@ export class VisitorMatcher extends Visitor {
       company: toShow.company,
       industry: toShow.industry,
       area: toShow.area,
-      organizer: toShow.organizer,
       mobile: toShow.mobile,
       cardImg: toShow.cardImg,
       email: toShow.email
@@ -90,7 +103,7 @@ export class VisitorMatcher extends Visitor {
         company: `移动公司${i}`,
         industry: `互联网${i}`,
         area: `北京${i}`,
-        status: i % 5,
+        status: i % 5
       })
     }
     return results
@@ -102,8 +115,13 @@ export class VisitorMatcherResp {
   RecordId?: string
   Type?: string
   State?: string
-  Initator?: RecommendVisitorResp[] | RecommendExhibitorResp[]
-  Receiver?: RecommendVisitorResp[] | RecommendExhibitorResp[]
+  // Type为1 展商发起约请
+  Initator?: RecommendExhibitorResp[]
+  VisitorReceiver?: RecommendVisitorResp[]
+
+  // Type为0 观众发起约请
+  VisitorInitator?: RecommendVisitorResp[]
+  Receiver?: RecommendExhibitorResp[]
 }
 
 // export interface
