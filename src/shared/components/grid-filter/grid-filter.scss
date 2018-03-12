@@ -4,9 +4,9 @@
 
   .selectors {
     position: relative;
-    flex: 1;
+    flex: 2;
     display: flex;
-    border: 1px solid #27272A;
+    border: 1px solid #27272a;
 
     hz-selector {
       flex: 1;
@@ -20,7 +20,20 @@
     }
   }
 
-  hz-search-input {
+  .count {
+    display: flex;
+    margin-left: 5px;
+    margin-top: 10px;
+    color: #666666;
     flex: 1;
+    .number {
+      margin: 2px 3px 0 3px;
+      color: map-get($map: $gridColors, $key: grey);
+      color: map-get($map: $colors, $key: golden);
+    }
+  }
+
+  hz-search-input {
+    flex: 2;
   }
 }
