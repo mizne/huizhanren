@@ -5,10 +5,12 @@
   flex-wrap: wrap;
 
   .visitor-item {
-    flex: 1;
-    min-width: 300px;
-    .expand {
-      width: 48%;
+    // flex: 1;
+    // min-width: 300px;
+    display: inline-block;
+    width: 50%;
+    &.expand {
+      width: 33%;
     }
   }
 
