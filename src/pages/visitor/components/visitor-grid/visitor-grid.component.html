@@ -1,11 +1,11 @@
-<div [hidden]="!expand" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.expand.' + type"
+<!-- <div [hidden]="!expand" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]"
+ infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()">
   <ion-grid class="header">
     <ion-row>
       <ion-col col-1></ion-col>
       <ion-col col-1>姓名</ion-col>
       <ion-col col-3>职务</ion-col>
-      <!-- <ion-col col-2>公司</ion-col> -->
       <ion-col col-2>行业</ion-col>
       <ion-col col-3 *ngIf="type === 'visitor'">地区</ion-col>
 
@@ -25,7 +25,6 @@
       </ion-col>
       <ion-col col-1 class="name">{{item.name | customerNamePrivacy:item.status}}</ion-col>
       <ion-col col-3 class="title">{{item.title}}</ion-col>
-      <!-- <ion-col col-2 class="company">{{item.company | customerCompanyPrivacy:item.status}}</ion-col> -->
       <ion-col col-2 class="industry">{{item.industry}}</ion-col>
 
       <ion-col col-3 *ngIf="type === 'visitor'">{{item.area}}</ion-col>
@@ -58,7 +57,6 @@
   </ng-template>
 </div>
 
-<!-- <ng-template #noExpand> -->
 <div [hidden]="expand" class="visitor-grid-container no-expand" [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.no-expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()" #gridNoExpand>
   <ion-grid class="header">
@@ -86,5 +84,28 @@
   <ng-template #noMoreData>
     <p class="not-more-data">没有更多数据了</p>
   </ng-template>
+</div> -->
+
+
+
+
+
+
+<div class="visitor-grid-container" #gridContainer [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.' + type"
+  [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
+  <div class="visitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
+    (click)="ensureShow(item)">
+
+    <visitor-item [visitor]="item" (invite)="ensureInvite($event)"></visitor-item>
+  </div>
+
+  <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>
+  <ng-template #noMoreData>
+    <p class="not-more-data">没有更多数据了</p>
+  </ng-template>
 </div>
-<!-- </ng-template> -->
+<ng-template #noData>
+  <p class="no-data">
+    没有{{ type === 'matcher' ? '约请' : '展商' }}数据
+  </p>
+</ng-template>

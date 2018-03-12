@@ -16,9 +16,9 @@
       <hz-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </hz-matcher-filter>
 
-      <visitor-grid [hidden]="(listStatus$ | async) === 1" type="visitor" (showDetail)="updateVisitorDetailID($event)" (loadMore)="loadMore()"
-        [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0"
-        [dataItems]="visitors$ | async">
+      <visitor-grid [hidden]="(listStatus$ | async) === 1" type="visitor" (invite)="toInvite($event)" (showDetail)="updateVisitorDetailID($event)"
+        (loadMore)="loadMore()" [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async"
+        [expand]="(pageStatus$ | async) === 0" [dataItems]="visitors$ | async">
       </visitor-grid>
       <visitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateMatcherDetailID($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"

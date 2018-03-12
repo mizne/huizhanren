@@ -38,7 +38,9 @@ export class VisitorService {
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-            const condition: { [key: string]: string } = {}
+            const condition: { [key: string]: string } = {
+              ExhibitionId: exhibitionId
+            }
             const options: { [key: string]: number } = {}
             if (params.area) {
               condition.Province = params.area
@@ -60,7 +62,6 @@ export class VisitorService {
               tenantId,
               userId,
               params: {
-                ExhibitionId: exhibitionId,
                 condition,
                 options
               }

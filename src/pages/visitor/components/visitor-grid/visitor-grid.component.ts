@@ -20,19 +20,10 @@ import { HzLoadMoreComponent } from '../../../../shared/components/load-more/loa
   templateUrl: 'visitor-grid.component.html'
 })
 export class VisitorGridComponent implements OnInit, OnDestroy {
-  activeId: string
   private gridContainers: HTMLElement[] = []
   @ViewChild('gridExpand')
-  set gridExpand(v: ElementRef) {
-    if (v) {
-      const index = this.gridContainers.indexOf(v.nativeElement)
-      if (index === -1) {
-        this.gridContainers.push(v.nativeElement)
-      }
-    }
-  }
-  @ViewChild('gridNoExpand')
-  set gridNoExpand(v: ElementRef) {
+  @ViewChild('gridContainer')
+  set gridContainer(v: ElementRef) {
     if (v) {
       const index = this.gridContainers.indexOf(v.nativeElement)
       if (index === -1) {
@@ -54,6 +45,7 @@ export class VisitorGridComponent implements OnInit, OnDestroy {
     }
   }
 
+  @Output() invite: EventEmitter<string> = new EventEmitter<string>()
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -71,9 +63,13 @@ export class VisitorGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureShow(id: string) {
-    this.showDetail.emit(id)
-    this.activeId = id
+  ensureInvite(id: string) {
+    this.invite.emit(id)
+  }
+
+  ensureShow(item: RecommendVisitor) {
+    item.selected = !item.selected
+    this.showDetail.emit(item.id)
   }
 
   ensureAgreeMatcher(id: string) {

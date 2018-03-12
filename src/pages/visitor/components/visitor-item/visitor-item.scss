@@ -1,0 +1,59 @@
+.visitor-item-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  background-color: transparent;
+  padding: 5px 10px 3px 10px;
+  height: 150px;
+  margin: 4px;
+  border: 2px solid #a0a0a5;
+  border-radius: 2px;
+
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cccccc;
+
+    .info {
+      .name {
+        font-size: 1.6rem;
+      }
+    }
+
+    hz-rate {
+      display: inline-block;
+      width: 100px;
+    }
+  }
+
+  .company {
+    margin-top: 5px;
+    color: #8b8b8c;
+  }
+
+  .industry {
+    margin-top: 8px;
+    color: map-get($map: $colors, $key: primary);
+  }
+
+  .footer {
+    width: 100%;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    hz-customer-status {
+      width: 90px;
+    }
+
+    button {
+      width: 50px;
+      height: 30px;
+      padding: 3px 5px;
+    }
+  }
+}

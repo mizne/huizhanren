@@ -115,6 +115,10 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.loadMoreSub.next()
   }
 
+  toInvite(id: string) {
+    console.log(`to modal for invite visitor of id: ${id}`)
+  }
+
   updateVisitorDetailID(id: string) {
     this.store.dispatch(new UpdateVisitorDetailIDAction(id))
   }
