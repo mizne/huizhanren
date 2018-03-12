@@ -1,38 +1,46 @@
-.grid-header-container {
+hz-grid-header {
   display: flex;
-
-  .grid-header {
-    position: relative;
-    flex: 1;
-    height: 60px;
-    background-color: #2c2d31;
-    transition: background-color 0.3s;
-    color: #999999;
+  align-items: center;
+  justify-content: center;
+  .grid-header-container {
+    width: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
 
-    .text {
+    .grid-header {
+      position: relative;
+      flex: 1;
+      height: 60px;
+      background-color: #2c2d31;
+      transition: background-color 0.3s;
+      color: #999999;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-size: 1.8rem;
-    }
+      justify-content: center;
+      flex-direction: column;
 
-    &.active {
-      background-color: #38393c;
-      color: map-get($map: $colors, $key: primary);
-    }
+      .text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.8rem;
+      }
 
-    .decoration {
-      margin-top: 4px;
-      width: 30%;
-      height: 2px;
+      &.active {
+        background-color: #38393c;
+        color: map-get($map: $colors, $key: primary);
+      }
 
-      div {
-        width: 100%;
-        background-color: map-get($map: $colors, $key: primary);
+      .decoration {
+        margin-top: 4px;
+        width: 110px;
+        height: 2px;
+
+        div {
+          width: 100%;
+          background-color: map-get($map: $colors, $key: primary);
+        }
       }
     }
   }
