@@ -1,35 +1,51 @@
 .matcher-filter-container {
   height: 42px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding-left: 10px;
   color: map-get($map: $gridColors, $key: grey);
+  margin: 5px 0 5px 4px;
 
-  .first {
-    display: none;
-  }
-
-  label {
-    margin-right: 2px;
-  }
-
-  &.expand {
-    justify-content: flex-start;
-    .first {
-      display: block;
-    }
-
-    label {
-      margin-right: 10px;
-    }
-
-    ion-checkbox {
-      margin-right: 10px;
+  .left {
+    display: flex;
+    align-items: center;
+    button {
+      margin-left: 30px;
+      border: 1px solid map-get($map: $colors, $key: primary);
+      border-radius: 3px;
+      height: 37px;
+      color: map-get($map: $colors, $key: primary);
+      background-color: transparent;
     }
   }
 
-  ion-checkbox {
-    margin-left: 3px;
+  .right {
+  }
+
+  .filter {
+    display: inline-block;
+    border: 1px solid map-get($map: $colors, $key: primary);
+  }
+
+  .filter-item {
+    display: inline-block;
+    height: 37px;
+    padding-right: 22px;
+    padding-left: 22px;
+    font-size: 14px;
+    line-height: 37px;
+    cursor: pointer;
+    transition: all ease 0.5s;
+    color: #8b8b8c;
+    background-color: transparent;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &.active {
+      color: map-get($map: $colors, $key: white);
+      background-color: map-get($map: $colors, $key: primary);
+    }
   }
 }

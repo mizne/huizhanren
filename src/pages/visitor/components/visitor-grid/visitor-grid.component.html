@@ -91,11 +91,9 @@
 
 
 
-<div class="visitor-grid-container" #gridContainer [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.' + type"
-  [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
-  <div class="visitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
-    (click)="ensureShow(item)">
-
+<div class="visitor-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container'" [fromRoot]="true"
+  (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
+  <div class="visitor-item" tappable [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
     <visitor-item [visitor]="item" (invite)="ensureInvite($event)"></visitor-item>
   </div>
 

@@ -1,5 +1,5 @@
 <div class="matcher-filter-container" [class.expand]="expand">
-  <label class="first" for="">筛选:</label>
+  <!-- <label class="first" for="">筛选:</label>
   <ion-checkbox tappable [formControl]="allowControl"></ion-checkbox>
   <label for="">已同意</label>
   <ion-checkbox tappable *ngIf="expand" [formControl]="refuseControl"></ion-checkbox>
@@ -9,5 +9,21 @@
   <ion-checkbox tappable *ngIf="expand" [formControl]="notAllowAuditControl"></ion-checkbox>
   <label *ngIf="expand" for="">审核未通过</label>
   <ion-checkbox tappable [formControl]="unReplyControl"></ion-checkbox>
-  <label for="">未答复</label>
+  <label for="">未答复</label> -->
+
+  <div class="left">
+    <ul class="filter filter-status">
+      <li tappable [ngClass]="['filter-item', 'all', filterStatusActiveIndex === 0 ? 'active' : '']" (click)="filterStatusActiveIndex = 0">全部</li>
+      <li tappable [ngClass]="['filter-item', 'pending', filterStatusActiveIndex === 1 ? 'active' : '']" (click)="filterStatusActiveIndex = 1">审核中</li>
+      <li tappable [ngClass]="['filter-item', 'unreply', filterStatusActiveIndex === 2 ? 'active' : '']" (click)="filterStatusActiveIndex = 2">未答复</li>
+    </ul>
+    <button ion-button>全部接受</button>
+  </div>
+  <div class="right">
+    <ul class="filter">
+      <li tappable [ngClass]="['filter-item', 'all', filterDirectionActiveIndex === 0 ? 'active' : '']" (click)="filterDirectionActiveIndex = 0">全部</li>
+      <li tappable [ngClass]="['filter-item', 'from-me', filterDirectionActiveIndex === 1 ? 'active' : '']" (click)="filterDirectionActiveIndex = 1">我发起的</li>
+      <li tappable [ngClass]="['filter-item', 'to-me', filterDirectionActiveIndex === 2 ? 'active' : '']" (click)="filterDirectionActiveIndex = 2">对方发起的</li>
+    </ul>
+  </div>
 </div>

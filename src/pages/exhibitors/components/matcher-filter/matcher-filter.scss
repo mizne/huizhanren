@@ -3,34 +3,6 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding-left: 10px;
   color: map-get($map: $gridColors, $key: grey);
-
-  .first {
-    display: none;
-  }
-
-  label {
-    margin-right: 2px;
-  }
-
-  &.expand {
-    justify-content: flex-start;
-    .first {
-      display: block;
-    }
-
-    label {
-      margin-right: 10px;
-    }
-
-    ion-checkbox {
-      margin-right: 10px;
-    }
-  }
-
-  ion-checkbox {
-    margin-left: 3px;
-  }
+  margin: 5px 0 5px 4px;
 }
-

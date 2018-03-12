@@ -120,7 +120,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   }
 
   updateVisitorDetailID(id: string) {
-    this.store.dispatch(new UpdateVisitorDetailIDAction(id))
+    // this.store.dispatch(new UpdateVisitorDetailIDAction(id))
   }
 
   updateMatcherDetailID(id: string) {
