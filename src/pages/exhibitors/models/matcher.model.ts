@@ -1,18 +1,23 @@
 import {
   Exhibitor,
-  RecommendExhibitor,
-  RecommendExhibitorResp
+  ExhibitorResp,
+  ExhibitorContactResp,
+  Product
 } from './exhibitor.model'
+import { Visitor } from '../../visitor/models/visitor.model'
 
-export class ExhibitorMatcher extends Exhibitor {
+export class ExhibitorMatcher {
+  id?: string
   status?: ExhibitorMatcherStatus
   selected?: boolean
-  senderId?: string
+  initatorId?: string
   receiverId?: string
   isSender?: boolean
   isReceiver?: boolean
-  sender?: RecommendExhibitor
-  receiver?: RecommendExhibitor
+  initator?: Exhibitor
+  receiver?: Exhibitor
+
+  toShow?: Exhibitor
 
   static filterDirtyData(resp: ExhibitorMatcherResp): boolean {
     return (
@@ -29,26 +34,31 @@ export class ExhibitorMatcher extends Exhibitor {
 
   static convertFromResp(resp: ExhibitorMatcherResp): ExhibitorMatcher {
     return {
-      id: resp.RecordId || resp._id,
-      status: convertMatcherStatusFromResp(resp.State),
-      senderId: resp.Initator[0]._id || resp.Initator[0].RecordId,
-      receiverId: resp.Receiver[0]._id || resp.Receiver[0].RecordId,
-      sender: RecommendExhibitor.convertFromResp(resp.Initator[0]),
-      receiver: RecommendExhibitor.convertFromResp(resp.Receiver[0]),
+      id: resp.RecordId,
+      status: ExhibitorMatcher.convertStatusFromState(resp.State),
+      initatorId: resp.Initator[0].RecordId,
+      receiverId: resp.Receiver[0].RecordId,
+      initator: Exhibitor.convertFromResp(resp.Initator[0]),
+      receiver: Exhibitor.convertFromResp(resp.Receiver[0]),
       selected: false
     }
+  }
+
+  static convertStatusFromState(state: string): ExhibitorMatcherStatus {
+    const dest = ExhibitorInvitationStatuses.find(e => e.status === state)
+    return dest ? dest.status : ExhibitorMatcherStatus.UNKNOWN
   }
 
   static extractExhibitorToShow(
     matcher: ExhibitorMatcher,
     currentExhibitorId: string
   ): Exhibitor {
-    let toShow: RecommendExhibitor = null
-    if (matcher.sender.id === currentExhibitorId) {
+    let toShow: Exhibitor = null
+    if (matcher.initator.id === currentExhibitorId) {
       toShow = matcher.receiver
     }
     if (matcher.receiver.id === currentExhibitorId) {
-      toShow = matcher.sender
+      toShow = matcher.initator
     }
 
     if (!toShow) {
@@ -61,15 +71,13 @@ export class ExhibitorMatcher extends Exhibitor {
     return {
       name: toShow.name,
       logo: toShow.logo,
-      booth: toShow.boothNo,
+      boothNo: toShow.boothNo,
       industry: toShow.industry,
       area: toShow.area,
       heat: toShow.heat,
       products: toShow.products,
       visitors: toShow.visitors,
-      description: toShow.description,
-      organizer: toShow.organizer,
-      organizerId: toShow.organizerId
+      description: toShow.description
     }
   }
 
@@ -112,93 +120,87 @@ export class ExhibitorMatcher extends Exhibitor {
 
 export interface ExhibitorMatcherResp {
   RecordId?: string
-  _id?: string
-  State?: string
-  Initator?: RecommendExhibitorResp[]
-  Receiver?: RecommendExhibitorResp[]
+  InitatorChild: ExhibitorContactResp[]
+  Initator: ExhibitorResp[]
+  ReceiverChild: ExhibitorContactResp[]
+  Receiver: ExhibitorResp[]
+  State: string
+  Remark: string
+  ApprovalTime: string
+  CreatedAt: string
 }
 
 export enum ExhibitorMatcherStatus {
-  UN_AUDIT, // 未审核
-  AUDIT_FAILED, // 审核未通过
-  AUDIT_SUCCESS, // 审核通过 未答复
-  AGREE, // 同意
-  REFUSE, // 拒绝
-  DELETED, // 已删除
-  CANCEL // 已取消
+  UNKNOWN = '9', // 未知状态
+  UN_AUDIT = '0', // 未审核
+  AUDIT_FAILED = '1', // 审核未通过
+  AUDIT_SUCCEED = '2', // 审核通过 未答复
+  AGREE = '4', // 同意
+  REFUSE = '3', // 拒绝
+  DELETED = '8', // 已删除
+  CANCEL = '7', // 已取消
+  KEEP_APPOINTMENT = '5', // 已赴约
+  FAIL_KEEP_APPOINITMENT = '6' // 已爽约
 }
 
-function convertMatcherStatusFromResp(status: string): ExhibitorMatcherStatus {
-  switch (status) {
-    case '0':
-      return ExhibitorMatcherStatus.UN_AUDIT
-    case '1':
-      return ExhibitorMatcherStatus.AUDIT_FAILED
-    case '2':
-      return ExhibitorMatcherStatus.AUDIT_SUCCESS
-    case '4':
-      return ExhibitorMatcherStatus.AGREE
-    case '3':
-      return ExhibitorMatcherStatus.REFUSE
-    case '6':
-      return ExhibitorMatcherStatus.DELETED
-    case '5':
-      return ExhibitorMatcherStatus.CANCEL
+export const ExhibitorInvitationStatuses = [
+  {
+    label: '未审核',
+    status: ExhibitorMatcherStatus.UN_AUDIT
+  },
+  {
+    label: '审核未通过',
+    status: ExhibitorMatcherStatus.AUDIT_FAILED
+  },
+  {
+    label: '未答复',
+    status: ExhibitorMatcherStatus.AUDIT_SUCCEED
+  },
+  {
+    label: '已拒绝',
+    status: ExhibitorMatcherStatus.REFUSE
+  },
+  {
+    label: '已同意',
+    status: ExhibitorMatcherStatus.AGREE
+  },
+  {
+    label: '已赴约',
+    status: ExhibitorMatcherStatus.KEEP_APPOINTMENT
+  },
+  {
+    label: '已爽约',
+    status: ExhibitorMatcherStatus.FAIL_KEEP_APPOINITMENT
+  },
+  {
+    label: '已取消',
+    status: ExhibitorMatcherStatus.CANCEL
+  },
 
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
+  {
+    label: '已删除',
+    status: ExhibitorMatcherStatus.DELETED
   }
-}
+]
 
 export function convertMatcherStatusFromModel(
   status: ExhibitorMatcherStatus
 ): string {
-  switch (status) {
-    case ExhibitorMatcherStatus.UN_AUDIT:
-      return '0'
-    case ExhibitorMatcherStatus.AUDIT_FAILED:
-      return '1'
-    case ExhibitorMatcherStatus.AUDIT_SUCCESS:
-      return '2'
-    case ExhibitorMatcherStatus.AGREE:
-      return '4'
-    case ExhibitorMatcherStatus.REFUSE:
-      return '3'
-    case ExhibitorMatcherStatus.DELETED:
-      return '6'
-    case ExhibitorMatcherStatus.CANCEL:
-      return '5'
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
+  const destIndex = ExhibitorInvitationStatuses.findIndex(
+    e => e.status === status
+  )
+  if (destIndex === -1) {
+    console.warn(`Unknown exhibitor matcher status: ${status};`)
   }
+  return String(destIndex)
 }
 
 export function convertMatcherDescFromModel(
   status: ExhibitorMatcherStatus,
   isSender: boolean
 ): string {
-  switch (status) {
-    case ExhibitorMatcherStatus.UN_AUDIT:
-      return '未审核'
-    case ExhibitorMatcherStatus.AUDIT_FAILED:
-      return '审核不通过'
-    case ExhibitorMatcherStatus.AUDIT_SUCCESS:
-      return '未答复'
-    case ExhibitorMatcherStatus.AGREE:
-      return '已同意'
-    case ExhibitorMatcherStatus.REFUSE:
-      return '已拒绝'
-    case ExhibitorMatcherStatus.DELETED:
-      return '已删除'
-    case ExhibitorMatcherStatus.CANCEL:
-      return '已取消'
-
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
-  }
+  const dest = ExhibitorInvitationStatuses.find(e => e.status === status)
+  return dest ? dest.label : '未知状态'
 }
 
 export interface FetchMatcherParams {

@@ -1,3 +1,5 @@
+import { VisitorResp, Visitor　}　from '../../visitor/models/visitor.model'
+
 export class Exhibitor {
   id?: string
   name?: string
@@ -13,16 +15,11 @@ export class Exhibitor {
   description?: string
   website?: string
   visitors?: Visitor[]
-  organizer?: string
-  organizerId?: string
-}
-
-export class RecommendExhibitor extends Exhibitor {
   selected?: boolean
 
-  static convertFromResp(resp: RecommendExhibitorResp): RecommendExhibitor {
+  static convertFromResp(resp: ExhibitorResp): Exhibitor {
     return {
-      id: resp.RecordId || resp._id,
+      id: resp.RecordId,
       name: resp.CompanyName,
       logo: resp.Logo || './assets/images/default_exhibitor.png',
       booth: resp.BoothArea,
@@ -32,39 +29,18 @@ export class RecommendExhibitor extends Exhibitor {
       area: resp.Province,
       city: resp.City,
       heat: resp.Heat || Math.round(Math.random() * 1000),
-      products: (resp.ProductList || []).map(e => ({
-        id: e.Name,
-        name: e.Name,
-        remark: e.Remark,
-        pictures: e.PicList.map(f => f.PicPath)
-      })),
-      visitors: (resp.Visitors || []).map(e => ({
-        id: e.id,
-        headImgUrl: e.HeadImgUrl
-      })),
+      products: resp.ProductList.map(Product.convertFromResp),
+      visitors: resp.Visitors.map(Visitor.convertFromResp),
       description: resp.Introduction,
       website: resp.Website,
-      organizer: resp.Organizer,
-      organizerId: resp.OrganizerId,
       selected: false
-    }
-  }
-
-  static convertFromModel(model: RecommendExhibitor): RecommendExhibitorResp {
-    return {
-      Organizer: model.organizer,
-      OrganizerId: model.organizerId,
-      CompanyName: model.name,
-      City: model.city,
-      BoothArea: model.booth,
-      ExHall: model.exHall
     }
   }
 
   static generateFakeExhibitors(
     start: number,
     end: number
-  ): RecommendExhibitor[] {
+  ): Exhibitor[] {
     const results = []
     for (let i = start; i < end; i += 1) {
       results.push({
@@ -101,57 +77,99 @@ export class RecommendExhibitor extends Exhibitor {
   }
 }
 
-export interface Product {
-  id?: string
-  name?: string
-  pictures?: string[]
-  remark?: string
+export interface ExhibitorContactResp {
+  Name: string
+  CompanyName: string
+  Job: string
 }
 
-export interface Visitor {
-  id?: string
-  headImgUrl?: string
+export interface ExhibitorResp {
+    RecordId?: string
+    CompanyName: string
+    Addr: string
+    Email: string
+    Fax: string
+    Tel: string
+    Website: string
+    Logo: string
+
+    Country: string
+    Province: string
+    City: string
+
+    Industry: string
+    Categories: string
+    Categories2: string
+
+    BoothArea: string
+    BoothNo: string
+    ExHall: string
+    ShowArea: string
+    Introduction: string
+    Heat: number
+
+    LinkList: LinkResp[]
+    ProductList: ProductResp[]
+    Visitors: VisitorResp[]
 }
 
-export interface RecommendExhibitorResp {
-  _id?: string
-  TenantId?: string
-  RecordId?: string
-  CompanyName?: string
-  Logo?: string
-  BoothArea?: string
-  BoothNo?: string
-  categories2?: string
-  Product?: string
-  Province?: string
-  City?: string
-  ExHall?: string
-  Heat?: number
-  ProductList?: ProductResp[]
-  Visitors?: VisitorResp[]
-  Organizer?: string
-  OrganizerId?: string
-  Industry?: string
-  Website?: string
-  description?: string
-  Introduction?: string
+
+export class Link {
+  isAdmin: boolean
+  name: string
+  job: string
+  phone: string
+
+  static convertFromResp(resp: LinkResp): Link {
+      return {
+          isAdmin: resp.admin === 0,
+          name: resp.LinkName,
+          job: resp.Job,
+          phone: resp.LinkMob
+      }
+  }
+}
+
+export interface LinkResp {
+  Job: string
+  LinkMob: string
+  LinkName: string
+  admin: number
+}
+
+export class Product {
+  name: string
+  remark: string
+  picList: Pic[]
+
+  static convertFromResp(resp: ProductResp): Product {
+      return {
+          name: resp.Name,
+          remark: resp.Remark,
+          picList: resp.PicList.map(Pic.convertFromResp)
+      }
+  }
 }
 
 export interface ProductResp {
-  Name?: string
-  PicList?: PicResp[]
-  Remark?: string
-  UpTime?: string
+  Name: string
+  Remark: string
+  PicList: PicResp[]
 }
 
-export interface VisitorResp {
-  id?: string
-  HeadImgUrl?: string
+export class Pic {
+  path: string
+  static convertFromResp(resp: PicResp): Pic {
+      return {
+          path: resp.PicPath
+      }
+  }
 }
 
 export interface PicResp {
-  PicPath?: string
+  PicPath: string
 }
+
 
 export interface ExhibitorFilter {
   area?: string

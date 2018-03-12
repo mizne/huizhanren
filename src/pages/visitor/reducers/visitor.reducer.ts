@@ -1,6 +1,6 @@
 import * as fromVisitor from '../actions/visitor.action'
 import {
-  RecommendVisitor,
+  Visitor,
   ListStatus,
   PageStatus,
   FilterOptions
@@ -9,7 +9,7 @@ import { Logger } from '../../customer/models/logger.model'
 import { deduplicate } from '../../customer/services/utils'
 
 export interface State {
-  visitors: RecommendVisitor[]
+  visitors: Visitor[]
   totalVisitorsCount: number
   currentVisitorsTotalCount: number
 

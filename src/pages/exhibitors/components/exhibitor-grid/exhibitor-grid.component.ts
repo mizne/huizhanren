@@ -9,7 +9,7 @@ import {
   ElementRef
 } from '@angular/core'
 
-import { RecommendExhibitor } from '../../models/exhibitor.model'
+import { Exhibitor } from '../../models/exhibitor.model'
 
 @Component({
   selector: 'exhibitor-grid',
@@ -29,7 +29,7 @@ export class ExhibitorGridComponent implements OnInit, OnDestroy {
 
   @Input() expand: boolean
   @Input() type: string
-  @Input() dataItems: RecommendExhibitor[]
+  @Input() dataItems: Exhibitor[]
   @Input() showLoadMore: boolean
   @Input()
   set shouldScrollToTop(v: boolean) {
@@ -58,7 +58,7 @@ export class ExhibitorGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureShow(item: RecommendExhibitor) {
+  ensureShow(item: Exhibitor) {
     item.selected = !item.selected
     this.showDetail.emit(item.id)
   }

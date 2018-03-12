@@ -11,7 +11,7 @@ import {
 } from '@angular/core'
 import { Subject } from 'rxjs/Subject'
 
-import { RecommendVisitor } from '../../models/visitor.model'
+import { Visitor } from '../../models/visitor.model'
 import { isInViewport } from '../../../customer/services/utils'
 import { HzLoadMoreComponent } from '../../../../shared/components/load-more/load-more.component'
 
@@ -34,7 +34,7 @@ export class VisitorGridComponent implements OnInit, OnDestroy {
 
   @Input() expand: boolean
   @Input() type: string
-  @Input() dataItems: RecommendVisitor[]
+  @Input() dataItems: Visitor[]
   @Input() showLoadMore: boolean
   @Input()
   set shouldScrollToTop(v: boolean) {
@@ -67,7 +67,7 @@ export class VisitorGridComponent implements OnInit, OnDestroy {
     this.invite.emit(id)
   }
 
-  ensureShow(item: RecommendVisitor) {
+  ensureShow(item: Visitor) {
     item.selected = !item.selected
     this.showDetail.emit(item.id)
   }

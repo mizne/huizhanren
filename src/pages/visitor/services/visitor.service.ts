@@ -6,7 +6,7 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
-  RecommendVisitor,
+  Visitor,
   FetchRecommendVisitorParams,
   VisitorFilter,
   FilterOptions
@@ -28,12 +28,12 @@ export class VisitorService {
    * 获取推荐观众信息
    *
    * @param {FetchRecommendVisitorParams} params
-   * @returns {Observable<RecommendVisitor[]>}
+   * @returns {Observable<Visitor[]>}
    * @memberof VisitorService
    */
   public fetchVisitors(
     params: FetchRecommendVisitorParams
-  ): Observable<RecommendVisitor[]> {
+  ): Observable<Visitor[]> {
     return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
@@ -68,7 +68,7 @@ export class VisitorService {
             })
           })
           .map(e => (e as APIResponse).result)
-          .map(e => e.map(RecommendVisitor.convertFromResp))
+          .map(e => e.map(Visitor.convertFromResp))
           .catch(e => {
             return this.logger.httpError({
               module: 'VisitorService',
@@ -77,7 +77,7 @@ export class VisitorService {
             })
           })
       : Observable.of(
-          RecommendVisitor.generateFakeVisitors(
+          Visitor.generateFakeVisitors(
             (params.pageIndex - 1) * params.pageSize,
             params.pageIndex * params.pageSize
           )

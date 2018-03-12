@@ -80,7 +80,7 @@ export class VisitorMatcherService {
               matchers.map(e => ({
                 ...e,
                 ...VisitorMatcher.extractVisitorToShow(e, exhibitorId),
-                isSender: e.sender.id === exhibitorId,
+                isSender: e.initator.id === exhibitorId,
                 isReceiver: e.receiver.id === exhibitorId
               }))
           )

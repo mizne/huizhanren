@@ -1,71 +1,90 @@
+import { Visitor, VisitorResp } from './visitor.model'
 import {
-  Visitor,
-  RecommendVisitor,
-  RecommendVisitorResp
-} from './visitor.model'
-import {
-  RecommendExhibitor,
-  RecommendExhibitorResp
+  Exhibitor,
+  ExhibitorResp,
+  ExhibitorContactResp
 } from '../../exhibitors/models/exhibitor.model'
 
-export class VisitorMatcher extends Visitor {
+export class VisitorMatcher {
+  id: string
   status?: VisitorMatcherStatus
   selected?: boolean
-  senderId?: string
+  initatorId?: string
   receiverId?: string
-  type?: string
-  isSender?: boolean
+  type?: VisitorMatcherType
+  isInitator?: boolean
   isReceiver?: boolean
-  sender?: RecommendVisitor | RecommendExhibitor
-  receiver?: RecommendVisitor | RecommendExhibitor
+  initator?: Visitor | Exhibitor
+  receiver?: Visitor | Exhibitor
+  startTime: string
+  endTime: string
+
+  toShow?: Visitor
+
+  static extractInitatorAndReceiver(
+    resp: VisitorMatcherResp,
+    type: VisitorMatcherType
+  ): {
+    initator: Visitor | Exhibitor
+    receiver: Visitor | Exhibitor
+  } {
+    switch (type) {
+      case VisitorMatcherType.VISITOR_TO_EXHIBITOR:
+        return {
+          initator: Visitor.convertFromResp(resp.VisitorInitator[0]),
+          receiver: Exhibitor.convertFromResp(resp.Receiver[0])
+        }
+      case VisitorMatcherType.EXHIBITOR_TO_VISITOR:
+        return {
+          initator: Exhibitor.convertFromResp(resp.Initator[0]),
+          receiver: Visitor.convertFromResp(resp.VisitorReceiver[0])
+        }
+      default:
+        console.warn(`Unknown visitor matcher type: ${type}`)
+    }
+  }
+
+  static convertStatusFromState(state: string): VisitorMatcherStatus {
+    const dest = VisitorInvitationStatuses.find(e => e.status === state)
+    return dest ? dest.status : VisitorMatcherStatus.UNKNOWN
+  }
+
+  static convertTypeFromResp(type: string): VisitorMatcherType {
+    return type === '0'
+      ? VisitorMatcherType.VISITOR_TO_EXHIBITOR
+      : type === '1'
+        ? VisitorMatcherType.EXHIBITOR_TO_VISITOR
+        : (console.warn(`Unknown visitor matcher type: ${type}`),
+          VisitorMatcherType.UNKNOWN)
+  }
 
   static convertFromResp(resp: VisitorMatcherResp): VisitorMatcher {
+    const type = VisitorMatcher.convertTypeFromResp(resp.Type)
+    const status = VisitorMatcher.convertStatusFromState(resp.State)
+    const { initator, receiver } = VisitorMatcher.extractInitatorAndReceiver(
+      resp,
+      type
+    )
     return {
-      id: resp.RecordId || resp._id,
-      type: resp.Type,
-      status: convertMatcherStatusFromResp(resp.State),
-      senderId: (() => {
-        if (resp.Type === '0') {
-          return resp.VisitorInitator[0].RecordId
-        }
-        if (resp.Type === '1') {
-          return resp.Initator[0].RecordId
-        }
-      })(),
-      receiverId: (() => {
-        if (resp.Type === '0') {
-          return resp.Receiver[0].RecordId
-        }
-        if (resp.Type === '1') {
-          return resp.VisitorReceiver[0].RecordId
-        }
-      })(),
-      sender: (() => {
-        if (resp.Type === '0') {
-          return RecommendVisitor.convertFromResp(resp.VisitorInitator[0])
-        }
-        if (resp.Type === '1') {
-          return RecommendExhibitor.convertFromResp(resp.Initator[0])
-        }
-      })(),
-      receiver: (() => {
-        if (resp.Type === '0') {
-          return RecommendExhibitor.convertFromResp(resp.Receiver[0])
-        }
-        if (resp.Type === '1') {
-          return RecommendVisitor.convertFromResp(resp.VisitorReceiver[0])
-        }
-      })()
+      id: resp.RecordId,
+      type,
+      status,
+      initatorId: initator.id,
+      receiverId: receiver.id,
+      initator,
+      receiver,
+      startTime: resp.MeetingTimeStart,
+      endTime: resp.MeetingTimeEnd
     }
   }
 
   static extractVisitorToShow(
     matcher: VisitorMatcher,
     exhibitorId: string
-  ): RecommendVisitor {
-    let toShow: RecommendVisitor = null
+  ): Visitor {
+    let toShow: Visitor = null
     if (
-      matcher.sender.id !== exhibitorId &&
+      matcher.initator.id !== exhibitorId &&
       matcher.receiver.id !== exhibitorId
     ) {
       throw new Error(
@@ -74,13 +93,12 @@ export class VisitorMatcher extends Visitor {
         }, exhibitorId: ${exhibitorId}`
       )
     }
-    if (matcher.type === '0') {
-      toShow = matcher.sender as RecommendVisitor
-    }
 
-    if (matcher.type === '1') {
-      toShow = matcher.receiver as RecommendVisitor
-    }
+    toShow =
+      matcher.type === VisitorMatcherType.VISITOR_TO_EXHIBITOR
+        ? matcher.initator
+        : matcher.receiver
+
     return {
       name: toShow.name,
       title: toShow.title,
@@ -111,105 +129,99 @@ export class VisitorMatcher extends Visitor {
 }
 
 export class VisitorMatcherResp {
-  _id?: string
   RecordId?: string
   Type?: string
   State?: string
+  MeetingTimeStart: string
+  MeetingTimeEnd: string
   // Type为1 展商发起约请
-  Initator?: RecommendExhibitorResp[]
-  VisitorReceiver?: RecommendVisitorResp[]
+  Initator: ExhibitorResp[] // 发送方展商
+  InitatorChild: ExhibitorContactResp[] // 发送方展商联系人
+  VisitorReceiver: VisitorResp[] // 接收方买家
 
-  // Type为0 观众发起约请
-  VisitorInitator?: RecommendVisitorResp[]
-  Receiver?: RecommendExhibitorResp[]
+  // Type为0 买家发起约请
+  Receiver: ExhibitorResp[] // 接收方展商
+  VisitorInitator: VisitorResp[] // 发送方买家
+  ReceiverChild: ExhibitorContactResp[] // 接收方展商联系人
 }
 
-// export interface
+export enum VisitorMatcherType {
+  VISITOR_TO_EXHIBITOR = '0',
+  EXHIBITOR_TO_VISITOR = '1',
+  UNKNOWN = 'Unknown'
+}
 
 export enum VisitorMatcherStatus {
-  UN_AUDIT, // 未审核
-  AUDIT_FAILED, // 审核未通过
-  AUDIT_SUCCESS, // 审核通过 未答复
-  AGREE, // 同意
-  REFUSE, // 拒绝
-  CANCEL, // 取消
-  DELETED // 已删除
+  UNKNOWN = '9', // 未知状态
+  UN_AUDIT = '0', // 未审核
+  AUDIT_FAILED = '1', // 审核未通过
+  AUDIT_SUCCEED = '2', // 审核通过 未答复
+  AGREE = '4', // 同意
+  REFUSE = '3', // 拒绝
+  DELETED = '8', // 已删除
+  CANCEL = '7', // 已取消
+  KEEP_APPOINTMENT = '5', // 已赴约
+  FAIL_KEEP_APPOINITMENT = '6' // 已爽约
 }
 
-export function convertMatcherStatusFromResp(
-  status: string
-): VisitorMatcherStatus {
-  switch (status) {
-    case '0':
-      return VisitorMatcherStatus.UN_AUDIT
-    case '1':
-      return VisitorMatcherStatus.AUDIT_FAILED
-    case '2':
-      return VisitorMatcherStatus.AUDIT_SUCCESS
-    case '4':
-      return VisitorMatcherStatus.AGREE
-    case '3':
-      return VisitorMatcherStatus.REFUSE
-    case '5':
-      return VisitorMatcherStatus.CANCEL
-    case '6':
-      return VisitorMatcherStatus.DELETED
+export const VisitorInvitationStatuses = [
+  {
+    label: '未审核',
+    status: VisitorMatcherStatus.UN_AUDIT
+  },
+  {
+    label: '审核未通过',
+    status: VisitorMatcherStatus.AUDIT_FAILED
+  },
+  {
+    label: '未答复',
+    status: VisitorMatcherStatus.AUDIT_SUCCEED
+  },
+  {
+    label: '已拒绝',
+    status: VisitorMatcherStatus.REFUSE
+  },
+  {
+    label: '已同意',
+    status: VisitorMatcherStatus.AGREE
+  },
+  {
+    label: '已赴约',
+    status: VisitorMatcherStatus.KEEP_APPOINTMENT
+  },
+  {
+    label: '已爽约',
+    status: VisitorMatcherStatus.FAIL_KEEP_APPOINITMENT
+  },
+  {
+    label: '已取消',
+    status: VisitorMatcherStatus.CANCEL
+  },
 
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
+  {
+    label: '已删除',
+    status: VisitorMatcherStatus.DELETED
   }
-}
+]
 
 export function convertMatcherStatusFromModel(
   status: VisitorMatcherStatus
 ): string {
-  switch (status) {
-    case VisitorMatcherStatus.UN_AUDIT:
-      return '0'
-    case VisitorMatcherStatus.AUDIT_FAILED:
-      return '1'
-    case VisitorMatcherStatus.AUDIT_SUCCESS:
-      return '2'
-    case VisitorMatcherStatus.AGREE:
-      return '4'
-    case VisitorMatcherStatus.REFUSE:
-      return '3'
-    case VisitorMatcherStatus.DELETED:
-      return '6'
-    case VisitorMatcherStatus.CANCEL:
-      return '5'
-
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
+  const destIndex = VisitorInvitationStatuses.findIndex(
+    e => e.status === status
+  )
+  if (destIndex === -1) {
+    console.warn(`Unknown visitor matcher status: ${status};`)
   }
+  return String(destIndex)
 }
 
 export function convertMatcherDescFromModel(
   status: VisitorMatcherStatus,
   isSender: boolean
 ): string {
-  switch (status) {
-    case VisitorMatcherStatus.UN_AUDIT:
-      return '未审核'
-    case VisitorMatcherStatus.AUDIT_FAILED:
-      return '审核不通过'
-    case VisitorMatcherStatus.AUDIT_SUCCESS:
-      return '未答复'
-    case VisitorMatcherStatus.AGREE:
-      return '已同意'
-    case VisitorMatcherStatus.REFUSE:
-      return '已拒绝'
-    case VisitorMatcherStatus.DELETED:
-      return '已删除'
-    case VisitorMatcherStatus.CANCEL:
-      return '已取消'
-
-    default:
-      console.warn(`Unknown matcher status: ${status}`)
-      break
-  }
+  const dest = VisitorInvitationStatuses.find(e => e.status === status)
+  return dest ? dest.label : '未知状态'
 }
 
 export interface FetchMatcherParams {

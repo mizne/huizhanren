@@ -13,7 +13,7 @@ import {
   ExhibitorMatcherResp,
   FetchMatcherParams
 } from '../models/matcher.model'
-import { RecommendExhibitor } from '../models/exhibitor.model'
+import { Exhibitor } from '../models/exhibitor.model'
 import { environment } from '../../../environments/environment'
 
 @Injectable()
@@ -80,7 +80,7 @@ export class ExhibitorMatcherService {
               return results.map(e => ({
                 ...e,
                 ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
-                isSender: e.sender.id === exhibitorId,
+                isSender: e.initator.id === exhibitorId,
                 isReceiver: e.receiver.id === exhibitorId
               }))
             }

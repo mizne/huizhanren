@@ -9,14 +9,12 @@ export class Visitor {
   mobile?: string
   cardImg?: string
   email?: string
-}
-
-export class RecommendVisitor extends Visitor {
   selected?: boolean
+  headImgUrl?: string
 
-  static convertFromResp(resp: RecommendVisitorResp): RecommendVisitor {
+  static convertFromResp(resp: VisitorResp): Visitor {
     return {
-      id: resp.RecordId || resp._id,
+      id: resp.RecordId,
       name: resp.Name,
       title: resp.Job,
       company: resp.CompanyName,
@@ -24,11 +22,12 @@ export class RecommendVisitor extends Visitor {
       area: resp.Province,
       mobile: resp.Mob,
       cardImg: resp.Card,
-      email: resp.Email
+      email: resp.Email,
+      headImgUrl: resp.HeadImgUrl
     }
   }
 
-  static convertFromModel(model: RecommendVisitor): CreateMatcherParams {
+  static convertFromModel(model: Visitor): CreateMatcherParams {
     return {
       Name: model.name,
       CompName: model.company,
@@ -40,7 +39,7 @@ export class RecommendVisitor extends Visitor {
     }
   }
 
-  static generateFakeVisitors(start: number, end: number): RecommendVisitor[] {
+  static generateFakeVisitors(start: number, end: number): Visitor[] {
     const results = []
     for (let i = start; i < end; i += 1) {
       results.push({
@@ -56,18 +55,29 @@ export class RecommendVisitor extends Visitor {
   }
 }
 
-export class RecommendVisitorResp {
-  _id?: string
-  TenantId?: string
+export class VisitorResp {
   RecordId?: string
-  Name?: string
-  Job?: string
-  CompanyName?: string
+  Name: string
+  Mob: string
+  Sex: string
+  Email: string
+  Dept: string
+  Job: string
   Industry?: string
-  Mob?: string
-  Province?: string
+
+  Country: string
+  Province: string
+  City: string
+  County: string
+
+  CompAddr: string
+  CompanyName: string
+
+  HeadImgUrl: string
   Card?: string
-  Email?: string
+
+  Objective: string
+  Remark: string
 }
 
 export interface VisitorFilter {

@@ -6,7 +6,7 @@ import { APIResponse } from '../../../providers/interceptor'
 import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
-  RecommendExhibitor,
+  Exhibitor,
   FetchRecommendExhibitorParams,
   ExhibitorFilter,
   FilterOptions
@@ -34,7 +34,7 @@ export class ExhibitorService {
    */
   fetchExhibitors(
     params: FetchRecommendExhibitorParams
-  ): Observable<RecommendExhibitor[]> {
+  ): Observable<Exhibitor[]> {
     return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
@@ -74,7 +74,7 @@ export class ExhibitorService {
               .map(e =>
                 e
                   .filter(e => e.TenantId !== tenantId)
-                  .map(RecommendExhibitor.convertFromResp)
+                  .map(Exhibitor.convertFromResp)
               )
               .catch(e => {
                 return this.logger.httpError({
@@ -85,7 +85,7 @@ export class ExhibitorService {
               })
           })
       : Observable.of(
-          RecommendExhibitor.generateFakeExhibitors(
+          Exhibitor.generateFakeExhibitors(
             (params.pageIndex - 1) * params.pageSize,
             params.pageIndex * params.pageSize
           )

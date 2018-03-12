@@ -54,7 +54,6 @@ import {
   Exhibitor,
   Portray,
   ExhibitorFilter,
-  RecommendExhibitor,
   Product,
   FilterOptions
 } from './models/exhibitor.model'
@@ -73,7 +72,7 @@ import { DestroyService } from '../../providers/destroy.service'
   providers: [DestroyService]
 })
 export class ExhibitorsPage implements OnInit, OnDestroy {
-  exhibitors$: Observable<RecommendExhibitor[]>
+  exhibitors$: Observable<Exhibitor[]>
   currentExhibitorsTotal$: Observable<number>
   matchers$: Observable<ExhibitorMatcher[]>
   currentMatchersTotal$: Observable<number>
@@ -203,7 +202,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   }
 
   // 根据list status和 show detail ID寻找当前显示详情
-  private computeCurrentDetail(): Observable<RecommendExhibitor> {
+  private computeCurrentDetail(): Observable<Exhibitor> {
     const latestExhibitor$ = Observable.combineLatest(
       this.store.select(getExhibitors),
       this.store.select(getExhibitorShowDetailID)

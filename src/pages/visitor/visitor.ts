@@ -50,7 +50,7 @@ import {
   PageStatus,
   ListStatus,
   ListHeaderEvent,
-  RecommendVisitor,
+  Visitor,
   Portray,
   VisitorFilter,
   FilterOptions
@@ -58,7 +58,6 @@ import {
 import { DestroyService } from '../../providers/destroy.service'
 
 import { Logger } from '../customer/models/logger.model'
-import { Visitor } from './models/visitor.model'
 import { VisitorMatcher, VisitorMatcherStatus } from './models/matcher.model'
 
 @IonicPage()
@@ -68,7 +67,7 @@ import { VisitorMatcher, VisitorMatcherStatus } from './models/matcher.model'
   providers: [DestroyService]
 })
 export class VisitorPage implements OnInit, OnDestroy {
-  visitors$: Observable<RecommendVisitor[]>
+  visitors$: Observable<Visitor[]>
   currentVisitorsTotal$: Observable<number>
   matchers$: Observable<VisitorMatcher[]>
   currentMatchersTotal$: Observable<number>
@@ -76,7 +75,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
   showDetailID$: Observable<string>
-  currentDetail$: Observable<RecommendVisitor>
+  currentDetail$: Observable<Visitor>
   currentLogs$: Observable<Logger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
@@ -211,7 +210,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   }
 
   // 根据list status和 show detail ID寻找当前显示详情
-  private computeCurrentDetail(): Observable<RecommendVisitor> {
+  private computeCurrentDetail(): Observable<Visitor> {
     const latestVisitor$ = Observable.combineLatest(
       this.store.select(getVisitors),
       this.store.select(getVisitorShowDetailID)
@@ -264,11 +263,11 @@ export class VisitorPage implements OnInit, OnDestroy {
           new FetchMatchersAction({
             pageIndex: 1,
             pageSize: 10,
-            statuses: [VisitorMatcherStatus.AUDIT_SUCCESS]
+            statuses: [VisitorMatcherStatus.AUDIT_SUCCEED]
           })
         )
         this.store.dispatch(
-          new FetchMatchersCountAction([VisitorMatcherStatus.AUDIT_SUCCESS])
+          new FetchMatchersCountAction([VisitorMatcherStatus.AUDIT_SUCCEED])
         )
       })
 

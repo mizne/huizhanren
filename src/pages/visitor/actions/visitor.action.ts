@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store'
 import {
-  RecommendVisitor,
+  Visitor,
   ListStatus,
   PageStatus,
   FetchRecommendVisitorParams,
@@ -75,7 +75,7 @@ export class FetchVisitorsAction implements Action {
 }
 export class FetchVisitorsSuccessAction implements Action {
   readonly type = FETCH_VISITORS_SUCCESS
-  constructor(public visitors: RecommendVisitor[]) {}
+  constructor(public visitors: Visitor[]) {}
 }
 export class FetchVisitorsFailureAction implements Action {
   readonly type = FETCH_VISITORS_FAILURE
@@ -127,7 +127,7 @@ export class LoadMoreVisitorsAction implements Action {
 }
 export class LoadMoreVisitorsSuccessAction implements Action {
   readonly type = LOAD_MORE_VISITORS_SUCCESS
-  constructor(public visitors: RecommendVisitor[]) {}
+  constructor(public visitors: Visitor[]) {}
 }
 export class LoadMoreVisitorsFailureAction implements Action {
   readonly type = LOAD_MORE_VISITORS_FAILURE

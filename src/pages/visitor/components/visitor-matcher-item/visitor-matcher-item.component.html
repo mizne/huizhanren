@@ -1,0 +1,19 @@
+<div class="visitor-item-container">
+  <div class="header">
+    <div class="info">
+      <span class="name">{{visitor.name}}</span>
+      <span class="title">{{visitor.title}}</span>
+    </div>
+    <hz-rate></hz-rate>
+  </div>
+
+  <div class="company">
+    <span>{{visitor.company}}</span>
+  </div>
+
+  <div class="industry">{{visitor.industry}}</div>
+  <div class="footer">
+    <hz-customer-status></hz-customer-status>
+    <button ion-button class="invite-btn" (click)="ensureInvite(item.id)">约 TA</button>
+  </div>
+</div>
