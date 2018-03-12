@@ -1,49 +1,25 @@
 <div class="grid-header-container">
-  <div class="grid-header left-header" tappable (clickOutside)="closeLeftMore()" (click)="activeHeader(0)" [class.active]="activeIndex === 0">
+  <div class="grid-header" tappable (click)="activeHeader(0)" [class.active]="activeIndex === 0">
     <div class="text">{{type === 'visitor' ? '推荐买家' : '本届展商'}}
-      <!-- <span>({{leftTotal}})</span> -->
     </div>
-
-    <div class="icon-wrapper" tappable (click)="showLeftMore($event)">
-      <i class="iconfont icon-more" *ngIf="activeIndex === 0"></i>
-    </div>
-    <div class="hz-popover-wrapper" [@collapseState]="activeLeftMore ? 'active' : 'inactive'">
-      <div class="hz-popover-item" tappable (click)="batchInvite($event)">
-        <i class="iconfont icon-yuyue"></i> 批量约请
-      </div>
-      <div class="hz-popover-item" tappable (click)="batchHidden($event)">
-        <i class="iconfont icon-yincang"></i> 批量隐藏
-      </div>
-      <div class="hz-popover-item" tappable (click)="refresh($event, 'left')">
-        <i class="iconfont icon-refresh"></i> 刷新
-      </div>
+    <div class="decoration">
+      <div [hidden]="activeIndex !== 0" class="decoration"></div>
     </div>
   </div>
 
-  <div class="grid-header right-header" tappable (clickOutside)="closeRigthMore()" (click)="activeHeader(1)" [class.active]="activeIndex === 1">
-    <div class="text">约请信息
-      <!-- <span>({{rightTotal}})</span> -->
+  <div class="grid-header" tappable (click)="activeHeader(1)" [class.active]="activeIndex === 1">
+    <div class="text">待处理
     </div>
+    <div class="decoration">
+      <div [hidden]="activeIndex !== 1" class="decoration"></div>
+    </div>
+  </div>
 
-    <div class="icon-wrapper" tappable (click)="showRightMore($event)">
-      <i class="iconfont icon-more" *ngIf="activeIndex === 1"></i>
+  <div class="grid-header" tappable (click)="activeHeader(2)" [class.active]="activeIndex === 2">
+    <div class="text">已完成
     </div>
-    <div class="hz-popover-wrapper" [@collapseState]="activeRightMore ? 'active' : 'inactive'">
-      <div class="hz-popover-item" tappable (click)="batchAccept($event)">
-        <i class="iconfont icon-jieshou"></i>批量接受
-      </div>
-      <div class="hz-popover-item" tappable (click)="batchRefuse($event)">
-        <i class="iconfont icon-jujue"></i>批量拒绝
-      </div>
-      <div class="hz-popover-item" tappable (click)="batchCancel($event)">
-        <i class="iconfont icon-quxiao"></i>批量取消
-      </div>
-      <div class="hz-popover-item" tappable (click)="batchDelete($event)">
-        <i class="iconfont icon-shanchu"></i>批量删除
-      </div>
-      <div class="hz-popover-item" tappable (click)="refresh($event, 'right')">
-        <i class="iconfont icon-refresh"></i> 刷新
-      </div>
+    <div class="decoration">
+      <div [hidden]="activeIndex !== 2" class="decoration"></div>
     </div>
   </div>
 </div>

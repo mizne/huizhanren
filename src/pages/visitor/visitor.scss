@@ -11,18 +11,19 @@ page-visitor {
       .list-area {
         background-color: #1f2022;
         transition: width 1s;
-        flex: 1;
+        flex: 2;
 
         &.expand {
-          flex: 2;
+          flex: 3;
         }
       }
 
       .detail-area {
         margin-left: 10px;
-        flex: 1;
+        display: none;
         &.expand {
-          flex: 2;
+          flex: 1;
+          display: block;
         }
       }
     }

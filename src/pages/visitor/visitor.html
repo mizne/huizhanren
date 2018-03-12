@@ -7,53 +7,31 @@
 <ion-content padding>
   <div class="visitor-container">
     <div class="list-area" [class.expand]="(pageStatus$ | async) === 0">
-      <hz-grid-header type="visitor" [leftTotal]="currentVisitorsTotal$ | async" [rightTotal]="currentMatchersTotal$ | async" [activeIndexSub]="listStatusChangeSub" [headerEventSub]="headerEventSub"></hz-grid-header>
+      <hz-grid-header type="visitor" [leftTotal]="currentVisitorsTotal$ | async" [rightTotal]="currentMatchersTotal$ | async" [activeIndexSub]="listStatusChangeSub"
+        [headerEventSub]="headerEventSub"></hz-grid-header>
 
-      <hz-grid-filter [hidden]="(listStatus$ | async) === 1"
-      [showSearch]="(pageStatus$ | async) === 0"
-        [filterSub]="visitorFilterSub"
-        [filterOptions]="filterOptions$ | async"
-        placeholder="请输入客户名">
+      <hz-grid-filter [hidden]="(listStatus$ | async) === 1" [showSearch]="(pageStatus$ | async) === 0" [filterSub]="visitorFilterSub"
+        [filterOptions]="filterOptions$ | async" placeholder="请输入客户名">
       </hz-grid-filter>
-      <hz-matcher-filter [hidden]="(listStatus$ | async) === 0"
-      [expand]="(pageStatus$ | async) === 0"
-        [filterSub]="matcherFilterSub">
+      <hz-matcher-filter [hidden]="(listStatus$ | async) === 0" [expand]="(pageStatus$ | async) === 0" [filterSub]="matcherFilterSub">
       </hz-matcher-filter>
 
-      <visitor-grid [hidden]="(listStatus$ | async) === 1" type="visitor"
-        (showDetail)="updateVisitorDetailID($event)"
-        (loadMore)="loadMore()"
-        [shouldScrollToTop]="visitorShouldScrollToTop$ | async"
-        [showLoadMore]="showLoadMore$ | async"
-        [expand]="(pageStatus$ | async) === 0"
+      <visitor-grid [hidden]="(listStatus$ | async) === 1" type="visitor" (showDetail)="updateVisitorDetailID($event)" (loadMore)="loadMore()"
+        [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0"
         [dataItems]="visitors$ | async">
       </visitor-grid>
-      <visitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher"
-      (showDetail)="updateMatcherDetailID($event)"
-      (agreeMatcher)="ensureAgreeMatcher($event)"
-      (refuseMatcher)="ensureRefuseMatcher($event)"
-      (loadMore)="loadMore()"
-      [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
-      [showLoadMore]="showLoadMore$ | async"
-      [expand]="(pageStatus$ | async) === 0"
-      [dataItems]="matchers$ | async">
-    </visitor-grid>
+      <visitor-grid [hidden]="(listStatus$ | async) === 0" type="matcher" (showDetail)="updateMatcherDetailID($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
+        (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
+        [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === 0" [dataItems]="matchers$ | async">
+      </visitor-grid>
 
     </div>
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === 1">
-      <visitor-detail
-      *ngIf="(currentDetail$ | async)" [detail]="currentDetail$ | async"
-      [expand]="(pageStatus$ | async) === 1"
-        [logs]="currentLogs$ | async"
-        [portray]="currentPortray$ | async"
-        (invite)="ensureInvite()"
-        (cancelMatcher)="ensureCancelMatcher($event)"
-        (agreeMatcher)="ensureAgreeMatcher($event)"
-        (refuseMatcher)="ensureRefuseMatcher($event)"
-        (createLog)="ensureCreateLog()"
-        (editLog)="ensureEditLog($event)"
-        >
+      <visitor-detail *ngIf="(currentDetail$ | async)" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === 1"
+        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (invite)="ensureInvite()" (cancelMatcher)="ensureCancelMatcher($event)"
+        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (createLog)="ensureCreateLog()"
+        (editLog)="ensureEditLog($event)">
       </visitor-detail>
     </div>
 

@@ -25,18 +25,14 @@
         </div>
 
         <div class="content">
-          <hz-logger-list *ngIf="activeHeaderIndex === 0"
-          theme="normal" [logs]="logs"
-          (createLog)="ensureCreateLog()"
-          (editLog)="ensureEditLog($event)"
-          ></hz-logger-list>
+          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal" [logs]="logs" (createLog)="ensureCreateLog()" (editLog)="ensureEditLog($event)"></hz-logger-list>
           <hz-customer-portray *ngIf="activeHeaderIndex === 1" theme="normal" [portray]="portray"></hz-customer-portray>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="right-area" *ngIf="expand">
+  <!-- <div class="right-area" *ngIf="expand">
     <div class="headers">
       <div class="header-item logger" tappable [class.active]="activeDetailHeaderIndex === 0" (click)="activeDetailHeader(0)">日志</div>
       <div class="header-item portray" tappable [class.active]="activeDetailHeaderIndex === 1" (click)="activeDetailHeader(1)">用户画像</div>
@@ -49,5 +45,5 @@
        ></hz-logger-list>
       <hz-customer-portray *ngIf="activeDetailHeaderIndex === 1" theme="primary" [portray]="portray"></hz-customer-portray>
     </div>
-  </div>
+  </div> -->
 </div>

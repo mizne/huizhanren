@@ -9,7 +9,6 @@ import 'rxjs/add/observable/throw'
 import 'rxjs/add/observable/timer'
 import 'rxjs/add/observable/zip'
 
-
 import 'rxjs/add/operator/catch'
 import 'rxjs/add/operator/concatMap'
 import 'rxjs/add/operator/debounceTime'
@@ -33,4 +32,3 @@ import 'rxjs/add/operator/takeUntil'
 import 'rxjs/add/operator/takeWhile'
 import 'rxjs/add/operator/timeout'
 import 'rxjs/add/operator/withLatestFrom'
-

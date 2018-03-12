@@ -23,6 +23,7 @@ import {
   getCurrentVisitorCount
 } from '../reducers'
 import { getCompanyName, getBoothNo, getTenantId } from '../../login/reducers'
+import { PageStatus } from '../models/visitor.model'
 
 @Injectable()
 export class VisitorEffects {
@@ -155,6 +156,13 @@ export class VisitorEffects {
           duration: 3e3
         })
         .present()
+    })
+
+  @Effect()
+  updateVisitorDetailID$ = this.actions$
+    .ofType(fromVisitor.UPDATE_VISITOR_DETAIL_ID)
+    .map(() => {
+      return new fromVisitor.ChangePageStatusAction(PageStatus.DETAIL)
     })
 
   @Effect()

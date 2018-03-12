@@ -100,7 +100,8 @@ export interface Portray {
 
 export enum ListStatus {
   VISITOR,
-  MATCHER
+  TODO,
+  COMPLETE
 }
 
 export enum PageStatus {

@@ -1,6 +1,4 @@
-<div [hidden]="!expand" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]"
-  infiniteScroll
-  [infiniteScrollContainer]="'.visitor-grid-container.expand.' + type"
+<div [hidden]="!expand" #gridExpand class="visitor-grid-container expand" [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()">
   <ion-grid class="header">
     <ion-row>
@@ -55,43 +53,38 @@
   </ion-grid>
 
   <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more expand" tappable (click)="ensureLoadMore()">加载更多</p>
-
-  <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
   <ng-template #noMoreData>
     <p class="not-more-data">没有更多数据了</p>
   </ng-template>
 </div>
 
 <!-- <ng-template #noExpand> -->
-  <div [hidden]="expand" class="visitor-grid-container no-expand" [ngClass]="[type]"
-  infiniteScroll
-  [infiniteScrollContainer]="'.visitor-grid-container.no-expand.' + type"
+<div [hidden]="expand" class="visitor-grid-container no-expand" [ngClass]="[type]" infiniteScroll [infiniteScrollContainer]="'.visitor-grid-container.no-expand.' + type"
   [fromRoot]="true" (scrolled)="onScroll()" #gridNoExpand>
-    <ion-grid class="header">
-      <ion-row class="header">
-        <ion-col col-2>姓名</ion-col>
-        <ion-col col-3>职务</ion-col>
-        <ion-col col-4>行业</ion-col>
-        <ion-col col-3></ion-col>
-      </ion-row>
-    </ion-grid>
+  <ion-grid class="header">
+    <ion-row class="header">
+      <ion-col col-2>姓名</ion-col>
+      <ion-col col-3>职务</ion-col>
+      <ion-col col-4>行业</ion-col>
+      <ion-col col-3></ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
-      <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
-        (click)="ensureShow(item.id)">
-        <ion-col col-2>{{item.name | customerNamePrivacy:item.status}}</ion-col>
-        <ion-col col-3>{{item.title}}</ion-col>
-        <ion-col col-4 class="industry">{{item.industry}}</ion-col>
-        <ion-col col-3>
-          <hz-customer-status class="no-expand"></hz-customer-status>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ion-grid class="body" *ngIf="dataItems.length > 0; else noData;">
+    <ion-row *ngFor="let item of dataItems; even as even" tappable class="row-item" [class.even]="even" [class.active]="activeId === item.id"
+      (click)="ensureShow(item.id)">
+      <ion-col col-2>{{item.name | customerNamePrivacy:item.status}}</ion-col>
+      <ion-col col-3>{{item.title}}</ion-col>
+      <ion-col col-4 class="industry">{{item.industry}}</ion-col>
+      <ion-col col-3>
+        <hz-customer-status class="no-expand"></hz-customer-status>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more no-expand" tappable (click)="ensureLoadMore()">加载更多</p>
-    <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
-    <ng-template #noMoreData>
-      <p class="not-more-data">没有更多数据了</p>
-    </ng-template>
-  </div>
+  <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more no-expand" tappable (click)="ensureLoadMore()">加载更多</p>
+  <ng-template #noMoreData>
+    <p class="not-more-data">没有更多数据了</p>
+  </ng-template>
+</div>
 <!-- </ng-template> -->

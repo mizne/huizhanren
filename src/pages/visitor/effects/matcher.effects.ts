@@ -9,6 +9,7 @@ import {
 } from 'ionic-angular'
 
 import * as fromMatcher from '../actions/matcher.action'
+import * as fromVisitor from '../actions/visitor.action'
 
 import { VisitorMatcherService } from '../services/matcher.service'
 
@@ -17,7 +18,12 @@ import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-m
 import { ToRefuseMatcherModal } from '../modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getCurrentMatcherCount } from '../reducers'
+import {
+  State,
+  getCurrentMatcherCount,
+  getMatcherShowDetailID
+} from '../reducers'
+import { PageStatus } from '../models/visitor.model'
 
 @Injectable()
 export class MatcherEffects {
@@ -44,17 +50,20 @@ export class MatcherEffects {
         })
     })
 
-    @Effect()
-    fetchMatchersCount$ = this.actions$.ofType(fromMatcher.FETCH_MATCHERS_COUNT)
+  @Effect()
+  fetchMatchersCount$ = this.actions$
+    .ofType(fromMatcher.FETCH_MATCHERS_COUNT)
     .map((action: fromMatcher.FetchMatchersCountAction) => action.statuses)
-    .switchMap((statuses) => {
+    .switchMap(statuses => {
       return this.matcherService
         .fetchMatcherCount(statuses)
         .map(number => {
           return new fromMatcher.FetchMatchersCountSuccessAction(number)
         })
         .catch(() => {
-          return Observable.of(new fromMatcher.FetchMatchersCountFailureAction())
+          return Observable.of(
+            new fromMatcher.FetchMatchersCountFailureAction()
+          )
         })
     })
 
@@ -86,6 +95,13 @@ export class MatcherEffects {
           loadingCtrl.dismiss()
           return Observable.of(new fromMatcher.LoadMoreMatchersFailureAction())
         })
+    })
+
+  @Effect()
+  updateMatcherDetailID$ = this.actions$
+    .ofType(fromMatcher.UPDATE_MATCHER_DETAIL_ID)
+    .map(() => {
+      return new fromVisitor.ChangePageStatusAction(PageStatus.DETAIL)
     })
 
   @Effect()
