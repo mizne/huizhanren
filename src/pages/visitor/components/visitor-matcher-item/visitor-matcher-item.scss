@@ -86,6 +86,7 @@
     }
 
     .booth-no {
+      color: map-get($map: $gridColors, $key: secondary);
     }
   }
 }

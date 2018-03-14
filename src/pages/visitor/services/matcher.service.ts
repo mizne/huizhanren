@@ -283,9 +283,7 @@ export class VisitorMatcherService {
               tenantId,
               userId
             },
-            {
-              params
-            }
+            params
           )
         )
       })
@@ -324,9 +322,7 @@ export class VisitorMatcherService {
               tenantId,
               userId
             },
-            {
-              params
-            }
+            params
           )
         )
       })
