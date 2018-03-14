@@ -1,19 +1,30 @@
-<div class="visitor-item-container">
+<div class="matcher-item-container">
+  <span [ngClass]="{'is-sender': item.isSender, 'is-receiver': item.isReceiver, 'send-dir': true}">
+    {{item.isSender ? '发' : '收'}}
+  </span>
   <div class="header">
     <div class="info">
-      <span class="name">{{visitor.name}}</span>
-      <span class="title">{{visitor.title}}</span>
+      <span class="name">{{matcher.toShow.name}}</span>
+      <span class="title">{{matcher.toShow.title}}</span>
     </div>
-    <hz-rate></hz-rate>
+    <div class="time">
+      {{matcher.startTime + '~' + matcher.endTime}}
+    </div>
   </div>
 
   <div class="company">
-    <span>{{visitor.company}}</span>
+    <span>{{macher.toShow.company}}</span>
   </div>
 
-  <div class="industry">{{visitor.industry}}</div>
+
   <div class="footer">
-    <hz-customer-status></hz-customer-status>
-    <button ion-button class="invite-btn" (click)="ensureInvite(item.id)">约 TA</button>
+    <div class="industry">{{macher.toShow.industry}}</div>
+    <div *ngIf="matcher.status === AUDIT_SUCCEED">
+      <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(item.id)">接受</button>
+      <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(item.id)">拒绝</button>
+    </div>
+    <div *ngIf="matcher.status === AGREE">
+      {{matcher.boothNo}}
+    </div>
   </div>
 </div>

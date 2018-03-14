@@ -20,6 +20,7 @@ export class VisitorMatcher {
   endTime: string
 
   toShow?: Visitor
+  boothNo: string
 
   static extractInitatorAndReceiver(
     resp: VisitorMatcherResp,
@@ -27,17 +28,20 @@ export class VisitorMatcher {
   ): {
     initator: Visitor | Exhibitor
     receiver: Visitor | Exhibitor
+    boothNo: string
   } {
     switch (type) {
       case VisitorMatcherType.VISITOR_TO_EXHIBITOR:
         return {
           initator: Visitor.convertFromResp(resp.VisitorInitator[0]),
-          receiver: Exhibitor.convertFromResp(resp.Receiver[0])
+          receiver: Exhibitor.convertFromResp(resp.Receiver[0]),
+          boothNo: resp.Receiver[0].BoothNo
         }
       case VisitorMatcherType.EXHIBITOR_TO_VISITOR:
         return {
           initator: Exhibitor.convertFromResp(resp.Initator[0]),
-          receiver: Visitor.convertFromResp(resp.VisitorReceiver[0])
+          receiver: Visitor.convertFromResp(resp.VisitorReceiver[0]),
+          boothNo: resp.Initator[0].BoothNo
         }
       default:
         console.warn(`Unknown visitor matcher type: ${type}`)
@@ -61,10 +65,11 @@ export class VisitorMatcher {
   static convertFromResp(resp: VisitorMatcherResp): VisitorMatcher {
     const type = VisitorMatcher.convertTypeFromResp(resp.Type)
     const status = VisitorMatcher.convertStatusFromState(resp.State)
-    const { initator, receiver } = VisitorMatcher.extractInitatorAndReceiver(
-      resp,
-      type
-    )
+    const {
+      initator,
+      receiver,
+      boothNo
+    } = VisitorMatcher.extractInitatorAndReceiver(resp, type)
     return {
       id: resp.RecordId,
       type,
@@ -73,6 +78,7 @@ export class VisitorMatcher {
       receiverId: receiver.id,
       initator,
       receiver,
+      boothNo,
       startTime: resp.MeetingTimeStart,
       endTime: resp.MeetingTimeEnd
     }

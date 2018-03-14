@@ -1,10 +1,14 @@
 .matcher-filter-container {
-  height: 42px;
+  height: 36px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: map-get($map: $gridColors, $key: grey);
   margin: 5px 0 5px 4px;
+
+  &.complete {
+    justify-content: flex-end;
+  }
 
   .left {
     display: flex;

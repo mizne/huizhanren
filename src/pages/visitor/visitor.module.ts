@@ -3,8 +3,10 @@ import { IonicPageModule } from 'ionic-angular'
 import { VisitorPage } from './visitor'
 
 import { VisitorGridComponent } from './components/visitor-grid/visitor-grid.component'
+import { VisitorMatcherGridComponent } from './components/visitor-matcher-grid/visitor-matcher-grid.component'
 import { VisitorDetailComponent } from './components/visitor-detail/visitor-detail.component'
 import { VisitorItemComponent } from './components/visitor-item/visitor-item.component'
+import { VisitorMatcherItemComponent } from './components/visitor-matcher-item/visitor-matcher-item.component'
 import { HzCustomerAbstractComponent } from './components/customer-abstract/customer-abstract.component'
 import { HzCustomerStatusComponent } from './components/customer-status/customer-status.component'
 import { HzCustomerPortrayComponent } from './components/customer-portray/customer-portray.component'
@@ -47,8 +49,10 @@ const modals = [
   declarations: [
     VisitorPage,
     VisitorGridComponent,
+    VisitorMatcherGridComponent,
     VisitorDetailComponent,
     VisitorItemComponent,
+    VisitorMatcherItemComponent,
     HzCustomerAbstractComponent,
     HzCustomerStatusComponent,
     HzCustomerPortrayComponent,

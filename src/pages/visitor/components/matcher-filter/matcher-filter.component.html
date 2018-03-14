@@ -1,4 +1,4 @@
-<div class="matcher-filter-container" [class.expand]="expand">
+<div class="matcher-filter-container" [class.expand]="expand" [class.complete]="listStatus === 2">
   <!-- <label class="first" for="">筛选:</label>
   <ion-checkbox tappable [formControl]="allowControl"></ion-checkbox>
   <label for="">已同意</label>
@@ -11,7 +11,7 @@
   <ion-checkbox tappable [formControl]="unReplyControl"></ion-checkbox>
   <label for="">未答复</label> -->
 
-  <div class="left">
+  <div class="left" [hidden]="listStatus === COMPLETE_MATCHER_GRID">
     <ul class="filter filter-status">
       <li tappable [ngClass]="['filter-item', 'all', filterStatusActiveIndex === 0 ? 'active' : '']" (click)="filterStatusActiveIndex = 0">全部</li>
       <li tappable [ngClass]="['filter-item', 'pending', filterStatusActiveIndex === 1 ? 'active' : '']" (click)="filterStatusActiveIndex = 1">审核中</li>

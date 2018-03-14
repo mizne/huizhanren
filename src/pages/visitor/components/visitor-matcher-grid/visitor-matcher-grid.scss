@@ -1,0 +1,30 @@
+.visitor-grid-container {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+
+  .visitor-item {
+    // flex: 1;
+    // min-width: 300px;
+    display: inline-block;
+    width: 33%;
+  }
+
+  .no-data {
+    @include flexboxCenter;
+    height: 50px;
+    color: map-get($map: $gridColors, $key: grey);
+  }
+
+  .not-more-data {
+    width: 100%;
+    color: #67686c;
+    text-align: center;
+  }
+
+  .hz-load-more {
+    color: #67686c;
+    text-align: center;
+  }
+}

@@ -67,6 +67,13 @@ import { VisitorMatcher, VisitorMatcherStatus } from './models/matcher.model'
   providers: [DestroyService]
 })
 export class VisitorPage implements OnInit, OnDestroy {
+  VISITOR_GRID = ListStatus.VISITOR
+  TODO_MATCHER_GRID = ListStatus.TODO
+  COMPLETE_MATCHER_GRID = ListStatus.COMPLETE
+
+  LIST_PAGE = PageStatus.LIST
+  DETAIL_PAGE = PageStatus.DETAIL
+
   visitors$: Observable<Visitor[]>
   currentVisitorsTotal$: Observable<number>
   matchers$: Observable<VisitorMatcher[]>

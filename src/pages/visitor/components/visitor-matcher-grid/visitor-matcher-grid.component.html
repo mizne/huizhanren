@@ -1,0 +1,16 @@
+<div class="visitor-matcher-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.visitor-matcher-grid-container'"
+  [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
+  <div class="visitor-matcher-item" tappable [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
+    <visitor-matcher-item [matcher]="item"></visitor-matcher-item>
+  </div>
+
+  <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>
+  <ng-template #noMoreData>
+    <p class="not-more-data">没有更多数据了</p>
+  </ng-template>
+</div>
+<ng-template #noData>
+  <p class="no-data">
+    没有买家约请数据
+  </p>
+</ng-template>
