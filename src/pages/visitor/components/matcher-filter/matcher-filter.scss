@@ -33,7 +33,6 @@
 
   .filter-item {
     display: inline-block;
-    height: 37px;
     padding-right: 22px;
     padding-left: 22px;
     font-size: 14px;
@@ -44,12 +43,21 @@
     background-color: transparent;
 
     &:last-child {
-      border-right: none;
+      border-left: 1px solid map-get($map: $colors, $key: primary);
+    }
+    &:first-child {
+      border-right: 1px solid map-get($map: $colors, $key: primary);
     }
 
     &.active {
       color: map-get($map: $colors, $key: white);
       background-color: map-get($map: $colors, $key: primary);
+    }
+
+    &.all,
+    &.pending,
+    &.from-me {
+      margin-right: -4px;
     }
   }
 }

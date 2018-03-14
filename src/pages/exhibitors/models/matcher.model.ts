@@ -45,7 +45,7 @@ export class ExhibitorMatcher {
   }
 
   static convertStatusFromState(state: string): ExhibitorMatcherStatus {
-    const dest = ExhibitorInvitationStatuses.find(e => e.status === state)
+    const dest = ExhibitorInvitationStatuses.find(e => e.state === state)
     return dest ? dest.status : ExhibitorMatcherStatus.UNKNOWN
   }
 
@@ -130,6 +130,12 @@ export interface ExhibitorMatcherResp {
   CreatedAt: string
 }
 
+export enum ExhibitorMatcherDirection {
+  FROM_ME,
+  TO_ME,
+  ANY
+}
+
 export enum ExhibitorMatcherStatus {
   UNKNOWN = '9', // 未知状态
   UN_AUDIT = '0', // 未审核
@@ -140,46 +146,56 @@ export enum ExhibitorMatcherStatus {
   DELETED = '8', // 已删除
   CANCEL = '7', // 已取消
   KEEP_APPOINTMENT = '5', // 已赴约
-  FAIL_KEEP_APPOINITMENT = '6' // 已爽约
+  FAIL_KEEP_APPOINITMENT = '6', // 已爽约
+  ANY = '10' // 任意状态
 }
 
 export const ExhibitorInvitationStatuses = [
   {
     label: '未审核',
-    status: ExhibitorMatcherStatus.UN_AUDIT
+    status: ExhibitorMatcherStatus.UN_AUDIT,
+    state: '0'
   },
   {
     label: '审核未通过',
-    status: ExhibitorMatcherStatus.AUDIT_FAILED
+    status: ExhibitorMatcherStatus.AUDIT_FAILED,
+    state: '1'
   },
   {
     label: '未答复',
-    status: ExhibitorMatcherStatus.AUDIT_SUCCEED
+    status: ExhibitorMatcherStatus.AUDIT_SUCCEED,
+    state: '2'
   },
   {
     label: '已拒绝',
-    status: ExhibitorMatcherStatus.REFUSE
+    status: ExhibitorMatcherStatus.REFUSE,
+    state: '3'
   },
   {
     label: '已同意',
-    status: ExhibitorMatcherStatus.AGREE
+    status: ExhibitorMatcherStatus.AGREE,
+    state: '4'
   },
   {
     label: '已赴约',
-    status: ExhibitorMatcherStatus.KEEP_APPOINTMENT
+    status: ExhibitorMatcherStatus.KEEP_APPOINTMENT,
+    state: '5'
   },
   {
     label: '已爽约',
-    status: ExhibitorMatcherStatus.FAIL_KEEP_APPOINITMENT
+    status: ExhibitorMatcherStatus.FAIL_KEEP_APPOINITMENT,
+    state: '6'
   },
   {
     label: '已取消',
-    status: ExhibitorMatcherStatus.CANCEL
+    status: ExhibitorMatcherStatus.CANCEL,
+    state: '7'
   },
 
   {
     label: '已删除',
-    status: ExhibitorMatcherStatus.DELETED
+    status: ExhibitorMatcherStatus.DELETED,
+    state: '8'
   }
 ]
 

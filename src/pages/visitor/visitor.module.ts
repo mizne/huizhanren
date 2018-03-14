@@ -22,7 +22,8 @@ import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { reducers } from './reducers'
 import { VisitorEffects } from './effects/visitor.effects'
-import { MatcherEffects } from './effects/matcher.effects'
+import { ToDoMatcherEffects } from './effects/todo-matcher.effects'
+import { CompleteMatcherEffects } from './effects/complete-matcher.effects'
 
 import { CustomerMatcherStatusPipe } from './pipes/matcher-status.pipe'
 import { CustomerNamePrivacyPipe } from './pipes/name-privacy.pipe'
@@ -32,7 +33,7 @@ import { VisitorService } from './services/visitor.service'
 import { VisitorMatcherService } from './services/matcher.service'
 
 const services = [VisitorService, VisitorMatcherService]
-const effects = [VisitorEffects, MatcherEffects]
+const effects = [VisitorEffects, ToDoMatcherEffects, CompleteMatcherEffects]
 const pipes = [
   CustomerMatcherStatusPipe,
   CustomerNamePrivacyPipe,

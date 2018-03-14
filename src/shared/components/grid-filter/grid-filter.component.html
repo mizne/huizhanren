@@ -5,7 +5,7 @@
     <hz-selector [options]="sortOptions" [selectedValueSub]="sortSelectSub"></hz-selector>
   </div>
   <div class="count">已为您推荐
-    <span class="number">768</span>位买家</div>
+    <span class="number">{{count}}</span>位{{type === visitor ? '买家' : '展商'}}</div>
 
   <hz-search-input *ngIf="showSearch" [placeholder]="placeholder" [searchSub]="searchSub" [debounceTime]="300"></hz-search-input>
 </div>

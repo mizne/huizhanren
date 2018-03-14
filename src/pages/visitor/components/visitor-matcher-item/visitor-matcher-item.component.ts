@@ -12,7 +12,7 @@ import {
   templateUrl: 'visitor-matcher-item.component.html'
 })
 export class VisitorMatcherItemComponent implements OnInit {
-  AUDIT_SUCCEED = VisitorMatcherStatus.AUDIT_FAILED
+  AUDIT_SUCCEED = VisitorMatcherStatus.AUDIT_SUCCEED
   AGREE = VisitorMatcherStatus.AGREE
 
   @Input() matcher: VisitorMatcher[]

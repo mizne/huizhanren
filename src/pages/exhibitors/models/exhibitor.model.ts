@@ -1,4 +1,4 @@
-import { VisitorResp, Visitor　}　from '../../visitor/models/visitor.model'
+import { VisitorResp, Visitor } from '../../visitor/models/visitor.model'
 
 export class Exhibitor {
   id?: string
@@ -29,18 +29,15 @@ export class Exhibitor {
       area: resp.Province,
       city: resp.City,
       heat: resp.Heat || Math.round(Math.random() * 1000),
-      products: resp.ProductList.map(Product.convertFromResp),
-      visitors: resp.Visitors.map(Visitor.convertFromResp),
+      products: (resp.ProductList || []).map(Product.convertFromResp),
+      visitors: (resp.Visitors || []).map(Visitor.convertFromResp),
       description: resp.Introduction,
       website: resp.Website,
       selected: false
     }
   }
 
-  static generateFakeExhibitors(
-    start: number,
-    end: number
-  ): Exhibitor[] {
+  static generateFakeExhibitors(start: number, end: number): Exhibitor[] {
     const results = []
     for (let i = start; i < end; i += 1) {
       results.push({
@@ -84,35 +81,34 @@ export interface ExhibitorContactResp {
 }
 
 export interface ExhibitorResp {
-    RecordId?: string
-    CompanyName: string
-    Addr: string
-    Email: string
-    Fax: string
-    Tel: string
-    Website: string
-    Logo: string
+  RecordId?: string
+  CompanyName: string
+  Addr: string
+  Email: string
+  Fax: string
+  Tel: string
+  Website: string
+  Logo: string
 
-    Country: string
-    Province: string
-    City: string
+  Country: string
+  Province: string
+  City: string
 
-    Industry: string
-    Categories: string
-    Categories2: string
+  Industry: string
+  Categories: string
+  Categories2: string
 
-    BoothArea: string
-    BoothNo: string
-    ExHall: string
-    ShowArea: string
-    Introduction: string
-    Heat: number
+  BoothArea: string
+  BoothNo: string
+  ExHall: string
+  ShowArea: string
+  Introduction: string
+  Heat: number
 
-    LinkList: LinkResp[]
-    ProductList: ProductResp[]
-    Visitors: VisitorResp[]
+  LinkList: LinkResp[]
+  ProductList: ProductResp[]
+  Visitors: VisitorResp[]
 }
-
 
 export class Link {
   isAdmin: boolean
@@ -121,12 +117,12 @@ export class Link {
   phone: string
 
   static convertFromResp(resp: LinkResp): Link {
-      return {
-          isAdmin: resp.admin === 0,
-          name: resp.LinkName,
-          job: resp.Job,
-          phone: resp.LinkMob
-      }
+    return {
+      isAdmin: resp.admin === 0,
+      name: resp.LinkName,
+      job: resp.Job,
+      phone: resp.LinkMob
+    }
   }
 }
 
@@ -143,11 +139,11 @@ export class Product {
   picList: Pic[]
 
   static convertFromResp(resp: ProductResp): Product {
-      return {
-          name: resp.Name,
-          remark: resp.Remark,
-          picList: resp.PicList.map(Pic.convertFromResp)
-      }
+    return {
+      name: resp.Name,
+      remark: resp.Remark,
+      picList: resp.PicList.map(Pic.convertFromResp)
+    }
   }
 }
 
@@ -160,16 +156,15 @@ export interface ProductResp {
 export class Pic {
   path: string
   static convertFromResp(resp: PicResp): Pic {
-      return {
-          path: resp.PicPath
-      }
+    return {
+      path: resp.PicPath
+    }
   }
 }
 
 export interface PicResp {
   PicPath: string
 }
-
 
 export interface ExhibitorFilter {
   area?: string

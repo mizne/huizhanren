@@ -9,7 +9,6 @@ import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 
 import * as fromVisitor from '../actions/visitor.action'
-import * as fromMatcher from '../actions/matcher.action'
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
 import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 import { VisitorService } from '../services/visitor.service'
@@ -212,10 +211,7 @@ export class VisitorEffects {
     .switchMap(visitorId =>
       this.matcherService
         .createMatcher(visitorId)
-        .concatMap(() => [
-          new fromVisitor.InviteVisitorSuccessAction(),
-          new fromMatcher.FetchMatchersAction()
-        ])
+        .map(() => new fromVisitor.InviteVisitorSuccessAction())
         .catch(() =>
           Observable.of(new fromVisitor.InviteVisitorFailureAction())
         )

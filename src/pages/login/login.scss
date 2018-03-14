@@ -5,14 +5,14 @@ page-login {
 
     background-size: cover;
     display: flex;
-    
-    @media screen and (max-width: 600px)  {
+
+    @media screen and (max-width: 600px) {
       .hz-input-wrapper {
         width: 90%;
       }
     }
 
-    @media screen and (min-width: 600px)  {
+    @media screen and (min-width: 600px) {
       .hz-input-wrapper {
         width: 600px;
       }
@@ -45,7 +45,6 @@ page-login {
 
         width: 20%;
         font-size: 23px;
-        margin-left: -2px;
         padding: 4px 20px;
         background-color: rgba(0, 0, 0, 0.8);
         color: #fff;

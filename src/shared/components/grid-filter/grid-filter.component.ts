@@ -3,12 +3,22 @@ import { Subject } from 'rxjs/Subject'
 
 import { DestroyService } from '../../../providers/destroy.service'
 
+export enum GridFilterType {
+  VISITOR,
+  EXHIBITOR
+}
+
 @Component({
   selector: 'hz-grid-filter',
   templateUrl: 'grid-filter.component.html',
   providers: [DestroyService]
 })
 export class HzGridFilterComponent implements OnInit {
+  visitor = GridFilterType.VISITOR
+  exhibitor = GridFilterType.EXHIBITOR
+
+  @Input() type: GridFilterType
+  @Input() count: number
   @Input() filterSub: Subject<any>
   @Input() showSearch: boolean
   @Input() placeholder: string
@@ -30,7 +40,7 @@ export class HzGridFilterComponent implements OnInit {
     this.sortOptions = options[2]
   }
 
-  constructor(private destroyService: DestroyService) { }
+  constructor(private destroyService: DestroyService) {}
 
   ngOnInit() {
     this.initAreaSelectorChange()

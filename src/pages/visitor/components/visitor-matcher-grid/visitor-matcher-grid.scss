@@ -1,10 +1,10 @@
-.visitor-grid-container {
+.visitor-matcher-grid-container {
   max-height: calc(100vh - 190px);
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
 
-  .visitor-item {
+  .visitor-matcher-item {
     // flex: 1;
     // min-width: 300px;
     display: inline-block;

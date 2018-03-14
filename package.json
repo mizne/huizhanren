@@ -56,7 +56,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.0.0",
     "@types/ramda": "^0.25.9",
-    "typescript": "2.3.4"
+    "typescript": "2.6.4"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -70,8 +70,6 @@
       "cordova-plugin-qrscanner": {},
       "cordova-plugin-network-information": {}
     },
-    "platforms": [
-      "android"
-    ]
+    "platforms": ["android"]
   }
 }

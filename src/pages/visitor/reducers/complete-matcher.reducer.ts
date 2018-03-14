@@ -1,10 +1,10 @@
-import * as fromMatcher from '../actions/matcher.action'
+import * as fromCompleteMatcher from '../actions/complete-matcher.action'
 import * as fromVisitor from '../actions/visitor.action'
 import { VisitorMatcher } from '../models/matcher.model'
 
 import { deduplicate } from '../../customer/services/utils'
 
-type Actions = fromVisitor.Actions | fromMatcher.Actions
+type Actions = fromVisitor.Actions | fromCompleteMatcher.Actions
 
 export interface State {
   matchers: VisitorMatcher[]
@@ -26,7 +26,7 @@ export const initialState: State = {
 
 export function reducer(state: State = initialState, action: Actions): State {
   switch (action.type) {
-    case fromMatcher.FETCH_MATCHERS_SUCCESS:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: action.matchers,
@@ -34,19 +34,18 @@ export function reducer(state: State = initialState, action: Actions): State {
         showDetailID: '',
         shouldScrollToTop: true
       }
-    case fromMatcher.FETCH_MATCHERS_FAILURE:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_FAILURE:
       return {
         ...state,
         matchers: [],
         currentMatcherTotalCount: 0,
-        showDetailID: ''
       }
-    case fromMatcher.FETCH_MATCHERS_COUNT_SUCCESS:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_COUNT_SUCCESS:
       return {
         ...state,
         totalMatcherCount: action.count
       }
-    case fromMatcher.LOAD_MORE_MATCHERS_SUCCESS:
+    case fromCompleteMatcher.LOAD_MORE_COMPLETE_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: deduplicate(
@@ -57,16 +56,10 @@ export function reducer(state: State = initialState, action: Actions): State {
           state.currentMatcherTotalCount + action.matchers.length,
         shouldScrollToTop: false
       }
-
-    case fromMatcher.UPDATE_MATCHER_DETAIL_ID:
+    case fromCompleteMatcher.UPDATE_MATCHER_DETAIL_ID:
       return {
         ...state,
         showDetailID: action.detailID
-      }
-    case fromVisitor.CHANGE_LIST_STATUS:
-      return {
-        ...state,
-        showDetailID: ''
       }
 
     default: {
@@ -82,5 +75,5 @@ export const getCurrentMatcherCount = (state: State) =>
 
 export const getShowLoadMore = (state: State) =>
   state.totalMatcherCount > state.currentMatcherTotalCount
-export const getShowDetailID = (state: State) => state.showDetailID
+export const getMatcherDetailID = (state: State) => state.showDetailID
 export const getShouldScrollToTop = (state: State) => state.shouldScrollToTop

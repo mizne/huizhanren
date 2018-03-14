@@ -1,7 +1,10 @@
-<div class="matcher-item-container">
-  <span [ngClass]="{'is-sender': item.isSender, 'is-receiver': item.isReceiver, 'send-dir': true}">
-    {{item.isSender ? '发' : '收'}}
-  </span>
+<div class="visitor-matcher-item-container">
+  <div class="matcher-dest">
+    <span [ngClass]="{'is-sender': matcher.isSender, 'is-receiver': matcher.isReceiver, 'send-dir': true}">
+      {{matcher.isInitator ? '发' : '收'}}
+    </span>
+  </div>
+
   <div class="header">
     <div class="info">
       <span class="name">{{matcher.toShow.name}}</span>
@@ -13,17 +16,22 @@
   </div>
 
   <div class="company">
-    <span>{{macher.toShow.company}}</span>
+    <span>{{matcher.toShow.company}}</span>
   </div>
 
 
   <div class="footer">
-    <div class="industry">{{macher.toShow.industry}}</div>
-    <div *ngIf="matcher.status === AUDIT_SUCCEED">
-      <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(item.id)">接受</button>
-      <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(item.id)">拒绝</button>
+    <div class="industry">{{matcher.toShow.industry}}</div>
+    <div class="btn-group" *ngIf="matcher.status === AUDIT_SUCCEED">
+      <div *ngIf="matcher.isReceiver; else senderBlock;">
+        <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(matcher.id)">接受</button>
+        <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(matcher.id)">拒绝</button>
+      </div>
+      <ng-template #senderBlock>
+        {{matcher.status | customerMatcherStatus}}
+      </ng-template>
     </div>
-    <div *ngIf="matcher.status === AGREE">
+    <div class="booth-no" *ngIf="matcher.status === AGREE">
       {{matcher.boothNo}}
     </div>
   </div>

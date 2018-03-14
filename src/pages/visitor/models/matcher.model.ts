@@ -157,6 +157,12 @@ export enum VisitorMatcherType {
   UNKNOWN = 'Unknown'
 }
 
+export enum VisitorMatcherDirection {
+  FROM_ME = '0',
+  TO_ME = '1',
+  ANY = '2'
+}
+
 export enum VisitorMatcherStatus {
   UNKNOWN = '9', // 未知状态
   UN_AUDIT = '0', // 未审核
@@ -167,7 +173,8 @@ export enum VisitorMatcherStatus {
   DELETED = '8', // 已删除
   CANCEL = '7', // 已取消
   KEEP_APPOINTMENT = '5', // 已赴约
-  FAIL_KEEP_APPOINITMENT = '6' // 已爽约
+  FAIL_KEEP_APPOINITMENT = '6', // 已爽约
+  ANY = '10' // 任意状态
 }
 
 export const VisitorInvitationStatuses = [
@@ -234,4 +241,5 @@ export interface FetchMatcherParams {
   pageSize?: number
   pageIndex?: number
   statuses?: VisitorMatcherStatus[]
+  direction?: VisitorMatcherDirection
 }
