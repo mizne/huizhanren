@@ -1,0 +1,13 @@
+.invite-visitor-modal {
+  height: 220px;
+  width: 300px;
+  margin: 10% auto;
+  display: flex;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    transform: rotate(45deg) scale(1.6);
+    right: -2px;
+  }
+}

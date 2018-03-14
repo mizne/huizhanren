@@ -13,6 +13,7 @@ import { HzCustomerPortrayComponent } from './components/customer-portray/custom
 import { HzMatcherFilterComponent } from './components/matcher-filter/matcher-filter.component'
 
 import { ToInviteCustomerModal } from './modals/to-invite-customer-modal/to-invite-customer-modal.component'
+import { ToInviteVisitorModal } from './modals/to-invite-visitor-modal/to-invite-visitor-modal.component'
 import { ToCancelMatcherModal } from './modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
 import { ToAgreeMatcherModal } from './modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
 import { ToRefuseMatcherModal } from './modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
@@ -41,6 +42,7 @@ const pipes = [
 ]
 const modals = [
   ToInviteCustomerModal,
+  ToInviteVisitorModal,
   ToCancelMatcherModal,
   ToAgreeMatcherModal,
   ToRefuseMatcherModal

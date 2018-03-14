@@ -41,6 +41,9 @@ export const INVITE_VISITOR = '[Visitor] Invite Visitor'
 export const INVITE_VISITOR_SUCCESS = '[Visitor] Invite Visitor Success'
 export const INVITE_VISITOR_FAILURE = '[Visitor] Invite Visitor Failure'
 
+export const TO_INIVITE_VISITOR_TO_MICRO_APP =
+  '[Visitor] To Invite Visitor To Micro App'
+
 export const CHANGE_LIST_STATUS = '[Visitor] Change List Status'
 export const CHANGE_PAGE_STATUS = '[Visitor] Change Page Status'
 export const TOGGLE_PAGE_STATUS = '[Visitor] Toggle Page Status'
@@ -149,6 +152,10 @@ export class InviteVisitorFailureAction implements Action {
   readonly type = INVITE_VISITOR_FAILURE
 }
 
+export class ToInviteVisitorToMicroAppAction implements Action {
+  readonly type = TO_INIVITE_VISITOR_TO_MICRO_APP
+}
+
 export class ChangeListStatusAction implements Action {
   readonly type = CHANGE_LIST_STATUS
   constructor(public listStatus: ListStatus) {}
@@ -220,6 +227,7 @@ export type Actions =
   | InviteVisitorAction
   | InviteVisitorSuccessAction
   | InviteVisitorFailureAction
+  | ToInviteVisitorToMicroAppAction
   | ChangeListStatusAction
   | ChangePageStatusAction
   | TogglePageStatusAction

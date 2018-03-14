@@ -37,7 +37,8 @@ import {
   FetchLoggerAction,
   LoadMoreVisitorsAction,
   FetchAreaFilterOptionsAction,
-  FetchTypeFilterOptionsAction
+  FetchTypeFilterOptionsAction,
+  ToInviteVisitorToMicroAppAction
 } from './actions/visitor.action'
 import {
   FetchToDoMatchersAction,
@@ -152,6 +153,7 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   toInvite(id: string) {
     console.log(`to modal for invite visitor of id: ${id}`)
+    this.store.dispatch(new ToInviteVisitorToMicroAppAction())
   }
 
   updateVisitorDetailID(id: string) {

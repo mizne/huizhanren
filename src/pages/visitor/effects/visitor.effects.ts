@@ -23,6 +23,7 @@ import {
 } from '../reducers'
 import { getCompanyName, getBoothNo, getTenantId } from '../../login/reducers'
 import { PageStatus } from '../models/visitor.model'
+import { ToInviteVisitorModal } from '../modals/to-invite-visitor-modal/to-invite-visitor-modal.component'
 
 @Injectable()
 export class VisitorEffects {
@@ -162,6 +163,13 @@ export class VisitorEffects {
     .ofType(fromVisitor.UPDATE_VISITOR_DETAIL_ID)
     .map(() => {
       return new fromVisitor.ChangePageStatusAction(PageStatus.DETAIL)
+    })
+
+  @Effect({ dispatch: false })
+  toInviteVisitorToMicroApp$ = this.actions$
+    .ofType(fromVisitor.TO_INIVITE_VISITOR_TO_MICRO_APP)
+    .do(() => {
+      this.modalCtrl.create(ToInviteVisitorModal).present()
     })
 
   @Effect()
