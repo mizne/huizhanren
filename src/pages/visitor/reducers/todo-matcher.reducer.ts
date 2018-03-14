@@ -33,7 +33,7 @@ export function reducer(state: State = initialState, action: Actions): State {
       return {
         ...state,
         matchers: [],
-        currentMatcherTotalCount: 0,
+        currentMatcherTotalCount: 0
       }
     case fromToDoMatcher.FETCH_TODO_MATCHERS_COUNT_SUCCESS:
       return {
@@ -50,6 +50,14 @@ export function reducer(state: State = initialState, action: Actions): State {
         currentMatcherTotalCount:
           state.currentMatcherTotalCount + action.matchers.length,
         shouldScrollToTop: false
+      }
+    case fromToDoMatcher.AGREE_MATCHER_SUCCESS:
+    case fromToDoMatcher.REFUSE_MATCHER_SUCCESS:
+      return {
+        ...state,
+        totalMatcherCount: state.totalMatcherCount - 1,
+        currentMatcherTotalCount: state.currentMatcherTotalCount - 1,
+        matchers: state.matchers.filter(e => e.id !== action.id)
       }
 
     default: {

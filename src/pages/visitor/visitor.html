@@ -25,12 +25,12 @@
         (loadMore)="loadMore()" [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async"
         [dataItems]="visitors$ | async">
       </visitor-grid>
-      <visitor-matcher-grid [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" type="matcher" (agreeMatcher)="ensureAgreeMatcher($event)"
+      <visitor-matcher-grid [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
         [showLoadMore]="showLoadMore$ | async" [dataItems]="toDoMatchers$ | async">
       </visitor-matcher-grid>
 
-      <visitor-matcher-grid [hidden]="(listStatus$ | async) !== COMPLETE_MATCHER_GRID" type="matcher" (showDetail)="updateMatcherDetailID($event)"
+      <visitor-matcher-grid [hidden]="(listStatus$ | async) !== COMPLETE_MATCHER_GRID" (showDetail)="updateMatcherDetailID($event)"
         (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async"
         [expand]="(pageStatus$ | async) === DETAIL_PAGE" [dataItems]="completeMatchers$ | async">
       </visitor-matcher-grid>

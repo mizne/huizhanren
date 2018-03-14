@@ -33,7 +33,6 @@ export class VisitorMatcherGridComponent implements OnInit, OnDestroy {
   }
 
   @Input() expand: boolean
-  @Input() type: string
   @Input() dataItems: Visitor[]
   @Input() showLoadMore: boolean
   @Input()
@@ -45,7 +44,6 @@ export class VisitorMatcherGridComponent implements OnInit, OnDestroy {
     }
   }
 
-  @Output() invite: EventEmitter<string> = new EventEmitter<string>()
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -63,20 +61,16 @@ export class VisitorMatcherGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureInvite(id: string) {
-    this.invite.emit(id)
-  }
-
   ensureShow(item: Visitor) {
     item.selected = !item.selected
     this.showDetail.emit(item.id)
   }
 
-  ensureAgreeMatcher(id: string) {
+  ensureAgree(id: string) {
     this.agreeMatcher.emit(id)
   }
 
-  ensureRefuseMatcher(id: string) {
+  ensureRefuse(id: string) {
     this.refuseMatcher.emit(id)
   }
 

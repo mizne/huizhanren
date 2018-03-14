@@ -99,6 +99,7 @@ export class AgreeMatcherAction implements Action {
 }
 export class AgreeMatcherSuccessAction implements Action {
   readonly type = AGREE_MATCHER_SUCCESS
+  constructor(public id: string) {}
 }
 export class AgreeMatcherFailureAction implements Action {
   readonly type = AGREE_MATCHER_FAILURE
@@ -117,6 +118,7 @@ export class RefuseMatcherAction implements Action {
 }
 export class RefuseMatcherSuccessAction implements Action {
   readonly type = REFUSE_MATCHER_SUCCESS
+  constructor(public id: string) {}
 }
 export class RefuseMatcherFailureAction implements Action {
   readonly type = REFUSE_MATCHER_FAILURE

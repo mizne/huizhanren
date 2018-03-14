@@ -18,12 +18,9 @@ import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-m
 import { ToRefuseMatcherModal } from '../modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 import { Store } from '@ngrx/store'
-import {
-  State,
-  getCurrentToDoMatcherCount,
-} from '../reducers'
+import { State, getCurrentToDoMatcherCount } from '../reducers'
 import { PageStatus } from '../models/visitor.model'
-import { VisitorMatcherStatus } from '../models/matcher.model';
+import { VisitorMatcherStatus } from '../models/matcher.model'
 
 @Injectable()
 export class ToDoMatcherEffects {
@@ -46,14 +43,18 @@ export class ToDoMatcherEffects {
         })
         .catch(() => {
           loadingCtrl.dismiss()
-          return Observable.of(new fromToDoMatcher.FetchToDoMatchersFailureAction())
+          return Observable.of(
+            new fromToDoMatcher.FetchToDoMatchersFailureAction()
+          )
         })
     })
 
   @Effect()
   fetchToDoMatchersCount$ = this.actions$
     .ofType(fromToDoMatcher.FETCH_TODO_MATCHERS_COUNT)
-    .map((action: fromToDoMatcher.FetchToDoMatchersCountAction) => action.params)
+    .map(
+      (action: fromToDoMatcher.FetchToDoMatchersCountAction) => action.params
+    )
     .switchMap(params => {
       return this.matcherService
         .fetchMatcherCount(params)
@@ -94,11 +95,12 @@ export class ToDoMatcherEffects {
         })
         .catch(() => {
           loadingCtrl.dismiss()
-          return Observable.of(new fromToDoMatcher.LoadMoreToDoMatchersFailureAction())
+          return Observable.of(
+            new fromToDoMatcher.LoadMoreToDoMatchersFailureAction()
+          )
         })
     })
 
-  
   @Effect()
   toAgreeMatcher$ = this.actions$
     .ofType(fromToDoMatcher.TO_AGREE_MATCHER)
@@ -128,11 +130,10 @@ export class ToDoMatcherEffects {
     .switchMap(matcherId =>
       this.matcherService
         .agreeMatcher(matcherId)
-        .concatMap(() => [
-          new fromToDoMatcher.AgreeMatcherSuccessAction(),
-          new fromToDoMatcher.FetchToDoMatchersAction()
-        ])
-        .catch(() => Observable.of(new fromToDoMatcher.AgreeMatcherFailureAction()))
+        .map(() => new fromToDoMatcher.AgreeMatcherSuccessAction(matcherId))
+        .catch(() =>
+          Observable.of(new fromToDoMatcher.AgreeMatcherFailureAction())
+        )
     )
 
   @Effect({ dispatch: false })
@@ -190,10 +191,7 @@ export class ToDoMatcherEffects {
     .switchMap(matcherId =>
       this.matcherService
         .refuseMatcher(matcherId)
-        .concatMap(() => [
-          new fromToDoMatcher.RefuseMatcherSuccessAction(),
-          new fromToDoMatcher.FetchToDoMatchersAction()
-        ])
+        .map(() => new fromToDoMatcher.RefuseMatcherSuccessAction(matcherId))
         .catch(() =>
           Observable.of(new fromToDoMatcher.RefuseMatcherFailureAction())
         )
