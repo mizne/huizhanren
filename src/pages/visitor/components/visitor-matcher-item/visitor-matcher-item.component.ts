@@ -13,6 +13,7 @@ import {
 })
 export class VisitorMatcherItemComponent implements OnInit {
   AUDIT_SUCCEED = VisitorMatcherStatus.AUDIT_SUCCEED
+  UN_AUDIT = VisitorMatcherStatus.UN_AUDIT
   AGREE = VisitorMatcherStatus.AGREE
 
   @Input() matcher: VisitorMatcher[]
@@ -20,7 +21,9 @@ export class VisitorMatcherItemComponent implements OnInit {
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   constructor() {}
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.matcher)
+  }
 
   ensureAgreeMatcher(id: string) {
     this.agreeMatcher.emit(id)

@@ -21,9 +21,8 @@
       </visitor-matcher-filter>
 
 
-      <visitor-grid [hidden]="(listStatus$ | async) !== VISITOR_GRID" type="visitor" (invite)="toInvite($event)" (showDetail)="updateVisitorDetailID($event)"
-        (loadMore)="loadMore()" [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async"
-        [dataItems]="visitors$ | async">
+      <visitor-grid [hidden]="(listStatus$ | async) !== VISITOR_GRID" type="visitor" (invite)="toInvite($event)" (loadMore)="loadMore()"
+        [shouldScrollToTop]="visitorShouldScrollToTop$ | async" [showLoadMore]="showLoadMore$ | async" [dataItems]="visitors$ | async">
       </visitor-grid>
       <visitor-matcher-grid [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" (agreeMatcher)="ensureAgreeMatcher($event)"
         (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"

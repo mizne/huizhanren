@@ -86,7 +86,7 @@ export interface VisitorFilter {
   key?: string
 }
 
-export interface FetchRecommendVisitorParams extends VisitorFilter {
+export interface FetchVisitorParams extends VisitorFilter {
   pageSize?: number
   pageIndex?: number
 }

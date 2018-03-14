@@ -3,7 +3,7 @@ import {
   Visitor,
   ListStatus,
   PageStatus,
-  FetchRecommendVisitorParams,
+  FetchVisitorParams,
   VisitorFilter,
   FilterOptions
 } from '../models/visitor.model'
@@ -67,7 +67,7 @@ export const FETCH_LOGGER_FAILURE = '[Visitor] Fetch Logger Failure'
 export class FetchVisitorsAction implements Action {
   readonly type = FETCH_VISITORS
   constructor(
-    public params: FetchRecommendVisitorParams = {
+    public params: FetchVisitorParams = {
       pageIndex: 1,
       pageSize: 10
     }
@@ -123,7 +123,7 @@ export class FetchTypeFilterOptionsFailureAction implements Action {
 
 export class LoadMoreVisitorsAction implements Action {
   readonly type = LOAD_MORE_VISITORS
-  constructor(public params: FetchRecommendVisitorParams) {}
+  constructor(public params: FetchVisitorParams) {}
 }
 export class LoadMoreVisitorsSuccessAction implements Action {
   readonly type = LOAD_MORE_VISITORS_SUCCESS
@@ -203,40 +203,32 @@ export type Actions =
   | FetchVisitorsAction
   | FetchVisitorsSuccessAction
   | FetchVisitorsFailureAction
-
   | FetchVisitorsCountAction
   | FetchVisitorsCountSuccessAction
   | FetchVisitorsCountFailureAction
-
   | FetchAreaFilterOptionsAction
   | FetchAreaFilterOptionsSuccessAction
   | FetchAreaFilterOptionsFailureAction
-
   | FetchTypeFilterOptionsAction
   | FetchTypeFilterOptionsSuccessAction
   | FetchTypeFilterOptionsFailureAction
-
   | LoadMoreVisitorsAction
   | LoadMoreVisitorsSuccessAction
   | LoadMoreVisitorsFailureAction
-
   | ToInviteVisitorAction
   | CancelInviteVisitorAction
   | InviteVisitorAction
   | InviteVisitorSuccessAction
   | InviteVisitorFailureAction
-
   | ChangeListStatusAction
   | ChangePageStatusAction
   | TogglePageStatusAction
   | UpdateVisitorDetailIDAction
-
   | ToCreateLoggerAction
   | CancelCreateLoggerAction
   | CreateLoggerAction
   | CreateLoggerSuccessAction
   | CreateLoggerFailureAction
-
   | FetchLoggerAction
   | FetchLoggerSuccessAction
   | FetchLoggerFailureAction

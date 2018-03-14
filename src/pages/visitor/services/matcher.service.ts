@@ -73,10 +73,10 @@ export class VisitorMatcherService {
             if (typeof params.direction !== 'undefined') {
               switch (params.direction) {
                 case VisitorMatcherDirection.FROM_ME:
-                  condition.initator = exhibitorId
+                  condition.Initator = exhibitorId
                   break
                 case VisitorMatcherDirection.TO_ME:
-                  condition.receiver = exhibitorId
+                  condition.Receiver = exhibitorId
                   break
               }
             }
@@ -99,7 +99,7 @@ export class VisitorMatcherService {
               matchers.map(e => ({
                 ...e,
                 toShow: VisitorMatcher.extractVisitorToShow(e, exhibitorId),
-                isSender: e.initator.id === exhibitorId,
+                isInitator: e.initator.id === exhibitorId,
                 isReceiver: e.receiver.id === exhibitorId
               }))
           )
@@ -150,10 +150,10 @@ export class VisitorMatcherService {
             if (params.direction) {
               switch (params.direction) {
                 case VisitorMatcherDirection.FROM_ME:
-                  condition.initator = exhibitorId
+                  condition.Initator = exhibitorId
                   break
                 case VisitorMatcherDirection.TO_ME:
-                  condition.receiver = exhibitorId
+                  condition.Receiver = exhibitorId
                   break
               }
             }

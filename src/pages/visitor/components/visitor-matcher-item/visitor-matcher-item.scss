@@ -85,6 +85,10 @@
       }
     }
 
+    .status {
+      color: #8b8b8c;
+    }
+
     .booth-no {
       color: map-get($map: $gridColors, $key: secondary);
     }

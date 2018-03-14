@@ -7,7 +7,7 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   Visitor,
-  FetchRecommendVisitorParams,
+  FetchVisitorParams,
   VisitorFilter,
   FilterOptions
 } from '../models/visitor.model'
@@ -27,13 +27,11 @@ export class VisitorService {
   /**
    * 获取推荐观众信息
    *
-   * @param {FetchRecommendVisitorParams} params
+   * @param {FetchVisitorParams} params
    * @returns {Observable<Visitor[]>}
    * @memberof VisitorService
    */
-  public fetchVisitors(
-    params: FetchRecommendVisitorParams
-  ): Observable<Visitor[]> {
+  public fetchVisitors(params: FetchVisitorParams): Observable<Visitor[]> {
     return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()

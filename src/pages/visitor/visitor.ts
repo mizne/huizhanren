@@ -365,7 +365,13 @@ export class VisitorPage implements OnInit, OnDestroy {
       )
       .takeUntil(this.destroyService)
       .subscribe(([_, filter]) => {
-        this.store.dispatch(new FetchVisitorsAction(filter))
+        this.store.dispatch(
+          new FetchVisitorsAction({
+            ...filter,
+            pageIndex: 1,
+            pageSize: 10
+          })
+        )
       })
   }
 
