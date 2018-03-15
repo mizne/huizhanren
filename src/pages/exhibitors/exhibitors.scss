@@ -11,10 +11,10 @@ page-exhibitors {
       .list-area {
         background-color: #1f2022;
         transition: width 1s;
-        flex: 1;
+        flex: 2;
 
         &.expand {
-          flex: 2;
+          flex: 3;
         }
       }
 
@@ -22,7 +22,8 @@ page-exhibitors {
         margin-left: 10px;
         flex: 1;
         &.expand {
-          flex: 2;
+          flex: 1;
+          display: block;
         }
       }
     }

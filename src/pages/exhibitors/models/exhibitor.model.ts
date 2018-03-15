@@ -184,7 +184,8 @@ export interface Portray {
 
 export enum ListStatus {
   EXHIBITOR,
-  MATCHER
+  TODO,
+  COMPLETE
 }
 
 export enum PageStatus {

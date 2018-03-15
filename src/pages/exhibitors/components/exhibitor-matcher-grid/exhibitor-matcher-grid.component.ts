@@ -1,22 +1,27 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
   Input,
   Output,
   EventEmitter,
-  ViewChild,
-  ElementRef
+  ElementRef,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild
 } from '@angular/core'
+import { Subject } from 'rxjs/Subject'
 
 import { Exhibitor } from '../../models/exhibitor.model'
+import { isInViewport } from '../../../customer/services/utils'
+import { HzLoadMoreComponent } from '../../../../shared/components/load-more/load-more.component'
 
 @Component({
-  selector: 'exhibitor-grid',
-  templateUrl: 'exhibitor-grid.component.html'
+  selector: 'exhibitor-matcher-grid',
+  templateUrl: 'exhibitor-matcher-grid.component.html'
 })
-export class ExhibitorGridComponent implements OnInit, OnDestroy {
+export class ExhibitorMatcherGridComponent implements OnInit, OnDestroy {
   private gridContainers: HTMLElement[] = []
+  @ViewChild('gridExpand')
   @ViewChild('gridContainer')
   set gridContainer(v: ElementRef) {
     if (v) {
@@ -40,7 +45,6 @@ export class ExhibitorGridComponent implements OnInit, OnDestroy {
   }
 
   @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
-  @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() loadMore: EventEmitter<void> = new EventEmitter<void>()
@@ -62,15 +66,11 @@ export class ExhibitorGridComponent implements OnInit, OnDestroy {
     this.showDetail.emit(item.id)
   }
 
-  ensureCancelMatcher(id: string) {
-    this.cancelMatcher.emit(id)
-  }
-
-  ensureAgreeMatcher(id: string) {
+  ensureAgree(id: string) {
     this.agreeMatcher.emit(id)
   }
 
-  ensureRefuseMatcher(id: string) {
+  ensureRefuse(id: string) {
     this.refuseMatcher.emit(id)
   }
 

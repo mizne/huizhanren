@@ -10,18 +10,23 @@ import {
   getListStatus,
   getPageStatus,
   getExhibitorShowDetailID,
-  getMatcherShowDetailID,
+  getToDoMatcherShowDetailID,
   getExhibitors,
-  getMatchers,
+  getToDoMatchers,
   getCurrentLogs,
   getShowExhibitorLoadMore,
-  getShowMatcherLoadMore,
+  getShowToDoMatcherLoadMore,
   getCurrentExhibitorCount,
-  getCurrentMatcherCount,
+  getCurrentToDoMatcherCount,
   getExhibitorShouldScrollToTop,
-  getMatcherShouldScrollToTop,
+  getToDoMatcherShouldScrollToTop,
   getExhibitorAreaFilters,
-  getExhibitorTypeFilters
+  getExhibitorTypeFilters,
+  getCompleteMatchers,
+  getCurrentCompleteMatcherCount,
+  getCompleteMatcherShouldScrollToTop,
+  getCompleteMatcherShowDetailID,
+  getShowCompleteMatcherLoadMore
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -35,17 +40,25 @@ import {
   FetchExhibitorsCountAction,
   LoadMoreExhibitorsAction,
   FetchAreaFilterOptionsAction,
-  FetchTypeFilterOptionsAction
+  FetchTypeFilterOptionsAction,
+  ToInviteExhibitorToMicroAppAction
 } from './actions/exhibitor.action'
 import {
-  FetchMatchersAction,
-  ToAgreeMatcherAction,
-  ToCancelMatcherAction,
-  ToRefuseMatcherAction,
-  FetchMatchersCountAction,
-  LoadMoreMatchersAction,
-  UpdateMatcherDetailIDAction
-} from './actions/matcher.action'
+  FetchToDoMatchersAction,
+  ToAgreeToDoMatcherAction,
+  ToRefuseToDoMatcherAction,
+  FetchToDoMatchersCountAction,
+  LoadMoreToDoMatchersAction,
+  UpdateToDoMatcherDetailIDAction,
+  ToBatchAgreeToDoMatchersAction
+} from './actions/todo-matcher.action'
+
+import {
+  FetchCompleteMatchersAction,
+  FetchCompleteMatchersCountAction,
+  UpdateCompleteMatcherDetailIDAction,
+  LoadMoreCompleteMatchersAction
+} from './actions/complete-matcher.action'
 
 import {
   PageStatus,
@@ -60,10 +73,13 @@ import {
 import { Logger } from '../customer/models/logger.model'
 import {
   ExhibitorMatcher,
-  ExhibitorMatcherStatus
+  ExhibitorMatcherStatus,
+  ExhibitorMatcherDirection
 } from './models/matcher.model'
 
 import { DestroyService } from '../../providers/destroy.service'
+import { GridFilterType } from '../../shared/components/grid-filter/grid-filter.component'
+import { ToDoFilterOptions } from './components/matcher-filter/matcher-filter.component'
 
 @IonicPage()
 @Component({
@@ -71,29 +87,43 @@ import { DestroyService } from '../../providers/destroy.service'
   templateUrl: 'exhibitors.html',
   providers: [DestroyService]
 })
-export class ExhibitorsPage implements OnInit, OnDestroy {
+export class ExhibitorsPage implements OnInit {
+  gridFilterType = GridFilterType.EXHIBITOR
+
+  EXHIBITOR_GRID = ListStatus.EXHIBITOR
+  TODO_MATCHER_GRID = ListStatus.TODO
+  COMPLETE_MATCHER_GRID = ListStatus.COMPLETE
+
+  LIST_PAGE = PageStatus.LIST
+  DETAIL_PAGE = PageStatus.DETAIL
+
   exhibitors$: Observable<Exhibitor[]>
   currentExhibitorsTotal$: Observable<number>
-  matchers$: Observable<ExhibitorMatcher[]>
-  currentMatchersTotal$: Observable<number>
+  toDoMatchers$: Observable<ExhibitorMatcher[]>
+  completeMatchers$: Observable<ExhibitorMatcher[]>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
   showDetailID$: Observable<string>
-  currentDetail$: Observable<Exhibitor>
+  currentExhibitorDetail$: Observable<Exhibitor>
+  currentExhibitorMatcherDetail$: Observable<ExhibitorMatcher>
   currentLogs$: Observable<Logger[]>
+  // TODO
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
   exhibitorShouldScrollToTop$: Observable<boolean>
-  matcherShouldScrollToTop$: Observable<boolean>
+  toDoMatcherShouldScrollToTop$: Observable<boolean>
+  completeMatcherShouldScrollToTop$: Observable<boolean>
   filterOptions$: Observable<FilterOptions[][]>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
-  headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
   exhibitorFilterSub: Subject<ExhibitorFilter> = new Subject<ExhibitorFilter>()
-  matcherFilterSub: Subject<ExhibitorMatcherStatus[]> = new Subject<
-    ExhibitorMatcherStatus[]
-    >()
+  toDoMatcherFilterSub: Subject<ToDoFilterOptions> = new Subject<
+    ToDoFilterOptions
+  >()
+  completeMatcherFilterSub: Subject<ExhibitorMatcherDirection> = new Subject<
+    ExhibitorMatcherDirection
+  >()
   loadMoreSub: Subject<void> = new Subject<void>()
 
   constructor(
@@ -101,7 +131,7 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private store: Store<State>,
     private destroyService: DestroyService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.initDataSource()
@@ -109,26 +139,40 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.initDispatch()
   }
 
-  ngOnDestroy() { }
+  ensureToDoFilter(filter: ToDoFilterOptions) {
+    this.toDoMatcherFilterSub.next(filter)
+  }
 
-  loadMore() {
-    this.loadMoreSub.next()
+  ensureCompleteFilter(filter: ExhibitorMatcherDirection) {
+    this.completeMatcherFilterSub.next(filter)
+  }
+
+  ensureBatchAgree() {
+    this.store.dispatch(new ToBatchAgreeToDoMatchersAction())
+  }
+
+  ensureInvite() {
+    this.store.dispatch(new ToInviteExhibitorToMicroAppAction())
   }
 
   updateExhibitorDetailID(id: string) {
     this.store.dispatch(new UpdateExhibitorDetailIDAction(id))
   }
 
-  updateMatcherDetailID(id: string) {
-    this.store.dispatch(new UpdateMatcherDetailIDAction(id))
+  loadMore() {
+    this.loadMoreSub.next()
+  }
+
+  updateToDoMatcherDetailID(id: string) {
+    this.store.dispatch(new UpdateToDoMatcherDetailIDAction(id))
+  }
+
+  updateCompleteMatcherDetailID(id: string) {
+    this.store.dispatch(new UpdateCompleteMatcherDetailIDAction(id))
   }
 
   toggleLog() {
     this.store.dispatch(new TogglePageStatusAction())
-  }
-
-  ensureInvite() {
-    this.store.dispatch(new ToInviteExhibitorAction())
   }
 
   ensureCreateLog() {
@@ -143,54 +187,50 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
     this.store.dispatch(new ToShowProcuctAction(product))
   }
 
-  ensureCancelMatcher(id: string) {
-    this.store.dispatch(new ToCancelMatcherAction(id))
-  }
-
   ensureAgreeMatcher(id: string) {
-    this.store.dispatch(new ToAgreeMatcherAction(id))
+    this.store.dispatch(new ToAgreeToDoMatcherAction(id))
   }
 
   ensureRefuseMatcher(id: string) {
-    this.store.dispatch(new ToRefuseMatcherAction(id))
+    this.store.dispatch(new ToRefuseToDoMatcherAction(id))
   }
 
   private initDataSource() {
-    this.pageStatus$ = this.store.select(getPageStatus)
-    this.listStatus$ = this.store.select(getListStatus)
     this.exhibitors$ = this.store.select(getExhibitors)
     this.currentExhibitorsTotal$ = this.store.select(getCurrentExhibitorCount)
-    this.exhibitorShouldScrollToTop$ = this.store.select(
-      getExhibitorShouldScrollToTop
-    )
-    this.matcherShouldScrollToTop$ = this.store.select(
-      getMatcherShouldScrollToTop
-    )
+    this.toDoMatchers$ = this.store.select(getToDoMatchers)
+    this.completeMatchers$ = this.store.select(getCompleteMatchers)
 
-    // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
-    this.matchers$ = Observable.combineLatest(
-      this.store.select(getMatchers),
-      this.matcherFilterSub.startWith([])
-    ).map(([matchers, matcherFilter]) => {
-      return matcherFilter.length === 0
-        ? matchers
-        : matchers.filter(e => matcherFilter.indexOf(e.status) >= 0)
-    })
-    this.currentMatchersTotal$ = this.store.select(getCurrentMatcherCount)
-
+    this.pageStatus$ = this.store.select(getPageStatus)
+    this.listStatus$ = this.store.select(getListStatus)
     this.showDetailID$ = Observable.merge(
       this.store.select(getExhibitorShowDetailID),
-      this.store.select(getMatcherShowDetailID)
+      this.store.select(getToDoMatcherShowDetailID),
+      this.store.select(getCompleteMatcherShowDetailID)
     )
-    this.currentDetail$ = this.computeCurrentDetail()
+
+    this.initCurrentDetail()
     this.currentLogs$ = this.store.select(getCurrentLogs)
     this.showLoadMore$ = Observable.merge(
       this.listStatus$
         .filter(e => e === ListStatus.EXHIBITOR)
         .mergeMap(() => this.store.select(getShowExhibitorLoadMore)),
       this.listStatus$
-        .filter(e => e === ListStatus.MATCHER)
-        .mergeMap(() => this.store.select(getShowMatcherLoadMore))
+        .filter(e => e === ListStatus.TODO)
+        .mergeMap(() => this.store.select(getShowToDoMatcherLoadMore)),
+      this.listStatus$
+        .filter(e => e === ListStatus.COMPLETE)
+        .mergeMap(() => this.store.select(getShowCompleteMatcherLoadMore))
+    )
+
+    this.exhibitorShouldScrollToTop$ = this.store.select(
+      getExhibitorShouldScrollToTop
+    )
+    this.toDoMatcherShouldScrollToTop$ = this.store.select(
+      getToDoMatcherShouldScrollToTop
+    )
+    this.completeMatcherShouldScrollToTop$ = this.store.select(
+      getCompleteMatcherShouldScrollToTop
     )
 
     this.filterOptions$ = Observable.combineLatest(
@@ -202,153 +242,203 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
   }
 
   // 根据list status和 show detail ID寻找当前显示详情
-  private computeCurrentDetail(): Observable<Exhibitor> {
+  private initCurrentDetail(): void {
     const latestExhibitor$ = Observable.combineLatest(
       this.store.select(getExhibitors),
       this.store.select(getExhibitorShowDetailID)
-    ).map(([exhibitors, id]) => {
-      const exhibitor = exhibitors.find(e => e.id === id)
-      return exhibitor
-    })
-    const latestMatcher$ = Observable.combineLatest(
-      this.store.select(getMatchers),
-      this.store.select(getMatcherShowDetailID)
-    ).map(([matchers, id]) => {
-      const matcher = matchers.find(e => e.id === id)
-      return matcher
-    })
-
-    return Observable.combineLatest(
-      latestExhibitor$,
-      latestMatcher$
-    ).withLatestFrom(this.listStatus$, ([exhibitor, matcher], listStatus) => {
-      if (listStatus === ListStatus.EXHIBITOR) {
+    )
+      .map(([exhibitors, id]) => {
+        const exhibitor = exhibitors.find(e => e.id === id)
         return exhibitor
-      }
-      if (listStatus === ListStatus.MATCHER) {
+      })
+      .filter(e => !!e)
+    const latestToDoMatcher$ = Observable.combineLatest(
+      this.store.select(getToDoMatchers),
+      this.store.select(getToDoMatcherShowDetailID)
+    )
+      .map(([matchers, id]) => {
+        const matcher = matchers.find(e => e.id === id)
         return matcher
+      })
+      .filter(e => !!e)
+    const latestCompleteMatcher$ = Observable.combineLatest(
+      this.store.select(getCompleteMatchers),
+      this.store.select(getCompleteMatcherShowDetailID)
+    )
+      .map(([matchers, id]) => {
+        const matcher = matchers.find(e => e.id === id)
+        return matcher
+      })
+      .filter(e => !!e)
+
+    this.currentExhibitorDetail$ = Observable.combineLatest(
+      latestExhibitor$,
+      latestToDoMatcher$.map(e => e.toShow),
+      latestCompleteMatcher$.map(e => e.toShow)
+    ).withLatestFrom(
+      this.listStatus$.startWith(ListStatus.EXHIBITOR),
+      ([exhibitor, toDo, complete], listStatus) => {
+        if (listStatus === ListStatus.EXHIBITOR) {
+          return exhibitor
+        }
+        if (listStatus === ListStatus.TODO) {
+          return toDo
+        }
+        if (listStatus === ListStatus.COMPLETE) {
+          return complete
+        }
       }
-    })
+    )
+
+    this.currentExhibitorMatcherDetail$ = Observable.combineLatest(
+      latestToDoMatcher$,
+      latestCompleteMatcher$
+    ).withLatestFrom(
+      this.listStatus$.startWith(ListStatus.EXHIBITOR),
+      ([toDo, complete], listStatus) => {
+        if (listStatus === ListStatus.TODO) {
+          return toDo
+        }
+        if (listStatus === ListStatus.COMPLETE) {
+          return complete
+        }
+      }
+    )
   }
 
   private initSubscriber() {
     this.initListHeaderChange()
-    this.initListHeaderEvent()
 
     this.initExhibitorFilter()
-    this.initMatcherFilter()
+    this.initToDoMatcherFilter()
+    this.initCompleteMatcherFilter()
     this.initLoadMore()
     this.initFetchLogger()
   }
   private initListHeaderChange(): void {
+    this.initChangeListStatus()
+
+    const sameWithLast$ = this.listStatusChangeSub
+      .pairwise()
+      .filter(([prev, curr]) => prev === curr)
+
+    this.initFetchToDoMatcher(sameWithLast$)
+    this.initFetchCompleteMatcher(sameWithLast$)
+    this.initFetchExhibitor(sameWithLast$)
+  }
+
+  private initChangeListStatus() {
     this.listStatusChangeSub
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
         this.store.dispatch(new ChangeListStatusAction(listStatus))
       })
+  }
 
-    this.listStatusChangeSub
-      .filter(listStatus => listStatus === ListStatus.MATCHER)
+  private initFetchToDoMatcher(
+    sameWithLast$: Observable<[ListStatus, ListStatus]>
+  ) {
+    const firstToDoMatchFetch$ = this.listStatusChangeSub
+      .filter(listStatus => listStatus === ListStatus.TODO)
       .take(1)
       .subscribe(() => {
-        this.store.dispatch(new FetchMatchersAction())
-        this.store.dispatch(new FetchMatchersCountAction())
+        this.store.dispatch(
+          new FetchToDoMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: [ExhibitorMatcherStatus.ANY],
+            direction: ExhibitorMatcherDirection.ANY
+          })
+        )
+        this.store.dispatch(
+          new FetchToDoMatchersCountAction({
+            status: ExhibitorMatcherStatus.ANY,
+            direction: ExhibitorMatcherDirection.ANY
+          })
+        )
       })
-  }
 
-  private initListHeaderEvent(): void {
-    this.headerEventSub
-      .withLatestFrom(this.listStatus$, (headerEvent, listStatus) => ({
-        headerEvent,
-        listStatus
-      }))
+    const sameWithLastToDoMatchFetch$ = sameWithLast$
+      .filter(([e, _]) => e === ListStatus.TODO)
       .withLatestFrom(
-      this.exhibitorFilterSub.startWith({
-        area: '',
-        type: '',
-        key: ''
-      }),
-      ({ headerEvent, listStatus }, exhibitorFilter) => ({
-        headerEvent,
-        listStatus,
-        exhibitorFilter
-      })
-      )
-      .withLatestFrom(
-      this.matcherFilterSub.startWith([]),
-      ({ headerEvent, listStatus, exhibitorFilter }, matcherFilter) => ({
-        headerEvent,
-        listStatus,
-        exhibitorFilter,
-        matcherFilter
-      })
+        this.toDoMatcherFilterSub.startWith({
+          status: ExhibitorMatcherStatus.ANY,
+          direction: ExhibitorMatcherDirection.ANY
+        })
       )
       .takeUntil(this.destroyService)
-      .subscribe(
-      ({ headerEvent, listStatus, exhibitorFilter, matcherFilter }) => {
-        switch (headerEvent) {
-          case ListHeaderEvent.REFRESH:
-            if (listStatus === ListStatus.EXHIBITOR) {
-              this.store.dispatch(
-                new FetchExhibitorsAction({
-                  ...exhibitorFilter,
-                  pageIndex: 1,
-                  pageSize: 10
-                })
-              )
-            }
-            if (listStatus === ListStatus.MATCHER) {
-              console.log(matcherFilter)
-              this.store.dispatch(
-                new FetchMatchersAction({
-                  statuses: matcherFilter,
-                  pageIndex: 1,
-                  pageSize: 10
-                })
-              )
-            }
-            break
-
-          case ListHeaderEvent.BATCH_ACCEPT:
-            console.log('batch accept')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_CANCEL:
-            console.log('batch cancel')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_DELETE:
-            console.log('batch delete')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_HIDDEN:
-            console.log('batch hidden')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_INVITE:
-            console.log('batch invite')
-            this.prompt()
-            break
-          case ListHeaderEvent.BATCH_REFUSE:
-            console.log('batch refuse')
-            this.prompt()
-            break
-          default:
-            console.warn(`Unknown recommend header event: ${headerEvent}`)
-            break
-        }
-      }
-      )
+      .subscribe(([_, filter]) => {
+        this.store.dispatch(
+          new FetchToDoMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: [filter.status],
+            direction: filter.direction
+          })
+        )
+      })
   }
 
-  private prompt(): void {
-    this.toastCtrl
-      .create({
-        message: '吐血研发中...',
-        position: 'top',
-        duration: 3e3
+  private initFetchCompleteMatcher(
+    sameWithLast$: Observable<[ListStatus, ListStatus]>
+  ) {
+    const firstCompleteMatchFetch$ = this.listStatusChangeSub
+      .filter(listStatus => listStatus === ListStatus.COMPLETE)
+      .take(1)
+      .subscribe(() => {
+        this.store.dispatch(
+          new FetchCompleteMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: [ExhibitorMatcherStatus.AGREE],
+            direction: ExhibitorMatcherDirection.ANY
+          })
+        )
+        this.store.dispatch(
+          new FetchCompleteMatchersCountAction(ExhibitorMatcherDirection.ANY)
+        )
       })
-      .present()
+
+    const sameWithLastCompleteMatchFetch$ = sameWithLast$
+      .filter(([e, _]) => e === ListStatus.COMPLETE)
+      .withLatestFrom(
+        this.completeMatcherFilterSub.startWith(ExhibitorMatcherDirection.ANY)
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(([_, direction]) => {
+        this.store.dispatch(
+          new FetchCompleteMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: [ExhibitorMatcherStatus.AGREE],
+            direction: direction
+          })
+        )
+      })
+  }
+
+  private initFetchExhibitor(
+    sameWithLast$: Observable<[ListStatus, ListStatus]>
+  ) {
+    const sameWithLastExhibitorFetch$ = sameWithLast$
+      .filter(([e, _]) => e === ListStatus.EXHIBITOR)
+      .withLatestFrom(
+        this.exhibitorFilterSub.startWith({
+          type: '',
+          area: '',
+          key: ''
+        })
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(([_, filter]) => {
+        this.store.dispatch(
+          new FetchExhibitorsAction({
+            ...filter,
+            pageIndex: 1,
+            pageSize: 10
+          })
+        )
+      })
   }
 
   private initExhibitorFilter(): void {
@@ -373,18 +463,35 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       })
   }
 
-  private initMatcherFilter(): void {
-    this.matcherFilterSub
+  private initToDoMatcherFilter(): void {
+    this.toDoMatcherFilterSub
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
         this.store.dispatch(
-          new FetchMatchersAction({
+          new FetchToDoMatchersAction({
             pageIndex: 1,
             pageSize: 10,
-            statuses: matcherFilter
+            statuses: [matcherFilter.status],
+            direction: matcherFilter.direction
           })
         )
-        this.store.dispatch(new FetchMatchersCountAction(matcherFilter))
+        this.store.dispatch(new FetchToDoMatchersCountAction(matcherFilter))
+      })
+  }
+
+  private initCompleteMatcherFilter(): void {
+    this.completeMatcherFilterSub
+      .takeUntil(this.destroyService)
+      .subscribe(direction => {
+        this.store.dispatch(
+          new FetchCompleteMatchersAction({
+            pageIndex: 1,
+            pageSize: 10,
+            statuses: [ExhibitorMatcherStatus.AGREE],
+            direction
+          })
+        )
+        this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
       })
   }
 
@@ -394,19 +501,20 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreExhibitor(loadMore$)
-    this.initLoadMoreMatcher(loadMore$)
+    this.initLoadMoreToDoMatcher(loadMore$)
+    this.initLoadMoreCompleteMatcher(loadMore$)
   }
 
   private initLoadMoreExhibitor(loadMore: Observable<ListStatus>) {
     loadMore
       .filter(e => e === ListStatus.EXHIBITOR)
       .withLatestFrom(
-      this.exhibitorFilterSub.startWith({
-        type: '',
-        area: '',
-        key: ''
-      }),
-      (_, recommendFilter) => recommendFilter
+        this.exhibitorFilterSub.startWith({
+          type: '',
+          area: '',
+          key: ''
+        }),
+        (_, recommendFilter) => recommendFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(exhibitorFilter => {
@@ -414,16 +522,32 @@ export class ExhibitorsPage implements OnInit, OnDestroy {
       })
   }
 
-  private initLoadMoreMatcher(loadMore: Observable<ListStatus>) {
+  private initLoadMoreToDoMatcher(loadMore: Observable<ListStatus>) {
     loadMore
-      .filter(e => e === ListStatus.MATCHER)
+      .filter(e => e === ListStatus.TODO)
       .withLatestFrom(
-      this.matcherFilterSub.startWith([]),
-      (_, matcherFilter) => matcherFilter
+        this.toDoMatcherFilterSub.startWith({
+          status: ExhibitorMatcherStatus.ANY,
+          direction: ExhibitorMatcherDirection.ANY
+        }),
+        (_, matcherFilter) => matcherFilter
       )
       .takeUntil(this.destroyService)
       .subscribe(matcherFilter => {
-        this.store.dispatch(new LoadMoreMatchersAction(matcherFilter))
+        this.store.dispatch(new LoadMoreToDoMatchersAction(matcherFilter))
+      })
+  }
+
+  private initLoadMoreCompleteMatcher(loadMore: Observable<ListStatus>) {
+    loadMore
+      .filter(e => e === ListStatus.COMPLETE)
+      .withLatestFrom(
+        this.completeMatcherFilterSub.startWith(ExhibitorMatcherDirection.ANY),
+        (_, matcherFilter) => matcherFilter
+      )
+      .takeUntil(this.destroyService)
+      .subscribe(matcherFilter => {
+        this.store.dispatch(new LoadMoreCompleteMatchersAction(matcherFilter))
       })
   }
 

@@ -11,10 +11,12 @@ import {
   ExhibitorMatcherStatus,
   convertMatcherStatusFromModel,
   ExhibitorMatcherResp,
-  FetchMatcherParams
+  FetchMatcherParams,
+  ExhibitorMatcherDirection
 } from '../models/matcher.model'
 import { Exhibitor } from '../models/exhibitor.model'
 import { environment } from '../../../environments/environment'
+import { ToDoFilterOptions } from '../components/matcher-filter/matcher-filter.component'
 
 @Injectable()
 export class ExhibitorMatcherService {
@@ -41,7 +43,7 @@ export class ExhibitorMatcherService {
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-            const condition: { [key: string]: string } = {
+            const condition: { [key: string]: any } = {
               ExhibitionId: exhibitionId,
               ExhibitorId: exhibitorId
             }
@@ -54,9 +56,28 @@ export class ExhibitorMatcherService {
               options.pageSize = params.pageSize
             }
             if (params.statuses && params.statuses.length > 0) {
-              condition.State = params.statuses
-                .map(convertMatcherStatusFromModel)
-                .toString()
+              if (params.statuses[0] === ExhibitorMatcherStatus.ANY) {
+                condition.State = {
+                  $in: [
+                    ExhibitorMatcherStatus.UN_AUDIT,
+                    ExhibitorMatcherStatus.AUDIT_SUCCEED
+                  ].map(convertMatcherStatusFromModel)
+                }
+              } else {
+                condition.State = convertMatcherStatusFromModel(
+                  params.statuses[0]
+                )
+              }
+            }
+            if (typeof params.direction !== 'undefined') {
+              switch (params.direction) {
+                case ExhibitorMatcherDirection.FROM_ME:
+                  condition.Initator = exhibitorId
+                  break
+                case ExhibitorMatcherDirection.TO_ME:
+                  condition.Receiver = exhibitorId
+                  break
+              }
             }
             return this.http.post(this.fetchUrl, {
               tenantId,
@@ -68,19 +89,14 @@ export class ExhibitorMatcherService {
             })
           })
           .map(e => (e as APIResponse).result as ExhibitorMatcherResp[])
-          .map(e =>
-            e
-              .filter(ExhibitorMatcher.filterDirtyData)
-              .filter(ExhibitorMatcher.filterState)
-              .map(ExhibitorMatcher.convertFromResp)
-          )
+          .map(e => e.map(ExhibitorMatcher.convertFromResp))
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
             (results, exhibitorId) => {
               return results.map(e => ({
                 ...e,
-                ...ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
-                isSender: e.initator.id === exhibitorId,
+                toShow: ExhibitorMatcher.extractExhibitorToShow(e, exhibitorId),
+                isInitator: e.initator.id === exhibitorId,
                 isReceiver: e.receiver.id === exhibitorId
               }))
             }
@@ -106,20 +122,37 @@ export class ExhibitorMatcherService {
    * @returns {Observable<number>}
    * @memberof ExhibitorMatcherService
    */
-  fetchMatcherCount(statuses: ExhibitorMatcherStatus[]): Observable<number> {
+  fetchMatcherCount(params: ToDoFilterOptions): Observable<number> {
     return !environment.mock || environment.production
       ? this.tenantService
           .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
           .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
-            const condition: { [key: string]: string } = {
+            const condition: { [key: string]: any } = {
               ExhibitionId: exhibitionId,
               ExhibitorId: exhibitorId
             }
 
-            if (statuses && statuses.length > 0) {
-              condition.State = statuses
-                .map(convertMatcherStatusFromModel)
-                .toString()
+            if (params.status) {
+              if (params.status === ExhibitorMatcherStatus.ANY) {
+                condition.State = {
+                  $in: [
+                    ExhibitorMatcherStatus.UN_AUDIT,
+                    ExhibitorMatcherStatus.AUDIT_SUCCEED
+                  ].map(convertMatcherStatusFromModel)
+                }
+              } else {
+                condition.State = convertMatcherStatusFromModel(params.status)
+              }
+            }
+            if (params.direction) {
+              switch (params.direction) {
+                case ExhibitorMatcherDirection.FROM_ME:
+                  condition.Initator = exhibitorId
+                  break
+                case ExhibitorMatcherDirection.TO_ME:
+                  condition.Receiver = exhibitorId
+                  break
+              }
             }
             return this.http
               .post(this.fetchCountUrl, {
@@ -250,6 +283,38 @@ export class ExhibitorMatcherService {
         return this.logger.httpError({
           module: 'ExhibitorMatcherService',
           method: 'agreeMatcher',
+          error: e
+        })
+      })
+  }
+
+  public batchAgreeMatcher(matcherIds: string[]): Observable<any> {
+    const params = {
+      params: matcherIds.map(id => ({
+        recordId: id,
+        setValue: {
+          State: convertMatcherStatusFromModel(ExhibitorMatcherStatus.AGREE)
+        }
+      }))
+    }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'ExhibitorMatcherService',
+          method: 'batchAgreeMatcher',
           error: e
         })
       })

@@ -1,22 +1,22 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
-import { Portray, Visitor } from '../../models/visitor.model'
+import { Portray, Exhibitor } from '../../models/exhibitor.model'
 import { Logger } from '../../../customer/models/logger.model'
 import {
-  VisitorMatcher,
-  VisitorMatcherStatus
+  ExhibitorMatcher,
+  ExhibitorMatcherStatus
 } from '../../models/matcher.model'
 
 @Component({
-  selector: 'visitor-matcher-item',
-  templateUrl: 'visitor-matcher-item.component.html'
+  selector: 'exhibitor-matcher-item',
+  templateUrl: 'exhibitor-matcher-item.component.html'
 })
-export class VisitorMatcherItemComponent implements OnInit {
-  AUDIT_SUCCEED = VisitorMatcherStatus.AUDIT_SUCCEED
-  UN_AUDIT = VisitorMatcherStatus.UN_AUDIT
-  AGREE = VisitorMatcherStatus.AGREE
+export class ExhibitorMatcherItemComponent implements OnInit {
+  AUDIT_SUCCEED = ExhibitorMatcherStatus.AUDIT_SUCCEED
+  UN_AUDIT = ExhibitorMatcherStatus.UN_AUDIT
+  AGREE = ExhibitorMatcherStatus.AGREE
 
-  @Input() matcher: VisitorMatcher
+  @Input() matcher: ExhibitorMatcher
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 

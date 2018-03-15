@@ -1,0 +1,38 @@
+<div class="exhibitor-matcher-item-container">
+  <div class="matcher-dest">
+    <span [ngClass]="{'is-sender': matcher.isInitator, 'is-receiver': matcher.isReceiver, 'send-dir': true}">
+      {{matcher.isInitator ? '发' : '收'}}
+    </span>
+  </div>
+
+  <div class="header">
+    <div class="info">
+      <span class="name">{{matcher.toShow.name}}</span>
+      <!-- <span class="title">{{matcher.toShow.title}}</span> -->
+    </div>
+    <!-- <div class="time">
+      {{matcher.meetingStartTime + '~' + matcher.meetingEndTime}}
+    </div> -->
+  </div>
+
+  <!-- <div class="company">
+    <span>{{matcher.toShow.company}}</span>
+  </div> -->
+
+
+  <!-- <div class="footer">
+    <div class="industry">{{matcher.toShow.industry}}</div>
+    <div class="btn-group" *ngIf="matcher.status === AUDIT_SUCCEED || matcher.status === UN_AUDIT">
+      <div *ngIf="matcher.isReceiver; else senderBlock;">
+        <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(matcher.id)">接受</button>
+        <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(matcher.id)">拒绝</button>
+      </div>
+      <ng-template #senderBlock>
+        <span class="status">{{matcher.status | customerMatcherStatus}}</span>
+      </ng-template>
+    </div>
+    <div class="booth-no" *ngIf="matcher.status === AGREE">
+      {{matcher.meetingPlace}}
+    </div>
+  </div> -->
+</div>

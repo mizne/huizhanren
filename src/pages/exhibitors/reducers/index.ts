@@ -1,11 +1,13 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store'
 import * as fromExhibitor from './exhibitor.reducer'
-import * as fromMatcher from './matcher.reducer'
+import * as fromToDoMatcher from './todo-matcher.reducer'
+import * as fromCompleteMatcher from './complete-matcher.reducer'
 import * as fromRoot from '../../../reducers/index'
 
 export interface ExhibitorState {
   exhibitor: fromExhibitor.State
-  matcher: fromMatcher.State
+  toDoMatcher: fromToDoMatcher.State
+  completeMatcher: fromCompleteMatcher.State
 }
 
 export interface State extends fromRoot.State {
@@ -14,7 +16,8 @@ export interface State extends fromRoot.State {
 
 export const reducers = {
   exhibitor: fromExhibitor.reducer,
-  matcher: fromMatcher.reducer
+  toDoMatcher: fromToDoMatcher.reducer,
+  completeMatcher: fromCompleteMatcher.reducer
 }
 
 export const selectExhibitorModuleState = createFeatureSelector<ExhibitorState>('exhibitorModule')
@@ -43,16 +46,31 @@ export const getShowExhibitorLoadMore = createSelector(
 )
 
 
-export const selectMatcherState = createSelector(
+export const selectToDoMatcherState = createSelector(
   selectExhibitorModuleState,
-  (state: ExhibitorState) => state.matcher
+  (state: ExhibitorState) => state.toDoMatcher
 )
-export const getMatchers = createSelector(selectMatcherState, fromMatcher.getMatchers)
-export const getMatcherTotalCount = createSelector(selectMatcherState, fromMatcher.getMatcherTotalCount)
-export const getCurrentMatcherCount = createSelector(selectMatcherState, fromMatcher.getCurrentMatcherCount)
-export const getShowMatcherLoadMore = createSelector(
-  selectMatcherState,
-  fromMatcher.getShowLoadMore
+export const getToDoMatchers = createSelector(selectToDoMatcherState, fromToDoMatcher.getMatchers)
+export const getToDoMatcherTotalCount = createSelector(selectToDoMatcherState, fromToDoMatcher.getMatcherTotalCount)
+export const getCurrentToDoMatcherCount = createSelector(selectToDoMatcherState, fromToDoMatcher.getCurrentMatcherCount)
+export const getShowToDoMatcherLoadMore = createSelector(
+  selectToDoMatcherState,
+  fromToDoMatcher.getShowLoadMore
 )
-export const getMatcherShowDetailID = createSelector(selectMatcherState, fromMatcher.getShowDetailID)
-export const getMatcherShouldScrollToTop = createSelector(selectMatcherState, fromMatcher.getShouldScrollToTop)
+export const getToDoMatcherShowDetailID = createSelector(selectToDoMatcherState, fromToDoMatcher.getShowDetailID)
+export const getToDoMatcherShouldScrollToTop = createSelector(selectToDoMatcherState, fromToDoMatcher.getShouldScrollToTop)
+
+
+export const selectCompleteMatcherState = createSelector(
+  selectExhibitorModuleState,
+  (state: ExhibitorState) => state.completeMatcher
+)
+export const getCompleteMatchers = createSelector(selectCompleteMatcherState, fromCompleteMatcher.getMatchers)
+export const getCompleteMatcherTotalCount = createSelector(selectCompleteMatcherState, fromCompleteMatcher.getMatcherTotalCount)
+export const getCurrentCompleteMatcherCount = createSelector(selectCompleteMatcherState, fromCompleteMatcher.getCurrentMatcherCount)
+export const getShowCompleteMatcherLoadMore = createSelector(
+  selectCompleteMatcherState,
+  fromCompleteMatcher.getShowLoadMore
+)
+export const getCompleteMatcherShowDetailID = createSelector(selectCompleteMatcherState, fromCompleteMatcher.getShowDetailID)
+export const getCompleteMatcherShouldScrollToTop = createSelector(selectCompleteMatcherState, fromCompleteMatcher.getShouldScrollToTop)

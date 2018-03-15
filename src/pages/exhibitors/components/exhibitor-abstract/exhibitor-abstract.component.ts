@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Exhibitor, Product } from '../../models/exhibitor.model'
+import { ExhibitorMatcher } from '../../models/matcher.model'
 
 @Component({
   selector: 'hz-exhibitor-abstract',
@@ -8,7 +9,8 @@ import { Exhibitor, Product } from '../../models/exhibitor.model'
 })
 export class HzExhibitorAbstractComponent implements OnInit {
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
-  @Input() detail: Exhibitor
+  @Input() exhibitor: Exhibitor
+  @Input() matcher: ExhibitorMatcher
 
   @Output() showProduct: EventEmitter<Product> = new EventEmitter<Product>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()

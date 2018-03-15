@@ -6,7 +6,6 @@ import {
   LoadingController
 } from 'ionic-angular'
 import * as fromExhibitor from '../actions/exhibitor.action'
-import * as fromMatcher from '../actions/matcher.action'
 
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
 import { Logger, LoggerLevel } from '../../customer/models/logger.model'
@@ -28,6 +27,7 @@ import {
   getCurrentExhibitorCount
 } from '../reducers'
 import { getTenantId, getCompanyName, getBoothNo } from '../../login/reducers'
+import { ToInviteExhibitorToMicroAppModal } from '../modals/to-invite-exhibitor-to-micro-app-modal/to-invite-exhibitor-to-micro-app-modal.component'
 
 @Injectable()
 export class ExhibitorEffects {
@@ -139,6 +139,13 @@ export class ExhibitorEffects {
         })
     })
 
+  @Effect({ dispatch: false })
+  toInviteExhibitorToMicroApp$ = this.actions$
+    .ofType(fromExhibitor.TO_INIVITE_EXHIBITOR_TO_MICRO_APP)
+    .do(() => {
+      this.modalCtrl.create(ToInviteExhibitorToMicroAppModal).present()
+    })
+
   @Effect()
   toInviteExhibitor$ = this.actions$
     .ofType(fromExhibitor.TO_INVITE_EXHIBITOR)
@@ -186,10 +193,7 @@ export class ExhibitorEffects {
     .switchMap(id =>
       this.matcherService
         .createMatcher(id)
-        .concatMap(() => [
-          new fromExhibitor.InviteExhibitorSuccessAction(),
-          new fromMatcher.FetchMatchersAction()
-        ])
+        .map(() => new fromExhibitor.InviteExhibitorSuccessAction())
         .catch(() =>
           Observable.of(new fromExhibitor.InviteExhibitorFailureAction())
         )

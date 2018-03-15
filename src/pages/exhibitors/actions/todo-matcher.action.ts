@@ -1,50 +1,52 @@
 import { Action } from '@ngrx/store'
 import {
-  VisitorMatcher,
+  ExhibitorMatcher,
   FetchMatcherParams,
-  VisitorMatcherStatus,
-  VisitorMatcherDirection
+  ExhibitorMatcherStatus
 } from '../models/matcher.model'
 import { ToDoFilterOptions } from '../components/matcher-filter/matcher-filter.component'
 
-export const FETCH_TODO_MATCHERS = '[Visitor] Fetch ToDo Matchers'
+export const FETCH_TODO_MATCHERS = '[Exhibitor] Fetch ToDo Matchers'
 export const FETCH_TODO_MATCHERS_SUCCESS =
-  '[Visitor] Fetch ToDo Matchers Success'
+  '[Exhibitor] Fetch ToDo Matchers Success'
 export const FETCH_TODO_MATCHERS_FAILURE =
-  '[Visitor] Fetch ToDo Matchers Failure'
+  '[Exhibitor] Fetch ToDo Matchers Failure'
 
-export const FETCH_TODO_MATCHERS_COUNT = '[Visitor] Fetch ToDo Matchers Count'
+export const FETCH_TODO_MATCHERS_COUNT = '[Exhibitor] Fetch ToDo Matchers Count'
 export const FETCH_TODO_MATCHERS_COUNT_SUCCESS =
-  '[Visitor] Fetch ToDo Matchers Count Success'
+  '[Exhibitor] Fetch ToDo Matchers Count Success'
 export const FETCH_TODO_MATCHERS_COUNT_FAILURE =
-  '[Visitor] Fetch ToDo Matchers Count Failure'
+  '[Exhibitor] Fetch ToDo Matchers Count Failure'
 
-export const LOAD_MORE_TODO_MATCHERS = '[Visitor] Load More ToDo Matchers'
+export const LOAD_MORE_TODO_MATCHERS = '[Exhibitor] Load More ToDo Matchers'
 export const LOAD_MORE_TODO_MATCHERS_SUCCESS =
-  '[Visitor] Load More ToDo Matchers Success'
+  '[Exhibitor] Load More ToDo Matchers Success'
 export const LOAD_MORE_TODO_MATCHERS_FAILURE =
-  '[Visitor] Load More ToDo Matchers Failure'
+  '[Exhibitor] Load More ToDo Matchers Failure'
 
-export const TO_AGREE_TODO_MATCHER = '[Visitor] To Agree ToDo Matcher'
-export const CANCEL_AGREE_TODO_MATCHER = '[Visitor] Cancel Agree ToDo Matcher'
-export const AGREE_TODO_MATCHER = '[Visitor] Agree ToDo Matcher'
-export const AGREE_TODO_MATCHER_SUCCESS = '[Visitor] Agree ToDo Matcher Success'
-export const AGREE_TODO_MATCHER_FAILURE = '[Visitor] Agree ToDo Matcher Failure'
+export const UPDATE_TODO_MATCHER_DETAIL_ID =
+  '[Exhibitor] Update ToDo Matcher Detail ID'
 
-export const TO_BATCH_AGREE_TODO_MATCHERS = '[Visitor] To Batch Agree ToDo Matchers'
+export const TO_AGREE_TODO_MATCHER = '[Exhibitor] To Agree ToDo Matcher'
+export const CANCEL_AGREE_TODO_MATCHER = '[Exhibitor] Cancel Agree ToDo Matcher'
+export const AGREE_TODO_MATCHER = '[Exhibitor] Agree ToDo Matcher'
+export const AGREE_TODO_MATCHER_SUCCESS = '[Exhibitor] Agree ToDo Matcher Success'
+export const AGREE_TODO_MATCHER_FAILURE = '[Exhibitor] Agree ToDo Matcher Failure'
+
+export const TO_BATCH_AGREE_TODO_MATCHERS = '[Exhibitor] To Batch Agree Matchers'
 export const CANCEL_BATCH_AGREE_TODO_MATCHERS =
-  '[Visitor] Cancel Batch Agree ToDo Matchers'
-export const BATCH_AGREE_TODO_MATCHERS = '[Visitor] Batch Agree ToDo Matchers'
+  '[Exhibitor] Cancel Batch Agree Matchers'
+export const BATCH_AGREE_TODO_MATCHERS = '[Exhibitor] Batch Agree Matchers'
 export const BATCH_AGREE_TODO_MATCHERS_SUCCESS =
-  '[Visitor] Batch Agree ToDo Matchers Success'
+  '[Exhibitor] Batch Agree Matchers Success'
 export const BATCH_AGREE_TODO_MATCHERS_FAILURE =
-  '[Visitor] Batch Agree ToDo Matchers Failure'
+  '[Exhibitor] Batch Agree Matchers Failure'
 
-export const TO_REFUSE_TODO_MATCHER = '[Visitor] To Refuse ToDo Matcher'
-export const CANCEL_REFUSE_TODO_MATCHER = '[Visitor] Cancel Refuse ToDo Matcher'
-export const REFUSE_TODO_MATCHER = '[Visitor] Refuse ToDo Matcher'
-export const REFUSE_TODO_MATCHER_SUCCESS = '[Visitor] Refuse ToDo Matcher Success'
-export const REFUSE_TODO_MATCHER_FAILURE = '[Visitor] Refuse ToDo Matcher Failure'
+export const TO_REFUSE_TODO_MATCHER = '[Exhibitor] To Refuse ToDo Matcher'
+export const CANCEL_REFUSE_TODO_MATCHER = '[Exhibitor] Cancel Refuse ToDo Matcher'
+export const REFUSE_TODO_MATCHER = '[Exhibitor] Refuse ToDo Matcher'
+export const REFUSE_TODO_MATCHER_SUCCESS = '[Exhibitor] Refuse ToDo Matcher Success'
+export const REFUSE_TODO_MATCHER_FAILURE = '[Exhibitor] Refuse ToDo Matcher Failure'
 
 /**
  * Every action is comprised of at least a type and an optional
@@ -65,7 +67,7 @@ export class FetchToDoMatchersAction implements Action {
 }
 export class FetchToDoMatchersSuccessAction implements Action {
   readonly type = FETCH_TODO_MATCHERS_SUCCESS
-  constructor(public matchers: VisitorMatcher[]) {}
+  constructor(public matchers: ExhibitorMatcher[]) {}
 }
 export class FetchToDoMatchersFailureAction implements Action {
   readonly type = FETCH_TODO_MATCHERS_FAILURE
@@ -89,10 +91,15 @@ export class LoadMoreToDoMatchersAction implements Action {
 }
 export class LoadMoreToDoMatchersSuccessAction implements Action {
   readonly type = LOAD_MORE_TODO_MATCHERS_SUCCESS
-  constructor(public matchers: VisitorMatcher[]) {}
+  constructor(public matchers: ExhibitorMatcher[]) {}
 }
 export class LoadMoreToDoMatchersFailureAction implements Action {
   readonly type = LOAD_MORE_TODO_MATCHERS_FAILURE
+}
+
+export class UpdateToDoMatcherDetailIDAction implements Action {
+  readonly type = UPDATE_TODO_MATCHER_DETAIL_ID
+  constructor(public detailID: string) {}
 }
 
 export class ToAgreeToDoMatcherAction implements Action {
@@ -164,6 +171,7 @@ export type Actions =
   | LoadMoreToDoMatchersAction
   | LoadMoreToDoMatchersSuccessAction
   | LoadMoreToDoMatchersFailureAction
+  | UpdateToDoMatcherDetailIDAction
   | ToAgreeToDoMatcherAction
   | CancelAgreeToDoMatcherAction
   | AgreeToDoMatcherAction

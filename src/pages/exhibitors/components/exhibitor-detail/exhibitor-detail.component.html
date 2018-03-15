@@ -1,51 +1,18 @@
 <div class="exhibitor-detail-container">
   <div class="left-area">
     <div class="exhibitor-container">
-      <hz-exhibitor-abstract
-      [detail]="detail"
-      (showProduct)="ensureShowProduct($event)"
-      (invite)="ensureInvite()"
-      (cancelMatcher)="ensureCancelMatcher($event)"
-      (agreeMatcher)="ensureAgreeMatcher($event)"
-      (refuseMatcher)="ensureRefuseMatcher($event)"
-      ></hz-exhibitor-abstract>
+      <hz-exhibitor-abstract [exhibitor]="exhibitor" [matcher]="matcher" (showProduct)="ensureShowProduct($event)" (invite)="ensureInvite()"
+        (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)"></hz-exhibitor-abstract>
       <div class="exhibitor-detail">
         <div class="headers">
-          <div class="header-item logger" tappable
-          [class.active]="activeHeaderIndex === 0"
-          (click)="activeHeader(0)">日志</div>
-          <div class="header-item portray"
-          [class.active]="activeHeaderIndex === 1"
-          (click)="activeHeader(1)">分析</div>
+          <div class="header-item logger" tappable [class.active]="activeHeaderIndex === 0" (click)="activeHeader(0)">日志</div>
+          <div class="header-item portray" [class.active]="activeHeaderIndex === 1" (click)="activeHeader(1)">分析</div>
         </div>
 
         <div class="content">
-          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal"
-          [logs]="logs" (createLog)="ensureCreateLogger()"
-          (editLog)="ensureEditLog($event)"
-          ></hz-logger-list>
+          <hz-logger-list *ngIf="activeHeaderIndex === 0" theme="normal" [logs]="logs" (createLog)="ensureCreateLogger()" (editLog)="ensureEditLog($event)"></hz-logger-list>
           <hz-exhibitor-analysis *ngIf="activeHeaderIndex === 1" [portray]="portray"></hz-exhibitor-analysis>
         </div>
       </div>
     </div>
   </div>
-
-  <div class="right-area" *ngIf="expand">
-    <div class="headers">
-      <div class="header-item logger" tappable
-      [class.active]="activeDetailHeaderIndex === 0"
-      (click)="activeDetailHeader(0)">日志</div>
-      <div class="header-item portray"
-      [class.active]="activeDetailHeaderIndex === 1"
-      (click)="activeDetailHeader(1)">分析</div>
-    </div>
-
-    <div class="content">
-      <hz-logger-list *ngIf="activeDetailHeaderIndex === 0" theme="primary"
-      [logs]="logs" (createLog)="ensureCreateLogger()"
-      (editLog)="ensureEditLog($event)"
-      ></hz-logger-list>
-      <hz-exhibitor-analysis *ngIf="activeDetailHeaderIndex === 1" [portray]="portray"></hz-exhibitor-analysis>
-    </div>
-  </div>
-</div>

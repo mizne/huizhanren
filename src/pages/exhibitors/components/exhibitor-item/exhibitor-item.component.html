@@ -1,0 +1,43 @@
+<div class="exhibitor-item-container">
+
+  <div class="logo">
+    <img [src]="exhibitor.logo" alt="logo">
+  </div>
+
+  <div class="desc">
+    <div class="header">{{exhibitor.name}}</div>
+
+    <div class="center">
+      <div class="area">
+        <span *ngIf="exhibitor.boothNo; else noBoothNo;">{{exhibitor.boothNo}}</span>
+        <ng-template #noBoothNo>
+          <span class="no-item"></span>
+        </ng-template>
+        <span class="pipe" *ngIf="exhibitor.boothNo && exhibitor.area"> | </span>
+        <span *ngIf="exhibitor.area; else noArea;">{{exhibitor.area}}</span>
+        <ng-template #noArea>
+          <span class="no-item"></span>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="industry" *ngIf="exhibitor.industry; else noIndustry;">
+        {{exhibitor.industry}}
+      </div>
+      <ng-template #noIndustry>
+        <div class="no-item"></div>
+      </ng-template>
+
+      <div class="right-area">
+        <div class="heat">
+          <i class="iconfont icon-view"></i> {{exhibitor.heat}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="active-icon" *ngIf="exhibitor.selected">
+    <i class="iconfont icon-check"></i>
+  </div>
+</div>

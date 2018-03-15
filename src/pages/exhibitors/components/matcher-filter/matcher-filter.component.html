@@ -1,13 +1,29 @@
-<div class="matcher-filter-container" [class.expand]="expand">
-  <label class="first" for="">筛选:</label>
-  <ion-checkbox tappable [formControl]="allowControl"></ion-checkbox>
-  <label for="">已同意</label>
-  <ion-checkbox tappable *ngIf="expand" [formControl]="refuseControl"></ion-checkbox>
-  <label *ngIf="expand">被拒绝</label>
-  <ion-checkbox tappable [formControl]="unAuditControl"></ion-checkbox>
-  <label for="">未审核</label>
-  <ion-checkbox tappable *ngIf="expand" [formControl]="notAllowAuditControl"></ion-checkbox>
-  <label *ngIf="expand" for="">审核未通过</label>
-  <ion-checkbox tappable [formControl]="unReplyControl"></ion-checkbox>
-  <label for="">未答复</label>
+<div class="matcher-filter-container" [class.expand]="expand" [class.complete]="listStatus === COMPLETE_MATCHER_GRID">
+  <!-- <label class="first" for="">筛选:</label>
+    <ion-checkbox tappable [formControl]="allowControl"></ion-checkbox>
+    <label for="">已同意</label>
+    <ion-checkbox tappable *ngIf="expand" [formControl]="refuseControl"></ion-checkbox>
+    <label *ngIf="expand">被拒绝</label>
+    <ion-checkbox tappable [formControl]="unAuditControl"></ion-checkbox>
+    <label for="">未审核</label>
+    <ion-checkbox tappable *ngIf="expand" [formControl]="notAllowAuditControl"></ion-checkbox>
+    <label *ngIf="expand" for="">审核未通过</label>
+    <ion-checkbox tappable [formControl]="unReplyControl"></ion-checkbox>
+    <label for="">未答复</label> -->
+
+  <div class="left" [hidden]="listStatus === COMPLETE_MATCHER_GRID">
+    <ul class="filter filter-status">
+      <li tappable (click)="ensureStatus(STATUS_ANY)" [ngClass]="['filter-item', 'all', filterStatusActive === STATUS_ANY ? 'active' : '']">全部</li>
+      <li tappable (click)="ensureStatus(STATUS_PENDING)" [ngClass]="['filter-item', 'pending', filterStatusActive === STATUS_PENDING ? 'active' : '']">审核中</li>
+      <li tappable (click)="ensureStatus(STATUS_ENREPLY)" [ngClass]="['filter-item', 'unreply', filterStatusActive === STATUS_ENREPLY ? 'active' : '']">未答复</li>
+    </ul>
+    <button ion-button (click)="toBatchAgree()">全部接受</button>
+  </div>
+  <div class="right">
+    <ul class="filter">
+      <li tappable (click)="ensureDirection(DIRECTION_ANY)" [ngClass]="['filter-item', 'all', filterDirectionActive === DIRECTION_ANY ? 'active' : '']">全部</li>
+      <li tappable (click)="ensureDirection(DIRECTION_FROM_ME)" [ngClass]="['filter-item', 'from-me', filterDirectionActive === DIRECTION_FROM_ME ? 'active' : '']">我发起的</li>
+      <li tappable (click)="ensureDirection(DIRECTION_TO_ME)" [ngClass]="['filter-item', 'to-me', filterDirectionActive === DIRECTION_TO_ME ? 'active' : '']">对方发起的</li>
+    </ul>
+  </div>
 </div>

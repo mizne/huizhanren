@@ -1,15 +1,17 @@
-import * as fromToDoMatcher from '../actions/todo-matcher.action'
-import * as fromVisitor from '../actions/visitor.action'
-import { VisitorMatcher } from '../models/matcher.model'
+import * as fromCompleteMatcher from '../actions/complete-matcher.action'
+import * as fromExhibitor from '../actions/exhibitor.action'
+import { ExhibitorMatcher } from '../models/matcher.model'
 
 import { deduplicate } from '../../customer/services/utils'
 
-type Actions = fromVisitor.Actions | fromToDoMatcher.Actions
+type Actions = fromExhibitor.Actions | fromCompleteMatcher.Actions
 
 export interface State {
-  matchers: VisitorMatcher[]
+  matchers: ExhibitorMatcher[]
   totalMatcherCount: number
   currentMatcherTotalCount: number
+
+  showDetailID: string
   shouldScrollToTop: boolean
 }
 
@@ -17,30 +19,33 @@ export const initialState: State = {
   matchers: [],
   totalMatcherCount: 0,
   currentMatcherTotalCount: 0,
+
+  showDetailID: '',
   shouldScrollToTop: false
 }
 
 export function reducer(state: State = initialState, action: Actions): State {
   switch (action.type) {
-    case fromToDoMatcher.FETCH_TODO_MATCHERS_SUCCESS:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: action.matchers,
         currentMatcherTotalCount: action.matchers.length,
+        showDetailID: '',
         shouldScrollToTop: true
       }
-    case fromToDoMatcher.FETCH_TODO_MATCHERS_FAILURE:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_FAILURE:
       return {
         ...state,
         matchers: [],
         currentMatcherTotalCount: 0
       }
-    case fromToDoMatcher.FETCH_TODO_MATCHERS_COUNT_SUCCESS:
+    case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_COUNT_SUCCESS:
       return {
         ...state,
         totalMatcherCount: action.count
       }
-    case fromToDoMatcher.LOAD_MORE_TODO_MATCHERS_SUCCESS:
+    case fromCompleteMatcher.LOAD_MORE_COMPLETE_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: deduplicate(
@@ -51,13 +56,10 @@ export function reducer(state: State = initialState, action: Actions): State {
           state.currentMatcherTotalCount + action.matchers.length,
         shouldScrollToTop: false
       }
-    case fromToDoMatcher.AGREE_TODO_MATCHER_SUCCESS:
-    case fromToDoMatcher.REFUSE_TODO_MATCHER_SUCCESS:
+    case fromCompleteMatcher.UPDATE_COMPLETE_MATCHER_DETAIL_ID:
       return {
         ...state,
-        totalMatcherCount: state.totalMatcherCount - 1,
-        currentMatcherTotalCount: state.currentMatcherTotalCount - 1,
-        matchers: state.matchers.filter(e => e.id !== action.id)
+        showDetailID: action.detailID
       }
 
     default: {
@@ -73,4 +75,5 @@ export const getCurrentMatcherCount = (state: State) =>
 
 export const getShowLoadMore = (state: State) =>
   state.totalMatcherCount > state.currentMatcherTotalCount
+export const getShowDetailID = (state: State) => state.showDetailID
 export const getShouldScrollToTop = (state: State) => state.shouldScrollToTop

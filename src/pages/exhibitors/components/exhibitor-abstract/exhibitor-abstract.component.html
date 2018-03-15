@@ -1,64 +1,64 @@
 <div class="exhibitor-abstract-container">
   <div class="exhibitor-logo">
     <div class="logo-wrapper">
-      <img [src]="detail.logo" alt="logo">
+      <img [src]="exhibitor.logo" alt="logo">
     </div>
   </div>
 
   <div class="exhibitor-abstract">
     <div class="exhibitor-name">
-      {{detail.name}}
+      {{exhibitor.name}}
     </div>
     <div class="exhibitor-area">
-      <span class="booth-no" *ngIf="detail.boothNo; else noBooth;">{{detail.boothNo}}</span>
+      <span class="booth-no" *ngIf="exhibitor.boothNo; else noBooth;">{{exhibitor.boothNo}}</span>
       <ng-template #noBooth>
         <span class="no-item"></span>
       </ng-template>
-      <span class="pipe" *ngIf="detail.boothNo && detail.area"> | </span>
-      <span class="area" *ngIf="detail.area; else noArea;">{{detail.area}}</span>
+      <span class="pipe" *ngIf="exhibitor.boothNo && exhibitor.area"> | </span>
+      <span class="area" *ngIf="exhibitor.area; else noArea;">{{exhibitor.area}}</span>
       <ng-template #noArea>
         <span class="no-item"></span>
       </ng-template>
-      <span class="industry" *ngIf="detail.industry; else noIndustry;">{{detail.industry}}</span>
+      <span class="industry" *ngIf="exhibitor.industry; else noIndustry;">{{exhibitor.industry}}</span>
       <ng-template #noIndustry>
         <span class="no-item"></span>
       </ng-template>
     </div>
 
-    <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
-      <span *ngIf="detail.isSender; else receiver;" class="send-dir">
-        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
-          {{detail.status | exhibitorMatcherStatus}}
+    <!-- <div class="matcher-status" *ngIf="exhibitor.senderId; else recommend;">
+      <span *ngIf="exhibitor.isSender; else receiver;" class="send-dir">
+        <span *ngIf="exhibitor.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + exhibitor.status]">
+          {{exhibitor.status | exhibitorMatcherStatus}}
         </span>
         <ng-template #sendAuditSuccess>
-          <span>{{detail.status | exhibitorMatcherStatus}}</span>
-          <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(detail.id)">取消</button>
+          <span>{{exhibitor.status | exhibitorMatcherStatus}}</span>
+          <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(exhibitor.id)">取消</button>
         </ng-template>
       </span>
       <ng-template #receiver>
-        <span *ngIf="detail.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
-          {{detail.status | exhibitorMatcherStatus}}
+        <span *ngIf="exhibitor.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + exhibitor.status]">
+          {{exhibitor.status | exhibitorMatcherStatus}}
         </span>
         <ng-template #receiveAuditSuccess>
-          <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(detail.id)">接受</button>
-          <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(detail.id)">拒绝</button>
+          <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(exhibitor.id)">接受</button>
+          <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(exhibitor.id)">拒绝</button>
         </ng-template>
       </ng-template>
+    </div> -->
+    <!-- <ng-template #recommend> -->
+    <div class="invite">
+      <button ion-button (click)="ensureInvite()">约 TA</button>
     </div>
-    <ng-template #recommend>
-      <div class="invite">
-        <button ion-button (click)="ensureInvite()">约 TA</button>
-      </div>
-    </ng-template>
+    <!-- </ng-template> -->
   </div>
 
   <div class="exhibitor-product">
     <div class="header">
       <span>产品</span>
     </div>
-    <div class="content" *ngIf="detail.products.length > 0; else noProduct;">
+    <div class="content" *ngIf="exhibitor.products.length > 0; else noProduct;">
       <ul class="products">
-        <li class="product-item" *ngFor="let item of detail.products.slice(0, 10)" (click)="ensureShowProduct(item)">
+        <li class="product-item" *ngFor="let item of exhibitor.products.slice(0, 10)" (click)="ensureShowProduct(item)">
           <img [src]="item.pictures && item.pictures[0]" alt="">
           <div class="product-name">{{item.name}}</div>
         </li>
@@ -74,8 +74,8 @@
     <div class="header">
       <span>简介</span>
     </div>
-    <div class="content" *ngIf="detail.description; else noDesc;">
-      {{detail.description}}
+    <div class="content" *ngIf="exhibitor.description; else noDesc;">
+      {{exhibitor.description}}
     </div>
     <div class="overlay" tappable (click)="toggleMoreDesc()">
       <i *ngIf="showMoreDesc; else showLess;" class="iconfont icon-arrowup"></i>
@@ -93,11 +93,11 @@
   <div class="exhibitor-visitors">
     <div class="header">
       <span>访客</span>
-      <span class="number">{{ '(共 ' + detail.visitors.length + ' 人)' }}</span>
+      <span class="number">{{ '(共 ' + exhibitor.visitors.length + ' 人)' }}</span>
     </div>
-    <div class="content" *ngIf="detail.visitors.length > 0; else noVisitor;">
+    <div class="content" *ngIf="exhibitor.visitors.length > 0; else noVisitor;">
       <ul class="visitors">
-        <li *ngFor="let visitor of detail.visitors.slice(-10)" class="visitor">
+        <li *ngFor="let visitor of exhibitor.visitors.slice(-10)" class="visitor">
           <img [src]="visitor.headImgUrl" alt="">
         </li>
       </ul>

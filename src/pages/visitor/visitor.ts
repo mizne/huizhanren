@@ -24,7 +24,8 @@ import {
   getCompleteMatchers,
   getCompleteMatcherTotalCount,
   getCompleteMatcherDetailID,
-  getShowCompleteMatcherLoadMore
+  getShowCompleteMatcherLoadMore,
+  getCompleteMatcherShouldScrollToTop
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -43,10 +44,10 @@ import {
 import {
   FetchToDoMatchersAction,
   FetchToDoMatchersCountAction,
-  ToAgreeMatcherAction,
-  ToRefuseMatcherAction,
+  ToAgreeToDoMatcherAction,
+  ToRefuseToDoMatcherAction,
   LoadMoreToDoMatchersAction,
-  ToBatchAgreeMatchersAction
+  ToBatchAgreeToDoMatchersAction
 } from './actions/todo-matcher.action'
 
 import {
@@ -82,7 +83,7 @@ import { GridFilterType } from '../../shared/components/grid-filter/grid-filter.
   templateUrl: 'visitor.html',
   providers: [DestroyService]
 })
-export class VisitorPage implements OnInit, OnDestroy {
+export class VisitorPage implements OnInit {
   gridFilterType = GridFilterType.VISITOR
 
   VISITOR_GRID = ListStatus.VISITOR
@@ -95,9 +96,7 @@ export class VisitorPage implements OnInit, OnDestroy {
   visitors$: Observable<Visitor[]>
   currentVisitorsTotal$: Observable<number>
   toDoMatchers$: Observable<VisitorMatcher[]>
-  toDoMatchersTotal$: Observable<number>
   completeMatchers$: Observable<VisitorMatcher[]>
-  completeMatchersTotal$: Observable<number>
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
@@ -107,11 +106,11 @@ export class VisitorPage implements OnInit, OnDestroy {
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
   visitorShouldScrollToTop$: Observable<boolean>
-  matcherShouldScrollToTop$: Observable<boolean>
+  toDoMatcherShouldScrollToTop$: Observable<boolean>
+  completeMatcherShouldScrollToTop$: Observable<boolean>
   filterOptions$: Observable<FilterOptions[][]>
 
   listStatusChangeSub: Subject<ListStatus> = new Subject<ListStatus>()
-  headerEventSub: Subject<ListHeaderEvent> = new Subject<ListHeaderEvent>()
   visitorFilterSub: Subject<VisitorFilter> = new Subject<VisitorFilter>()
   toDoMatcherFilterSub: Subject<ToDoFilterOptions> = new Subject<
     ToDoFilterOptions
@@ -134,10 +133,6 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.initDispatch()
   }
 
-  ionViewEnter() {
-    console.log('view enter visitor module')
-  }
-
   ensureToDoFilter(filter: ToDoFilterOptions) {
     this.toDoMatcherFilterSub.next(filter)
   }
@@ -146,23 +141,16 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.completeMatcherFilterSub.next(filter)
   }
 
-  ngOnDestroy() {}
+  ensureBatchAgree() {
+    this.store.dispatch(new ToBatchAgreeToDoMatchersAction())
+  }
 
   loadMore() {
     this.loadMoreSub.next()
   }
 
   toInvite(id: string) {
-    console.log(`to modal for invite visitor of id: ${id}`)
     this.store.dispatch(new ToInviteVisitorToMicroAppAction())
-  }
-
-  updateVisitorDetailID(id: string) {
-    // this.store.dispatch(new UpdateVisitorDetailIDAction(id))
-  }
-
-  ensureBatchAgree() {
-    this.store.dispatch(new ToBatchAgreeMatchersAction())
   }
 
   updateMatcherDetailID(id: string) {
@@ -171,10 +159,6 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   toggleLog() {
     this.store.dispatch(new TogglePageStatusAction())
-  }
-
-  ensureInvite() {
-    this.store.dispatch(new ToInviteVisitorAction())
   }
 
   ensureCreateLog() {
@@ -186,11 +170,11 @@ export class VisitorPage implements OnInit, OnDestroy {
   }
 
   ensureAgreeMatcher(id: string) {
-    this.store.dispatch(new ToAgreeMatcherAction(id))
+    this.store.dispatch(new ToAgreeToDoMatcherAction(id))
   }
 
   ensureRefuseMatcher(id: string) {
-    this.store.dispatch(new ToRefuseMatcherAction(id))
+    this.store.dispatch(new ToRefuseToDoMatcherAction(id))
   }
 
   private initDataSource() {
@@ -201,17 +185,15 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.visitorShouldScrollToTop$ = this.store.select(
       getVisitorShouldScrollToTop
     )
-    this.matcherShouldScrollToTop$ = this.store.select(
+    this.toDoMatcherShouldScrollToTop$ = this.store.select(
       getToDoMatcherShouldScrollToTop
     )
-
-    // TODO 当前实现为 前台过滤约请状态 后面改为后台实现
-    this.toDoMatchers$ = this.store.select(getToDoMatchers)
-    this.toDoMatchersTotal$ = this.store.select(getCurrentToDoMatcherCount)
-    this.completeMatchers$ = this.store.select(getCompleteMatchers)
-    this.completeMatchersTotal$ = this.store.select(
-      getCompleteMatcherTotalCount
+    this.completeMatcherShouldScrollToTop$ = this.store.select(
+      getCompleteMatcherShouldScrollToTop
     )
+
+    this.toDoMatchers$ = this.store.select(getToDoMatchers)
+    this.completeMatchers$ = this.store.select(getCompleteMatchers)
 
     this.showDetailID$ = this.store.select(getCompleteMatcherDetailID)
     this.currentDetail$ = this.showDetailID$
@@ -257,7 +239,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.initFetchLogger()
   }
   private initListHeaderChange(): void {
-    this.initChageListStatus()
+    this.initChangeListStatus()
 
     const sameWithLast$ = this.listStatusChangeSub
       .pairwise()
@@ -268,7 +250,7 @@ export class VisitorPage implements OnInit, OnDestroy {
     this.initFetchVisitor(sameWithLast$)
   }
 
-  private initChageListStatus() {
+  private initChangeListStatus() {
     this.listStatusChangeSub
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
@@ -380,16 +362,6 @@ export class VisitorPage implements OnInit, OnDestroy {
           })
         )
       })
-  }
-
-  private prompt(): void {
-    this.toastCtrl
-      .create({
-        message: '吐血研发中...',
-        position: 'top',
-        duration: 3e3
-      })
-      .present()
   }
 
   private initVisitorFilter(): void {

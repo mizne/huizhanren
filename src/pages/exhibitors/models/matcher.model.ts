@@ -12,7 +12,7 @@ export class ExhibitorMatcher {
   selected?: boolean
   initatorId?: string
   receiverId?: string
-  isSender?: boolean
+  isInitator?: boolean
   isReceiver?: boolean
   initator?: Exhibitor
   receiver?: Exhibitor
@@ -131,9 +131,9 @@ export interface ExhibitorMatcherResp {
 }
 
 export enum ExhibitorMatcherDirection {
-  FROM_ME,
-  TO_ME,
-  ANY
+  FROM_ME = '0',
+  TO_ME = '1',
+  ANY = '2'
 }
 
 export enum ExhibitorMatcherStatus {
@@ -223,4 +223,5 @@ export interface FetchMatcherParams {
   pageSize?: number
   pageIndex?: number
   statuses?: ExhibitorMatcherStatus[]
+  direction?: ExhibitorMatcherDirection
 }

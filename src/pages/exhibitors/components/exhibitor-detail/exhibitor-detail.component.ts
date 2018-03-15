@@ -3,15 +3,16 @@ import { ToastController } from 'ionic-angular'
 
 import { Portray, Exhibitor, Product } from '../../models/exhibitor.model'
 import { Logger } from '../../../customer/models/logger.model'
+import { ExhibitorMatcher } from '../../models/matcher.model'
 
 @Component({
   selector: 'exhibitor-detail',
   templateUrl: 'exhibitor-detail.component.html'
 })
 export class ExhibitorDetailComponent implements OnInit {
-
   @Input() logs: Logger[]
-  @Input() detail: Exhibitor
+  @Input() exhibitor: Exhibitor
+  @Input() matcher: ExhibitorMatcher
   @Input() portray: Portray
   @Input() expand: boolean
 
@@ -28,28 +29,30 @@ export class ExhibitorDetailComponent implements OnInit {
 
   constructor(private toastCtrl: ToastController) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   activeHeader(index: number) {
     if (index === 1) {
-      return this.toastCtrl.create({
-        message: '吐血研发中',
-        position: 'top',
-        duration: 3e3
-      }).present()
+      return this.toastCtrl
+        .create({
+          message: '吐血研发中',
+          position: 'top',
+          duration: 3e3
+        })
+        .present()
     }
     this.activeHeaderIndex = index
-
   }
 
   activeDetailHeader(index: number) {
     if (index === 1) {
-      return this.toastCtrl.create({
-        message: '吐血研发中',
-        position: 'top',
-        duration: 3e3
-      }).present()
+      return this.toastCtrl
+        .create({
+          message: '吐血研发中',
+          position: 'top',
+          duration: 3e3
+        })
+        .present()
     }
     this.activeDetailHeaderIndex = index
   }

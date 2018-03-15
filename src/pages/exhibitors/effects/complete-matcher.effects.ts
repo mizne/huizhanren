@@ -9,21 +9,21 @@ import {
 } from 'ionic-angular'
 
 import * as fromCompleteMatcher from '../actions/complete-matcher.action'
-import * as fromVisitor from '../actions/visitor.action'
+import * as fromExhibitor from '../actions/exhibitor.action'
 
-import { VisitorMatcherService } from '../services/matcher.service'
+import { ExhibitorMatcherService } from '../services/matcher.service'
 
-import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
-import { ToRefuseMatcherModal } from '../modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
+import { ToAgreeMatcherModal } from '../../visitor/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
+import { ToRefuseMatcherModal } from '../../visitor/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 import { Store } from '@ngrx/store'
 import {
   State,
-  getCompleteMatcherDetailID,
+  getCompleteMatcherShowDetailID,
   getCurrentCompleteMatcherCount
 } from '../reducers'
-import { PageStatus } from '../models/visitor.model'
-import { VisitorMatcherStatus } from '../models/matcher.model'
+import { PageStatus } from '../models/exhibitor.model'
+import { ExhibitorMatcherStatus } from '../models/matcher.model'
 
 @Injectable()
 export class CompleteMatcherEffects {
@@ -36,7 +36,7 @@ export class CompleteMatcherEffects {
     )
     .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取已完成拉客约请中...',
+        content: '获取已完成展商约请中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
@@ -68,7 +68,7 @@ export class CompleteMatcherEffects {
       return this.matcherService
         .fetchMatcherCount({
           direction,
-          status: VisitorMatcherStatus.AGREE
+          status: ExhibitorMatcherStatus.AGREE
         })
         .map(number => {
           return new fromCompleteMatcher.FetchCompleteMatchersCountSuccessAction(
@@ -94,13 +94,13 @@ export class CompleteMatcherEffects {
       (direction, currentTotal) => ({
         pageIndex: Math.ceil(currentTotal / 10) + 1,
         pageSize: 10,
-        statuses: [VisitorMatcherStatus.AGREE],
+        statuses: [ExhibitorMatcherStatus.AGREE],
         direction: direction
       })
     )
     .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
-        content: '获取更多拉客约请中...',
+        content: '获取更多展商约请中...',
         spinner: 'bubbles'
       })
       loadingCtrl.present()
@@ -122,16 +122,16 @@ export class CompleteMatcherEffects {
 
   @Effect()
   updateMatcherDetailID$ = this.actions$
-    .ofType(fromCompleteMatcher.UPDATE_MATCHER_DETAIL_ID)
+    .ofType(fromCompleteMatcher.UPDATE_COMPLETE_MATCHER_DETAIL_ID)
     .map(() => {
-      return new fromVisitor.ChangePageStatusAction(PageStatus.DETAIL)
+      return new fromExhibitor.ChangePageStatusAction(PageStatus.DETAIL)
     })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private matcherService: VisitorMatcherService,
+    private matcherService: ExhibitorMatcherService,
     private store: Store<State>,
     private loadCtrl: LoadingController
   ) {}

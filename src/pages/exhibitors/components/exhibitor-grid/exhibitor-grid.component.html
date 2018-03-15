@@ -1,11 +1,8 @@
-<div class="exhibitor-grid-container" #gridContainer  [ngClass]="[type]"
-  infiniteScroll
-  [infiniteScrollContainer]="'.exhibitor-grid-container.' + type"
-  [fromRoot]="true" (scrolled)="onScroll()"
-*ngIf="dataItems.length > 0; else noData;">
+<div class="exhibitor-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.exhibitor-grid-container'"
+  [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
   <div class="exhibitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
     (click)="ensureShow(item)">
-    <div class="logo">
+    <!-- <div class="logo">
       <img [src]="item.logo" alt="logo">
     </div>
 
@@ -74,7 +71,8 @@
 
     <div class="active-icon" *ngIf="item.selected">
       <i class="iconfont icon-check"></i>
-    </div>
+    </div> -->
+    <exhibitor-item [exhibitor]="item"></exhibitor-item>
   </div>
 
   <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>

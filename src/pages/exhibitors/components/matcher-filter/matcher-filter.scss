@@ -1,8 +1,63 @@
 .matcher-filter-container {
-  height: 42px;
+  height: 36px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   color: map-get($map: $gridColors, $key: grey);
   margin: 5px 0 5px 4px;
+
+  &.complete {
+    justify-content: flex-end;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    button {
+      margin-left: 30px;
+      border: 1px solid map-get($map: $colors, $key: primary);
+      border-radius: 3px;
+      height: 37px;
+      color: map-get($map: $colors, $key: primary);
+      background-color: transparent;
+    }
+  }
+
+  .right {
+  }
+
+  .filter {
+    display: inline-block;
+    border: 1px solid map-get($map: $colors, $key: primary);
+  }
+
+  .filter-item {
+    display: inline-block;
+    padding-right: 22px;
+    padding-left: 22px;
+    font-size: 14px;
+    line-height: 37px;
+    cursor: pointer;
+    transition: all ease 0.5s;
+    color: #8b8b8c;
+    background-color: transparent;
+
+    &:last-child {
+      border-left: 1px solid map-get($map: $colors, $key: primary);
+    }
+    &:first-child {
+      border-right: 1px solid map-get($map: $colors, $key: primary);
+    }
+
+    &.active {
+      color: map-get($map: $colors, $key: white);
+      background-color: map-get($map: $colors, $key: primary);
+    }
+
+    &.all,
+    &.pending,
+    &.from-me {
+      margin-right: -4px;
+    }
+  }
 }

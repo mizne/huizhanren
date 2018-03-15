@@ -1,10 +1,10 @@
-import * as fromMatcher from '../actions/matcher.action'
+import * as fromToDoMatcher from '../actions/todo-matcher.action'
 import * as fromExhibitor from '../actions/exhibitor.action'
 import { ExhibitorMatcher } from '../models/matcher.model'
 
 import { deduplicate } from '../../customer/services/utils'
 
-type Actions = fromMatcher.Actions | fromExhibitor.Actions
+type Actions = fromToDoMatcher.Actions | fromExhibitor.Actions
 
 export interface State {
   matchers: ExhibitorMatcher[]
@@ -26,7 +26,7 @@ export const initialState: State = {
 
 export function reducer(state: State = initialState, action: Actions): State {
   switch (action.type) {
-    case fromMatcher.FETCH_MATCHERS_SUCCESS:
+    case fromToDoMatcher.FETCH_TODO_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: action.matchers,
@@ -34,12 +34,12 @@ export function reducer(state: State = initialState, action: Actions): State {
         showDetailID: '',
         shouldScrollToTop: true
       }
-    case fromMatcher.FETCH_MATCHERS_COUNT_SUCCESS:
+    case fromToDoMatcher.FETCH_TODO_MATCHERS_COUNT_SUCCESS:
       return {
         ...state,
         matcherTotalCount: action.count
       }
-    case fromMatcher.FETCH_MATCHERS_FAILURE:
+    case fromToDoMatcher.FETCH_TODO_MATCHERS_FAILURE:
       return {
         ...state,
         matchers: [],
@@ -47,7 +47,7 @@ export function reducer(state: State = initialState, action: Actions): State {
         showDetailID: ''
       }
 
-    case fromMatcher.LOAD_MORE_MATCHERS_SUCCESS:
+    case fromToDoMatcher.LOAD_MORE_TODO_MATCHERS_SUCCESS:
       return {
         ...state,
         matchers: deduplicate(
@@ -57,7 +57,7 @@ export function reducer(state: State = initialState, action: Actions): State {
         currentMatcherCount: state.currentMatcherCount + action.matchers.length
       }
 
-    case fromMatcher.UPDATE_MATCHER_DETAIL_ID:
+    case fromToDoMatcher.UPDATE_TODO_MATCHER_DETAIL_ID:
       return {
         ...state,
         showDetailID: action.detailID
@@ -66,6 +66,15 @@ export function reducer(state: State = initialState, action: Actions): State {
       return {
         ...state,
         showDetailID: ''
+      }
+
+    case fromToDoMatcher.AGREE_TODO_MATCHER_SUCCESS:
+    case fromToDoMatcher.REFUSE_TODO_MATCHER_SUCCESS:
+      return {
+        ...state,
+        matcherTotalCount: state.matcherTotalCount - 1,
+        currentMatcherCount: state.currentMatcherCount - 1,
+        matchers: state.matchers.filter(e => e.id !== action.id)
       }
 
     default: {
