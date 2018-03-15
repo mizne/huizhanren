@@ -17,6 +17,7 @@ export class ExhibitorMatcherItemComponent implements OnInit {
   AGREE = ExhibitorMatcherStatus.AGREE
 
   @Input() matcher: ExhibitorMatcher
+  @Input() exhibitor: Exhibitor
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
@@ -25,11 +26,13 @@ export class ExhibitorMatcherItemComponent implements OnInit {
     console.log(this.matcher)
   }
 
-  ensureAgreeMatcher(id: string) {
+  ensureAgreeMatcher(id: string, ev: Event) {
+    ev.stopPropagation()
     this.agreeMatcher.emit(id)
   }
 
-  ensureRefuseMatcher(id: string) {
+  ensureRefuseMatcher(id: string, ev: Event) {
+    ev.stopPropagation()
     this.refuseMatcher.emit(id)
   }
 }

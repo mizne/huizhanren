@@ -5,10 +5,12 @@
   flex-wrap: wrap;
 
   .exhibitor-matcher-item {
-    // flex: 1;
-    // min-width: 300px;
     display: inline-block;
     width: 33%;
+
+    &.expand {
+      width: 49%;
+    }
   }
 
   .no-data {
@@ -17,7 +19,7 @@
     color: map-get($map: $gridColors, $key: grey);
   }
 
-  .not-more-data {
+  .no-more-data {
     width: 100%;
     color: #67686c;
     text-align: center;

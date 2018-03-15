@@ -8,10 +8,6 @@
     display: inline-block;
     width: 33%;
 
-    &.expand:nth-child(2n) {
-      margin-left: 2%;
-    }
-
     &.expand {
       width: 49%;
     }
@@ -24,13 +20,13 @@
   color: map-get($map: $gridColors, $key: grey);
 }
 
-.hz-load-more {
+.not-more-data {
   width: 100%;
   color: #67686c;
   text-align: center;
 }
 
-.not-more-data {
+.hz-load-more {
   width: 100%;
   color: #67686c;
   text-align: center;

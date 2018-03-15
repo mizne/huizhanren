@@ -41,7 +41,8 @@ import {
   LoadMoreExhibitorsAction,
   FetchAreaFilterOptionsAction,
   FetchTypeFilterOptionsAction,
-  ToInviteExhibitorToMicroAppAction
+  ToInviteExhibitorToMicroAppAction,
+  ChangePageStatusAction
 } from './actions/exhibitor.action'
 import {
   FetchToDoMatchersAction,
@@ -271,38 +272,15 @@ export class ExhibitorsPage implements OnInit {
       })
       .filter(e => !!e)
 
-    this.currentExhibitorDetail$ = Observable.combineLatest(
+    this.currentExhibitorDetail$ = Observable.merge(
       latestExhibitor$,
       latestToDoMatcher$.map(e => e.toShow),
       latestCompleteMatcher$.map(e => e.toShow)
-    ).withLatestFrom(
-      this.listStatus$.startWith(ListStatus.EXHIBITOR),
-      ([exhibitor, toDo, complete], listStatus) => {
-        if (listStatus === ListStatus.EXHIBITOR) {
-          return exhibitor
-        }
-        if (listStatus === ListStatus.TODO) {
-          return toDo
-        }
-        if (listStatus === ListStatus.COMPLETE) {
-          return complete
-        }
-      }
     )
 
-    this.currentExhibitorMatcherDetail$ = Observable.combineLatest(
+    this.currentExhibitorMatcherDetail$ = Observable.merge(
       latestToDoMatcher$,
       latestCompleteMatcher$
-    ).withLatestFrom(
-      this.listStatus$.startWith(ListStatus.EXHIBITOR),
-      ([toDo, complete], listStatus) => {
-        if (listStatus === ListStatus.TODO) {
-          return toDo
-        }
-        if (listStatus === ListStatus.COMPLETE) {
-          return complete
-        }
-      }
     )
   }
 
@@ -332,6 +310,7 @@ export class ExhibitorsPage implements OnInit {
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
         this.store.dispatch(new ChangeListStatusAction(listStatus))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 

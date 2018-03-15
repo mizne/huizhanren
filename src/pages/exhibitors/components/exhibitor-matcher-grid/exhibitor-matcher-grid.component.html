@@ -1,12 +1,13 @@
 <div class="exhibitor-matcher-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.exhibitor-matcher-grid-container'"
   [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
-  <div class="exhibitor-matcher-item" tappable [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
-    <exhibitor-matcher-item [matcher]="item" (agreeMatcher)="ensureAgree($event)" (refuseMatcher)="ensureRefuse($event)"></exhibitor-matcher-item>
+  <div class="exhibitor-matcher-item" tappable [class.active]="item.selected" [class.expand]="expand" *ngFor="let item of dataItems"
+    (click)="ensureShow(item)">
+    <exhibitor-matcher-item [matcher]="item" [exhibitor]="item.toShow" (agreeMatcher)="ensureAgree($event)" (refuseMatcher)="ensureRefuse($event)"></exhibitor-matcher-item>
   </div>
 
   <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>
   <ng-template #noMoreData>
-    <p class="not-more-data">没有更多数据了</p>
+    <p class="no-more-data">没有更多数据了</p>
   </ng-template>
 </div>
 <ng-template #noData>

@@ -26,8 +26,9 @@ import {
   getExhibitors,
   getCurrentExhibitorCount
 } from '../reducers'
-import { getTenantId, getCompanyName, getBoothNo } from '../../login/reducers'
+import { getCompanyName, getBoothNo } from '../../login/reducers'
 import { ToInviteExhibitorToMicroAppModal } from '../modals/to-invite-exhibitor-to-micro-app-modal/to-invite-exhibitor-to-micro-app-modal.component'
+import { PageStatus } from '../models/exhibitor.model'
 
 @Injectable()
 export class ExhibitorEffects {
@@ -314,6 +315,13 @@ export class ExhibitorEffects {
     .map((action: fromExhibitor.ToShowProcuctAction) => action.product)
     .do(product => {
       this.modalCtrl.create(ToShowProductModal, product).present()
+    })
+
+  @Effect()
+  updateExhibitorDetailID$ = this.actions$
+    .ofType(fromExhibitor.UPDATE_EXHIBITOR_DETAIL_ID)
+    .map(() => {
+      return new fromExhibitor.ChangePageStatusAction(PageStatus.DETAIL)
     })
 
   constructor(
