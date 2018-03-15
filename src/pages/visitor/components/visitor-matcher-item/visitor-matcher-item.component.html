@@ -11,7 +11,7 @@
       <span class="title">{{matcher.toShow.title}}</span>
     </div>
     <div class="time">
-      {{matcher.startTime + '~' + matcher.endTime}}
+      {{matcher.meetingStartTime + '~' + matcher.meetingEndTime}}
     </div>
   </div>
 
@@ -32,7 +32,7 @@
       </ng-template>
     </div>
     <div class="booth-no" *ngIf="matcher.status === AGREE">
-      {{matcher.boothNo}}
+      {{matcher.meetingPlace}}
     </div>
   </div>
 </div>

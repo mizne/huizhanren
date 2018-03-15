@@ -16,11 +16,11 @@ export class VisitorMatcher {
   isReceiver?: boolean
   initator?: Visitor | Exhibitor
   receiver?: Visitor | Exhibitor
-  startTime: string
-  endTime: string
+  meetingStartTime: string
+  meetingEndTime: string
 
   toShow?: Visitor
-  boothNo: string
+  meetingPlace: string
 
   static extractInitatorAndReceiver(
     resp: VisitorMatcherResp,
@@ -28,20 +28,17 @@ export class VisitorMatcher {
   ): {
     initator: Visitor | Exhibitor
     receiver: Visitor | Exhibitor
-    boothNo: string
   } {
     switch (type) {
       case VisitorMatcherType.VISITOR_TO_EXHIBITOR:
         return {
           initator: Visitor.convertFromResp(resp.VisitorInitator[0]),
-          receiver: Exhibitor.convertFromResp(resp.Receiver[0]),
-          boothNo: resp.Receiver[0].BoothNo
+          receiver: Exhibitor.convertFromResp(resp.Receiver[0])
         }
       case VisitorMatcherType.EXHIBITOR_TO_VISITOR:
         return {
           initator: Exhibitor.convertFromResp(resp.Initator[0]),
-          receiver: Visitor.convertFromResp(resp.VisitorReceiver[0]),
-          boothNo: resp.Initator[0].BoothNo
+          receiver: Visitor.convertFromResp(resp.VisitorReceiver[0])
         }
       default:
         console.warn(`Unknown visitor matcher type: ${type}`)
@@ -65,11 +62,10 @@ export class VisitorMatcher {
   static convertFromResp(resp: VisitorMatcherResp): VisitorMatcher {
     const type = VisitorMatcher.convertTypeFromResp(resp.Type)
     const status = VisitorMatcher.convertStatusFromState(resp.State)
-    const {
-      initator,
-      receiver,
-      boothNo
-    } = VisitorMatcher.extractInitatorAndReceiver(resp, type)
+    const { initator, receiver } = VisitorMatcher.extractInitatorAndReceiver(
+      resp,
+      type
+    )
     return {
       id: resp.RecordId,
       type,
@@ -78,9 +74,9 @@ export class VisitorMatcher {
       receiverId: receiver.id,
       initator,
       receiver,
-      boothNo,
-      startTime: resp.MeetingTimeStart.trim().slice(0, 5),
-      endTime: resp.MeetingTimeEnd.trim().slice(0, 5)
+      meetingPlace: resp.MeetingPlace,
+      meetingStartTime: resp.MeetingTimeStart.trim().slice(0, 5),
+      meetingEndTime: resp.MeetingTimeEnd.trim().slice(0, 5)
     }
   }
 
@@ -140,6 +136,7 @@ export class VisitorMatcherResp {
   State?: string
   MeetingTimeStart: string
   MeetingTimeEnd: string
+  MeetingPlace: string
   // Type为1 展商发起约请
   Initator: ExhibitorResp[] // 发送方展商
   InitatorChild: ExhibitorContactResp[] // 发送方展商联系人
