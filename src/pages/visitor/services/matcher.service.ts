@@ -19,10 +19,11 @@ import { ToDoFilterOptions } from '../components/matcher-filter/matcher-filter.c
 
 @Injectable()
 export class VisitorMatcherService {
-  private fetchUrl: string = '/data/queryList/InvitationInfo'
+  private fetchUrl = '/data/queryList/InvitationInfo'
   private fetchCountUrl = '/data/queryCount/InvitationInfo'
   private insertUrl = '/data/insert/InvitationInfo'
-  private updateUrl: string = '/data/update/InvitationInfo'
+  private updateUrl = '/data/update/InvitationInfo'
+  private batchUpdateUrl = '/data/updateList/InvitationInfo'
 
   constructor(
     private http: HttpClient,
@@ -293,6 +294,38 @@ export class VisitorMatcherService {
         return this.logger.httpError({
           module: 'VisitorMatcherService',
           method: 'agreeMatcher',
+          error: e
+        })
+      })
+  }
+
+  public batchAgreeMatcher(matcherIds: string[]): Observable<any> {
+    const params = {
+      params: matcherIds.map(id => ({
+        recordId: id,
+        setValue: {
+          State: convertMatcherStatusFromModel(VisitorMatcherStatus.AGREE)
+        }
+      }))
+    }
+    return this.tenantService
+      .getTenantIdAndUserId()
+      .mergeMap(([tenantId, userId]) => {
+        return this.http.post(
+          this.updateUrl,
+          Object.assign(
+            {
+              tenantId,
+              userId
+            },
+            params
+          )
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'VisitorMatcherService',
+          method: 'batchAgreeMatcher',
           error: e
         })
       })

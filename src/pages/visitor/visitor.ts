@@ -45,7 +45,8 @@ import {
   FetchToDoMatchersCountAction,
   ToAgreeMatcherAction,
   ToRefuseMatcherAction,
-  LoadMoreToDoMatchersAction
+  LoadMoreToDoMatchersAction,
+  ToBatchAgreeMatchersAction
 } from './actions/todo-matcher.action'
 
 import {
@@ -158,6 +159,10 @@ export class VisitorPage implements OnInit, OnDestroy {
 
   updateVisitorDetailID(id: string) {
     // this.store.dispatch(new UpdateVisitorDetailIDAction(id))
+  }
+
+  ensureBatchAgree() {
+    this.store.dispatch(new ToBatchAgreeMatchersAction())
   }
 
   updateMatcherDetailID(id: string) {

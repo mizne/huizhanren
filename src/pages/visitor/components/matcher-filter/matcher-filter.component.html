@@ -17,7 +17,7 @@
       <li tappable (click)="ensureStatus(STATUS_PENDING)" [ngClass]="['filter-item', 'pending', filterStatusActive === STATUS_PENDING ? 'active' : '']">审核中</li>
       <li tappable (click)="ensureStatus(STATUS_ENREPLY)" [ngClass]="['filter-item', 'unreply', filterStatusActive === STATUS_ENREPLY ? 'active' : '']">未答复</li>
     </ul>
-    <button ion-button>全部接受</button>
+    <button ion-button (click)="toBatchAgree()">全部接受</button>
   </div>
   <div class="right">
     <ul class="filter">

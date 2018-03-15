@@ -14,7 +14,8 @@
         [showSearch]="(pageStatus$ | async) === LIST_PAGE" [filterSub]="visitorFilterSub" [filterOptions]="filterOptions$ | async"
         placeholder="请输入客户名">
       </hz-grid-filter>
-      <visitor-matcher-filter [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" [listStatus]="listStatus$ | async" (toDoFilter)="ensureToDoFilter($event)">
+      <visitor-matcher-filter [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" [listStatus]="listStatus$ | async" (toDoFilter)="ensureToDoFilter($event)"
+        (batchAgree)="ensureBatchAgree()">
       </visitor-matcher-filter>
       <visitor-matcher-filter [hidden]="(listStatus$ | async) !== COMPLETE_MATCHER_GRID" [listStatus]="listStatus$ | async" [expand]="(pageStatus$ | async) === DETAIL_PAGE"
         (completeFilter)="ensureCompleteFilter($event)">

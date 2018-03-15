@@ -32,6 +32,7 @@ import { CustomerCompanyPrivacyPipe } from './pipes/company-privacy.pipe'
 
 import { VisitorService } from './services/visitor.service'
 import { VisitorMatcherService } from './services/matcher.service'
+import { ToBatchAgreeMatchersModal } from './modals/to-batch-agree-matcher-modal/to-batch-agree-matcher-modal.component'
 
 const services = [VisitorService, VisitorMatcherService]
 const effects = [VisitorEffects, ToDoMatcherEffects, CompleteMatcherEffects]
@@ -45,6 +46,7 @@ const modals = [
   ToInviteVisitorModal,
   ToCancelMatcherModal,
   ToAgreeMatcherModal,
+  ToBatchAgreeMatchersModal,
   ToRefuseMatcherModal
 ]
 

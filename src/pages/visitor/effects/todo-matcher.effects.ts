@@ -18,9 +18,10 @@ import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-m
 import { ToRefuseMatcherModal } from '../modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 
 import { Store } from '@ngrx/store'
-import { State, getCurrentToDoMatcherCount } from '../reducers'
+import { State, getCurrentToDoMatcherCount, getToDoMatchers } from '../reducers'
 import { PageStatus } from '../models/visitor.model'
 import { VisitorMatcherStatus } from '../models/matcher.model'
+import { ToBatchAgreeMatchersModal } from '../modals/to-batch-agree-matcher-modal/to-batch-agree-matcher-modal.component'
 
 @Injectable()
 export class ToDoMatcherEffects {
@@ -160,6 +161,104 @@ export class ToDoMatcherEffects {
           position: 'top'
         })
         .present()
+    })
+
+  @Effect()
+  toBatchAgreeMatcher$ = this.actions$
+    .ofType(fromToDoMatcher.TO_BATCH_AGREE_MATCHERS)
+    .withLatestFrom(this.store.select(getToDoMatchers))
+    .switchMap(([_, matchers]) => {
+      const toAgreeMatchers = matchers.filter(
+        e => e.isReceiver && e.status === VisitorMatcherStatus.AUDIT_SUCCEED
+      )
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          if (toAgreeMatchers.length > 0) {
+            const modal = this.modalCtrl.create(ToBatchAgreeMatchersModal, {
+              count: toAgreeMatchers.length
+            })
+            modal.onDidDismiss(ok => {
+              res(ok)
+            })
+            modal.present()
+          } else {
+            rej(new Error('还没有约请可以接受'))
+          }
+        })
+      )
+        .map((ok: string) => {
+          if (ok) {
+            return new fromToDoMatcher.BatchAgreeMatchersAction()
+          } else {
+            return new fromToDoMatcher.CancelBatchAgreeMatchersAction()
+          }
+        })
+        .catch(e => {
+          return Observable.of(
+            new fromToDoMatcher.CancelBatchAgreeMatchersAction(e.message)
+          )
+        })
+    })
+
+  @Effect()
+  batchAgreeMatchers$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_MATCHERS)
+    .withLatestFrom(this.store.select(getToDoMatchers))
+    .switchMap(([_, matchers]) => {
+      const toAgreeMatchers = matchers.filter(
+        e => e.isReceiver && e.status === VisitorMatcherStatus.AUDIT_SUCCEED
+      )
+
+      return this.matcherService
+        .batchAgreeMatcher(toAgreeMatchers.map(e => e.id))
+        .map(() => new fromToDoMatcher.BatchAgreeMatchersSuccessAction())
+        .catch(() =>
+          Observable.of(new fromToDoMatcher.BatchAgreeMatchersFailureAction())
+        )
+    })
+
+  @Effect({ dispatch: false })
+  batchAgreeMatchersSuccess$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_MATCHERS_SUCCESS)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '批量同意约请成功',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  batchAgreeMatchersFailure$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_MATCHERS_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '批量同意约请失败',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  cancelBatchAgreeMatchers$ = this.actions$
+    .ofType(fromToDoMatcher.CANCEL_BATCH_AGREE_MATCHERS)
+    .map(
+      (action: fromToDoMatcher.CancelBatchAgreeMatchersAction) => action.message
+    )
+    .do(message => {
+      if (message) {
+        this.toastCtrl
+          .create({
+            message,
+            duration: 3e3,
+            position: 'top'
+          })
+          .present()
+      }
     })
 
   @Effect()

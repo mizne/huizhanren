@@ -42,6 +42,7 @@ export class HzMatcherFilterComponent implements OnInit {
   completeFilter: EventEmitter<VisitorMatcherDirection> = new EventEmitter<
     VisitorMatcherDirection
   >()
+  @Output() batchAgree: EventEmitter<void> = new EventEmitter<void>()
 
   ngOnInit() {}
 
@@ -64,6 +65,12 @@ export class HzMatcherFilterComponent implements OnInit {
       })
     } else {
       this.completeFilter.emit(this.filterDirectionActive)
+    }
+  }
+
+  toBatchAgree() {
+    if (this.listStatus === ListStatus.TODO) {
+      this.batchAgree.emit()
     }
   }
 }

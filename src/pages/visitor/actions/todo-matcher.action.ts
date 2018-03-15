@@ -31,6 +31,15 @@ export const AGREE_MATCHER = '[Visitor] Agree Matcher'
 export const AGREE_MATCHER_SUCCESS = '[Visitor] Agree Matcher Success'
 export const AGREE_MATCHER_FAILURE = '[Visitor] Agree Matcher Failure'
 
+export const TO_BATCH_AGREE_MATCHERS = '[Visitor] To Batch Agree Matchers'
+export const CANCEL_BATCH_AGREE_MATCHERS =
+  '[Visitor] Cancel Batch Agree Matchers'
+export const BATCH_AGREE_MATCHERS = '[Visitor] Batch Agree Matchers'
+export const BATCH_AGREE_MATCHERS_SUCCESS =
+  '[Visitor] Batch Agree Matchers Success'
+export const BATCH_AGREE_MATCHERS_FAILURE =
+  '[Visitor] Batch Agree Matchers Failure'
+
 export const TO_REFUSE_MATCHER = '[Visitor] To Refuse Matcher'
 export const CANCEL_REFUSE_MATCHER = '[Visitor] Cancel Refuse Matcher'
 export const REFUSE_MATCHER = '[Visitor] Refuse Matcher'
@@ -105,6 +114,23 @@ export class AgreeMatcherFailureAction implements Action {
   readonly type = AGREE_MATCHER_FAILURE
 }
 
+export class ToBatchAgreeMatchersAction implements Action {
+  readonly type = TO_BATCH_AGREE_MATCHERS
+}
+export class CancelBatchAgreeMatchersAction implements Action {
+  readonly type = CANCEL_BATCH_AGREE_MATCHERS
+  constructor(public message?: string) {}
+}
+export class BatchAgreeMatchersAction implements Action {
+  readonly type = BATCH_AGREE_MATCHERS
+}
+export class BatchAgreeMatchersSuccessAction implements Action {
+  readonly type = BATCH_AGREE_MATCHERS_SUCCESS
+}
+export class BatchAgreeMatchersFailureAction implements Action {
+  readonly type = BATCH_AGREE_MATCHERS_FAILURE
+}
+
 export class ToRefuseMatcherAction implements Action {
   readonly type = TO_REFUSE_MATCHER
   constructor(public matcherId: string) {}
@@ -143,6 +169,11 @@ export type Actions =
   | AgreeMatcherAction
   | AgreeMatcherSuccessAction
   | AgreeMatcherFailureAction
+  | ToBatchAgreeMatchersAction
+  | CancelBatchAgreeMatchersAction
+  | BatchAgreeMatchersAction
+  | BatchAgreeMatchersSuccessAction
+  | BatchAgreeMatchersFailureAction
   | ToRefuseMatcherAction
   | CancelRefuseMatcherAction
   | RefuseMatcherAction
