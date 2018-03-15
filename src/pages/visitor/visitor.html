@@ -38,8 +38,8 @@
 
     <div class="detail-area" [class.expand]="(pageStatus$ | async) === DETAIL_PAGE">
       <visitor-detail *ngIf="(currentDetail$ | async)" [detail]="currentDetail$ | async" [expand]="(pageStatus$ | async) === DETAIL_PAGE"
-        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
-        (refuseMatcher)="ensureRefuseMatcher($event)" (createLog)="ensureCreateLog()" (editLog)="ensureEditLog($event)">
+        [logs]="currentLogs$ | async" [portray]="currentPortray$ | async" (sendSMS)="ensureSendSMS($event)" (createLog)="ensureCreateLog()"
+        (editLog)="ensureEditLog($event)">
       </visitor-detail>
     </div>
 

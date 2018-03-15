@@ -178,6 +178,10 @@ export class VisitorPage implements OnInit {
     this.store.dispatch(new ToRefuseToDoMatcherAction(id))
   }
 
+  ensureSendSMS(phone: string) {
+    console.log(`TODO: send sms for visitor!`)
+  }
+
   private initDataSource() {
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
