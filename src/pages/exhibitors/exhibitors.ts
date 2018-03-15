@@ -252,7 +252,13 @@ export class ExhibitorsPage implements OnInit {
         const exhibitor = exhibitors.find(e => e.id === id)
         return exhibitor
       })
-      .filter(e => !!e)
+      .withLatestFrom(this.listStatus$)
+      .filter(
+        ([matcher, listStatus]) =>
+          matcher && listStatus === ListStatus.EXHIBITOR
+      )
+      .map(([matcher, _]) => matcher)
+
     const latestToDoMatcher$ = Observable.combineLatest(
       this.store.select(getToDoMatchers),
       this.store.select(getToDoMatcherShowDetailID)
@@ -261,7 +267,12 @@ export class ExhibitorsPage implements OnInit {
         const matcher = matchers.find(e => e.id === id)
         return matcher
       })
-      .filter(e => !!e)
+      .withLatestFrom(this.listStatus$)
+      .filter(
+        ([matcher, listStatus]) => matcher && listStatus === ListStatus.TODO
+      )
+      .map(([matcher, _]) => matcher)
+
     const latestCompleteMatcher$ = Observable.combineLatest(
       this.store.select(getCompleteMatchers),
       this.store.select(getCompleteMatcherShowDetailID)
@@ -270,7 +281,11 @@ export class ExhibitorsPage implements OnInit {
         const matcher = matchers.find(e => e.id === id)
         return matcher
       })
-      .filter(e => !!e)
+      .withLatestFrom(this.listStatus$)
+      .filter(
+        ([matcher, listStatus]) => matcher && listStatus === ListStatus.COMPLETE
+      )
+      .map(([matcher, _]) => matcher)
 
     this.currentExhibitorDetail$ = Observable.merge(
       latestExhibitor$,

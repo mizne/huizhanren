@@ -1,5 +1,10 @@
 import * as fromExhibitor from '../actions/exhibitor.action'
-import { Exhibitor, ListStatus, PageStatus, FilterOptions } from '../models/exhibitor.model'
+import {
+  Exhibitor,
+  ListStatus,
+  PageStatus,
+  FilterOptions
+} from '../models/exhibitor.model'
 
 import { Logger } from '../../customer/models/logger.model'
 import { deduplicate } from '../../customer/services/utils'
@@ -46,7 +51,7 @@ export function reducer(
         exhibitors: action.exhibitors,
         currentExhibitorsCount: action.exhibitors.length,
         showDetailID: '',
-        shouldScrollToTop:  true
+        shouldScrollToTop: true
       }
     case fromExhibitor.FETCH_EXHIBITORS_FAILURE:
       return {
@@ -70,7 +75,7 @@ export function reducer(
         ),
         currentExhibitorsCount:
           state.currentExhibitorsCount + action.exhibitors.length,
-          shouldScrollToTop: false
+        shouldScrollToTop: false
       }
 
     case fromExhibitor.FETCH_AREA_FILTER_OPTIONS_SUCCESS:
@@ -110,7 +115,11 @@ export function reducer(
     case fromExhibitor.UPDATE_EXHIBITOR_DETAIL_ID:
       return {
         ...state,
-        showDetailID: action.detailID
+        showDetailID: action.detailID,
+        exhibitors: state.exhibitors.map(e => ({
+          ...e,
+          selected: e.id === action.detailID
+        }))
       }
 
     case fromExhibitor.FETCH_LOGGER_SUCCESS:

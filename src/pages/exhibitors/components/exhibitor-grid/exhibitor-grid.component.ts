@@ -57,9 +57,8 @@ export class ExhibitorGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureShow(item: Exhibitor) {
-    item.selected = !item.selected
-    this.showDetail.emit(item.id)
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
   }
 
   ensureCancelMatcher(id: string) {

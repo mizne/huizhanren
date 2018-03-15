@@ -1,82 +1,10 @@
 <div class="exhibitor-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.exhibitor-grid-container'"
   [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
-  <div class="exhibitor-item" tappable [class.expand]="expand" [class.active]="item.selected" *ngFor="let item of dataItems"
-    (click)="ensureShow(item)">
-    <!-- <div class="logo">
-      <img [src]="item.logo" alt="logo">
-    </div>
-
-    <div class="desc">
-      <div class="header">{{item.name}}</div>
-
-      <div class="center">
-        <div class="area">
-          <span *ngIf="item.boothNo; else noBoothNo;">{{item.boothNo}}</span>
-          <ng-template #noBoothNo>
-            <span class="no-item"></span>
-          </ng-template>
-          <span class="pipe" *ngIf="item.boothNo && item.area"> | </span>
-          <span *ngIf="item.area; else noArea;">{{item.area}}</span>
-          <ng-template #noArea>
-            <span class="no-item"></span>
-          </ng-template>
-        </div>
-
-        <div class="matcher-dest" *ngIf="type === 'matcher'">
-          <span [ngClass]="{'is-sender': item.isSender, 'is-receiver': item.isReceiver, 'send-dir': true}">
-            {{item.isSender ? '发' : '收'}}
-          </span>
-        </div>
-      </div>
-
-      <div class="footer">
-        <div class="industry" *ngIf="item.industry; else noIndustry;">
-          {{item.industry}}
-        </div>
-        <ng-template #noIndustry>
-          <div class="no-item"></div>
-        </ng-template>
-
-        <div class="right-area">
-          <div class="heat" *ngIf="type === 'exhibitor'; else matcherBlock;">
-            <i class="iconfont icon-view"></i> {{item.heat}}
-          </div>
-          <ng-template #matcherBlock>
-            <div class="matcher-status" *ngIf="item.senderId">
-              <span *ngIf="item.isSender; else receiver;" class="send-dir">
-                <span *ngIf="item.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + item.status]">
-                  {{item.status | exhibitorMatcherStatus}}
-                </span>
-                <ng-template #sendAuditSuccess>
-                  <span>{{item.status | exhibitorMatcherStatus}}</span>
-                  <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(item.id)">取消</button>
-                </ng-template>
-              </span>
-              <ng-template #receiver>
-                <span *ngIf="item.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status', 'matcher-status-' + item.status]">
-                  {{item.status | exhibitorMatcherStatus}}
-                </span>
-                <ng-template #receiveAuditSuccess>
-                  <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(item.id)">接受</button>
-                  <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(item.id)">拒绝</button>
-                </ng-template>
-              </ng-template>
-            </div>
-
-          </ng-template>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="active-icon" *ngIf="item.selected">
-      <i class="iconfont icon-check"></i>
-    </div> -->
-    <exhibitor-item [exhibitor]="item"></exhibitor-item>
+  <div class="exhibitor-item" [class.expand]="expand" *ngFor="let item of dataItems">
+    <exhibitor-item [exhibitor]="item" (showDetail)="ensureShow($event)"></exhibitor-item>
   </div>
 
   <p *ngIf="showLoadMore; else noMoreData;" class="hz-load-more" tappable (click)="ensureLoadMore()">加载更多</p>
-  <!-- <hz-load-more *ngIf="showLoadMore; else noMoreData;" (loadMore)="ensureLoadMore()"></hz-load-more> -->
   <ng-template #noMoreData>
     <p class="not-more-data">没有更多数据了</p>
   </ng-template>

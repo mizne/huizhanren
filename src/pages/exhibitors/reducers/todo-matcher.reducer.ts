@@ -61,7 +61,11 @@ export function reducer(state: State = initialState, action: Actions): State {
     case fromToDoMatcher.UPDATE_TODO_MATCHER_DETAIL_ID:
       return {
         ...state,
-        showDetailID: action.detailID
+        showDetailID: action.detailID,
+        matchers: state.matchers.map(e => ({
+          ...e,
+          selected: action.detailID === e.id
+        }))
       }
     case fromExhibitor.CHANGE_LIST_STATUS:
       return {

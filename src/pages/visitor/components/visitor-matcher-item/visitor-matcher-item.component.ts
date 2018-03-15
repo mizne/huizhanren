@@ -19,6 +19,7 @@ export class VisitorMatcherItemComponent implements OnInit {
   @Input() matcher: VisitorMatcher
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
+  @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
 
   constructor() {}
   ngOnInit() {}
@@ -29,5 +30,9 @@ export class VisitorMatcherItemComponent implements OnInit {
 
   ensureRefuseMatcher(id: string) {
     this.refuseMatcher.emit(id)
+  }
+
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
   }
 }

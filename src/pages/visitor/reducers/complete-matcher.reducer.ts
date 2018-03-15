@@ -59,7 +59,11 @@ export function reducer(state: State = initialState, action: Actions): State {
     case fromCompleteMatcher.UPDATE_COMPLETE_MATCHER_DETAIL_ID:
       return {
         ...state,
-        showDetailID: action.detailID
+        showDetailID: action.detailID,
+        matchers: state.matchers.map(e => ({
+          ...e,
+          selected: e.id === action.detailID
+        }))
       }
 
     default: {

@@ -10,6 +10,12 @@ import { Logger } from '../../../customer/models/logger.model'
 export class ExhibitorItemComponent implements OnInit {
   @Input() exhibitor: Exhibitor[]
 
+  @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
+
   constructor() {}
   ngOnInit() {}
+
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
+  }
 }

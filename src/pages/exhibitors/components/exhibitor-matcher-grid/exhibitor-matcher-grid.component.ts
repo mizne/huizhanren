@@ -60,9 +60,9 @@ export class ExhibitorMatcherGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureShow(item: Exhibitor) {
-    item.selected = !item.selected
-    this.showDetail.emit(item.id)
+  ensureShow(id) {
+    this.showDetail.emit(id)
+    console.log(`ensure show exhibitor matcher id: ${id}`)
   }
 
   ensureAgree(id: string) {

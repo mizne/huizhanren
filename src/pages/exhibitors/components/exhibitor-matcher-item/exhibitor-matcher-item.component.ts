@@ -18,6 +18,7 @@ export class ExhibitorMatcherItemComponent implements OnInit {
 
   @Input() matcher: ExhibitorMatcher
   @Input() exhibitor: Exhibitor
+  @Output() showDetail: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
@@ -32,5 +33,9 @@ export class ExhibitorMatcherItemComponent implements OnInit {
   ensureRefuseMatcher(id: string, ev: Event) {
     ev.stopPropagation()
     this.refuseMatcher.emit(id)
+  }
+
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
   }
 }

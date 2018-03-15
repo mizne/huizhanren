@@ -1,4 +1,4 @@
-<div class="exhibitor-matcher-item-container">
+<div class="exhibitor-matcher-item-container" tappable [class.active]="matcher.selected" (click)="ensureShow(matcher.id)">
   <div class="matcher-dest">
     <span [ngClass]="{'is-sender': matcher.isInitator, 'is-receiver': matcher.isReceiver, 'send-dir': true}">
       {{matcher.isInitator ? '发' : '收'}}

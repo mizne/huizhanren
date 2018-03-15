@@ -1,5 +1,4 @@
-<div class="exhibitor-item-container">
-
+<div class="exhibitor-item-container" tappable [class.active]="exhibitor.selected" (click)="ensureShow(exhibitor.id)">
   <div class="logo">
     <img [src]="exhibitor.logo" alt="logo">
   </div>

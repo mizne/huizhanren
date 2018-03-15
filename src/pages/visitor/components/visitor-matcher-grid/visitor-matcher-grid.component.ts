@@ -60,9 +60,8 @@ export class VisitorMatcherGridComponent implements OnInit, OnDestroy {
     this.loadMore.emit()
   }
 
-  ensureShow(item: Visitor) {
-    item.selected = !item.selected
-    this.showDetail.emit(item.id)
+  ensureShow(id: string) {
+    this.showDetail.emit(id)
   }
 
   ensureAgree(id: string) {
