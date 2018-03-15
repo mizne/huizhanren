@@ -1,24 +1,60 @@
 <div class="visitor-detail-container">
   <div class="left-area">
     <div class="card-container">
-      <div class="card-info" *ngIf="detail.status === 3; else notAllow;">
+      <div class="card-info">
         <img *ngIf="detail.cardImg; else noCardImg;" src="./assets/images/card.jpg" alt="">
         <ng-template #noCardImg>
           <p class="no-cardimg">还没上传名片</p>
         </ng-template>
       </div>
-      <ng-template #notAllow>
-        <div class="card-info">
-          <div class="title">名片信息</div>
-          <div class="desc">成功约请后显示其名片及详细资料</div>
-        </div>
-      </ng-template>
     </div>
 
     <div class="customer-container">
-      <hz-customer-abstract [detail]="detail" (invite)="ensureInvite()" (cancelMatcher)="ensureCancelMatcher($event)" (agreeMatcher)="ensureAgreeMatcher($event)"
-        (refuseMatcher)="ensureRefuseMatcher($event)"></hz-customer-abstract>
+      <hz-customer-abstract [detail]="detail"></hz-customer-abstract>
+
       <div class="customer-detail">
+        <div class="hz-card-detail-field-item" *ngIf="detail.toShow.mobile">
+          <ion-icon [name]="'phone-portrait'" color="grey"></ion-icon>
+          <div class="hz-content">
+            <a [href]="telHref">
+              <div class="hz-card-field-value">{{detail.toShow.mobile}}</div>
+              <div class="hz-card-field-label">手机</div>
+            </a>
+          </div>
+          <div class="icon-wrapper" tappable *ngIf="isPhone" (click)="sendSMS()">
+            <ion-icon name="chatboxes" color="primary"></ion-icon>
+          </div>
+        </div>
+        <div class="hz-card-detail-field-item" *ngIf="detail.toShow.email">
+          <ion-icon [name]="'mail'" color="grey"></ion-icon>
+          <div class="hz-content">
+            <a [href]="telHref">
+              <div class="hz-card-field-value">{{detail.toShow.email}}</div>
+              <div class="hz-card-field-label">邮箱</div>
+            </a>
+          </div>
+        </div>
+        <div class="hz-card-detail-field-item" *ngIf="detail.toShow.companyAddr">
+          <ion-icon [name]="'locate'" color="grey"></ion-icon>
+          <div class="hz-content">
+            <a [href]="telHref">
+              <div class="hz-card-field-value">{{detail.toShow.companyAddr}}</div>
+              <div class="hz-card-field-label">地址</div>
+            </a>
+          </div>
+        </div>
+        <div class="hz-card-detail-field-item" *ngIf="detail.toShow.website">
+          <ion-icon [name]="'people'" color="grey"></ion-icon>
+          <div class="hz-content">
+            <a [href]="telHref">
+              <div class="hz-card-field-value">{{detail.toShow.website}}</div>
+              <div class="hz-card-field-label">网站</div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="customer-extra">
         <div class="headers">
           <div class="header-item logger" tappable [class.active]="activeHeaderIndex === 0" (click)="activeHeader(0)">日志</div>
           <div class="header-item portray" tappable [class.active]="activeHeaderIndex === 1" (click)="activeHeader(1)">用户画像</div>
@@ -31,19 +67,4 @@
       </div>
     </div>
   </div>
-
-  <!-- <div class="right-area" *ngIf="expand">
-    <div class="headers">
-      <div class="header-item logger" tappable [class.active]="activeDetailHeaderIndex === 0" (click)="activeDetailHeader(0)">日志</div>
-      <div class="header-item portray" tappable [class.active]="activeDetailHeaderIndex === 1" (click)="activeDetailHeader(1)">用户画像</div>
-    </div>
-
-    <div class="content">
-      <hz-logger-list *ngIf="activeDetailHeaderIndex === 0" theme="primary" [logs]="logs"
-       (createLog)="ensureCreateLog()"
-       (editLog)="ensureEditLog($event)"
-       ></hz-logger-list>
-      <hz-customer-portray *ngIf="activeDetailHeaderIndex === 1" theme="primary" [portray]="portray"></hz-customer-portray>
-    </div>
-  </div> -->
 </div>

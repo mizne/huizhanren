@@ -8,7 +8,6 @@ import { Logger } from '../../../customer/models/logger.model'
   templateUrl: 'visitor-detail.component.html'
 })
 export class VisitorDetailComponent implements OnInit {
-
   @Input() logs: Logger[]
   @Input() detail: Visitor
   @Input() portray: Portray
@@ -24,9 +23,15 @@ export class VisitorDetailComponent implements OnInit {
   activeHeaderIndex: number = 0
   activeDetailHeaderIndex: number = 0
 
+  get isPhone() {
+    return true
+  }
+
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.detail)
+  }
 
   activeHeader(index: number) {
     this.activeHeaderIndex = index

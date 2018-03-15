@@ -1,8 +1,14 @@
 <div class="customer-abstract-container">
+  <div class="matcher-dest">
+    <span [ngClass]="{'is-sender': detail.isInitator, 'is-receiver': detail.isReceiver, 'send-dir': true}">
+      {{detail.isInitator ? '发' : '收'}}
+    </span>
+  </div>
+
   <div class="customer-header">
     <div class="customer-title">
-      <span class="customer-name">{{detail.name | customerNamePrivacy:detail.status}}</span>
-      <span class="customer-title" *ngIf="detail.title; else noTitle;">( {{detail.title}} )</span>
+      <span class="customer-name">{{detail.toShow.name}}</span>
+      <span class="customer-title" *ngIf="detail.toShow.title; else noTitle;">( {{detail.toShow.title}} )</span>
       <ng-template #noTitle>
         <span class="no-title no-item"></span>
       </ng-template>
@@ -13,16 +19,16 @@
     </div>
   </div>
 
-  <div class="customer-company" *ngIf="detail.company">
-    {{detail.company | customerCompanyPrivacy:detail.status}}
+  <div class="customer-company" *ngIf="detail.toShow.company">
+    {{detail.toShow.company}}
   </div>
 
   <div class="customer-industry">
-    <span class="industry" *ngIf="detail.industry; else noIndustry;">{{detail.industry}}</span>
+    <span class="industry" *ngIf="detail.toShow.industry; else noIndustry;">{{detail.toShow.industry}}</span>
     <ng-template #noIndustry>
       <span class="no-industry no-item"></span>
     </ng-template>
-    <span class="area" *ngIf="detail.area; else noArea;">{{detail.area}}</span>
+    <span class="area" *ngIf="detail.toShow.area; else noArea;">{{detail.toShow.area}}</span>
     <ng-template #noArea>
       <span class="no-area no-item"></span>
     </ng-template>
@@ -31,45 +37,8 @@
   <div class="customer-status">
     <hz-customer-status></hz-customer-status>
 
-    <div class="matcher-status" *ngIf="detail.senderId; else recommend;">
-      <span *ngIf="detail.isSender; else receiver;" class="send-dir">
-        <span *ngIf="detail.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
-          {{detail.status | customerMatcherStatus}}
-        </span>
-        <ng-template #sendAuditSuccess>
-          <span>{{detail.status | customerMatcherStatus}}</span>
-          <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(detail.id)">取消</button>
-        </ng-template>
-      </span>
-      <ng-template #receiver>
-        <span *ngIf="detail.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + detail.status]">
-          {{detail.status | customerMatcherStatus}}
-        </span>
-        <ng-template #receiveAuditSuccess>
-          <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(detail.id)">接受</button>
-          <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(detail.id)">拒绝</button>
-        </ng-template>
-      </ng-template>
-    </div>
-    <ng-template #recommend>
-      <div class="invite">
-        <button ion-button (click)="ensureInvite()">约 TA</button>
-      </div>
-    </ng-template>
-  </div>
-
-  <div class="customer-private" *ngIf="detail.status === 3">
-    <div class="customer-mobile field-item" *ngIf="detail.mobile">
-      <span>电话:</span>
-      <span class="info">{{detail.mobile}}</span>
-    </div>
-    <div class="customer-email field-item" *ngIf="detail.email">
-      <span>邮箱:</span>
-      <span class="info">{{detail.email}}</span>
-    </div>
-    <div class="customer-address field-item" *ngIf="detail.visitorAddr">
-      <span>地址:</span>
-      <span class="info">{{detail.visitorAddr}}</span>
+    <div class="meeting-place">
+      {{'会面地点: ' + detail.meetingPlace}}
     </div>
   </div>
 </div>

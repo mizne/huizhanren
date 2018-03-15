@@ -1,4 +1,5 @@
 .customer-abstract-container {
+  position: relative;
   height: 200px;
   margin-bottom: 5px;
   padding: 20px;
@@ -6,10 +7,31 @@
   color: map-get($map: $colors, $key: grey);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
 
   .no-item {
     color: map-get($map: $colors, $key: danger);
+  }
+
+  .matcher-dest {
+    position: absolute;
+    top: -12px;
+    right: 3px;
+    color: #9e9e9e;
+    height: 25px;
+    color: #fff;
+    width: 25px;
+    .send-dir {
+      @include flexboxCenter;
+      border-radius: 50%;
+      padding: 3px;
+    }
+    .is-sender {
+      background-color: map-get($map: $gridColors, $key: sender);
+    }
+    .is-receiver {
+      background-color: map-get($map: $gridColors, $key: receiver);
+    }
   }
 
   .customer-header {
@@ -55,70 +77,8 @@
       width: 25%;
     }
 
-    .invite {
-      button {
-        width: 100px;
-        height: 30px;
-      }
-    }
-
-    .matcher-status {
-      .send-dir {
-        display: flex;
-        align-items: center;
-      }
-
-      button {
-        width: 60px;
-        height: 30px;
-        background-color: transparent;
-        padding: 3px 5px;
-        &.agree-btn {
-          color: map-get($map: $colors, $key: primary);
-          border: 1px solid map-get($map: $colors, $key: primary);
-        }
-        &.refuse-btn {
-          color: map-get($map: $colors, $key: danger);
-          border: 1px solid map-get($map: $colors, $key: danger);
-        }
-        &.cancel-btn {
-          margin-left: 15px;
-          background-color: map-get($map: $colors, $key: primary);
-        }
-      }
-
-      .matcher-status-0,
-      .matcher-status-2 {
-        color: map-get($map: $gridColors, $key: grey);
-      }
-      .matcher-status-1,
-      .matcher-status-4 {
-        color: map-get($map: $gridColors, $key: danger);
-      }
-      .matcher-status-3 {
-        color: map-get($map: $gridColors, $key: secondary);
-      }
-    }
-  }
-
-  .customer-private {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-
-    .field-item {
-      flex: 1;
-      display: flex;
-      min-width: 150px;
-      justify-content: flex-start;
-      align-items: center;
-
-      .info {
-        margin-left: 5px;
-        color: map-get($map: $colors, $key: primary);
-      }
+    .meeting-place {
+      color: map-get($map: $gridColors, $key: secondary);
     }
   }
 }

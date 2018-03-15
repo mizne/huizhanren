@@ -9,6 +9,7 @@ export class Visitor {
   mobile?: string
   cardImg?: string
   email?: string
+  website?: string
   selected?: boolean
   headImgUrl?: string
 
@@ -18,24 +19,14 @@ export class Visitor {
       name: resp.Name,
       title: resp.Job,
       company: resp.CompanyName,
+      companyAddr: resp.CompAddr,
       industry: resp.Industry,
       area: resp.Province,
       mobile: resp.Mob,
       cardImg: resp.Card,
       email: resp.Email,
+      website: resp.Website,
       headImgUrl: resp.HeadImgUrl
-    }
-  }
-
-  static convertFromModel(model: Visitor): CreateMatcherParams {
-    return {
-      Name: model.name,
-      CompName: model.company,
-      Mob: model.mobile,
-      JobTitle: model.title,
-      Province: model.area,
-      Email: model.email,
-      VisitorAddr: model.companyAddr
     }
   }
 
@@ -75,6 +66,7 @@ export class VisitorResp {
 
   HeadImgUrl: string
   Card?: string
+  Website?: string
 
   Objective: string
   Remark: string

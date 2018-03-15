@@ -34,7 +34,57 @@
       background-color: #dadae2;
 
       .customer-detail {
+        padding: 10px 20px;
+        margin-top: 10px;
         background-color: #fff;
+        .hz-card-detail-field-item {
+          display: flex;
+          align-items: center;
+
+          &:not(:first-child) {
+            margin-top: 8px;
+          }
+
+          ion-icon {
+            width: 30px;
+            font-size: 20px;
+          }
+          .hz-content {
+            margin-left: 10px;
+            a {
+              text-decoration: none;
+              color: #333;
+            }
+
+            .hz-card-field-value,
+            .hz-card-field-label {
+              margin: 2px 0;
+            }
+
+            .hz-card-field-label {
+              color: #aeaeae;
+              font-size: 12px;
+            }
+          }
+
+          .icon-wrapper {
+            margin-left: 20px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .icon {
+              font-size: 20px;
+            }
+          }
+        }
+      }
+
+      .customer-extra {
+        background-color: #fff;
+        margin-top: 10px;
         padding: 30px 10px;
         .headers {
           display: flex;
@@ -55,33 +105,6 @@
           margin-top: 20px;
         }
       }
-    }
-  }
-
-  .right-area {
-    flex: 1;
-    background-color: #264073;
-    .headers {
-      display: flex;
-      justify-content: space-around;
-      .header-item {
-        flex: 1;
-        @include flexboxCenter;
-        color: #fff;
-        height: 50px;
-        font-size: 1.8rem;
-        background-color: #6287d5;
-
-        &.active {
-          background-color: #305ebc;
-        }
-      }
-    }
-
-    .content {
-      padding: 30px;
-      height: calc(100vh - 140px);
-      overflow: auto;
     }
   }
 }
