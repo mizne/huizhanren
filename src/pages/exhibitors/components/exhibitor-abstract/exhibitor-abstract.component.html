@@ -1,4 +1,10 @@
 <div class="exhibitor-abstract-container">
+  <div *ngIf="matcher" class="matcher-dest">
+    <span [ngClass]="{'is-sender': matcher.isInitator, 'is-receiver': matcher.isReceiver, 'send-dir': true}">
+      {{matcher.isInitator ? '发' : '收'}}
+    </span>
+  </div>
+
   <div class="exhibitor-logo">
     <div class="logo-wrapper">
       <img [src]="exhibitor.logo" alt="logo">
@@ -25,31 +31,31 @@
       </ng-template>
     </div>
 
-    <!-- <div class="matcher-status" *ngIf="exhibitor.senderId; else recommend;">
-      <span *ngIf="exhibitor.isSender; else receiver;" class="send-dir">
-        <span *ngIf="exhibitor.status !== 2; else sendAuditSuccess;" [ngClass]="['matcher-status-' + exhibitor.status]">
-          {{exhibitor.status | exhibitorMatcherStatus}}
+    <div class="matcher-status" *ngIf="matcher; else exhibitorBlock;">
+      <span *ngIf="matcher.isInitator; else receiver;" class="send-dir">
+        <span *ngIf="matcher.status !== AUDIT_SUCCEED; else sendAuditSuccess;" [ngClass]="['matcher-status-' + matcher.status]">
+          {{matcher.status | exhibitorMatcherStatus}}
         </span>
         <ng-template #sendAuditSuccess>
-          <span>{{exhibitor.status | exhibitorMatcherStatus}}</span>
-          <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(exhibitor.id)">取消</button>
+          <span>{{matcher.status | exhibitorMatcherStatus}}</span>
+          <!-- <button ion-button class="cancel-btn" (click)="ensureCancelMatcher(exhibitor.id)">取消</button> -->
         </ng-template>
       </span>
       <ng-template #receiver>
-        <span *ngIf="exhibitor.status !== 2; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + exhibitor.status]">
-          {{exhibitor.status | exhibitorMatcherStatus}}
+        <span *ngIf="matcher.status !== AUDIT_SUCCEED; else receiveAuditSuccess;" [ngClass]="['matcher-status-' + matcher.status]">
+          {{matcher.status | exhibitorMatcherStatus}}
         </span>
         <ng-template #receiveAuditSuccess>
-          <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(exhibitor.id)">接受</button>
-          <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(exhibitor.id)">拒绝</button>
+          <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(matcher.id)">接受</button>
+          <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(matcher.id)">拒绝</button>
         </ng-template>
       </ng-template>
-    </div> -->
-    <!-- <ng-template #recommend> -->
-    <div class="invite">
-      <button ion-button (click)="ensureInvite()">约 TA</button>
     </div>
-    <!-- </ng-template> -->
+    <ng-template #exhibitorBlock>
+      <div class="invite">
+        <button ion-button (click)="ensureInvite()">约 TA</button>
+      </div>
+    </ng-template>
   </div>
 
   <div class="exhibitor-product">
@@ -59,7 +65,7 @@
     <div class="content" *ngIf="exhibitor.products.length > 0; else noProduct;">
       <ul class="products">
         <li class="product-item" *ngFor="let item of exhibitor.products.slice(0, 10)" (click)="ensureShowProduct(item)">
-          <img [src]="item.pictures && item.pictures[0]" alt="">
+          <img [src]="item.picList && item.picList[0] && item.picList[0].path" alt="">
           <div class="product-name">{{item.name}}</div>
         </li>
       </ul>

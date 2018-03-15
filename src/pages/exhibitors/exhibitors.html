@@ -43,6 +43,6 @@
       </exhibitor-detail>
     </div>
 
-    <hz-toggle-detail [hidden]="!(showDetailID$ | async)" [collapse]="(pageStatus$ | async) === DETAIL_PAGE" (toggle)="toggleLog()"></hz-toggle-detail>
+    <hz-toggle-detail [hidden]="(pageStatus$ | async) === LIST_PAGE" [collapse]="(pageStatus$ | async) === DETAIL_PAGE" (toggle)="toggleLog()"></hz-toggle-detail>
   </div>
 </ion-content>

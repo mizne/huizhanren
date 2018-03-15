@@ -15,15 +15,12 @@ export class ToShowProductModal implements OnInit {
 
   @ViewChild(Slides) slides: Slides
 
-  constructor(
-    public params: NavParams,
-    public viewCtrl: ViewController,
-  ) {}
+  constructor(public params: NavParams, public viewCtrl: ViewController) {}
 
   ngOnInit() {
     this.name = this.params.get('name')
     this.remark = this.params.get('remark')
-    this.pictures = this.params.get('pictures')
+    this.pictures = this.params.get('picList').map(e => e.path)
     this.indicator = `1/${this.pictures.length}`
   }
 

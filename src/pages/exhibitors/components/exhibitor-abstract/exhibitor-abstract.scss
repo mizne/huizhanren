@@ -1,4 +1,5 @@
 .exhibitor-abstract-container {
+  position: relative;
   background-color: #fff;
   color: map-get($map: $colors, $key: grey);
   display: flex;
@@ -15,6 +16,28 @@
   .no-visitor {
     height: 40px;
     @include flexboxCenter;
+  }
+
+  .matcher-dest {
+    position: absolute;
+    top: 84px;
+    right: 3px;
+    color: #9e9e9e;
+    height: 25px;
+    color: #fff;
+    width: 25px;
+    z-index: 100;
+    .send-dir {
+      @include flexboxCenter;
+      border-radius: 50%;
+      padding: 3px;
+    }
+    .is-sender {
+      background-color: map-get($map: $gridColors, $key: sender);
+    }
+    .is-receiver {
+      background-color: map-get($map: $gridColors, $key: receiver);
+    }
   }
 
   .exhibitor-logo {

@@ -16,9 +16,9 @@ import { ToCancelMatcherModal } from '../../visitor/modals/to-cancel-matcher-mod
 import { ToAgreeMatcherModal } from '../../visitor/modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
 import { ToRefuseMatcherModal } from '../../visitor/modals/to-refuse-matcher-modal/to-refuse-matcher-modal.component'
 import { State, getCurrentToDoMatcherCount, getToDoMatchers } from '../reducers'
-import { ExhibitorMatcherStatus } from '../models/matcher.model';
-import { PageStatus } from '../models/exhibitor.model';
-import { ToBatchAgreeMatchersModal } from '../modals/to-batch-agree-matcher-modal/to-batch-agree-matcher-modal.component';
+import { ExhibitorMatcherStatus } from '../models/matcher.model'
+import { PageStatus } from '../models/exhibitor.model'
+import { ToBatchAgreeMatchersModal } from '../modals/to-batch-agree-matcher-modal/to-batch-agree-matcher-modal.component'
 
 @Injectable()
 export class ToDoMatcherEffects {
@@ -99,7 +99,6 @@ export class ToDoMatcherEffects {
         })
     })
 
-
   @Effect()
   toAgreeToDoMatcher$ = this.actions$
     .ofType(fromToDoMatcher.TO_AGREE_TODO_MATCHER)
@@ -129,11 +128,16 @@ export class ToDoMatcherEffects {
     .switchMap(matcherId => {
       return this.matcherService
         .agreeMatcher(matcherId)
-        .map(() => {
-          return new fromToDoMatcher.AgreeToDoMatcherSuccessAction(matcherId)
+        .concatMap(() => {
+          return [
+            new fromToDoMatcher.AgreeToDoMatcherSuccessAction(matcherId),
+            new fromExhibitor.ChangePageStatusAction(PageStatus.LIST)
+          ]
         })
         .catch(() => {
-          return Observable.of(new fromToDoMatcher.AgreeToDoMatcherFailureAction())
+          return Observable.of(
+            new fromToDoMatcher.AgreeToDoMatcherFailureAction()
+          )
         })
     })
 
@@ -163,108 +167,116 @@ export class ToDoMatcherEffects {
         .present()
     })
 
-    @Effect()
-    toBatchAgreeToDoMatcher$ = this.actions$
-      .ofType(fromToDoMatcher.TO_BATCH_AGREE_TODO_MATCHERS)
-      .withLatestFrom(this.store.select(getToDoMatchers))
-      .switchMap(([_, matchers]) => {
-        const toAgreeMatchers = matchers.filter(
-          e => e.isReceiver && e.status === ExhibitorMatcherStatus.AUDIT_SUCCEED
-        )
-        return Observable.fromPromise(
-          new Promise((res, rej) => {
-            if (toAgreeMatchers.length > 0) {
-              const modal = this.modalCtrl.create(ToBatchAgreeMatchersModal, {
-                count: toAgreeMatchers.length
-              })
-              modal.onDidDismiss(ok => {
-                res(ok)
-              })
-              modal.present()
-            } else {
-              rej(new Error('还没有约请可以接受'))
-            }
-          })
-        )
-          .map((ok: string) => {
-            if (ok) {
-              return new fromToDoMatcher.BatchAgreeToDoMatchersAction()
-            } else {
-              return new fromToDoMatcher.CancelBatchAgreeToDoMatchersAction()
-            }
-          })
-          .catch(e => {
-            return Observable.of(
-              new fromToDoMatcher.CancelBatchAgreeToDoMatchersAction(e.message)
-            )
-          })
-      })
-  
-    @Effect()
-    batchAgreeToDoMatchers$ = this.actions$
-      .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS)
-      .withLatestFrom(this.store.select(getToDoMatchers))
-      .switchMap(([_, matchers]) => {
-        const toAgreeMatchers = matchers.filter(
-          e => e.isReceiver && e.status === ExhibitorMatcherStatus.AUDIT_SUCCEED
-        )
-  
-        return this.matcherService
-          .batchAgreeMatcher(toAgreeMatchers.map(e => e.id))
-          .map(() => new fromToDoMatcher.BatchAgreeToDoMatchersSuccessAction())
-          .catch(() =>
-            Observable.of(new fromToDoMatcher.BatchAgreeToDoMatchersFailureAction())
-          )
-      })
-  
-    @Effect({ dispatch: false })
-    batchAgreeToDoMatchersSuccess$ = this.actions$
-      .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_SUCCESS)
-      .do(() => {
-        this.toastCtrl
-          .create({
-            message: '批量同意约请成功',
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
-      })
-  
-    @Effect({ dispatch: false })
-    batchAgreeToDoMatchersFailure$ = this.actions$
-      .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_FAILURE)
-      .do(() => {
-        this.toastCtrl
-          .create({
-            message: '批量同意约请失败',
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
-      })
-  
-    @Effect({ dispatch: false })
-    cancelBatchAgreeToDoMatchers$ = this.actions$
-      .ofType(fromToDoMatcher.CANCEL_BATCH_AGREE_TODO_MATCHERS)
-      .map(
-        (action: fromToDoMatcher.CancelBatchAgreeToDoMatchersAction) => action.message
+  @Effect()
+  toBatchAgreeToDoMatcher$ = this.actions$
+    .ofType(fromToDoMatcher.TO_BATCH_AGREE_TODO_MATCHERS)
+    .withLatestFrom(this.store.select(getToDoMatchers))
+    .switchMap(([_, matchers]) => {
+      const toAgreeMatchers = matchers.filter(
+        e => e.isReceiver && e.status === ExhibitorMatcherStatus.AUDIT_SUCCEED
       )
-      .do(message => {
-        if (message) {
-          this.toastCtrl
-            .create({
-              message,
-              duration: 3e3,
-              position: 'top'
+      return Observable.fromPromise(
+        new Promise((res, rej) => {
+          if (toAgreeMatchers.length > 0) {
+            const modal = this.modalCtrl.create(ToBatchAgreeMatchersModal, {
+              count: toAgreeMatchers.length
             })
-            .present()
-        }
-      })
+            modal.onDidDismiss(ok => {
+              res(ok)
+            })
+            modal.present()
+          } else {
+            rej(new Error('还没有约请可以接受'))
+          }
+        })
+      )
+        .map((ok: string) => {
+          if (ok) {
+            return new fromToDoMatcher.BatchAgreeToDoMatchersAction()
+          } else {
+            return new fromToDoMatcher.CancelBatchAgreeToDoMatchersAction()
+          }
+        })
+        .catch(e => {
+          return Observable.of(
+            new fromToDoMatcher.CancelBatchAgreeToDoMatchersAction(e.message)
+          )
+        })
+    })
+
+  @Effect()
+  batchAgreeToDoMatchers$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS)
+    .withLatestFrom(this.store.select(getToDoMatchers))
+    .switchMap(([_, matchers]) => {
+      const toAgreeMatchers = matchers.filter(
+        e => e.isReceiver && e.status === ExhibitorMatcherStatus.AUDIT_SUCCEED
+      )
+
+      return this.matcherService
+        .batchAgreeMatcher(toAgreeMatchers.map(e => e.id))
+        .concatMap(() => [
+          new fromToDoMatcher.BatchAgreeToDoMatchersSuccessAction(),
+          new fromExhibitor.ChangePageStatusAction(PageStatus.LIST)
+        ])
+        .catch(() =>
+          Observable.of(
+            new fromToDoMatcher.BatchAgreeToDoMatchersFailureAction()
+          )
+        )
+    })
+
+  @Effect({ dispatch: false })
+  batchAgreeToDoMatchersSuccess$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_SUCCESS)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '批量同意约请成功',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  batchAgreeToDoMatchersFailure$ = this.actions$
+    .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_FAILURE)
+    .do(() => {
+      this.toastCtrl
+        .create({
+          message: '批量同意约请失败',
+          duration: 3e3,
+          position: 'top'
+        })
+        .present()
+    })
+
+  @Effect({ dispatch: false })
+  cancelBatchAgreeToDoMatchers$ = this.actions$
+    .ofType(fromToDoMatcher.CANCEL_BATCH_AGREE_TODO_MATCHERS)
+    .map(
+      (action: fromToDoMatcher.CancelBatchAgreeToDoMatchersAction) =>
+        action.message
+    )
+    .do(message => {
+      if (message) {
+        this.toastCtrl
+          .create({
+            message,
+            duration: 3e3,
+            position: 'top'
+          })
+          .present()
+      }
+    })
 
   @Effect()
   toRefuseToDoMatcher$ = this.actions$
     .ofType(fromToDoMatcher.TO_REFUSE_TODO_MATCHER)
-    .map((action: fromToDoMatcher.ToRefuseToDoMatcherAction) => action.matcherId)
+    .map(
+      (action: fromToDoMatcher.ToRefuseToDoMatcherAction) => action.matcherId
+    )
     .switchMap(matcherId => {
       return Observable.fromPromise(
         new Promise((res, _) => {
@@ -290,7 +302,10 @@ export class ToDoMatcherEffects {
     .switchMap(matcherId =>
       this.matcherService
         .refuseMatcher(matcherId)
-        .map(() =>  new fromToDoMatcher.RefuseToDoMatcherSuccessAction(matcherId))
+        .concatMap(() => [
+          new fromToDoMatcher.RefuseToDoMatcherSuccessAction(matcherId),
+          new fromExhibitor.ChangePageStatusAction(PageStatus.LIST)
+        ])
         .catch(() =>
           Observable.of(new fromToDoMatcher.RefuseToDoMatcherFailureAction())
         )
@@ -322,9 +337,9 @@ export class ToDoMatcherEffects {
         .present()
     })
 
-
-    @Effect()
-    updateMatcherDetailID$ = this.actions$.ofType(fromToDoMatcher.UPDATE_TODO_MATCHER_DETAIL_ID)
+  @Effect()
+  updateMatcherDetailID$ = this.actions$
+    .ofType(fromToDoMatcher.UPDATE_TODO_MATCHER_DETAIL_ID)
     .map(() => {
       return new fromExhibitor.ChangePageStatusAction(PageStatus.DETAIL)
     })

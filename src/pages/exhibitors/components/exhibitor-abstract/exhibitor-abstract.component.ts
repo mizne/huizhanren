@@ -1,17 +1,24 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Exhibitor, Product } from '../../models/exhibitor.model'
-import { ExhibitorMatcher } from '../../models/matcher.model'
+import {
+  ExhibitorMatcher,
+  ExhibitorMatcherStatus
+} from '../../models/matcher.model'
 
 @Component({
   selector: 'hz-exhibitor-abstract',
   templateUrl: 'exhibitor-abstract.component.html'
 })
 export class HzExhibitorAbstractComponent implements OnInit {
-  @Output() invite: EventEmitter<void> = new EventEmitter<void>()
+  AUDIT_SUCCEED = ExhibitorMatcherStatus.AUDIT_SUCCEED
+  UN_AUDIT = ExhibitorMatcherStatus.UN_AUDIT
+  AGREE = ExhibitorMatcherStatus.AGREE
+
   @Input() exhibitor: Exhibitor
   @Input() matcher: ExhibitorMatcher
 
+  @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() showProduct: EventEmitter<Product> = new EventEmitter<Product>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -21,6 +28,9 @@ export class HzExhibitorAbstractComponent implements OnInit {
 
   ngOnInit() {
     this.showMoreDesc = false
+
+    console.log(this.exhibitor)
+    console.log(this.matcher)
   }
 
   toggleMoreDesc() {
