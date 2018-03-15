@@ -28,9 +28,7 @@ export class VisitorDetailComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.detail)
-  }
+  ngOnInit() {}
 
   activeHeader(index: number) {
     this.activeHeaderIndex = index

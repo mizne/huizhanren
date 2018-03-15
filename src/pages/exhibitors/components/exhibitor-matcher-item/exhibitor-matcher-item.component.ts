@@ -22,9 +22,7 @@ export class ExhibitorMatcherItemComponent implements OnInit {
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   constructor() {}
-  ngOnInit() {
-    console.log(this.matcher)
-  }
+  ngOnInit() {}
 
   ensureAgreeMatcher(id: string, ev: Event) {
     ev.stopPropagation()

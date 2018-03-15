@@ -25,7 +25,7 @@
         [dataItems]="exhibitors$ | async">
       </exhibitor-grid>
       <exhibitor-matcher-grid [hidden]="(listStatus$ | async) !== TODO_MATCHER_GRID" (showDetail)="updateToDoMatcherDetailID($event)"
-        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="matcherShouldScrollToTop$ | async"
+        (agreeMatcher)="ensureAgreeMatcher($event)" (refuseMatcher)="ensureRefuseMatcher($event)" (loadMore)="loadMore()" [shouldScrollToTop]="toDoMatcherShouldScrollToTop$ | async"
         [showLoadMore]="showLoadMore$ | async" [expand]="(pageStatus$ | async) === DETAIL_PAGE" [dataItems]="toDoMatchers$ | async">
       </exhibitor-matcher-grid>
 

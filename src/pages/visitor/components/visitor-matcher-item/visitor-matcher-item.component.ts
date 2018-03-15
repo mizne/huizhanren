@@ -21,9 +21,7 @@ export class VisitorMatcherItemComponent implements OnInit {
   @Output() refuseMatcher: EventEmitter<string> = new EventEmitter<string>()
 
   constructor() {}
-  ngOnInit() {
-    console.log(this.matcher)
-  }
+  ngOnInit() {}
 
   ensureAgreeMatcher(id: string) {
     this.agreeMatcher.emit(id)

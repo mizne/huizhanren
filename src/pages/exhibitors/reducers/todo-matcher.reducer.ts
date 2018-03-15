@@ -54,7 +54,8 @@ export function reducer(state: State = initialState, action: Actions): State {
           state.matchers.concat(action.matchers),
           e => e.id
         ),
-        currentMatcherCount: state.currentMatcherCount + action.matchers.length
+        currentMatcherCount: state.currentMatcherCount + action.matchers.length,
+        shouldScrollToTop: false
       }
 
     case fromToDoMatcher.UPDATE_TODO_MATCHER_DETAIL_ID:

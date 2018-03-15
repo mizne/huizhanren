@@ -305,6 +305,13 @@ export class VisitorPage implements OnInit {
             direction: filter.direction
           })
         )
+
+        this.store.dispatch(
+          new FetchToDoMatchersCountAction({
+            status: filter.status,
+            direction: filter.direction
+          })
+        )
       })
   }
 
@@ -343,6 +350,8 @@ export class VisitorPage implements OnInit {
             direction: direction
           })
         )
+
+        this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
       })
   }
 
@@ -367,6 +376,8 @@ export class VisitorPage implements OnInit {
             pageSize: 10
           })
         )
+
+        this.store.dispatch(new FetchVisitorsCountAction({ ...filter }))
       })
   }
 

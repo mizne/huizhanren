@@ -7,7 +7,6 @@ import { NavParams, ViewController } from 'ionic-angular'
 export class ToBatchAgreeMatchersModal {
   count: number
   constructor(public params: NavParams, public viewCtrl: ViewController) {
-    console.log(params.get('count'))
     this.count = params.get('count')
   }
 

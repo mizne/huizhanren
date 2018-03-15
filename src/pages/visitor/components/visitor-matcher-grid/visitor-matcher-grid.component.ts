@@ -21,7 +21,6 @@ import { HzLoadMoreComponent } from '../../../../shared/components/load-more/loa
 })
 export class VisitorMatcherGridComponent implements OnInit, OnDestroy {
   private gridContainers: HTMLElement[] = []
-  @ViewChild('gridExpand')
   @ViewChild('gridContainer')
   set gridContainer(v: ElementRef) {
     if (v) {

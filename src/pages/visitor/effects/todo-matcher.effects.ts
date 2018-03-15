@@ -213,7 +213,9 @@ export class ToDoMatcherEffects {
         .batchAgreeMatcher(toAgreeMatchers.map(e => e.id))
         .map(() => new fromToDoMatcher.BatchAgreeToDoMatchersSuccessAction())
         .catch(() =>
-          Observable.of(new fromToDoMatcher.BatchAgreeToDoMatchersFailureAction())
+          Observable.of(
+            new fromToDoMatcher.BatchAgreeToDoMatchersFailureAction()
+          )
         )
     })
 
@@ -247,7 +249,8 @@ export class ToDoMatcherEffects {
   cancelBatchAgreeMatchers$ = this.actions$
     .ofType(fromToDoMatcher.CANCEL_BATCH_AGREE_TODO_MATCHERS)
     .map(
-      (action: fromToDoMatcher.CancelBatchAgreeToDoMatchersAction) => action.message
+      (action: fromToDoMatcher.CancelBatchAgreeToDoMatchersAction) =>
+        action.message
     )
     .do(message => {
       if (message) {
@@ -264,7 +267,9 @@ export class ToDoMatcherEffects {
   @Effect()
   toRefuseMatcher$ = this.actions$
     .ofType(fromToDoMatcher.TO_REFUSE_TODO_MATCHER)
-    .map((action: fromToDoMatcher.ToRefuseToDoMatcherAction) => action.matcherId)
+    .map(
+      (action: fromToDoMatcher.ToRefuseToDoMatcherAction) => action.matcherId
+    )
     .switchMap(matcherId => {
       return Observable.fromPromise(
         new Promise((res, _) => {
@@ -290,7 +295,9 @@ export class ToDoMatcherEffects {
     .switchMap(matcherId =>
       this.matcherService
         .refuseMatcher(matcherId)
-        .map(() => new fromToDoMatcher.RefuseToDoMatcherSuccessAction(matcherId))
+        .map(
+          () => new fromToDoMatcher.RefuseToDoMatcherSuccessAction(matcherId)
+        )
         .catch(() =>
           Observable.of(new fromToDoMatcher.RefuseToDoMatcherFailureAction())
         )

@@ -28,9 +28,6 @@ export class HzExhibitorAbstractComponent implements OnInit {
 
   ngOnInit() {
     this.showMoreDesc = false
-
-    console.log(this.exhibitor)
-    console.log(this.matcher)
   }
 
   toggleMoreDesc() {
