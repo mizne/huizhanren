@@ -19,7 +19,7 @@ page-exhibitors {
 
       .detail-area {
         margin-left: 10px;
-        flex: 1;
+        display: none;
         &.expand {
           flex: 1;
           display: block;
