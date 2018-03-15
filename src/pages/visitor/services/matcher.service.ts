@@ -96,12 +96,14 @@ export class VisitorMatcherService {
           .withLatestFrom(
             this.tenantService.getExhibitorId(),
             (matchers, exhibitorId) =>
-              matchers.map(e => ({
-                ...e,
-                toShow: VisitorMatcher.extractVisitorToShow(e, exhibitorId),
-                isInitator: e.initator.id === exhibitorId,
-                isReceiver: e.receiver.id === exhibitorId
-              }))
+              matchers.map(e => {
+                return {
+                  ...e,
+                  toShow: VisitorMatcher.extractVisitorToShow(e, exhibitorId),
+                  isInitator: e.initator.id === exhibitorId,
+                  isReceiver: e.receiver.id === exhibitorId
+                }
+              })
           )
           .catch(e => {
             return this.logger.httpError({

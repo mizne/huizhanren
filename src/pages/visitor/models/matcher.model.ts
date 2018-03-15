@@ -79,8 +79,8 @@ export class VisitorMatcher {
       initator,
       receiver,
       boothNo,
-      startTime: resp.MeetingTimeStart.trim(),
-      endTime: resp.MeetingTimeEnd.trim()
+      startTime: resp.MeetingTimeStart.trim().slice(0, 5),
+      endTime: resp.MeetingTimeEnd.trim().slice(0, 5)
     }
   }
 
