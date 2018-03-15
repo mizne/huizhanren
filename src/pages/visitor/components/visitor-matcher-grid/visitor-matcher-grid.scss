@@ -5,10 +5,15 @@
   flex-wrap: wrap;
 
   .visitor-matcher-item {
-    // flex: 1;
-    // min-width: 300px;
     display: inline-block;
     width: 33%;
+  }
+
+  &.expand {
+    .visitor-matcher-item {
+      display: inline-block;
+      width: 50%;
+    }
   }
 
   .no-data {

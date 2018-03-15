@@ -1,4 +1,4 @@
-<div class="visitor-matcher-grid-container" #gridContainer infiniteScroll [infiniteScrollContainer]="'.visitor-matcher-grid-container'"
+<div class="visitor-matcher-grid-container" [class.expand]="expand" #gridContainer infiniteScroll [infiniteScrollContainer]="'.visitor-matcher-grid-container'"
   [fromRoot]="true" (scrolled)="onScroll()" *ngIf="dataItems.length > 0; else noData;">
   <div class="visitor-matcher-item" tappable [class.active]="item.selected" *ngFor="let item of dataItems" (click)="ensureShow(item)">
     <visitor-matcher-item [matcher]="item" (agreeMatcher)="ensureAgree($event)" (refuseMatcher)="ensureRefuse($event)"></visitor-matcher-item>
