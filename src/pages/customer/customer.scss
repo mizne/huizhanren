@@ -6,7 +6,6 @@ page-customer {
     .hz-customer-container {
       display: flex;
       height: calc(100vh - 90px);
-      position: relative;
 
       .hz-customer-left {
         flex: 1;
@@ -17,7 +16,6 @@ page-customer {
           color: white;
           text-align: center;
         }
-
       }
       .hz-customer-right {
         flex: 2;
@@ -93,7 +91,7 @@ page-customer {
           hz-card-detail,
           hz-card-log,
           hz-card-notification {
-            transition: all ease .8s;
+            transition: all ease 0.8s;
           }
 
           hz-card-detail {
