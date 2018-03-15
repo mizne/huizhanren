@@ -39,7 +39,8 @@ import {
   LoadMoreVisitorsAction,
   FetchAreaFilterOptionsAction,
   FetchTypeFilterOptionsAction,
-  ToInviteVisitorToMicroAppAction
+  ToInviteVisitorToMicroAppAction,
+  ChangePageStatusAction
 } from './actions/visitor.action'
 import {
   FetchToDoMatchersAction,
@@ -54,7 +55,7 @@ import {
   FetchCompleteMatchersAction,
   FetchCompleteMatchersCountAction,
   LoadMoreCompleteMatchersAction,
-  UpdateMatcherDetailIDAction
+  UpdateCompleteMatcherDetailIDAction
 } from './actions/complete-matcher.action'
 
 import {
@@ -154,7 +155,7 @@ export class VisitorPage implements OnInit {
   }
 
   updateMatcherDetailID(id: string) {
-    this.store.dispatch(new UpdateMatcherDetailIDAction(id))
+    this.store.dispatch(new UpdateCompleteMatcherDetailIDAction(id))
   }
 
   toggleLog() {
@@ -255,6 +256,7 @@ export class VisitorPage implements OnInit {
       .takeUntil(this.destroyService)
       .subscribe(listStatus => {
         this.store.dispatch(new ChangeListStatusAction(listStatus))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 

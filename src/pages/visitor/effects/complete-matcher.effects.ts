@@ -122,7 +122,7 @@ export class CompleteMatcherEffects {
 
   @Effect()
   updateMatcherDetailID$ = this.actions$
-    .ofType(fromCompleteMatcher.UPDATE_MATCHER_DETAIL_ID)
+    .ofType(fromCompleteMatcher.UPDATE_COMPLETE_MATCHER_DETAIL_ID)
     .map(() => {
       return new fromVisitor.ChangePageStatusAction(PageStatus.DETAIL)
     })

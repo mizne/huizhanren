@@ -38,7 +38,7 @@ export function reducer(state: State = initialState, action: Actions): State {
       return {
         ...state,
         matchers: [],
-        currentMatcherTotalCount: 0,
+        currentMatcherTotalCount: 0
       }
     case fromCompleteMatcher.FETCH_COMPLETE_MATCHERS_COUNT_SUCCESS:
       return {
@@ -56,7 +56,7 @@ export function reducer(state: State = initialState, action: Actions): State {
           state.currentMatcherTotalCount + action.matchers.length,
         shouldScrollToTop: false
       }
-    case fromCompleteMatcher.UPDATE_MATCHER_DETAIL_ID:
+    case fromCompleteMatcher.UPDATE_COMPLETE_MATCHER_DETAIL_ID:
       return {
         ...state,
         showDetailID: action.detailID
