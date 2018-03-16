@@ -1,7 +1,8 @@
 .visitor-grid-container {
   height: calc(100vh - 170px);
   overflow: auto;
-  display: block;
+  display: flex;
+  flex-wrap: wrap;
 
   .visitor-item {
     display: inline-block;
