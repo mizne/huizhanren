@@ -52,31 +52,4 @@
       }
     }
   }
-
-  .right-area {
-    flex: 1;
-    background-color: #264073;
-    .headers {
-      display: flex;
-      justify-content: space-around;
-      .header-item {
-        flex: 1;
-        @include flexboxCenter;
-        color: #fff;
-        height: 50px;
-        font-size: 1.8rem;
-        background-color: #6287d5;
-
-        &.active {
-          background-color: #305ebc;
-        }
-      }
-    }
-
-    .content {
-      padding: 30px;
-      height: calc(100vh - 140px);
-      overflow: auto;
-    }
-  }
 }
