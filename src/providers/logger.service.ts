@@ -38,7 +38,7 @@ export class LoggerService {
           params: {
             record: {
               ...Logger.convertFromModel(log),
-              ContactInfo: customerId
+              ContactId: customerId
             }
           }
         })
@@ -62,7 +62,7 @@ export class LoggerService {
           params: {
             recordlist: customerIds.map(e => ({
               ...Logger.convertFromModel(log),
-              ContactInfo: e
+              ContactId: e
             }))
           }
         })
@@ -117,7 +117,7 @@ export class LoggerService {
               userId,
               params: {
                 condition: {
-                  ContactInfo: customerId
+                  ContactId: customerId
                 }
               }
             })

@@ -41,7 +41,7 @@ export class NotificationService {
             record: {
               RemindContent: notification.content,
               RemindDate: notification.time,
-              ContactInfo: customerId
+              ContactId: customerId
             }
           }
         })
@@ -103,7 +103,7 @@ export class NotificationService {
           userId,
           params: {
             condition: {
-              ContactInfo: customerId
+              ContactId: customerId
             }
           }
         })

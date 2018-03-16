@@ -87,16 +87,17 @@ export class CustomerService {
    */
   createCustomer(customer: Customer, exhibitionId: string): Observable<any> {
     return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, _]) => {
         const params = {
           tenantId,
           userId,
           params: {
             record: {
               Name: customer.name,
-              ExhibitionInfo: exhibitionId,
-              GroupInfo: [],
+              ExhibitionId: exhibitionId,
+              ExhibitorId: exhibitorId,
+              ContactGroupId: [],
               Address: customer.addresses,
               Phone: customer.phones,
               Email: customer.emails,
@@ -151,7 +152,7 @@ export class CustomerService {
           params: {
             RecordId: customerId,
             setValue: {
-              ExhibitionInfo: exhibitionId,
+              ExhibitionId: exhibitionId,
               Name: customer.name,
               Phone: customer.phones.map(mapper),
               Email: customer.emails.map(mapper),
@@ -237,8 +238,8 @@ export class CustomerService {
             return {
               recordId: customer.id,
               setValue: {
-                ExhibitionInfo: exhibitionId,
-                GroupInfo: (() => {
+                ExhibitionId: exhibitionId,
+                ContactGroupId: (() => {
                   if (groupId === Group.NONE.id) {
                     return []
                   } else {
@@ -287,8 +288,8 @@ export class CustomerService {
               return {
                 recordId: customer.id,
                 setValue: {
-                  ExhibitionInfo: exhibitionId,
-                  GroupInfo: (() => {
+                  ExhibitionId: exhibitionId,
+                  ContactGroupId: (() => {
                     const index = customer.groups.indexOf(groupId)
                     return customer.groups.filter((_, i) => i !== index)
                   })()
@@ -331,8 +332,8 @@ export class CustomerService {
           params: {
             RecordId: customer.id,
             setValue: {
-              ExhibitionInfo: exhibitionId,
-              GroupInfo: (() => {
+              ExhibitionId: exhibitionId,
+              ContactGroupId: (() => {
                 if (groupId === Group.NONE.id) {
                   return []
                 } else {

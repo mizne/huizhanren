@@ -39,7 +39,7 @@ export class GroupService {
           params: {
             record: {
               Name: name,
-              ExhibitionInfo: exhibitionId
+              ExhibitionId: exhibitionId
             }
           }
         })
