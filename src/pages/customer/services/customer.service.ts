@@ -276,26 +276,30 @@ export class CustomerService {
     groupId: string,
     exhibitionId: string
   ): Observable<any> {
+    const needRemoveGroupIdCustomers = customers.filter(
+      customer => customer.groups.indexOf(groupId) >= 0
+    )
+    if (needRemoveGroupIdCustomers.length === 0) {
+      return Observable.of('No customer to need remove group id')
+    }
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
         const params = {
           tenantId,
           userId,
-          params: customers
-            .filter(customer => customer.groups.indexOf(groupId) >= 0)
-            .map(customer => {
-              return {
-                recordId: customer.id,
-                setValue: {
-                  ExhibitionId: exhibitionId,
-                  ContactGroupId: (() => {
-                    const index = customer.groups.indexOf(groupId)
-                    return customer.groups.filter((_, i) => i !== index)
-                  })()
-                }
+          params: needRemoveGroupIdCustomers.map(customer => {
+            return {
+              recordId: customer.id,
+              setValue: {
+                ExhibitionId: exhibitionId,
+                ContactGroupId: (() => {
+                  const index = customer.groups.indexOf(groupId)
+                  return customer.groups.filter((_, i) => i !== index)
+                })()
               }
-            })
+            }
+          })
         }
 
         return this.http.post(this.updateListUrl, params)

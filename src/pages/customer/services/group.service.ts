@@ -99,6 +99,7 @@ export class GroupService {
           tenantId,
           userId,
           params: {
+            recordId: groupId,
             setValue: {
               Name: groupName
             }

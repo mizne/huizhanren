@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core'
 
 import { Group } from '../../models/group.model'
 import { CustomerPageManageableStatus } from '../../models/customer.model'
@@ -34,7 +34,6 @@ export class HzCustomerManageComponent {
   tabClick(index): void {
     this._activeIndex = index
   }
-
 }
 
 @Component({
@@ -63,7 +62,6 @@ export class HzCustomerManageHeader {
   }
 }
 
-
 @Component({
   selector: 'hz-customer-manage-content-item',
   template: `
@@ -72,10 +70,7 @@ export class HzCustomerManageHeader {
     </div>
   `
 })
-export class HzCustomerManageContentItem {
-}
-
-
+export class HzCustomerManageContentItem {}
 
 @Component({
   selector: 'hz-customer-manage-template',
@@ -120,7 +115,13 @@ export class HzCustomerManageTemplate {
   GROUP_STATUS = CustomerPageManageableStatus.GROUP
   selectedTemplate: any
   _templates: any
-  validSelected: boolean = false
+
+  get validSelected(): boolean {
+    if (!this.selectedTemplate) {
+      return false
+    }
+    return this.selectedTemplate.id !== Group.NONE.id
+  }
 
   @Input()
   set templates(tmps) {
@@ -134,7 +135,10 @@ export class HzCustomerManageTemplate {
   @Output() cancelSms: EventEmitter<void> = new EventEmitter<void>()
   @Output() cancelGroup: EventEmitter<void> = new EventEmitter<void>()
   @Output() saveTemplate: EventEmitter<string> = new EventEmitter<string>()
-  @Output() createTemplate: EventEmitter<CustomerPageManageableStatus> = new EventEmitter<CustomerPageManageableStatus>()
+  @Output()
+  createTemplate: EventEmitter<CustomerPageManageableStatus> = new EventEmitter<
+    CustomerPageManageableStatus
+  >()
   @Output() renameGroup: EventEmitter<Group> = new EventEmitter<Group>()
   @Output() delGroup: EventEmitter<Group> = new EventEmitter<Group>()
 
@@ -158,11 +162,6 @@ export class HzCustomerManageTemplate {
 
   selectTemplate(template, index) {
     this.selectedTemplate = template
-    if (index === 0) {
-      this.validSelected = false
-    } else {
-      this.validSelected = true
-    }
   }
 
   send(): void {

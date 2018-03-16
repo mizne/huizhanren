@@ -84,7 +84,7 @@ export class LoggerService {
           tenantId,
           userId,
           params: {
-            RecordId: log.id,
+            recordId: log.id,
             setValue: {
               ...Logger.convertFromModel(log)
             }
