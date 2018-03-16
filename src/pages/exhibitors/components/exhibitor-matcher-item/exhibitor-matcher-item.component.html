@@ -24,6 +24,9 @@
           <span class="no-item"></span>
         </ng-template>
       </div>
+      <div *ngIf="matcher.status === AGREE" class="time">
+        {{matcher.meetingStartTime + '~' + matcher.meetingEndTime}}
+      </div>
     </div>
 
     <div class="footer">

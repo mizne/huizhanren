@@ -18,9 +18,9 @@ export class VisitorMatcher {
   receiver?: Visitor | Exhibitor
   meetingStartTime: string
   meetingEndTime: string
+  meetingPlace: string
 
   toShow?: Visitor
-  meetingPlace: string
 
   static extractInitatorAndReceiver(
     resp: VisitorMatcherResp,

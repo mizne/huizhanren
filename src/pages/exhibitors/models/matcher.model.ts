@@ -16,6 +16,9 @@ export class ExhibitorMatcher {
   isReceiver?: boolean
   initator?: Exhibitor
   receiver?: Exhibitor
+  meetingStartTime: string
+  meetingEndTime: string
+  meetingPlace: string
 
   toShow?: Exhibitor
 
@@ -40,6 +43,9 @@ export class ExhibitorMatcher {
       receiverId: resp.Receiver[0].RecordId,
       initator: Exhibitor.convertFromResp(resp.Initator[0]),
       receiver: Exhibitor.convertFromResp(resp.Receiver[0]),
+      meetingPlace: resp.MeetingPlace,
+      meetingStartTime: resp.MeetingTimeStart.trim().slice(0, 5),
+      meetingEndTime: resp.MeetingTimeEnd.trim().slice(0, 5),
       selected: false
     }
   }
@@ -128,6 +134,9 @@ export interface ExhibitorMatcherResp {
   Remark: string
   ApprovalTime: string
   CreatedAt: string
+  MeetingTimeStart: string
+  MeetingTimeEnd: string
+  MeetingPlace: string
 }
 
 export enum ExhibitorMatcherDirection {
