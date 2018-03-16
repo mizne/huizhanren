@@ -1,8 +1,7 @@
 .visitor-matcher-grid-container {
   height: calc(100vh - 170px);
   overflow: auto;
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
 
   .visitor-matcher-item {
     display: inline-block;
