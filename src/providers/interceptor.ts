@@ -38,7 +38,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
         next: (event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
             if (event.body && event.url.indexOf(HOST) >= 0) {
-              if (event.body.resCode !== 0 && event.body.resCode !== 10000) {
+              if (event.body.resCode !== 0) {
                 console.error(`API Error; ${event.body.resMsg}`)
                 throw new Error(event.body.resMsg)
               }

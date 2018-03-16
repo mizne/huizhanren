@@ -18,7 +18,8 @@ export class SmsTemplate {
     return {
       Name: model.label,
       Content: model.preview,
-      IsActive: true
+      IsActive: true,
+      Type: '1'
     }
   }
 }
@@ -28,6 +29,7 @@ export interface SmsTemplateResp {
   Name?: string
   Content?: string
   IsActive: boolean
+  Type: string
 }
 
 export interface SmsTemplateParams {

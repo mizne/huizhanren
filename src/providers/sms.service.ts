@@ -78,13 +78,17 @@ export class SmsService {
    */
   createSmsTemplate(template: SmsTemplate): Observable<any> {
     return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
         return this.http.post(this.insertUrl, {
           tenantId,
           userId,
           params: {
-            record: SmsTemplate.convertFromModal(template)
+            record: {
+              ...SmsTemplate.convertFromModal(template),
+              ExhibitionId: exhibitionId
+              // ExhibitorId: exhibitorId
+            }
           }
         })
       })
