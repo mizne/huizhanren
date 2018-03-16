@@ -79,10 +79,11 @@ export class ToDoMatcherEffects {
         direction: params.direction
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多展商约请中...',
-        spinner: 'bubbles'
+        spinner: 'bubbles',
+        dismissOnPageChange: true
       })
       loadingCtrl.present()
       return this.matcherService

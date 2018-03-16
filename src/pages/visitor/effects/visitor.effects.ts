@@ -127,7 +127,7 @@ export class VisitorEffects {
         ...params
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多客户中...',
         spinner: 'bubbles'

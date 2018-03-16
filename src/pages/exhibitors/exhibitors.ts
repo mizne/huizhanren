@@ -504,6 +504,7 @@ export class ExhibitorsPage implements OnInit {
   private initLoadMore(): void {
     const loadMore$ = this.loadMoreSub
       .asObservable()
+      .debounceTime(2e2)
       .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreExhibitor(loadMore$)

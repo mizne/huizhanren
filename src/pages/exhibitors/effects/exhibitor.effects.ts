@@ -120,7 +120,7 @@ export class ExhibitorEffects {
         ...params
       })
     )
-    .mergeMap(params => {
+    .switchMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多展商中...',
         spinner: 'bubbles'

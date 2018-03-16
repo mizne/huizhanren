@@ -439,6 +439,7 @@ export class VisitorPage implements OnInit {
   private initLoadMore(): void {
     const loadMore$ = this.loadMoreSub
       .asObservable()
+      .debounceTime(2e2)
       .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreVisitor(loadMore$)
@@ -501,10 +502,12 @@ export class VisitorPage implements OnInit {
   }
 
   private initDispatch(): void {
-    this.store.dispatch(new FetchVisitorsAction({
-      pageIndex: 1,
-      pageSize: this.pageSize
-    }))
+    this.store.dispatch(
+      new FetchVisitorsAction({
+        pageIndex: 1,
+        pageSize: this.pageSize
+      })
+    )
     this.store.dispatch(new FetchVisitorsCountAction())
     this.store.dispatch(new FetchAreaFilterOptionsAction())
     this.store.dispatch(new FetchTypeFilterOptionsAction())

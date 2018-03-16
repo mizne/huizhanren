@@ -92,7 +92,7 @@ export class RavenErrorHandler implements ErrorHandler {
     LoggerService,
     ErrorLoggerService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiErrorInterceptor, multi: true },
-    { provide: 'DEFAULT_PAGE_SIZE', useValue: 10 }
+    { provide: 'DEFAULT_PAGE_SIZE', useValue: 20 }
   ]
 })
 export class AppModule {}
