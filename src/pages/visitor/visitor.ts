@@ -286,6 +286,7 @@ export class VisitorPage implements OnInit {
             direction: VisitorMatcherDirection.ANY
           })
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
 
     const sameWithLastToDoMatchFetch$ = sameWithLast$
@@ -313,6 +314,7 @@ export class VisitorPage implements OnInit {
             direction: filter.direction
           })
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -334,6 +336,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersCountAction(VisitorMatcherDirection.ANY)
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
 
     const sameWithLastCompleteMatchFetch$ = sameWithLast$
@@ -353,6 +356,7 @@ export class VisitorPage implements OnInit {
         )
 
         this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -401,6 +405,7 @@ export class VisitorPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchVisitorsCountAction(visitorFilter))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -417,6 +422,7 @@ export class VisitorPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchToDoMatchersCountAction(matcherFilter))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -433,6 +439,7 @@ export class VisitorPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 

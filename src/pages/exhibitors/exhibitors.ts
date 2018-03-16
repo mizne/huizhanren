@@ -351,6 +351,7 @@ export class ExhibitorsPage implements OnInit {
             direction: ExhibitorMatcherDirection.ANY
           })
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
 
     const sameWithLastToDoMatchFetch$ = sameWithLast$
@@ -378,6 +379,7 @@ export class ExhibitorsPage implements OnInit {
             direction: filter.direction
           })
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -399,6 +401,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersCountAction(ExhibitorMatcherDirection.ANY)
         )
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
 
     const sameWithLastCompleteMatchFetch$ = sameWithLast$
@@ -418,6 +421,7 @@ export class ExhibitorsPage implements OnInit {
         )
 
         this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -466,6 +470,7 @@ export class ExhibitorsPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchExhibitorsCountAction(exhibitorFilter))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -482,6 +487,7 @@ export class ExhibitorsPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchToDoMatchersCountAction(matcherFilter))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 
@@ -498,6 +504,7 @@ export class ExhibitorsPage implements OnInit {
           })
         )
         this.store.dispatch(new FetchCompleteMatchersCountAction(direction))
+        this.store.dispatch(new ChangePageStatusAction(PageStatus.LIST))
       })
   }
 

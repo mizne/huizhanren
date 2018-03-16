@@ -1,5 +1,10 @@
-import { Component } from '@angular/core'
-import { LoadingController, ToastController } from 'ionic-angular'
+import { Component, ViewChild } from '@angular/core'
+import {
+  LoadingController,
+  ToastController,
+  NavController,
+  Tabs
+} from 'ionic-angular'
 
 import { CustomerPage } from '../customer/customer'
 
@@ -36,6 +41,8 @@ export class TabsPage {
   tab4Root = ExhibitorsPage
   tab5Root = MorePage
 
+  @ViewChild('myTabs') tabRef: Tabs
+
   options: CameraOptions = {
     quality: 70,
     destinationType: this.camera.DestinationType.DATA_URL,
@@ -52,10 +59,12 @@ export class TabsPage {
     private ocrService: OcrService,
     private loadingCtrl: LoadingController,
     private toastCtrl: ToastController,
+    private navCtrl: NavController,
     private store: Store<State>
   ) {}
 
   takeCamera() {
+    this.tabRef.select(0)
     environment.production ? this.takeRealCamera() : this.takeFakeCamera()
   }
 
