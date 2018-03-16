@@ -439,7 +439,7 @@ export class VisitorPage implements OnInit {
   private initLoadMore(): void {
     const loadMore$ = this.loadMoreSub
       .asObservable()
-      .debounceTime(2e2)
+      .throttleTime(5e2)
       .withLatestFrom(this.listStatus$, (_, listStatus) => listStatus)
 
     this.initLoadMoreVisitor(loadMore$)
