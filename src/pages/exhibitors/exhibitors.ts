@@ -565,7 +565,12 @@ export class ExhibitorsPage implements OnInit {
   }
 
   private initDispatch(): void {
-    this.store.dispatch(new FetchExhibitorsAction())
+    this.store.dispatch(
+      new FetchExhibitorsAction({
+        pageIndex: 1,
+        pageSize: 10
+      })
+    )
     this.store.dispatch(new FetchExhibitorsCountAction())
 
     this.store.dispatch(new FetchAreaFilterOptionsAction())

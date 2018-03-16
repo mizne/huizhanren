@@ -98,7 +98,7 @@ export class CompleteMatcherEffects {
         direction: direction
       })
     )
-    .switchMap(params => {
+    .mergeMap(params => {
       const loadingCtrl = this.loadCtrl.create({
         content: '获取更多展商约请中...',
         spinner: 'bubbles'
