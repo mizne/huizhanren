@@ -57,10 +57,7 @@ export const REFUSE_TODO_MATCHER_FAILURE = '[Visitor] Refuse ToDo Matcher Failur
 export class FetchToDoMatchersAction implements Action {
   readonly type = FETCH_TODO_MATCHERS
   constructor(
-    public payload: FetchMatcherParams = {
-      pageIndex: 1,
-      pageSize: 10
-    }
+    public payload: FetchMatcherParams
   ) {}
 }
 export class FetchToDoMatchersSuccessAction implements Action {

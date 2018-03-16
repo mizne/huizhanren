@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
@@ -76,8 +76,8 @@ export class ToDoMatcherEffects {
     .withLatestFrom(
       this.store.select(getCurrentToDoMatcherCount),
       (params, currentTotal) => ({
-        pageIndex: Math.ceil(currentTotal / 10) + 1,
-        pageSize: 10,
+        pageIndex: Math.ceil(currentTotal / this.pageSize) + 1,
+        pageSize: this.pageSize,
         statuses: [params.status],
         direction: params.direction
       })
@@ -335,6 +335,7 @@ export class ToDoMatcherEffects {
     private toastCtrl: ToastController,
     private matcherService: VisitorMatcherService,
     private store: Store<State>,
-    private loadCtrl: LoadingController
+    private loadCtrl: LoadingController,
+    @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}
 }

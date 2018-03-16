@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs/Subscription'
-import { Component, ViewChild, OnDestroy } from '@angular/core'
+import { Component, ViewChild, OnDestroy, Inject } from '@angular/core'
 import { Platform, Nav, ToastController } from 'ionic-angular'
 import { StatusBar } from '@ionic-native/status-bar'
 import { SplashScreen } from '@ionic-native/splash-screen'
@@ -32,7 +32,8 @@ export class MyApp implements OnDestroy {
     private network: Network,
     private store: Store<State>,
     private nativeService: NativeService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    @Inject('DEFAULT_PAGE_SIZE') private size
   ) {
     this.platformReady()
 
@@ -58,15 +59,18 @@ export class MyApp implements OnDestroy {
   }
 
   private checkNetwork() {
-    this.subscription = this.network.onDisconnect().debounceTime(3e2).subscribe(() => {
-      this.toastCtrl
-        .create({
-          message: '网络未连接，请检查您的网络设置',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
-    })
+    this.subscription = this.network
+      .onDisconnect()
+      .debounceTime(3e2)
+      .subscribe(() => {
+        this.toastCtrl
+          .create({
+            message: '网络未连接，请检查您的网络设置',
+            duration: 3e3,
+            position: 'top'
+          })
+          .present()
+      })
   }
 
   ngOnDestroy() {

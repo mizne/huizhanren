@@ -4,7 +4,7 @@ import {
   ListStatus,
   PageStatus,
   Product,
-  FetchRecommendExhibitorParams,
+  FetchExhibitorParams,
   ExhibitorFilter,
   FilterOptions
 } from '../models/exhibitor.model'
@@ -77,10 +77,7 @@ export const CANCEL_SHOW_PRODUCT = '[Exhibitor] Cancel Show Product'
 export class FetchExhibitorsAction implements Action {
   readonly type = FETCH_EXHIBITORS
   constructor(
-    public params: FetchRecommendExhibitorParams = {
-      pageIndex: 1,
-      pageSize: 10
-    }
+    public params: FetchExhibitorParams
   ) {}
 }
 export class FetchExhibitorsSuccessAction implements Action {
@@ -133,7 +130,7 @@ export class FetchTypeFilterOptionsFailureAction implements Action {
 
 export class LoadMoreExhibitorsAction implements Action {
   readonly type = LOAD_MORE_EXHIBITORS
-  constructor(public params: FetchRecommendExhibitorParams) {}
+  constructor(public params: FetchExhibitorParams) {}
 }
 export class LoadMoreExhibitorsSuccessAction implements Action {
   readonly type = LOAD_MORE_EXHIBITORS_SUCCESS

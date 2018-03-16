@@ -70,10 +70,7 @@ export const FETCH_LOGGER_FAILURE = '[Visitor] Fetch Logger Failure'
 export class FetchVisitorsAction implements Action {
   readonly type = FETCH_VISITORS
   constructor(
-    public params: FetchVisitorParams = {
-      pageIndex: 1,
-      pageSize: 10
-    }
+    public params: FetchVisitorParams
   ) {}
 }
 export class FetchVisitorsSuccessAction implements Action {

@@ -32,12 +32,7 @@ export const UPDATE_COMPLETE_MATCHER_DETAIL_ID =
 export class FetchCompleteMatchersAction implements Action {
   readonly type = FETCH_COMPLETE_MATCHERS
   constructor(
-    public payload: FetchMatcherParams = {
-      pageIndex: 1,
-      pageSize: 10,
-      statuses: [VisitorMatcherStatus.AGREE],
-      direction: VisitorMatcherDirection.ANY
-    }
+    public payload: FetchMatcherParams
   ) {}
 }
 export class FetchCompleteMatchersSuccessAction implements Action {

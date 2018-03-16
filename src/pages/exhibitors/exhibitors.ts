@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core'
 import { NavController, ToastController, IonicPage } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -131,7 +131,8 @@ export class ExhibitorsPage implements OnInit {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private store: Store<State>,
-    private destroyService: DestroyService
+    private destroyService: DestroyService,
+    @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}
 
   ngOnInit() {
@@ -339,7 +340,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [ExhibitorMatcherStatus.ANY],
             direction: ExhibitorMatcherDirection.ANY
           })
@@ -365,7 +366,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [filter.status],
             direction: filter.direction
           })
@@ -390,7 +391,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [ExhibitorMatcherStatus.AGREE],
             direction: ExhibitorMatcherDirection.ANY
           })
@@ -410,7 +411,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [ExhibitorMatcherStatus.AGREE],
             direction: direction
           })
@@ -438,7 +439,7 @@ export class ExhibitorsPage implements OnInit {
           new FetchExhibitorsAction({
             ...filter,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: this.pageSize
           })
         )
 
@@ -461,7 +462,7 @@ export class ExhibitorsPage implements OnInit {
           new FetchExhibitorsAction({
             ...exhibitorFilter,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: this.pageSize
           })
         )
         this.store.dispatch(new FetchExhibitorsCountAction(exhibitorFilter))
@@ -475,7 +476,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [matcherFilter.status],
             direction: matcherFilter.direction
           })
@@ -491,7 +492,7 @@ export class ExhibitorsPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [ExhibitorMatcherStatus.AGREE],
             direction
           })
@@ -568,7 +569,7 @@ export class ExhibitorsPage implements OnInit {
     this.store.dispatch(
       new FetchExhibitorsAction({
         pageIndex: 1,
-        pageSize: 10
+        pageSize: this.pageSize
       })
     )
     this.store.dispatch(new FetchExhibitorsCountAction())

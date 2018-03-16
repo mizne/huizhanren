@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import {
   ModalController,
@@ -122,8 +122,8 @@ export class VisitorEffects {
     .withLatestFrom(
       this.store.select(getCurrentVisitorCount),
       (params, currentTotal) => ({
-        pageIndex: Math.ceil(currentTotal / 10) + 1,
-        pageSize: 10,
+        pageIndex: Math.ceil(currentTotal / this.pageSize) + 1,
+        pageSize: this.pageSize,
         ...params
       })
     )
@@ -338,6 +338,7 @@ export class VisitorEffects {
     private visitorService: VisitorService,
     private matcherService: VisitorMatcherService,
     private loggerService: LoggerService,
-    private store: Store<State>
+    private store: Store<State>,
+    @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}
 }

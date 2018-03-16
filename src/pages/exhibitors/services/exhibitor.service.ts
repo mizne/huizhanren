@@ -7,7 +7,7 @@ import { TenantService } from '../../../providers/tenant.service'
 import { ErrorLoggerService } from '../../../providers/error-logger.service'
 import {
   Exhibitor,
-  FetchRecommendExhibitorParams,
+  FetchExhibitorParams,
   ExhibitorFilter,
   FilterOptions
 } from '../models/exhibitor.model'
@@ -33,7 +33,7 @@ export class ExhibitorService {
    * @memberof ExhibitorService
    */
   fetchExhibitors(
-    params: FetchRecommendExhibitorParams
+    params: FetchExhibitorParams
   ): Observable<Exhibitor[]> {
     return !environment.mock || environment.production
       ? this.tenantService

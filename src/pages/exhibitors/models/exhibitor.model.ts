@@ -172,7 +172,7 @@ export interface ExhibitorFilter {
   key?: string
 }
 
-export interface FetchRecommendExhibitorParams extends ExhibitorFilter {
+export interface FetchExhibitorParams extends ExhibitorFilter {
   pageSize?: number
   pageIndex?: number
 }

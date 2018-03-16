@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core'
 import { NavController, ToastController, IonicPage } from 'ionic-angular'
 
 import { Observable } from 'rxjs/Observable'
@@ -125,7 +125,8 @@ export class VisitorPage implements OnInit {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private store: Store<State>,
-    private destroyService: DestroyService
+    private destroyService: DestroyService,
+    @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}
 
   ngOnInit() {
@@ -274,7 +275,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [VisitorMatcherStatus.ANY],
             direction: VisitorMatcherDirection.ANY
           })
@@ -300,7 +301,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [filter.status],
             direction: filter.direction
           })
@@ -325,7 +326,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [VisitorMatcherStatus.AGREE],
             direction: VisitorMatcherDirection.ANY
           })
@@ -345,7 +346,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [VisitorMatcherStatus.AGREE],
             direction: direction
           })
@@ -373,7 +374,7 @@ export class VisitorPage implements OnInit {
           new FetchVisitorsAction({
             ...filter,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: this.pageSize
           })
         )
 
@@ -396,7 +397,7 @@ export class VisitorPage implements OnInit {
           new FetchVisitorsAction({
             ...visitorFilter,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: this.pageSize
           })
         )
         this.store.dispatch(new FetchVisitorsCountAction(visitorFilter))
@@ -410,7 +411,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchToDoMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [matcherFilter.status],
             direction: matcherFilter.direction
           })
@@ -426,7 +427,7 @@ export class VisitorPage implements OnInit {
         this.store.dispatch(
           new FetchCompleteMatchersAction({
             pageIndex: 1,
-            pageSize: 10,
+            pageSize: this.pageSize,
             statuses: [VisitorMatcherStatus.AGREE],
             direction
           })
@@ -500,7 +501,10 @@ export class VisitorPage implements OnInit {
   }
 
   private initDispatch(): void {
-    this.store.dispatch(new FetchVisitorsAction())
+    this.store.dispatch(new FetchVisitorsAction({
+      pageIndex: 1,
+      pageSize: this.pageSize
+    }))
     this.store.dispatch(new FetchVisitorsCountAction())
     this.store.dispatch(new FetchAreaFilterOptionsAction())
     this.store.dispatch(new FetchTypeFilterOptionsAction())
