@@ -7,7 +7,7 @@
   color: map-get($map: $colors, $key: grey);
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
 
   .no-item {
     color: map-get($map: $colors, $key: danger);

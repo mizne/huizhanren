@@ -70,6 +70,8 @@
       "cordova-plugin-qrscanner": {},
       "cordova-plugin-network-information": {}
     },
-    "platforms": ["android"]
+    "platforms": [
+      "android"
+    ]
   }
 }
