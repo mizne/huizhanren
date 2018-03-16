@@ -169,7 +169,11 @@ export class VisitorEffects {
   toInviteVisitorToMicroApp$ = this.actions$
     .ofType(fromVisitor.TO_INIVITE_VISITOR_TO_MICRO_APP)
     .do(() => {
-      this.modalCtrl.create(ToInviteVisitorModal).present()
+      this.modalCtrl
+        .create(ToInviteVisitorModal, null, {
+          enableBackdropDismiss: true
+        })
+        .present()
     })
 
   @Effect()

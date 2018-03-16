@@ -144,7 +144,11 @@ export class ExhibitorEffects {
   toInviteExhibitorToMicroApp$ = this.actions$
     .ofType(fromExhibitor.TO_INIVITE_EXHIBITOR_TO_MICRO_APP)
     .do(() => {
-      this.modalCtrl.create(ToInviteExhibitorToMicroAppModal).present()
+      this.modalCtrl
+        .create(ToInviteExhibitorToMicroAppModal, null, {
+          enableBackdropDismiss: true
+        })
+        .present()
     })
 
   @Effect()
