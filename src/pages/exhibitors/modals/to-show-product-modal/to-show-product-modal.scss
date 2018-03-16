@@ -1,5 +1,13 @@
 .show-product-modal {
   height: 300px;
+  position: relative;
+
+  .icon {
+    position: absolute;
+    transform: rotate(45deg) scale(1.6);
+    right: -2px;
+    top: 0;
+  }
 
   .modal-body {
     padding: 20px 34px;
@@ -15,12 +23,11 @@
         top: 88%;
         width: 40px;
         text-align: center;
-        background-color: #B8B8B8;
+        background-color: #b8b8b8;
         color: white;
         z-index: 100;
         border-radius: 10px;
         padding-bottom: 2px;
-
       }
     }
 
