@@ -11,7 +11,11 @@
     <span>{{visitor.company}}</span>
   </div>
 
-  <div class="industry">{{visitor.industry}}</div>
+  <div *ngIf="visitor.industry; else noIndustry" class="industry">{{visitor.industry}}</div>
+  <ng-template #noIndustry>
+    <span class="no-industry no-item">行业未填写</span>
+  </ng-template>
+
   <div class="footer">
     <hz-customer-status></hz-customer-status>
     <button ion-button class="invite-btn" (click)="ensureInvite(visitor.id)">约 TA</button>

@@ -10,6 +10,10 @@
   border: 2px solid #a0a0a5;
   border-radius: 2px;
 
+  .no-item {
+    color: map-get($map: $colors, $key: danger);
+  }
+
   .header {
     width: 100%;
     display: flex;
@@ -37,6 +41,10 @@
   .industry {
     margin-top: 8px;
     color: map-get($map: $colors, $key: primary);
+  }
+
+  .no-industry {
+    margin-top: 8px;
   }
 
   .footer {
