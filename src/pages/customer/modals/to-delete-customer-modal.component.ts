@@ -1,8 +1,5 @@
 import { Component, OnDestroy } from '@angular/core'
-import {
-  NavParams,
-  ViewController,
-} from 'ionic-angular'
+import { NavParams, ViewController } from 'ionic-angular'
 
 import { Subscription } from 'rxjs/Subscription'
 import { Store } from '@ngrx/store'
@@ -10,13 +7,13 @@ import { State } from '../reducers/index'
 import {
   CancelDeleteAction,
   EnsureDeleteAction
- } from '../actions/customer.action'
+} from '../actions/customer.action'
 
- import { getSelectedCustomers } from '../reducers'
+import { getSelectedCustomers } from '../reducers'
 
 @Component({
   template: `
-<div class="hz-modal to-delete-modal">
+<div class="hz-modal to-delete-modal hz-confirm-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
@@ -35,20 +32,7 @@ import {
   </div>
   </ion-content>
 </div>
-`,
-styles: [`
-  .modal-wrapper {
-    height: 300px;
-  }
-  .to-delete-modal {
-    height: 300px;
-  }
-  .to-delete-modal .modal-body {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-  }
-`]
+`
 })
 export class ToDeleteCustomerModal implements OnDestroy {
   deleteMulti: boolean
@@ -62,10 +46,12 @@ export class ToDeleteCustomerModal implements OnDestroy {
   ) {
     this.deleteMulti = !!params.get('multi')
 
-    this.subscription = store.select(getSelectedCustomers).map(e => e.length)
-    .subscribe((count) => {
-      this.count = count
-    })
+    this.subscription = store
+      .select(getSelectedCustomers)
+      .map(e => e.length)
+      .subscribe(count => {
+        this.count = count
+      })
   }
 
   private dismiss(data?): void {

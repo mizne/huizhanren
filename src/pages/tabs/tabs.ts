@@ -48,8 +48,9 @@ export class TabsPage {
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.PNG,
     mediaType: this.camera.MediaType.PICTURE,
-    targetWidth: 326,
-    targetHeight: 204,
+    // targetWidth: 326,
+    // targetHeight: 204,
+    correctOrientation: true,
     saveToPhotoAlbum: true,
     allowEdit: true
   }

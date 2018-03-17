@@ -1,19 +1,16 @@
 import { Component } from '@angular/core'
-import {
-  NavParams,
-  ViewController,
-} from 'ionic-angular'
+import { NavParams, ViewController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
 import {
   CancelDeleteGroupAction,
   EnsureDeleteGroupAction
- } from '../actions/group.action'
+} from '../actions/group.action'
 
 @Component({
   template: `
-<div class="hz-modal to-delete-modal">
+<div class="hz-modal to-delete-modal hz-confirm-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
@@ -33,23 +30,13 @@ import {
   </ion-content>
 </div>
 `,
-styles: [`
-  .modal-wrapper {
-    height: 300px;
-  }
-  .to-delete-modal {
-    height: 300px;
-  }
-  .to-delete-modal .modal-body {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-  }
-
+  styles: [
+    `
   .to-delete-modal .modal-body .group-name {
     color: #6288d5;
   }
-`]
+`
+  ]
 })
 export class ToDeleteGroupModal {
   groupName: string

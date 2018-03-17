@@ -1,19 +1,16 @@
 import { Component } from '@angular/core'
-import {
-  NavParams,
-  ViewController,
-} from 'ionic-angular'
+import { NavParams, ViewController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
 import { State } from '../reducers/index'
 import {
   CancelDiscardAction,
   EnsureDiscardAction
- } from '../actions/customer.action'
+} from '../actions/customer.action'
 
 @Component({
   template: `
-<div class="hz-modal to-delete-modal">
+<div class="hz-modal to-delete-modal hz-confirm-modal">
   <ion-header>
   <ion-toolbar>
     <ion-title>
@@ -32,28 +29,14 @@ import {
   </div>
   </ion-content>
 </div>
-`,
-styles: [`
-  .modal-wrapper {
-    height: 300px;
-  }
-  .to-delete-modal {
-    height: 300px;
-  }
-  .to-delete-modal .modal-body {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
-  }
-`]
+`
 })
 export class ToDiscardModal {
   constructor(
     public params: NavParams,
     public viewCtrl: ViewController,
     private store: Store<State>
-  ) {
-  }
+  ) {}
 
   private dismiss(data?): void {
     this.viewCtrl.dismiss(data)
