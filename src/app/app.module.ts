@@ -29,6 +29,7 @@ import { VisitorPageModule } from '../pages/visitor/visitor.module'
 import { ExhibitorsPageModule } from '../pages/exhibitors/exhibitors.module'
 
 import { OcrService } from '../providers/ocr.service'
+import { ToastService } from '../providers/toast.service'
 import { SmsService } from '../providers/sms.service'
 import { LoginService } from '../providers/login.service'
 import { TenantService } from '../providers/tenant.service'
@@ -85,6 +86,7 @@ export class RavenErrorHandler implements ErrorHandler {
       ? { provide: ErrorHandler, useClass: RavenErrorHandler }
       : { provide: ErrorHandler, useClass: IonicErrorHandler },
     OcrService,
+    ToastService,
     SmsService,
     LoginService,
     TenantService,

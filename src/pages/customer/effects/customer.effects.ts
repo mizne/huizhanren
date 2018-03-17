@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import {
-  ModalController,
-  ToastController,
-  LoadingController
-} from 'ionic-angular'
+import { ModalController, LoadingController } from 'ionic-angular'
 import { Observable } from 'rxjs/Observable'
 import { Store } from '@ngrx/store'
 
@@ -26,6 +22,7 @@ import * as fromCard from '../actions/card.action'
 
 import { CustomerService } from '../services/customer.service'
 import { LoggerService } from '../../../providers/logger.service'
+import { ToastService } from '../../../providers/toast.service'
 
 import { ToDeleteCustomerModal } from '../modals/to-delete-customer-modal.component'
 import { ToDiscardModal } from '../modals/to-discard-modal.component'
@@ -61,13 +58,7 @@ export class CustomerEffects {
   initialFailure$ = this.actions$
     .ofType(fromCustomer.INITIAL_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '获取客户信息失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('获取客户信息失败')
     })
 
   @Effect()
@@ -92,13 +83,7 @@ export class CustomerEffects {
 
   @Effect({ dispatch: false })
   cancelCreate$ = this.actions$.ofType(fromCustomer.CANCEL_CREATE).do(() => {
-    this.toastCtrl
-      .create({
-        message: '姓名不能为空',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('姓名不能为空')
   })
 
   @Effect()
@@ -172,24 +157,12 @@ export class CustomerEffects {
 
   @Effect({ dispatch: false })
   createSuccess$ = this.actions$.ofType(fromCustomer.CREATE_SUCCESS).do(() => {
-    this.toastCtrl
-      .create({
-        message: '保存客户成功',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('保存客户成功')
   })
 
   @Effect({ dispatch: false })
   createFailure$ = this.actions$.ofType(fromCustomer.CREATE_FAILURE).do(() => {
-    this.toastCtrl
-      .create({
-        message: '保存客户失败',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('保存客户失败')
   })
 
   @Effect()
@@ -204,13 +177,7 @@ export class CustomerEffects {
   fetchAllFailure$ = this.actions$
     .ofType(fromCustomer.FETCH_ALL_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '获取客户列表失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('获取客户列表失败')
     })
 
   @Effect()
@@ -241,13 +208,7 @@ export class CustomerEffects {
   cancelBatchEditGroup$ = this.actions$
     .ofType(fromCustomer.CANCEL_BATCH_EDIT_GROUP)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '您还没有选择客户呢',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('您还没有选择客户呢')
     })
 
   @Effect()
@@ -280,26 +241,14 @@ export class CustomerEffects {
   batchEditGroupSuccess$ = this.actions$
     .ofType(fromCustomer.BATCH_EDIT_GROUP_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '批量编辑客户标签成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('批量编辑客户标签成功')
     })
 
   @Effect({ dispatch: false })
   batchEditGroupFailure$ = this.actions$
     .ofType(fromCustomer.BATCH_EDIT_GROUP_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '批量编辑客户标签失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('批量编辑客户标签失败')
     })
 
   @Effect({ dispatch: false })
@@ -349,26 +298,14 @@ export class CustomerEffects {
   singleEditGroupSuccess$ = this.actions$
     .ofType(fromCustomer.SINGLE_EDIT_GROUP_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '编辑客户标签成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('编辑客户标签成功')
     })
 
   @Effect({ dispatch: false })
   singleEditGroupFailure$ = this.actions$
     .ofType(fromCustomer.SINGLE_EDIT_GROUP_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '编辑客户标签失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('编辑客户标签失败')
     })
 
   @Effect()
@@ -414,23 +351,11 @@ export class CustomerEffects {
     )
     .do(({ multi, isAdmin, selectedCustomers }) => {
       if (!isAdmin) {
-        return this.toastCtrl
-          .create({
-            message: '您还不是管理员',
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
+        return this.toastService.show('您还不是管理员')
       }
 
       if (multi && selectedCustomers.length === 0) {
-        return this.toastCtrl
-          .create({
-            message: '您还没有选择客户',
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
+        return this.toastService.show('您还没有选择客户')
       }
 
       this.modalCtrl.create(ToDeleteCustomerModal, { multi }).present()
@@ -466,24 +391,12 @@ export class CustomerEffects {
 
   @Effect({ dispatch: false })
   deleteSuccess$ = this.actions$.ofType(fromCustomer.DELETE_SUCCESS).do(() => {
-    this.toastCtrl
-      .create({
-        message: '删除客户成功',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('删除客户成功')
   })
 
   @Effect({ dispatch: false })
   deleteFailure$ = this.actions$.ofType(fromCustomer.DELETE_FAILURE).do(() => {
-    this.toastCtrl
-      .create({
-        message: '删除客户失败',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('删除客户失败')
   })
 
   @Effect({ dispatch: false })
@@ -566,26 +479,14 @@ export class CustomerEffects {
   editCustomerSuccess$ = this.actions$
     .ofType(fromCustomer.EDIT_CUSTOMER_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '编辑客户成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('编辑客户成功')
     })
 
   @Effect({ dispatch: false })
   editCustomerFailure$ = this.actions$
     .ofType(fromCustomer.EDIT_CUSTOMER_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '编辑客户失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('获取客户信息失败')
     })
 
   @Effect()
@@ -633,10 +534,10 @@ export class CustomerEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
     private customerService: CustomerService,
     private loggerService: LoggerService,
     private loadCtrl: LoadingController,
-    private store: Store<State>
+    private store: Store<State>,
+    private toastService: ToastService
   ) {}
 }

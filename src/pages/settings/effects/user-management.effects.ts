@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
-import { ModalController, ToastController } from 'ionic-angular'
+import { ModalController } from 'ionic-angular'
 
 import * as fromUserManagement from '../actions/user-management.action'
 import { UserService } from '../services/user.service'
 import { SmsService } from '../../../providers/sms.service'
+import { ToastService } from '../../../providers/toast.service'
 import { ToDeleteUserModal } from '../modals/to-delete-user-modal/to-delete-user-modal.component'
 import { ToAddUserModal } from '../modals/to-add-user-modal/to-add-user-modal.component'
 
@@ -80,26 +81,16 @@ export class UserManagementEffects {
   deleteUserSuccess$ = this.actions$
     .ofType(fromUserManagement.DELETE_USER_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '删除用户成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('删除用户成功')
     })
 
   @Effect({ dispatch: false })
   deleteUserFailure$ = this.actions$
     .ofType(fromUserManagement.DELETE_USER_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '删除用户失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('删除用户失败')
     })
 
   @Effect({ dispatch: false })
@@ -112,13 +103,8 @@ export class UserManagementEffects {
     )
     .do(([maxCount, usersCount]) => {
       if (usersCount >= maxCount) {
-        this.toastCtrl
-          .create({
-            message: `已有${usersCount}个用户, 不能创建更多了`,
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
+        this.toastService
+          .show(`已有${usersCount}个用户, 不能创建更多了`)
       } else {
         this.modalCtrl.create(ToAddUserModal).present()
       }
@@ -143,13 +129,8 @@ export class UserManagementEffects {
   fetchSmsCodeSuccess$ = this.actions$
     .ofType(fromUserManagement.FETCH_SMS_CODE_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '验证码已发送, 请注意查收',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('验证码已发送, 请注意查收')
     })
 
   @Effect({ dispatch: false })
@@ -159,13 +140,8 @@ export class UserManagementEffects {
       (action: fromUserManagement.FetchSMSCodeFailureAction) => action.errorMsg
     )
     .do(errorMsg => {
-      this.toastCtrl
-        .create({
-          message: `验证码发送失败, ${errorMsg}`,
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show(`验证码发送失败`)
     })
 
   @Effect()
@@ -191,32 +167,23 @@ export class UserManagementEffects {
   addUserSuccess$ = this.actions$
     .ofType(fromUserManagement.ADD_USER_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '添加用户成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('添加用户成功')
     })
 
   @Effect({ dispatch: false })
   addUserFailure$ = this.actions$
     .ofType(fromUserManagement.ADD_USER_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '添加用户失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('添加用户失败')
+        
     })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private userService: UserService,
     private smsService: SmsService,
     private store: Store<State>

@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 
 import {
   ModalController,
-  ToastController,
 } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
+import { ToastService } from '../../../providers/toast.service'
 import { State, getSelectedExhibitionId } from '../../login/reducers'
 
 import * as fromGroup from '../actions/group.action'
@@ -55,23 +55,12 @@ export class GroupEffects {
 
   @Effect({ dispatch: false })
   createSuccess$ = this.actions$.ofType(fromGroup.CREATE_SUCCESS).do(() => {
-    this.toastCtrl.create({
-      message: '创建标签成功',
-      duration: 3e3,
-      position: 'top'
-    })
-    .present()
+    this.toastService.show('创建标签成功')
   })
 
   @Effect({ dispatch: false })
   createFailure$ = this.actions$.ofType(fromGroup.CREATE_FAILURE).do(() => {
-    this.toastCtrl
-      .create({
-        message: '创建标签失败',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+      this.toastService.show('创建标签失败')
   })
 
   @Effect()
@@ -86,23 +75,12 @@ export class GroupEffects {
 
   @Effect({ dispatch: false })
   fetchAllSuccess$ = this.actions$.ofType(fromGroup.FETCH_ALL_SUCCESS).do(() => {
-    // this.toastCtrl.create({
-    //   message: '获取标签成功',
-    //   duration: 3e3,
-    //   position: 'top'
-    // })
-    // .present()
+    // this.toastService.show('获取标签成功')
   })
 
   @Effect({ dispatch: false })
   fetchAllFailure$ = this.actions$.ofType(fromGroup.FETCH_ALL_FAILURE).do(() => {
-    // this.toastCtrl
-    //   .create({
-    //     message: '获取标签失败',
-    //     duration: 3e3,
-    //     position: 'top'
-    //   })
-    //   .present()
+    // this.toastService.show('获取标签失败')
   })
 
 
@@ -128,21 +106,13 @@ export class GroupEffects {
   @Effect({ dispatch: false })
   renameGroupSuccess$ = this.actions$.ofType(fromGroup.RENAME_GROUP_SUCCESS)
   .do(() => {
-    this.toastCtrl.create({
-      message: '重命名标签成功',
-      duration: 3e3,
-      position: 'top'
-    }).present()
+    this.toastService.show('重命名标签成功')
   })
 
   @Effect({ dispatch: false })
   renameGroupFailure$ = this.actions$.ofType(fromGroup.RENAME_GROUP_FAILURE)
   .do(() => {
-    this.toastCtrl.create({
-      message: '重命名标签失败',
-      duration: 3e3,
-      position: 'top'
-    }).present()
+    this.toastService.show('重命名标签失败')
   })
 
 
@@ -169,28 +139,20 @@ export class GroupEffects {
   @Effect({ dispatch: false })
   deleteGroupSuccess$ = this.actions$.ofType(fromGroup.DELETE_GROUP_SUCCESS)
   .do(() => {
-    this.toastCtrl.create({
-      message: '删除标签成功',
-      duration: 3e3,
-      position: 'top'
-    }).present()
+    this.toastService.show('删除标签成功')
   })
 
   @Effect({ dispatch: false })
   deleteGroupFailure$ = this.actions$.ofType(fromGroup.DELETE_GROUP_FAILURE)
   .do(() => {
-    this.toastCtrl.create({
-      message: '删除标签失败',
-      duration: 3e3,
-      position: 'top'
-    }).present()
+    this.toastService.show('删除标签失败')
   })
 
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private groupService: GroupService,
     private store: Store<State>
   ) {}

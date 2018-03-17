@@ -4,11 +4,11 @@ import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable';
 
 import {
-  ToastController,
   LoadingController
 } from 'ionic-angular'
 
 import * as other from '../actions/other.action'
+import { ToastService } from '../../../providers/toast.service'
 import { OtherService } from '../services/other.service'
 
 @Injectable()
@@ -37,27 +37,19 @@ export class OtherEffects {
   checkUpdateSuccess$ = this.actions$
     .ofType(other.CHECK_UPDATE_SUCCESS)
     .do(() => {
-      this.toastCtrl.create({
-        message: '更新成功',
-        duration: 3e3,
-        position: 'top'
-      }).present()
+      this.toastService.show('更新成功')
     })
 
   @Effect({ dispatch: false })
   checkUpdateFailure$ = this.actions$
     .ofType(other.CHECK_UPDATE_FAILURE)
     .do(() => {
-      this.toastCtrl.create({
-        message: '更新失败',
-        duration: 3e3,
-        position: 'top'
-      }).present()
+      this.toastService.show('更新失败')
     })
 
   constructor(
     private actions$: Actions,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private otherService: OtherService,
     private loadCtrl: LoadingController
   ) {}

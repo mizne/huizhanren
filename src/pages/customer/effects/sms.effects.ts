@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
-import { ModalController, ToastController } from 'ionic-angular'
+import { ModalController } from 'ionic-angular'
 import { Store } from '@ngrx/store'
 
 import { State, getPhonesToSendOfCustomers, getSmsTemplates } from '../reducers'
@@ -12,6 +12,7 @@ import * as fromCustomer from '../actions/customer.action'
 import * as fromLogger from '../actions/logger.action'
 
 import { SmsService } from '../../../providers/sms.service'
+import { ToastService } from '../../../providers/toast.service'
 import { TenantService } from '../../../providers/tenant.service'
 import { CustomerService } from '../services/customer.service'
 import {
@@ -68,26 +69,14 @@ export class SmsEffects {
   createTemplateSuccess$ = this.actions$
     .ofType(fromSms.CREATE_TEMPLATE_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '新增短信模版成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('新增短信模版成功')
     })
 
   @Effect({ dispatch: false })
   createTemplateFailure$ = this.actions$
     .ofType(fromSms.CREATE_TEMPLATE_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '新增短信模版失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('新增短信模版失败')
     })
 
   @Effect()
@@ -101,13 +90,7 @@ export class SmsEffects {
         []
       )
       if (phones.length === 0) {
-        this.toastCtrl
-          .create({
-            message: '您还没有选择电话呢',
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
+        this.toastService.show('您还没有选择电话呢')
         return new fromSms.NoPhoneToSendSMSAction()
       } else {
         return new fromSms.ToSendSMSAction({
@@ -152,13 +135,7 @@ export class SmsEffects {
 
   @Effect({ dispatch: false })
   cancelSendSms$ = this.actions$.ofType(fromSms.CANCEL_SEND_SMS).do(() => {
-    this.toastCtrl
-      .create({
-        message: '取消发送短信',
-        duration: 3e3,
-        position: 'top'
-      })
-      .present()
+    this.toastService.show('取消发送短信')
   })
 
   @Effect()
@@ -205,26 +182,14 @@ export class SmsEffects {
   sendSmsSuccess$ = this.actions$
     .ofType(fromSms.BATCH_SEND_SMS_SUCCESS, fromSms.SINGLE_SEND_SMS_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '发送短信成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('发送短信成功')
     })
 
   @Effect({ dispatch: false })
   sendSmsFailure$ = this.actions$
     .ofType(fromSms.BATCH_SEND_SMS_FAILURE, fromSms.SINGLE_SEND_SMS_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '发送短信失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('发送短信失败')
     })
 
   @Effect({ dispatch: false })
@@ -270,7 +235,7 @@ export class SmsEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private smsService: SmsService,
     private store: Store<State>,
     private customerService: CustomerService,

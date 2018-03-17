@@ -4,10 +4,9 @@ import { Observable } from 'rxjs/Observable'
 
 import {
   ModalController,
-  ToastController,
   LoadingController
 } from 'ionic-angular'
-
+import { ToastService } from '../../../providers/toast.service'
 import * as fromCompleteMatcher from '../actions/complete-matcher.action'
 import * as fromExhibitor from '../actions/exhibitor.action'
 
@@ -130,7 +129,7 @@ export class CompleteMatcherEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private matcherService: ExhibitorMatcherService,
     private store: Store<State>,
     private loadCtrl: LoadingController,

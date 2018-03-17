@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 
-import { ModalController, ToastController } from 'ionic-angular'
+import { ModalController } from 'ionic-angular'
 import { Observable } from 'rxjs/Observable'
 
 import { Store } from '@ngrx/store'
 import { State, getShowDetailCustomerId } from '../reducers'
+
+import { ToastService } from '../../../providers/toast.service'
 
 import * as fromLogger from '../actions/logger.action'
 import { ToCreateLoggerModal } from '../modals/to-create-logger-modal.component'
@@ -60,14 +62,9 @@ export class LoggerEffects {
     .ofType(fromLogger.CREATE_LOGGER_SUCCESS)
     .map((action: fromLogger.CreateLoggerSuccessAction) => action.level)
     .do(level => {
-      // 系统日志 不弹出toast
+      // 非系统日志 弹出toast
       if (level !== LoggerLevel.SYS) {
-        let toast = this.toastCtrl.create({
-          message: '添加日志成功',
-          duration: 3000,
-          position: 'top'
-        })
-        toast.present()
+        this.toastService.show('添加日志成功')
       }
     })
 
@@ -75,12 +72,7 @@ export class LoggerEffects {
   createLoggerFailure$ = this.actions$
     .ofType(fromLogger.CREATE_LOGGER_FAILURE)
     .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志失败',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+      this.toastService.show('添加日志失败')
     })
 
   @Effect()
@@ -123,24 +115,14 @@ export class LoggerEffects {
   editLoggerSuccess$ = this.actions$
     .ofType(fromLogger.EDIT_LOGGER_SUCCESS)
     .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '编辑日志成功',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+      this.toastService.show('编辑日志成功')
     })
 
   @Effect({ dispatch: false })
   editLoggerFailure$ = this.actions$
     .ofType(fromLogger.EDIT_LOGGER_FAILURE)
     .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '编辑日志失败',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+      this.toastService.show('编辑日志失败')
     })
 
   @Effect()
@@ -218,7 +200,7 @@ export class LoggerEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private loggerService: LoggerService,
     private store: Store<State>
   ) {}

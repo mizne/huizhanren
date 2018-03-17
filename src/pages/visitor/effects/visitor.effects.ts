@@ -1,15 +1,12 @@
 import { Injectable, Inject } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import {
-  ModalController,
-  ToastController,
-  LoadingController
-} from 'ionic-angular'
+import { ModalController, LoadingController } from 'ionic-angular'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs/Observable'
 
 import * as fromVisitor from '../actions/visitor.action'
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
+import { ToastService } from '../../../providers/toast.service'
 import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 import { VisitorService } from '../services/visitor.service'
 import { VisitorMatcherService } from '../services/matcher.service'
@@ -53,13 +50,7 @@ export class VisitorEffects {
   fetchVisitorsFailure$ = this.actions$
     .ofType(fromVisitor.FETCH_VISITORS_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '获取客户失败',
-          position: 'top',
-          duration: 3e3
-        })
-        .present()
+      this.toastService.show('获取客户失败')
     })
 
   @Effect()
@@ -149,13 +140,7 @@ export class VisitorEffects {
   loadMoreVisitorsFailure$ = this.actions$
     .ofType(fromVisitor.LOAD_MORE_VISITORS_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '获取更多客户失败',
-          position: 'top',
-          duration: 3e3
-        })
-        .present()
+      this.toastService.show('获取更多客户失败')
     })
 
   @Effect()
@@ -233,26 +218,14 @@ export class VisitorEffects {
   inviteVisitorSuccess$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '约请发送成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('约请发送成功')
     })
 
   @Effect({ dispatch: false })
   inviteVisitorFailure$ = this.actions$
     .ofType(fromVisitor.INVITE_VISITOR_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '约请发送失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('约请发送失败')
     })
 
   @Effect()
@@ -300,14 +273,9 @@ export class VisitorEffects {
     .ofType(fromVisitor.CREATE_LOGGER_SUCCESS)
     .map((action: fromVisitor.CreateLoggerSuccessAction) => action.level)
     .do(level => {
-      // 系统日志 不弹出toast
+      // 非系统日志 弹出toast
       if (level !== LoggerLevel.SYS) {
-        let toast = this.toastCtrl.create({
-          message: '添加日志成功',
-          duration: 3000,
-          position: 'top'
-        })
-        toast.present()
+        this.toastService.show('添加日志成功')
       }
     })
 
@@ -315,12 +283,7 @@ export class VisitorEffects {
   createLoggerFailure$ = this.actions$
     .ofType(fromVisitor.CREATE_LOGGER_FAILURE)
     .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志失败',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+      this.toastService.show('添加日志失败')
     })
 
   @Effect()
@@ -337,7 +300,7 @@ export class VisitorEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private loadCtrl: LoadingController,
     private visitorService: VisitorService,
     private matcherService: VisitorMatcherService,

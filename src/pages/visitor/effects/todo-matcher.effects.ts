@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable'
 
 import {
   ModalController,
-  ToastController,
   LoadingController
 } from 'ionic-angular'
 
@@ -12,6 +11,7 @@ import * as fromToDoMatcher from '../actions/todo-matcher.action'
 import * as fromVisitor from '../actions/visitor.action'
 
 import { VisitorMatcherService } from '../services/matcher.service'
+import { ToastService } from '../../../providers/toast.service'
 
 import { ToCancelMatcherModal } from '../modals/to-cancel-matcher-modal/to-cancel-matcher-modal.component'
 import { ToAgreeMatcherModal } from '../modals/to-agree-matcher-modal/to-agree-matcher-modal.component'
@@ -141,26 +141,16 @@ export class ToDoMatcherEffects {
   agreeMatcherSuccess$ = this.actions$
     .ofType(fromToDoMatcher.AGREE_TODO_MATCHER_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '同意约请成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('同意约请成功')
     })
 
   @Effect({ dispatch: false })
   agreeMatcherFailure$ = this.actions$
     .ofType(fromToDoMatcher.AGREE_TODO_MATCHER_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '同意约请失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('同意约请失败')
     })
 
   @Effect()
@@ -223,26 +213,16 @@ export class ToDoMatcherEffects {
   batchAgreeMatchersSuccess$ = this.actions$
     .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '批量同意约请成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('批量同意约请成功')
     })
 
   @Effect({ dispatch: false })
   batchAgreeMatchersFailure$ = this.actions$
     .ofType(fromToDoMatcher.BATCH_AGREE_TODO_MATCHERS_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '批量同意约请失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('批量同意约请失败')
     })
 
   @Effect({ dispatch: false })
@@ -254,13 +234,8 @@ export class ToDoMatcherEffects {
     )
     .do(message => {
       if (message) {
-        this.toastCtrl
-          .create({
-            message,
-            duration: 3e3,
-            position: 'top'
-          })
-          .present()
+        this.toastService
+          .show(message)
       }
     })
 
@@ -307,32 +282,22 @@ export class ToDoMatcherEffects {
   refuseMatcherSuccess$ = this.actions$
     .ofType(fromToDoMatcher.REFUSE_TODO_MATCHER_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '拒绝约请成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('拒绝约请成功')
     })
 
   @Effect({ dispatch: false })
   refuseMatcherFailure$ = this.actions$
     .ofType(fromToDoMatcher.REFUSE_TODO_MATCHER_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '拒绝约请失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService
+        .show('拒绝约请失败')
     })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private matcherService: VisitorMatcherService,
     private store: Store<State>,
     private loadCtrl: LoadingController,

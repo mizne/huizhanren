@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
-import { ModalController, ToastController, LoadingController } from 'ionic-angular'
+import { ModalController, LoadingController } from 'ionic-angular'
 
 import * as fromExhibitions from '../actions/exhibitions.action'
+import { ToastService } from '../../../providers/toast.service'
 import { WelcomeModal } from '../modals/welcome-modal.component'
 import { LoginService } from '../../../providers/login.service'
 
@@ -40,13 +41,7 @@ export class ExhibitionsEffects {
   fetchAllExhibitionsFailure$ = this.actions$
     .ofType(fromExhibitions.FETCH_ALL_EXHIBITIONS_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '未绑定该手机号',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+        this.toastService.show('未绑定该手机号')
     })
 
   @Effect({ dispatch: false })
@@ -67,7 +62,7 @@ export class ExhibitionsEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private loadCtrl: LoadingController,
     private loginService: LoginService,
   ) {}

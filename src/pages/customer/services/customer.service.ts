@@ -150,7 +150,7 @@ export class CustomerService {
           tenantId,
           userId,
           params: {
-            RecordId: customerId,
+            recordId: customerId,
             setValue: {
               ExhibitionId: exhibitionId,
               Name: customer.name,
@@ -334,7 +334,7 @@ export class CustomerService {
           tenantId,
           userId,
           params: {
-            RecordId: customer.id,
+            recordId: customer.id,
             setValue: {
               ExhibitionId: exhibitionId,
               ContactGroupId: (() => {

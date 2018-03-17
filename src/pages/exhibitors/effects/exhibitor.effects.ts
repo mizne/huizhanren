@@ -1,10 +1,6 @@
 import { Injectable, Inject } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
-import {
-  ModalController,
-  ToastController,
-  LoadingController
-} from 'ionic-angular'
+import { ModalController, LoadingController } from 'ionic-angular'
 import * as fromExhibitor from '../actions/exhibitor.action'
 
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
@@ -12,6 +8,7 @@ import { Logger, LoggerLevel } from '../../customer/models/logger.model'
 
 import { ExhibitorService } from '../services/exhibitor.service'
 import { ExhibitorMatcherService } from '../services/matcher.service'
+import { ToastService } from '../../../providers/toast.service'
 
 import { LoggerService } from '../../../providers/logger.service'
 import { Observable } from 'rxjs/Observable'
@@ -208,26 +205,14 @@ export class ExhibitorEffects {
   inviteExhibitorSuccess$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '约请发送成功',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('约请发送成功')
     })
 
   @Effect({ dispatch: false })
   inviteExhibitorFailure$ = this.actions$
     .ofType(fromExhibitor.INVITE_EXHIBITOR_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '约请发送失败',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+      this.toastService.show('约请发送失败')
     })
 
   @Effect()
@@ -277,14 +262,9 @@ export class ExhibitorEffects {
     .ofType(fromExhibitor.CREATE_LOGGER_SUCCESS)
     .map((action: fromExhibitor.CreateLoggerSuccessAction) => action.level)
     .do(level => {
-      // 系统日志 不弹出toast
+      // 非系统日志 弹出toast
       if (level !== LoggerLevel.SYS) {
-        let toast = this.toastCtrl.create({
-          message: '添加日志成功',
-          duration: 3000,
-          position: 'top'
-        })
-        toast.present()
+        this.toastService.show('添加日志成功')
       }
     })
 
@@ -292,12 +272,7 @@ export class ExhibitorEffects {
   createLoggerFailure$ = this.actions$
     .ofType(fromExhibitor.CREATE_LOGGER_FAILURE)
     .do(() => {
-      let toast = this.toastCtrl.create({
-        message: '添加日志失败',
-        duration: 3000,
-        position: 'top'
-      })
-      toast.present()
+      this.toastService.show('添加日志失败')
     })
 
   @Effect()
@@ -331,7 +306,7 @@ export class ExhibitorEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private loadCtrl: LoadingController,
     private exhibitorService: ExhibitorService,
     private matcherService: ExhibitorMatcherService,

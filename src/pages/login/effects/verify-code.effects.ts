@@ -10,6 +10,7 @@ import * as fromExhibitions from '../actions/exhibitions.action'
 import { VerifyCodeModal } from '../modals/verify-code-modal.component'
 import { SmsService } from '../../../providers/sms.service'
 import { TenantService } from '../../../providers/tenant.service'
+import { ToastService } from '../../../providers/toast.service'
 
 import { State, getPhone } from '../reducers/index'
 
@@ -52,26 +53,14 @@ export class VerifyCodeEffects {
   fetchCodeSuccess$ = this.actions$
     .ofType(fromVerifyCode.FETCH_CODE_SUCCESS)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '验证码已发送, 请注意查收',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+        this.toastService.show('验证码已发送, 请注意查收')
     })
 
   @Effect({ dispatch: false })
   fetchCodeFailure$ = this.actions$
     .ofType(fromVerifyCode.FETCH_CODE_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '验证码发送失败, 请重新获取',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+        this.toastService.show('验证码发送失败, 请重新获取')
     })
 
   @Effect()
@@ -100,19 +89,13 @@ export class VerifyCodeEffects {
   verifyCodeFailure$ = this.actions$
     .ofType(fromVerifyCode.VERIFY_CODE_FAILURE)
     .do(() => {
-      this.toastCtrl
-        .create({
-          message: '验证码填写错误',
-          duration: 3e3,
-          position: 'top'
-        })
-        .present()
+        this.toastService.show('验证码填写错误')
     })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private smsService: SmsService,
     private tenantService: TenantService,
     private store: Store<State>

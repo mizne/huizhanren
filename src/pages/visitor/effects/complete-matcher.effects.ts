@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable'
 
 import {
   ModalController,
-  ToastController,
   LoadingController
 } from 'ionic-angular'
 
@@ -130,7 +129,6 @@ export class CompleteMatcherEffects {
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
     private matcherService: VisitorMatcherService,
     private store: Store<State>,
     private loadCtrl: LoadingController,

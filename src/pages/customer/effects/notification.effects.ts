@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core'
 import { Effect, Actions } from '@ngrx/effects'
 import { Observable } from 'rxjs/Observable'
 
-import { ModalController, ToastController } from 'ionic-angular'
+import { ModalController } from 'ionic-angular'
 
 import { Store } from '@ngrx/store'
 import { State, getShowDetailCustomerId } from '../reducers'
+import { ToastService } from '../../../providers/toast.service'
 import * as fromNotification from '../actions/notification.action'
 import { ToCreateNotificationModal } from '../modals/to-create-notification-modal.component'
 import { ToEditNotificationModal } from '../modals/to-edit-notification-modal.component'
@@ -50,23 +51,13 @@ export class NotificationEffects {
   @Effect({ dispatch: false })
   createNotificationSuccess$ = this.actions$.ofType(fromNotification.CREATE_NOTIFICATION_SUCCESS)
   .do(() => {
-    let toast = this.toastCtrl.create({
-      message: '添加提醒成功',
-      duration: 3000,
-      position: 'top'
-    })
-    toast.present()
+    this.toastService.show('添加提醒成功')
   })
 
   @Effect({ dispatch: false })
   createNotificationFailure$ = this.actions$.ofType(fromNotification.CREATE_NOTIFICATION_FAILURE)
   .do(() => {
-    let toast = this.toastCtrl.create({
-      message: '添加提醒失败',
-      duration: 3000,
-      position: 'top'
-    })
-    toast.present()
+    this.toastService.show('添加提醒失败')
   })
 
 
@@ -107,27 +98,14 @@ export class NotificationEffects {
   @Effect({ dispatch: false })
   editNotificationSuccess$ = this.actions$.ofType(fromNotification.EDIT_NOTIFICATION_SUCCESS)
   .do(() => {
-    let toast = this.toastCtrl.create({
-      message: '编辑提醒成功',
-      duration: 3000,
-      position: 'top'
-    })
-    toast.present()
+    this.toastService.show('编辑提醒成功')
   })
 
   @Effect({ dispatch: false })
   editNotificationFailure$ = this.actions$.ofType(fromNotification.EDIT_NOTIFICATION_FAILURE)
   .do(() => {
-    let toast = this.toastCtrl.create({
-      message: '编辑提醒失败',
-      duration: 3000,
-      position: 'top'
-    })
-    toast.present()
+    this.toastService.show('编辑提醒失败')
   })
-
-
-
 
   @Effect()
   fetchNotification$ = this.actions$.ofType(fromNotification.FETCH_NOTIFICATION)
@@ -141,29 +119,19 @@ export class NotificationEffects {
   @Effect({ dispatch: false })
   fetchNotificationSuccess$ = this.actions$.ofType(fromNotification.FETCH_NOTIFICATION_SUCCESS)
   .do(() => {
-    // let toast = this.toastCtrl.create({
-    //   message: '查询日志成功',
-    //   duration: 3000,
-    //   position: 'top'
-    // })
-    // toast.present()
+    // this.toastService.show('查询日志成功')
   })
 
   @Effect({ dispatch: false })
   fetchNotificationFailure$ = this.actions$.ofType(fromNotification.FETCH_NOTIFICATION_FAILURE)
   .do(() => {
-    // let toast = this.toastCtrl.create({
-    //   message: '查询日志失败',
-    //   duration: 3000,
-    //   position: 'top'
-    // })
-    // toast.present()
+    // this.toastService.show('查询日志失败')
   })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
-    private toastCtrl: ToastController,
+    private toastService: ToastService,
     private notificationService: NotificationService,
     private store: Store<State>
   ) {}
