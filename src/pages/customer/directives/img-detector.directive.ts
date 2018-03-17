@@ -11,13 +11,16 @@ export class ImgDetectorDirective {
     this.img = this.el.nativeElement
     this.img.onload = function(ev) {
       console.log(`width: ${this.width}; height: ${this.height}`)
+      debugger
       if (this.height > this.width) {
-        self.correctOrientation()
+        self.addTransform()
+      } else {
+        self.removeTransform()
       }
     }
   }
 
-  private correctOrientation() {
+  private addTransform() {
     if (this.img) {
       if (this.imgDetector === 'editable') {
         this.rd.setStyle(
@@ -32,6 +35,17 @@ export class ImgDetectorDirective {
           'transform',
           'scale(0.7) rotate(-90deg) translateX(-83%)'
         )
+      }
+    }
+  }
+
+  private removeTransform() {
+    if (this.img) {
+      if (this.imgDetector === 'editable') {
+        this.rd.setStyle(this.img, 'transform', 'none')
+      }
+      if (this.imgDetector === 'detailable') {
+        this.rd.setStyle(this.img, 'transform', 'none')
       }
     }
   }
