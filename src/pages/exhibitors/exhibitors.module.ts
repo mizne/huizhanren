@@ -26,10 +26,11 @@ import { CompleteMatcherEffects } from './effects/complete-matcher.effects'
 
 import { ExhibitorService } from './services/exhibitor.service'
 import { ExhibitorMatcherService } from './services/matcher.service'
+import { ExhibitorLoggerService } from './services/exhibitor-logger.service'
 
 import { ExhibitorMatcherStatusPipe } from './pipes/exhibitor-matcher-status.pipe'
 
-const services = [ExhibitorService, ExhibitorMatcherService]
+const services = [ExhibitorService, ExhibitorMatcherService, ExhibitorLoggerService]
 const effects = [ExhibitorEffects, ToDoMatcherEffects, CompleteMatcherEffects]
 const pipes = [ExhibitorMatcherStatusPipe]
 const modals = [

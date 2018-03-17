@@ -7,10 +7,13 @@ import { Observable } from 'rxjs/Observable'
 import * as fromVisitor from '../actions/visitor.action'
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
 import { ToastService } from '../../../providers/toast.service'
-import { Logger, LoggerLevel } from '../../customer/models/logger.model'
+import {
+  VisitorLogger,
+  VisitorLoggerLevel
+} from '../models/visitor-logger.model'
 import { VisitorService } from '../services/visitor.service'
 import { VisitorMatcherService } from '../services/matcher.service'
-import { LoggerService } from '../../../providers/logger.service'
+import { VisitorLoggerService } from '../services/visitor-logger.service'
 import { ToInviteCustomerModal } from '../modals/to-invite-customer-modal/to-invite-customer-modal.component'
 import {
   State,
@@ -236,13 +239,13 @@ export class VisitorEffects {
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
-          loggerModal.onDidDismiss((log: Logger) => {
+          loggerModal.onDidDismiss((log: VisitorLogger) => {
             res(log)
           })
 
           loggerModal.present()
         })
-      ).map((log: Logger) => {
+      ).map((log: VisitorLogger) => {
         if (log) {
           return new fromVisitor.CreateLoggerAction(log)
         } else {
@@ -256,13 +259,16 @@ export class VisitorEffects {
     .ofType(fromVisitor.CREATE_LOGGER)
     .map((action: fromVisitor.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getVisitorShowDetailID))
-    .switchMap(([log, customerId]) =>
-      this.loggerService
-        .createLog(log, customerId)
+    .switchMap(([log, visitorId]) =>
+      this.visitorLoggerService
+        .createLog({
+          ...log,
+          visitorId
+        })
         .concatMap(() => {
           return [
             new fromVisitor.CreateLoggerSuccessAction(log.level),
-            new fromVisitor.FetchLoggerAction(customerId)
+            new fromVisitor.FetchLoggerAction(visitorId)
           ]
         })
         .catch(() => Observable.of(new fromVisitor.CreateLoggerFailureAction()))
@@ -274,7 +280,7 @@ export class VisitorEffects {
     .map((action: fromVisitor.CreateLoggerSuccessAction) => action.level)
     .do(level => {
       // 非系统日志 弹出toast
-      if (level !== LoggerLevel.SYS) {
+      if (level !== VisitorLoggerLevel.SYS) {
         this.toastService.show('添加日志成功')
       }
     })
@@ -289,10 +295,10 @@ export class VisitorEffects {
   @Effect()
   fetchLogger$ = this.actions$
     .ofType(fromVisitor.FETCH_LOGGER)
-    .map((action: fromVisitor.FetchLoggerAction) => action.customerID)
-    .switchMap(customerId =>
-      this.loggerService
-        .fetchLogger(customerId)
+    .map((action: fromVisitor.FetchLoggerAction) => action.visitorID)
+    .switchMap(visitorID =>
+      this.visitorLoggerService
+        .fetchLogger(visitorID)
         .map(logs => new fromVisitor.FetchLoggerSuccessAction(logs))
         .catch(() => Observable.of(new fromVisitor.FetchLoggerFailureAction()))
     )
@@ -304,7 +310,7 @@ export class VisitorEffects {
     private loadCtrl: LoadingController,
     private visitorService: VisitorService,
     private matcherService: VisitorMatcherService,
-    private loggerService: LoggerService,
+    private visitorLoggerService: VisitorLoggerService,
     private store: Store<State>,
     @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}

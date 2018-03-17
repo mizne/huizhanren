@@ -6,7 +6,7 @@ import {
   FilterOptions
 } from '../models/exhibitor.model'
 
-import { Logger } from '../../customer/models/logger.model'
+import { ExhibitorLogger } from '../models/exhibitor-logger.model'
 import { deduplicate } from '../../customer/services/utils'
 
 export interface State {
@@ -21,7 +21,7 @@ export interface State {
   pageStatus: PageStatus // 表明 页面是否显示 右边展开的详细信息
   showDetailID: string // 表明 右边显示详细信息的 id
   shouldScrollToTop: boolean
-  logs: Logger[]
+  logs: ExhibitorLogger[]
 }
 
 export const initialState: State = {

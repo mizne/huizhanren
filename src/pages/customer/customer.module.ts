@@ -52,6 +52,7 @@ import { HzCustomerGroupManageComponent } from './components/hz-customer-manage/
 import { CustomerService } from './services/customer.service'
 import { GroupService } from './services/group.service'
 import { NotificationService } from './services/notification.service'
+import { ContactLoggerService } from './services/contact-logger.service'
 
 import { TimeRestPipe } from './pipes/time-rest.pipe'
 
@@ -132,7 +133,8 @@ const pipes = [
   providers: [
     CustomerService,
     GroupService,
-    NotificationService
+    NotificationService,
+    ContactLoggerService
   ],
   entryComponents: [
     ...modals,

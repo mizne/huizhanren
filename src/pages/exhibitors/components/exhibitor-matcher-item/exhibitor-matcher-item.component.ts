@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Portray, Exhibitor } from '../../models/exhibitor.model'
-import { Logger } from '../../../customer/models/logger.model'
+import { ContactLogger } from '../../../customer/models/logger.model'
 import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus

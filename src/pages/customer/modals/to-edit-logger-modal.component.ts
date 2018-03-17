@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core'
 import { NavParams, ViewController, ToastController } from 'ionic-angular'
 
-import { Logger, LoggerLevel } from '../models/logger.model'
+import { ContactLogger, ContactLoggerLevel } from '../models/logger.model'
 
 @Component({
   template: `
@@ -126,12 +126,12 @@ import { Logger, LoggerLevel } from '../models/logger.model'
   `]
 })
 export class ToEditLoggerModal {
-  INFO = LoggerLevel.INFO
-  WARN = LoggerLevel.WARN
-  ERROR = LoggerLevel.ERROR
-  SYS = LoggerLevel.SYS
+  INFO = ContactLoggerLevel.INFO
+  WARN = ContactLoggerLevel.WARN
+  ERROR = ContactLoggerLevel.ERROR
+  SYS = ContactLoggerLevel.SYS
 
-  level: LoggerLevel = LoggerLevel.INFO
+  level: ContactLoggerLevel = ContactLoggerLevel.INFO
   content: string
   private id: string
   private time: string
@@ -152,7 +152,7 @@ export class ToEditLoggerModal {
     // this.el.nativeElement.focus()
   }
 
-  private dismiss(data?: Logger): void {
+  private dismiss(data?: ContactLogger): void {
     this.viewCtrl.dismiss(data)
   }
 
@@ -160,7 +160,7 @@ export class ToEditLoggerModal {
     this.dismiss()
   }
 
-  active(level: LoggerLevel): void {
+  active(level: ContactLoggerLevel): void {
     this.level = level
   }
 

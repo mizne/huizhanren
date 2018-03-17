@@ -24,7 +24,7 @@ import {
 import { ToSendSMSModal } from './../modals/to-send-sms-modal.component'
 import { ToCreateTemplateModal } from '../modals/to-create-template-modal.component'
 import { ToSingleSendSMSModal } from '../modals/to-single-send-sms-modal.component'
-import { Logger } from '../models/logger.model'
+import { ContactLogger } from '../models/logger.model'
 
 @Injectable()
 export class SmsEffects {
@@ -150,7 +150,7 @@ export class SmsEffects {
             new fromSms.BatchSendSMSSuccessAction(),
             new fromLogger.BatchCreateLoggerAction({
               customerIds: context.getCustomerIds(),
-              log: Logger.generateSysLoggerForSms(context.getTemplate().label)
+              log: ContactLogger.generateSysLoggerForSms(context.getTemplate().label)
             }),
             new fromSms.MarkCustomerHasSendSMSAction(context.getCustomerIds()),
             new fromCustomer.ToListableStatusAction()
@@ -212,7 +212,7 @@ export class SmsEffects {
         .concatMap(() => [
           new fromSms.SingleSendSMSSuccessAction(),
           new fromLogger.CreateLoggerAction(
-            Logger.generateSysLoggerForSms(context.getTemplate().label)
+            ContactLogger.generateSysLoggerForSms(context.getTemplate().label)
           ),
           new fromSms.MarkCustomerHasSendSMSAction([context.getCustomer().id])
         ])

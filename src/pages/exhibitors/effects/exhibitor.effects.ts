@@ -4,13 +4,16 @@ import { ModalController, LoadingController } from 'ionic-angular'
 import * as fromExhibitor from '../actions/exhibitor.action'
 
 import { ToCreateLoggerModal } from '../../customer/modals/to-create-logger-modal.component'
-import { Logger, LoggerLevel } from '../../customer/models/logger.model'
+import {
+  ExhibitorLogger,
+  ExhibitorLoggerLevel
+} from '../models/exhibitor-logger.model'
 
 import { ExhibitorService } from '../services/exhibitor.service'
 import { ExhibitorMatcherService } from '../services/matcher.service'
 import { ToastService } from '../../../providers/toast.service'
 
-import { LoggerService } from '../../../providers/logger.service'
+import { ExhibitorLoggerService } from '../services/exhibitor-logger.service'
 import { Observable } from 'rxjs/Observable'
 
 import { ToInviteExhibitorModal } from '../modals/to-invite-exhibitor-modal/to-invite-exhibitor-modal.component'
@@ -223,13 +226,13 @@ export class ExhibitorEffects {
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
-          loggerModal.onDidDismiss((log: Logger) => {
+          loggerModal.onDidDismiss((log: ExhibitorLogger) => {
             res(log)
           })
 
           loggerModal.present()
         })
-      ).map((log: Logger) => {
+      ).map((log: ExhibitorLogger) => {
         if (log) {
           return new fromExhibitor.CreateLoggerAction(log)
         } else {
@@ -243,13 +246,16 @@ export class ExhibitorEffects {
     .ofType(fromExhibitor.CREATE_LOGGER)
     .map((action: fromExhibitor.CreateLoggerAction) => action.log)
     .withLatestFrom(this.store.select(getExhibitorShowDetailID))
-    .switchMap(([log, customerId]) =>
-      this.loggerService
-        .createLog(log, customerId)
+    .switchMap(([log, exhibitorId]) =>
+      this.exhibitorLoggerService
+        .createLog({
+          ...log,
+          exhibitorId
+        })
         .concatMap(() => {
           return [
             new fromExhibitor.CreateLoggerSuccessAction(log.level),
-            new fromExhibitor.FetchLoggerAction(customerId)
+            new fromExhibitor.FetchLoggerAction(exhibitorId)
           ]
         })
         .catch(() =>
@@ -263,7 +269,7 @@ export class ExhibitorEffects {
     .map((action: fromExhibitor.CreateLoggerSuccessAction) => action.level)
     .do(level => {
       // 非系统日志 弹出toast
-      if (level !== LoggerLevel.SYS) {
+      if (level !== ExhibitorLoggerLevel.SYS) {
         this.toastService.show('添加日志成功')
       }
     })
@@ -278,9 +284,9 @@ export class ExhibitorEffects {
   @Effect()
   fetchLogger$ = this.actions$
     .ofType(fromExhibitor.FETCH_LOGGER)
-    .map((action: fromExhibitor.FetchLoggerAction) => action.exhibitionID)
+    .map((action: fromExhibitor.FetchLoggerAction) => action.exhibitorID)
     .switchMap(exhibitionID =>
-      this.loggerService
+      this.exhibitorLoggerService
         .fetchLogger(exhibitionID)
         .map(logs => new fromExhibitor.FetchLoggerSuccessAction(logs))
         .catch(() =>
@@ -310,7 +316,7 @@ export class ExhibitorEffects {
     private loadCtrl: LoadingController,
     private exhibitorService: ExhibitorService,
     private matcherService: ExhibitorMatcherService,
-    private loggerService: LoggerService,
+    private exhibitorLoggerService: ExhibitorLoggerService,
     private store: Store<State>,
     @Inject('DEFAULT_PAGE_SIZE') private pageSize
   ) {}

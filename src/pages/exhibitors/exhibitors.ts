@@ -71,7 +71,7 @@ import {
   Product,
   FilterOptions
 } from './models/exhibitor.model'
-import { Logger } from '../customer/models/logger.model'
+import { ExhibitorLogger } from './models/exhibitor-logger.model'
 import {
   ExhibitorMatcher,
   ExhibitorMatcherStatus,
@@ -108,7 +108,7 @@ export class ExhibitorsPage implements OnInit {
   showDetailID$: Observable<string>
   currentExhibitorDetail$: Observable<Exhibitor>
   currentExhibitorMatcherDetail$: Observable<ExhibitorMatcher>
-  currentLogs$: Observable<Logger[]>
+  currentLogs$: Observable<ExhibitorLogger[]>
   // TODO
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
@@ -181,7 +181,7 @@ export class ExhibitorsPage implements OnInit {
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
-  ensureEditLog(log: Logger) {
+  ensureEditLog(log: ExhibitorLogger) {
     console.log(`exhibitor edit log: ${log}`)
   }
 

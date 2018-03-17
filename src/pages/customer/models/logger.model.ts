@@ -1,47 +1,50 @@
-export enum LoggerLevel {
+export enum ContactLoggerLevel {
   INFO,
   WARN,
   ERROR,
   SYS
 }
 
-export class Logger {
+export class ContactLogger {
   id?: string
   time?: string
-  level: LoggerLevel
+  level: ContactLoggerLevel
   content: string
+  contactId?: string
 
-  static convertFromResp(resp: LoggerResp): Logger {
+  static convertFromResp(resp: LoggerResp): ContactLogger {
     return {
       id: resp.RecordId,
       time: resp.CreatedAt,
       level: resp.level,
-      content: resp.info
+      content: resp.info,
+      contactId: resp.contactId
     }
   }
 
-  static convertFromModel(log: Logger): LoggerResp {
+  static convertFromModel(log: ContactLogger): LoggerResp {
     return {
       level: log.level,
-      info: log.content
+      info: log.content,
+      contactId: log.contactId
     }
   }
 
-  static generateSysLoggerForSms(templateLabel: string): Logger {
+  static generateSysLoggerForSms(templateLabel: string): ContactLogger {
     return {
-      level: LoggerLevel.SYS,
+      level: ContactLoggerLevel.SYS,
       content: `系统: 发送 【${templateLabel}】 短信成功!`
     }
   }
 
-  static generateSysLoggerForScanCard(): Logger {
+  static generateSysLoggerForScanCard(): ContactLogger {
     return {
-      level: LoggerLevel.SYS,
+      level: ContactLoggerLevel.SYS,
       content: '系统: 扫描名片并保存成功'
     }
   }
 
-  static generateFakeLogs(length: number): Logger[] {
+  static generateFakeLogs(length: number): ContactLogger[] {
     return Array.from({ length }, (_, i) => ({
       id: String(i),
       time: '2017-12-22 11:12:11',
@@ -56,4 +59,5 @@ export interface LoggerResp {
   CreatedAt?: string
   level: number
   info: string
+  contactId: string
 }

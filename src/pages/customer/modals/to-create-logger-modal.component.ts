@@ -5,7 +5,7 @@ import {
   ToastController
 } from 'ionic-angular'
 
-import { Logger, LoggerLevel } from '../models/logger.model';
+import { ContactLogger, ContactLoggerLevel } from '../models/logger.model';
 
 @Component({
   template: `
@@ -131,12 +131,12 @@ styles: [`
 `]
 })
 export class ToCreateLoggerModal {
-  INFO = LoggerLevel.INFO
-  WARN = LoggerLevel.WARN
-  ERROR = LoggerLevel.ERROR
-  SYS = LoggerLevel.SYS
+  INFO = ContactLoggerLevel.INFO
+  WARN = ContactLoggerLevel.WARN
+  ERROR = ContactLoggerLevel.ERROR
+  SYS = ContactLoggerLevel.SYS
 
-  level: LoggerLevel = LoggerLevel.INFO
+  level: ContactLoggerLevel = ContactLoggerLevel.INFO
   content: string = ''
 
   @ViewChild('text') el: ElementRef
@@ -153,7 +153,7 @@ export class ToCreateLoggerModal {
     // this.el.nativeElement.focus()
   }
 
-  private dismiss(data?: Logger): void {
+  private dismiss(data?: ContactLogger): void {
     this.viewCtrl.dismiss(data)
   }
 
@@ -161,7 +161,7 @@ export class ToCreateLoggerModal {
     this.dismiss()
   }
 
-  active(level: LoggerLevel): void {
+  active(level: ContactLoggerLevel): void {
     this.level = level
   }
 

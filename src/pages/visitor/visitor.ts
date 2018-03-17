@@ -69,7 +69,7 @@ import {
 } from './models/visitor.model'
 import { DestroyService } from '../../providers/destroy.service'
 
-import { Logger } from '../customer/models/logger.model'
+import { VisitorLogger } from './models/visitor-logger.model'
 import {
   VisitorMatcher,
   VisitorMatcherStatus,
@@ -103,7 +103,7 @@ export class VisitorPage implements OnInit {
   listStatus$: Observable<ListStatus>
   showDetailID$: Observable<string>
   currentDetail$: Observable<Visitor>
-  currentLogs$: Observable<Logger[]>
+  currentLogs$: Observable<VisitorLogger[]>
   currentPortray$: Observable<Portray>
   showLoadMore$: Observable<boolean>
   visitorShouldScrollToTop$: Observable<boolean>
@@ -167,7 +167,7 @@ export class VisitorPage implements OnInit {
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
-  ensureEditLog(log: Logger) {
+  ensureEditLog(log: VisitorLogger) {
     console.log(`visitor to edit log: ${log}`)
   }
 

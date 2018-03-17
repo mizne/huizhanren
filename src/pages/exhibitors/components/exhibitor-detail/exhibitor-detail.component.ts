@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { ToastController } from 'ionic-angular'
 
 import { Portray, Exhibitor, Product } from '../../models/exhibitor.model'
-import { Logger } from '../../../customer/models/logger.model'
+import { ContactLogger } from '../../../customer/models/logger.model'
 import { ExhibitorMatcher } from '../../models/matcher.model'
 
 @Component({
@@ -10,7 +10,7 @@ import { ExhibitorMatcher } from '../../models/matcher.model'
   templateUrl: 'exhibitor-detail.component.html'
 })
 export class ExhibitorDetailComponent implements OnInit {
-  @Input() logs: Logger[]
+  @Input() logs: ContactLogger[]
   @Input() exhibitor: Exhibitor
   @Input() matcher: ExhibitorMatcher
   @Input() portray: Portray
@@ -18,7 +18,7 @@ export class ExhibitorDetailComponent implements OnInit {
 
   @Output() invite: EventEmitter<void> = new EventEmitter<void>()
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
-  @Output() editLog: EventEmitter<Logger> = new EventEmitter<Logger>()
+  @Output() editLog: EventEmitter<ContactLogger> = new EventEmitter<ContactLogger>()
   @Output() showProduct: EventEmitter<Product> = new EventEmitter<Product>()
   @Output() cancelMatcher: EventEmitter<string> = new EventEmitter<string>()
   @Output() agreeMatcher: EventEmitter<string> = new EventEmitter<string>()
@@ -65,7 +65,7 @@ export class ExhibitorDetailComponent implements OnInit {
     this.createLog.emit()
   }
 
-  ensureEditLog(log: Logger) {
+  ensureEditLog(log: ContactLogger) {
     this.editLog.emit(log)
   }
 

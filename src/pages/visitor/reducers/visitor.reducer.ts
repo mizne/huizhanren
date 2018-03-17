@@ -5,7 +5,7 @@ import {
   PageStatus,
   FilterOptions
 } from '../models/visitor.model'
-import { Logger } from '../../customer/models/logger.model'
+import { VisitorLogger } from '../models/visitor-logger.model'
 import { deduplicate } from '../../customer/services/utils'
 
 export interface State {
@@ -21,7 +21,7 @@ export interface State {
   showDetailID: string // 表明 右边显示详细信息的 id
   shouldScrollToTop: boolean
 
-  logs: Logger[]
+  logs: VisitorLogger[]
 }
 
 export const initialState: State = {

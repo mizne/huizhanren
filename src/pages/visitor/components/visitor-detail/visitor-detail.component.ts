@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 
 import { Portray, Visitor } from '../../models/visitor.model'
-import { Logger } from '../../../customer/models/logger.model'
+import { ContactLogger } from '../../../customer/models/logger.model'
 import { VisitorMatcher } from '../../models/matcher.model'
 import { phoneRe } from '../../../customer/services/utils'
 
@@ -10,13 +10,13 @@ import { phoneRe } from '../../../customer/services/utils'
   templateUrl: 'visitor-detail.component.html'
 })
 export class VisitorDetailComponent implements OnInit {
-  @Input() logs: Logger[]
+  @Input() logs: ContactLogger[]
   @Input() detail: VisitorMatcher
   @Input() portray: Portray
   @Input() expand: boolean
 
   @Output() createLog: EventEmitter<void> = new EventEmitter<void>()
-  @Output() editLog: EventEmitter<Logger> = new EventEmitter<Logger>()
+  @Output() editLog: EventEmitter<ContactLogger> = new EventEmitter<ContactLogger>()
   @Output() sendSMS: EventEmitter<string> = new EventEmitter<string>()
 
   activeHeaderIndex: number = 0
@@ -42,7 +42,7 @@ export class VisitorDetailComponent implements OnInit {
     this.createLog.emit()
   }
 
-  ensureEditLog(log: Logger) {
+  ensureEditLog(log: ContactLogger) {
     this.editLog.emit(log)
   }
 

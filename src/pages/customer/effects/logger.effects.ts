@@ -12,8 +12,8 @@ import { ToastService } from '../../../providers/toast.service'
 import * as fromLogger from '../actions/logger.action'
 import { ToCreateLoggerModal } from '../modals/to-create-logger-modal.component'
 import { ToEditLoggerModal } from '../modals/to-edit-logger-modal.component'
-import { LoggerService } from '../../../providers/logger.service'
-import { Logger, LoggerLevel } from '../models/logger.model'
+import { ContactLoggerService } from '../services/contact-logger.service'
+import { ContactLogger, ContactLoggerLevel } from '../models/logger.model'
 
 @Injectable()
 export class LoggerEffects {
@@ -25,13 +25,13 @@ export class LoggerEffects {
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToCreateLoggerModal, {})
 
-          loggerModal.onDidDismiss((log: Logger) => {
+          loggerModal.onDidDismiss((log: ContactLogger) => {
             res(log)
           })
 
           loggerModal.present()
         })
-      ).map((log: Logger) => {
+      ).map((log: ContactLogger) => {
         if (log) {
           return new fromLogger.CreateLoggerAction(log)
         } else {
@@ -63,7 +63,7 @@ export class LoggerEffects {
     .map((action: fromLogger.CreateLoggerSuccessAction) => action.level)
     .do(level => {
       // 非系统日志 弹出toast
-      if (level !== LoggerLevel.SYS) {
+      if (level !== ContactLoggerLevel.SYS) {
         this.toastService.show('添加日志成功')
       }
     })
@@ -83,12 +83,12 @@ export class LoggerEffects {
       return Observable.fromPromise(
         new Promise((res, _) => {
           const loggerModal = this.modalCtrl.create(ToEditLoggerModal, log)
-          loggerModal.onDidDismiss((log: Logger) => {
+          loggerModal.onDidDismiss((log: ContactLogger) => {
             res(log)
           })
           loggerModal.present()
         })
-      ).map((log: Logger) => {
+      ).map((log: ContactLogger) => {
         if (log) {
           return new fromLogger.EditLoggerAction(log)
         } else {
@@ -201,7 +201,7 @@ export class LoggerEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastService: ToastService,
-    private loggerService: LoggerService,
+    private loggerService: ContactLoggerService,
     private store: Store<State>
   ) {}
 }

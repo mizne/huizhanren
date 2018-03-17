@@ -1,8 +1,8 @@
 import * as logger from '../actions/logger.action'
-import { Logger } from '../models/logger.model'
+import { ContactLogger } from '../models/logger.model'
 
 export interface State {
-  logs: Logger[]
+  logs: ContactLogger[]
 }
 
 export const initialState: State = {

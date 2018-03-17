@@ -34,7 +34,6 @@ import { SmsService } from '../providers/sms.service'
 import { LoginService } from '../providers/login.service'
 import { TenantService } from '../providers/tenant.service'
 import { NativeService } from '../providers/native.service'
-import { LoggerService } from '../providers/logger.service'
 import { ErrorLoggerService } from '../providers/error-logger.service'
 import { ApiErrorInterceptor } from '../providers/interceptor'
 
@@ -91,7 +90,6 @@ export class RavenErrorHandler implements ErrorHandler {
     LoginService,
     TenantService,
     NativeService,
-    LoggerService,
     ErrorLoggerService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiErrorInterceptor, multi: true },
     { provide: 'DEFAULT_PAGE_SIZE', useValue: 20 }

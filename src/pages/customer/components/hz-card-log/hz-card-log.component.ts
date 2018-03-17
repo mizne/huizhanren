@@ -7,7 +7,7 @@ import {
   ToggleShowLogAction,
   ToggleShowNotificationAction
 } from '../../actions/customer.action'
-import { Logger } from '../../models/logger.model'
+import { ContactLogger } from '../../models/logger.model'
 import {
   ToCreateLoggerAction,
   ToEditLoggerAction
@@ -35,7 +35,7 @@ import {
 })
 export class HzCardLogComponent {
   @Input() open: boolean
-  logs$: Observable<Logger[]>
+  logs$: Observable<ContactLogger[]>
   showLog$: Observable<boolean>
   showNotification$: Observable<boolean>
 
@@ -68,7 +68,7 @@ export class HzCardLogComponent {
     this.store.dispatch(new ToCreateLoggerAction())
   }
 
-  ensureEditLog(log: Logger) {
+  ensureEditLog(log: ContactLogger) {
     this.store.dispatch(new ToEditLoggerAction(log))
   }
 }

@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
 
 import {
-  Logger,
-  LoggerLevel
+  ContactLogger,
+  ContactLoggerLevel
 } from '../../../pages/customer/models/logger.model'
 
 @Component({
@@ -10,23 +10,23 @@ import {
   templateUrl: './logger-item.component.html'
 })
 export class HzLoggerItemComponent {
-  @Input() log: Logger
+  @Input() log: ContactLogger
   @Input() theme: string
 
-  @Output() editLog: EventEmitter<Logger> = new EventEmitter<Logger>()
+  @Output() editLog: EventEmitter<ContactLogger> = new EventEmitter<ContactLogger>()
 
   get levelClass(): string {
-    return this.log.level === LoggerLevel.INFO
+    return this.log.level === ContactLoggerLevel.INFO
       ? 'info'
-      : this.log.level === LoggerLevel.WARN
+      : this.log.level === ContactLoggerLevel.WARN
         ? 'warn'
-        : this.log.level === LoggerLevel.ERROR
+        : this.log.level === ContactLoggerLevel.ERROR
           ? 'error'
-          : this.log.level === LoggerLevel.SYS ? 'sys' : 'sys'
+          : this.log.level === ContactLoggerLevel.SYS ? 'sys' : 'sys'
   }
 
-  editLogger(log: Logger) {
-    if (log.level !== LoggerLevel.SYS) {
+  editLogger(log: ContactLogger) {
+    if (log.level !== ContactLoggerLevel.SYS) {
       this.editLog.emit(log)
     }
   }

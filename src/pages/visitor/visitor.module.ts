@@ -31,11 +31,12 @@ import { CustomerNamePrivacyPipe } from './pipes/name-privacy.pipe'
 import { CustomerCompanyPrivacyPipe } from './pipes/company-privacy.pipe'
 
 import { VisitorService } from './services/visitor.service'
+import { VisitorLoggerService } from './services/visitor-logger.service'
 import { VisitorMatcherService } from './services/matcher.service'
 import { ToBatchAgreeMatchersModal } from './modals/to-batch-agree-matcher-modal/to-batch-agree-matcher-modal.component'
 
 const services = [VisitorService, VisitorMatcherService]
-const effects = [VisitorEffects, ToDoMatcherEffects, CompleteMatcherEffects]
+const effects = [VisitorEffects, VisitorLoggerService, ToDoMatcherEffects, CompleteMatcherEffects]
 const pipes = [
   CustomerMatcherStatusPipe,
   CustomerNamePrivacyPipe,

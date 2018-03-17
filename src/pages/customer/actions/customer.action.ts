@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store'
 import { Customer } from '../models/customer.model'
-import { Logger } from '../models/logger.model'
+import { ContactLogger } from '../models/logger.model'
 import { InitFetchAllResp } from '../services/customer.service'
 
 export const INITIAL = '[Customer] Initial Groups And Customers'
@@ -109,7 +109,7 @@ export class CreateSuccessAction implements Action {
 
 export class CreateSysLoggerAction implements Action {
   readonly type = CREATE_SYS_LOGGER
-  constructor(public payload: { log: Logger; customerId: string }) {}
+  constructor(public payload: { log: ContactLogger; customerId: string }) {}
 }
 
 export class CreateSysLoggerSuccessAction implements Action {

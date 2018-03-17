@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store'
-import { Logger, LoggerLevel } from '../models/logger.model'
+import { ContactLogger, ContactLoggerLevel } from '../models/logger.model'
 
 export const TO_CREATE_LOGGER = '[Logger] To Create Logger'
 export const CANCEL_CREATE_LOGGER = '[Logger] Cancel Create Logger'
@@ -31,12 +31,12 @@ export class CancelCreateLoggerAction implements Action {
 
 export class CreateLoggerAction implements Action {
   readonly type = CREATE_LOGGER
-  constructor(public log: Logger) {}
+  constructor(public log: ContactLogger) {}
 }
 
 export class CreateLoggerSuccessAction implements Action {
   readonly type = CREATE_LOGGER_SUCCESS
-  constructor(public level: LoggerLevel) {}
+  constructor(public level: ContactLoggerLevel) {}
 }
 
 export class CreateLoggerFailureAction implements Action {
@@ -47,7 +47,7 @@ export class CreateLoggerFailureAction implements Action {
 
 export class ToEditLoggerAction implements Action {
   readonly type = TO_EDIT_LOGGER
-  constructor(public log: Logger) {}
+  constructor(public log: ContactLogger) {}
 }
 
 export class CancelEditLoggerAction implements Action {
@@ -56,7 +56,7 @@ export class CancelEditLoggerAction implements Action {
 
 export class EditLoggerAction implements Action {
   readonly type = EDIT_LOGGER
-  constructor(public log: Logger) {}
+  constructor(public log: ContactLogger) {}
 }
 
 export class EditLoggerSuccessAction implements Action {
@@ -76,7 +76,7 @@ export class FetchLoggerAction implements Action {
 
 export class FetchLoggerSuccessAction implements Action {
   readonly type = FETCH_LOGGER_SUCCESS
-  constructor(public logs: Logger[]) {}
+  constructor(public logs: ContactLogger[]) {}
 }
 
 export class FetchLoggerFailureAction implements Action {
@@ -85,7 +85,7 @@ export class FetchLoggerFailureAction implements Action {
 
 export class BatchCreateLoggerAction implements Action {
   readonly type = BATCH_CREATE_LOGGER
-  constructor(public payload: {customerIds: string[], log: Logger}) {}
+  constructor(public payload: {customerIds: string[], log: ContactLogger}) {}
 }
 
 export class BatchCreateLoggerSuccessAction implements Action {

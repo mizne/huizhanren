@@ -7,7 +7,7 @@ import {
   VisitorFilter,
   FilterOptions
 } from '../models/visitor.model'
-import { Logger, LoggerLevel } from '../../customer/models/logger.model'
+import { VisitorLogger, VisitorLoggerLevel } from '../models/visitor-logger.model'
 
 export const FETCH_VISITORS = '[Visitor] Fetch Visitors'
 export const FETCH_VISITORS_SUCCESS = '[Visitor] Fetch Visitors Success'
@@ -177,11 +177,11 @@ export class CancelCreateLoggerAction implements Action {
 }
 export class CreateLoggerAction implements Action {
   readonly type = CREATE_LOGGER
-  constructor(public log: Logger) {}
+  constructor(public log: VisitorLogger) {}
 }
 export class CreateLoggerSuccessAction implements Action {
   readonly type = CREATE_LOGGER_SUCCESS
-  constructor(public level: LoggerLevel) {}
+  constructor(public level: VisitorLoggerLevel) {}
 }
 export class CreateLoggerFailureAction implements Action {
   readonly type = CREATE_LOGGER_FAILURE
@@ -189,11 +189,11 @@ export class CreateLoggerFailureAction implements Action {
 
 export class FetchLoggerAction implements Action {
   readonly type = FETCH_LOGGER
-  constructor(public customerID: string) {}
+  constructor(public visitorID: string) {}
 }
 export class FetchLoggerSuccessAction implements Action {
   readonly type = FETCH_LOGGER_SUCCESS
-  constructor(public logs: Logger[]) {}
+  constructor(public logs: VisitorLogger[]) {}
 }
 export class FetchLoggerFailureAction implements Action {
   readonly type = FETCH_LOGGER_FAILURE

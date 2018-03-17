@@ -21,7 +21,7 @@ import * as fromCustomer from '../actions/customer.action'
 import * as fromCard from '../actions/card.action'
 
 import { CustomerService } from '../services/customer.service'
-import { LoggerService } from '../../../providers/logger.service'
+import { ContactLoggerService } from '../services/contact-logger.service'
 import { ToastService } from '../../../providers/toast.service'
 
 import { ToDeleteCustomerModal } from '../modals/to-delete-customer-modal.component'
@@ -30,7 +30,7 @@ import { ToEditCustomerGroupModal } from '../modals/to-edit-customer-group-modal
 
 import { Customer, CustomerPateStatus } from '../models/customer.model'
 import { createCustomerFromFields } from '../models/card.model'
-import { Logger } from '../models/logger.model'
+import { ContactLogger } from '../models/logger.model'
 
 @Injectable()
 export class CustomerEffects {
@@ -129,7 +129,7 @@ export class CustomerEffects {
           return [
             new fromCustomer.CreateSuccessAction(res),
             new fromCustomer.CreateSysLoggerAction({
-              log: Logger.generateSysLoggerForScanCard(),
+              log: ContactLogger.generateSysLoggerForScanCard(),
               customerId: res.RecordId
             }),
             new fromCustomer.FetchAllAction(),
@@ -535,7 +535,7 @@ export class CustomerEffects {
     private actions$: Actions,
     private modalCtrl: ModalController,
     private customerService: CustomerService,
-    private loggerService: LoggerService,
+    private loggerService: ContactLoggerService,
     private loadCtrl: LoadingController,
     private store: Store<State>,
     private toastService: ToastService

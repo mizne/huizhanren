@@ -2,18 +2,16 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs/Observable'
 
-import { APIResponse } from './interceptor'
-import { TenantService } from './tenant.service'
-import { Logger } from '../pages/customer/models/logger.model'
-import { ErrorLoggerService } from './error-logger.service'
-import { environment } from '../environments/environment'
+import { TenantService } from '../../../providers/tenant.service'
+import { VisitorLogger } from '../models/visitor-logger.model'
+import { ErrorLoggerService } from '../../../providers/error-logger.service'
 
 @Injectable()
-export class LoggerService {
-  private queryUrl: string = '/data/querybycondition/ExhibitorContactLog'
-  private insertUrl: string = '/data/insert/ExhibitorContactLog'
-  private updateUrl: string = '/data/update/ExhibitorContactLog'
-  private insertListUrl: string = '/data/insertList/ExhibitorContactLog'
+export class VisitorLoggerService {
+  private queryUrl: string = '/data/querybycondition/VisitorLog'
+  private insertUrl: string = '/data/insert/VisitorLog'
+  private updateUrl: string = '/data/update/VisitorLog'
+  private insertListUrl: string = '/data/insertList/VisitorLog'
 
   constructor(
     private http: HttpClient,
@@ -24,11 +22,11 @@ export class LoggerService {
   /**
    * 新建 log
    *
-   * @param {Logger} log
+   * @param {ContactLogger} log
    * @returns {Observable<any>}
    * @memberof LoggerService
    */
-  createLog(log: Logger, customerId): Observable<any> {
+  createLog(log: VisitorLogger): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
@@ -37,22 +35,21 @@ export class LoggerService {
           userId,
           params: {
             record: {
-              ...Logger.convertFromModel(log),
-              ContactId: customerId
+              ...VisitorLogger.convertFromModel(log)
             }
           }
         })
       })
       .catch(e => {
         return this.errorLogger.httpError({
-          module: 'LoggerService',
+          module: 'VisitorLoggerService',
           method: 'createLog',
           error: e
         })
       })
   }
 
-  batchCreateLog(customerIds: string[], log: Logger): Observable<any> {
+  batchCreateLog(customerIds: string[], log: VisitorLogger): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
@@ -61,7 +58,7 @@ export class LoggerService {
           userId,
           params: {
             recordlist: customerIds.map(e => ({
-              ...Logger.convertFromModel(log),
+              ...VisitorLogger.convertFromModel(log),
               ContactId: e
             }))
           }
@@ -69,14 +66,14 @@ export class LoggerService {
       })
       .catch(e => {
         return this.errorLogger.httpError({
-          module: 'LoggerService',
+          module: 'VisitorLoggerService',
           method: 'batchCreateLog',
           error: e
         })
       })
   }
 
-  editLog(log: Logger): Observable<any> {
+  editLog(log: VisitorLogger): Observable<any> {
     return this.tenantService
       .getTenantIdAndUserId()
       .mergeMap(([tenantId, userId]) => {
@@ -86,14 +83,14 @@ export class LoggerService {
           params: {
             recordId: log.id,
             setValue: {
-              ...Logger.convertFromModel(log)
+              ...VisitorLogger.convertFromModel(log)
             }
           }
         })
       })
       .catch(e => {
         return this.errorLogger.httpError({
-          module: 'LoggerService',
+          module: 'VisitorLoggerService',
           method: 'editLog',
           error: e
         })
@@ -103,13 +100,12 @@ export class LoggerService {
   /**
    * 获取所有 logs
    *
-   * @returns {Observable<Logger[]>}
+   * @returns {Observable<VisitorLogger[]>}
    * @memberof LoggerService
    */
-  fetchLogger(customerId: string): Observable<Logger[]> {
+  fetchLogger(visitorID: string): Observable<VisitorLogger[]> {
     // return Observable.of(Logger.generateFakeLogs(100))
-    return !environment.mock || environment.production
-      ? this.tenantService
+    return this.tenantService
           .getTenantIdAndUserId()
           .mergeMap(([tenantId, userId]) =>
             this.http.post(this.queryUrl, {
@@ -117,19 +113,18 @@ export class LoggerService {
               userId,
               params: {
                 condition: {
-                  ContactId: customerId
+                  visitorId: visitorID
                 }
               }
             })
           )
-          .map(res => (res as APIResponse).result.map(Logger.convertFromResp))
+          .map(res => (res as any).result.map(VisitorLogger.convertFromResp))
           .catch(e => {
             return this.errorLogger.httpError({
-              module: 'LoggerService',
+              module: 'VisitorLoggerService',
               method: 'fetchLogger',
               error: e
             })
           })
-      : Observable.of(Logger.generateFakeLogs(100))
   }
 }

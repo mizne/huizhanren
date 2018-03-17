@@ -8,7 +8,7 @@ import {
   ExhibitorFilter,
   FilterOptions
 } from '../models/exhibitor.model'
-import { Logger, LoggerLevel } from '../../customer/models/logger.model'
+import { ExhibitorLogger, ExhibitorLoggerLevel } from '../models/exhibitor-logger.model'
 
 export const FETCH_EXHIBITORS = '[Exhibitor] Fetch Exhibitors'
 export const FETCH_EXHIBITORS_SUCCESS = '[Exhibitor] Fetch Exhibitors Success'
@@ -184,11 +184,11 @@ export class CancelCreateLoggerAction implements Action {
 }
 export class CreateLoggerAction implements Action {
   readonly type = CREATE_LOGGER
-  constructor(public log: Logger) {}
+  constructor(public log: ExhibitorLogger) {}
 }
 export class CreateLoggerSuccessAction implements Action {
   readonly type = CREATE_LOGGER_SUCCESS
-  constructor(public level: LoggerLevel) {}
+  constructor(public level: ExhibitorLoggerLevel) {}
 }
 export class CreateLoggerFailureAction implements Action {
   readonly type = CREATE_LOGGER_FAILURE
@@ -196,11 +196,11 @@ export class CreateLoggerFailureAction implements Action {
 
 export class FetchLoggerAction implements Action {
   readonly type = FETCH_LOGGER
-  constructor(public exhibitionID: string) {}
+  constructor(public exhibitorID: string) {}
 }
 export class FetchLoggerSuccessAction implements Action {
   readonly type = FETCH_LOGGER_SUCCESS
-  constructor(public logs: Logger[]) {}
+  constructor(public logs: ExhibitorLogger[]) {}
 }
 export class FetchLoggerFailureAction implements Action {
   readonly type = FETCH_LOGGER_FAILURE
