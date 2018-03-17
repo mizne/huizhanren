@@ -65,9 +65,9 @@ export class CustomerService {
   uploadCardImage(base64Img: string): Observable<any> {
     return this.http
       .post(this.uploadImgUrl, {
-        rawBody: base64Img
+        url: base64Img
       })
-      .map(res => HOST + '/' + (res as APIResponse).result)
+      .map(res => (res as APIResponse).result)
       .catch(e => {
         return this.logger.httpError({
           module: 'CustomerService',

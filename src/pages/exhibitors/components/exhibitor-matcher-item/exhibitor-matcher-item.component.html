@@ -39,11 +39,11 @@
 
       <div class="right-area">
         <div class="btn-group" *ngIf="matcher.status === AUDIT_SUCCEED || matcher.status === UN_AUDIT">
-          <div *ngIf="matcher.isReceiver; else senderBlock;">
+          <div *ngIf="matcher.isReceiver && matcher.status === AUDIT_SUCCEED; else statusBlock;">
             <button ion-button class="agree-btn" (click)="ensureAgreeMatcher(matcher.id, $event)">接受</button>
             <button ion-button class="refuse-btn" (click)="ensureRefuseMatcher(matcher.id, $event)">拒绝</button>
           </div>
-          <ng-template #senderBlock>
+          <ng-template #statusBlock>
             <span class="status">{{matcher.status | exhibitorMatcherStatus}}</span>
           </ng-template>
         </div>

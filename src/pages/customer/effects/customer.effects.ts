@@ -5,7 +5,7 @@ import {
   ToastController,
   LoadingController
 } from 'ionic-angular'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable'
 import { Store } from '@ngrx/store'
 
 import {
@@ -33,7 +33,7 @@ import { ToEditCustomerGroupModal } from '../modals/to-edit-customer-group-modal
 
 import { Customer, CustomerPateStatus } from '../models/customer.model'
 import { createCustomerFromFields } from '../models/card.model'
-import { Logger } from '../models/logger.model';
+import { Logger } from '../models/logger.model'
 
 @Injectable()
 export class CustomerEffects {
@@ -122,8 +122,12 @@ export class CustomerEffects {
       })
 
       return Observable.forkJoin(
-        this.customerService.uploadCardImage(cardInfo.cardImg),
-        this.customerService.uploadCardImage(cardInfo.cardBehindImg)
+        cardInfo.cardImg
+          ? this.customerService.uploadCardImage(cardInfo.cardImg)
+          : Observable.of(''),
+        cardInfo.cardBehindImg
+          ? this.customerService.uploadCardImage(cardInfo.cardBehindImg)
+          : Observable.of('')
       )
         .mergeMap(([path, behindPath]) => {
           return this.customerService.createCustomer(
@@ -161,7 +165,9 @@ export class CustomerEffects {
       return this.loggerService
         .createLog(log, customerId)
         .map(() => new fromCustomer.CreateSysLoggerSuccessAction())
-        .catch(() => Observable.of(new fromCustomer.CreateSysLoggerFailureAction()))
+        .catch(() =>
+          Observable.of(new fromCustomer.CreateSysLoggerFailureAction())
+        )
     })
 
   @Effect({ dispatch: false })
@@ -208,13 +214,15 @@ export class CustomerEffects {
     })
 
   @Effect()
-  fetchSingle$ = this.actions$.ofType(fromCustomer.FETCH_SINGLE)
-  .map((action: fromCustomer.FetchSingleAction) => action.customerId)
-  .switchMap((id) => {
-    return this.customerService.fetchSingleCustomer(id)
-    .map(customer => new fromCustomer.FetchSingleSuccessAction(customer))
-      .catch(() => Observable.of(new fromCustomer.FetchSingleFailureAction()))
-  })
+  fetchSingle$ = this.actions$
+    .ofType(fromCustomer.FETCH_SINGLE)
+    .map((action: fromCustomer.FetchSingleAction) => action.customerId)
+    .switchMap(id => {
+      return this.customerService
+        .fetchSingleCustomer(id)
+        .map(customer => new fromCustomer.FetchSingleSuccessAction(customer))
+        .catch(() => Observable.of(new fromCustomer.FetchSingleFailureAction()))
+    })
 
   @Effect()
   preBatchEditGroup$ = this.actions$
@@ -263,7 +271,9 @@ export class CustomerEffects {
           new fromCustomer.ToListableStatusAction(),
           new fromCustomer.FetchAllAction()
         ])
-        .catch(() => Observable.of(new fromCustomer.BatchEditGroupFailureAction()))
+        .catch(() =>
+          Observable.of(new fromCustomer.BatchEditGroupFailureAction())
+        )
     })
 
   @Effect({ dispatch: false })
@@ -330,7 +340,9 @@ export class CustomerEffects {
             new fromCustomer.FetchAllAction()
           ]
         })
-        .catch(() => Observable.of(new fromCustomer.SingleEditGroupFailureAction()))
+        .catch(() =>
+          Observable.of(new fromCustomer.SingleEditGroupFailureAction())
+        )
     })
 
   @Effect({ dispatch: false })
@@ -613,7 +625,9 @@ export class CustomerEffects {
           new fromCustomer.RemoveCustomerGroupIdSuccessAction(),
           new fromCustomer.FetchAllAction()
         ])
-        .catch(() => Observable.of(new fromCustomer.RemoveCustomerGroupIdFailureAction()))
+        .catch(() =>
+          Observable.of(new fromCustomer.RemoveCustomerGroupIdFailureAction())
+        )
     })
 
   constructor(
