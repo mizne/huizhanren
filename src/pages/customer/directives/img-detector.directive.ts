@@ -10,7 +10,6 @@ export class ImgDetectorDirective {
     const self = this
     this.img = this.el.nativeElement
     this.img.onload = function(ev) {
-      console.log(`height: ${this.height}; width: ${this.width}`)
       if (this.height > this.width) {
         self.addTransform()
       } else {
@@ -25,7 +24,6 @@ export class ImgDetectorDirective {
         const transform = `scale(0.6) rotate(-90deg) translateX(${this.computePositionForEdit(
           this.img.height
         )})`
-        console.log(transform)
         this.rd.setStyle(this.img, 'transform', transform)
 
         //  height: 516 0.6 88%
@@ -37,7 +35,6 @@ export class ImgDetectorDirective {
         const transform = `scale(0.6) rotate(-90deg) translateX(${this.computePositionForDetail(
           this.img.height
         )})`
-        console.log(transform)
         this.rd.setStyle(this.img, 'transform', transform)
 
         //  height: 559 0.6 -105%
@@ -54,7 +51,7 @@ export class ImgDetectorDirective {
         this.rd.setStyle(this.img, 'transform', 'none')
       }
       if (this.imgDetector === 'detailable') {
-        this.rd.setStyle(this.img, 'transform', 'none')
+        this.rd.setStyle(this.img, 'transform', 'translateY(14%)')
       }
     }
   }
