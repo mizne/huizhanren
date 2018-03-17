@@ -22,12 +22,11 @@ hz-card-detail {
     }
   }
 
-
   .hz-card-box {
     width: 100%;
     height: 240px;
     padding: 18px 30px;
-    transition: all ease .8s;
+    transition: all ease 0.8s;
 
     ion-label {
       color: map-get($map: $colors, $key: white);
@@ -37,13 +36,9 @@ hz-card-detail {
       height: 100%;
       img {
         width: 100%;
-        max-height: 100%;
         max-width: 100%;
-        // height: 200px;
-        // transform: translateY(10%) rotate(270deg);
       }
     }
-
   }
 
   &.open .hz-card-box {
@@ -75,7 +70,6 @@ hz-card-detail {
     background: rgba(47, 94, 189, 0.8);
     z-index: 100;
     transition: none;
-
 
     &.close {
       width: calc(100% - 30px);
@@ -130,7 +124,6 @@ hz-card-detail {
     }
   }
 
-
   .hz-field-container {
     display: flex;
     flex-wrap: wrap;
@@ -150,7 +143,3 @@ hz-card-detail {
     }
   }
 }
-
-
-
-

@@ -34,10 +34,10 @@ interface Field {
     <div class="hz-card-detail" [class.close]="!open" [class.open]="open">
       <div class="hz-card-box">
         <div class="hz-img-wrapper">
-        <ion-slides zoom="true">
+        <ion-slides>
         <ion-slide>
           <div class="swiper-zoom-container">
-            <img [src]="(customer$ | async)?.imageUrl">
+            <img imgDetector="detailable" [src]="(customer$ | async)?.imageUrl">
           </div>
         </ion-slide>
         <ion-slide>

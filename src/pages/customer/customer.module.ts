@@ -27,9 +27,7 @@ import {
   HzCardDetailComponent,
   HzCardDetailFieldItemComponent
 } from './components/hz-card-detail/hz-card-detail.component'
-import {
-  HzCardLogComponent,
-} from './components/hz-card-log/hz-card-log.component'
+import { HzCardLogComponent } from './components/hz-card-log/hz-card-log.component'
 
 import { HzHelpToggleLogComponent } from './components/helps/hz-help-toggle-log.component'
 
@@ -37,7 +35,7 @@ import {
   HzCardNotificationComponent,
   HzCardNotificationItemAddComponent,
   HzCardNotificationItemComponent
- } from './components/hz-card-notification/hz-card-notification.component'
+} from './components/hz-card-notification/hz-card-notification.component'
 
 import {
   HzCustomerManageComponent,
@@ -70,6 +68,8 @@ import { ToRenameGroupModal } from './modals/to-rename-group-modal.component'
 import { ToSendSMSModal } from './modals/to-send-sms-modal.component'
 import { ToSingleSendSMSModal } from './modals/to-single-send-sms-modal.component'
 
+import { ImgDetectorDirective } from './directives/img-detector.directive'
+
 const modals = [
   ToCreateGroupModal,
   ToCreateTemplateModal,
@@ -83,12 +83,10 @@ const modals = [
   ToEditNotificationModal,
   ToRenameGroupModal,
   ToSendSMSModal,
-  ToSingleSendSMSModal,
+  ToSingleSendSMSModal
 ]
 
-const pipes = [
-  TimeRestPipe,
-]
+const pipes = [TimeRestPipe]
 
 @NgModule({
   declarations: [
@@ -123,11 +121,18 @@ const pipes = [
 
     ...pipes,
     ...modals,
+    ImgDetectorDirective
   ],
   imports: [
     SharedModule,
     StoreModule.forFeature('customerModule', reducers),
-    EffectsModule.forFeature([LoggerEffects, CustomerEffects, SmsEffects, GroupEffects, NotificationEffects]),
+    EffectsModule.forFeature([
+      LoggerEffects,
+      CustomerEffects,
+      SmsEffects,
+      GroupEffects,
+      NotificationEffects
+    ]),
     IonicPageModule.forChild(CustomerPage)
   ],
   providers: [
@@ -136,8 +141,6 @@ const pipes = [
     NotificationService,
     ContactLoggerService
   ],
-  entryComponents: [
-    ...modals,
-  ]
+  entryComponents: [...modals]
 })
 export class CustomerPageModule {}

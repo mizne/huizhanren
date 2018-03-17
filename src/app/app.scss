@@ -19,7 +19,7 @@
     background-color: #0d0d0f !important;
 
     &.show-tabbar {
-      transition: all linear .3s;
+      transition: all linear 0.3s;
     }
 
     .tab-button {
@@ -50,7 +50,7 @@
       }
     }
 
-    .tab-button[aria-selected=true] {
+    .tab-button[aria-selected='true'] {
       background-color: #222224;
       color: white;
       & .icon {
@@ -71,7 +71,8 @@
   }
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -85,7 +86,6 @@ ul, ol {
 }
 
 img {
-  max-height: 100%;
   max-width: 100%;
 }
 

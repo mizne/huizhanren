@@ -31,14 +31,14 @@
         <div class="hz-customer-input-area">
           <div class="hz-customer-center">
             <div class="hz-card-container">
-              <img [src]="cardImg$ | async">
+              <img [src]="cardImg$ | async" imgDetector="editable">
             </div>
             <hz-field-item *ngFor="let field of fields1$ | async" [field]="field"></hz-field-item>
           </div>
           <div class="hz-customer-input-area-right">
             <div class="hz-card-behind-container">
 
-              <img *ngIf="cardBehindImg$ | async" [src]="cardBehindImg$ | async">
+              <img *ngIf="cardBehindImg$ | async" imgDetector="editable" [src]="cardBehindImg$ | async">
 
               <div *ngIf="!(cardBehindImg$ | async)" tappable class="hz-card-box" (click)="takeCardBehind()">
                 <ion-icon class="hz-icon" name="camera"></ion-icon>
