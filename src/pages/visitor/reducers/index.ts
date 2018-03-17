@@ -123,3 +123,7 @@ export const getCompleteMatcherShouldScrollToTop = createSelector(
   selectCompleteMatcherState,
   fromCompleteMatcher.getShouldScrollToTop
 )
+export const getCompleteMatcherVisitorShowDetailID = createSelector(
+  selectCompleteMatcherState,
+  fromCompleteMatcher.getVisitorDetailID
+)

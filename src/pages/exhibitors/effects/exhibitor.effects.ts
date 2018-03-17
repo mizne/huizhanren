@@ -285,9 +285,9 @@ export class ExhibitorEffects {
   fetchLogger$ = this.actions$
     .ofType(fromExhibitor.FETCH_LOGGER)
     .map((action: fromExhibitor.FetchLoggerAction) => action.exhibitorID)
-    .switchMap(exhibitionID =>
+    .switchMap(exhibitorID =>
       this.exhibitorLoggerService
-        .fetchLogger(exhibitionID)
+        .fetchLogger(exhibitorID)
         .map(logs => new fromExhibitor.FetchLoggerSuccessAction(logs))
         .catch(() =>
           Observable.of(new fromExhibitor.FetchLoggerFailureAction())

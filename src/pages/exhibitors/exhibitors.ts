@@ -20,12 +20,14 @@ import {
   getCurrentToDoMatcherCount,
   getExhibitorShouldScrollToTop,
   getToDoMatcherShouldScrollToTop,
+  getToDoMatcherShowExhibitorDetailID,
   getExhibitorAreaFilters,
   getExhibitorTypeFilters,
   getCompleteMatchers,
   getCurrentCompleteMatcherCount,
   getCompleteMatcherShouldScrollToTop,
   getCompleteMatcherShowDetailID,
+  getCompleteMatcherShowExhibitorDetailID,
   getShowCompleteMatcherLoadMore
 } from './reducers/index'
 import {
@@ -105,7 +107,7 @@ export class ExhibitorsPage implements OnInit {
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
-  showDetailID$: Observable<string>
+  showExhibitorDetailID$: Observable<string>
   currentExhibitorDetail$: Observable<Exhibitor>
   currentExhibitorMatcherDetail$: Observable<ExhibitorMatcher>
   currentLogs$: Observable<ExhibitorLogger[]>
@@ -205,10 +207,10 @@ export class ExhibitorsPage implements OnInit {
 
     this.pageStatus$ = this.store.select(getPageStatus)
     this.listStatus$ = this.store.select(getListStatus)
-    this.showDetailID$ = Observable.merge(
+    this.showExhibitorDetailID$ = Observable.merge(
       this.store.select(getExhibitorShowDetailID),
-      this.store.select(getToDoMatcherShowDetailID),
-      this.store.select(getCompleteMatcherShowDetailID)
+      this.store.select(getToDoMatcherShowExhibitorDetailID),
+      this.store.select(getCompleteMatcherShowExhibitorDetailID)
     )
 
     this.initCurrentDetail()
@@ -566,11 +568,13 @@ export class ExhibitorsPage implements OnInit {
   }
 
   private initFetchLogger(): void {
-    this.showDetailID$.takeUntil(this.destroyService).subscribe(exhibitorId => {
-      if (exhibitorId) {
-        this.store.dispatch(new FetchLoggerAction(exhibitorId))
-      }
-    })
+    this.showExhibitorDetailID$
+      .takeUntil(this.destroyService)
+      .subscribe(exhibitorId => {
+        if (exhibitorId) {
+          this.store.dispatch(new FetchLoggerAction(exhibitorId))
+        }
+      })
   }
 
   private initDispatch(): void {

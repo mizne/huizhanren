@@ -81,3 +81,7 @@ export const getShowLoadMore = (state: State) =>
   state.totalMatcherCount > state.currentMatcherTotalCount
 export const getMatcherDetailID = (state: State) => state.showDetailID
 export const getShouldScrollToTop = (state: State) => state.shouldScrollToTop
+export const getVisitorDetailID = (state: State) => {
+  const matcher = state.matchers.find(e => e.id === state.showDetailID)
+  return matcher ? matcher.toShow.id : ''
+}

@@ -75,6 +75,7 @@ export class ExhibitorMatcher {
       )
     }
     return {
+      id: toShow.id,
       name: toShow.name,
       logo: toShow.logo,
       boothNo: toShow.boothNo,

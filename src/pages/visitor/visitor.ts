@@ -25,7 +25,8 @@ import {
   getCompleteMatcherTotalCount,
   getCompleteMatcherDetailID,
   getShowCompleteMatcherLoadMore,
-  getCompleteMatcherShouldScrollToTop
+  getCompleteMatcherShouldScrollToTop,
+  getCompleteMatcherVisitorShowDetailID
 } from './reducers/index'
 import {
   ToCreateLoggerAction,
@@ -101,7 +102,7 @@ export class VisitorPage implements OnInit {
 
   pageStatus$: Observable<PageStatus>
   listStatus$: Observable<ListStatus>
-  showDetailID$: Observable<string>
+  showCompleteMatcherDetailID$: Observable<string>
   currentDetail$: Observable<Visitor>
   currentLogs$: Observable<VisitorLogger[]>
   currentPortray$: Observable<Portray>
@@ -201,8 +202,10 @@ export class VisitorPage implements OnInit {
     this.toDoMatchers$ = this.store.select(getToDoMatchers)
     this.completeMatchers$ = this.store.select(getCompleteMatchers)
 
-    this.showDetailID$ = this.store.select(getCompleteMatcherDetailID)
-    this.currentDetail$ = this.showDetailID$
+    this.showCompleteMatcherDetailID$ = this.store.select(
+      getCompleteMatcherDetailID
+    )
+    this.currentDetail$ = this.showCompleteMatcherDetailID$
       .withLatestFrom(this.completeMatchers$)
       .map(([id, matchers]) => matchers.find(e => e.id === id))
     this.currentLogs$ = this.store.select(getLogs)
@@ -501,11 +504,14 @@ export class VisitorPage implements OnInit {
   }
 
   private initFetchLogger(): void {
-    this.showDetailID$.takeUntil(this.destroyService).subscribe(visitorId => {
-      if (visitorId) {
-        this.store.dispatch(new FetchLoggerAction(visitorId))
-      }
-    })
+    this.store
+      .select(getCompleteMatcherVisitorShowDetailID)
+      .takeUntil(this.destroyService)
+      .subscribe(visitorId => {
+        if (visitorId) {
+          this.store.dispatch(new FetchLoggerAction(visitorId))
+        }
+      })
   }
 
   private initDispatch(): void {
