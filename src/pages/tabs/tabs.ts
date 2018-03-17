@@ -44,7 +44,7 @@ export class TabsPage {
   @ViewChild('myTabs') tabRef: Tabs
 
   options: CameraOptions = {
-    quality: 70,
+    quality: 50,
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.PNG,
     mediaType: this.camera.MediaType.PICTURE,

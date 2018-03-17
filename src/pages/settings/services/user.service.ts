@@ -10,7 +10,7 @@ import { User } from '../models/user.model'
 @Injectable()
 export class UserService {
   private queryUrl: string = '/data/querybycondition/User'
-  private insertUrl: string = '/data/insert/User'
+  private insertUrl: string = '/data/InsertExhibitorContact'
   private deleteUrl: string = '/data/delete/User'
 
   constructor(
@@ -28,18 +28,20 @@ export class UserService {
    */
   createUser(user: User): Observable<any> {
     return this.tenantService
-      .getTenantIdAndUserId()
-      .mergeMap(([tenantId, userId]) => {
+      .getTenantIdAndUserIdAndExhibitorIdAndExhibitionId()
+      .mergeMap(([tenantId, userId, exhibitorId, exhibitionId]) => {
         return this.http.post(this.insertUrl, {
           tenantId,
-          userId,
+          // userId,
           params: {
             record: {
               Name: user.name,
               UserName: user.phone,
               UserPassword: 888888,
               Admin: '0'
-            }
+            },
+            ExhibitorId: exhibitorId,
+            ExhibitionId: exhibitionId
           }
         })
       })
@@ -64,7 +66,7 @@ export class UserService {
       .mergeMap(([tenantId, userId]) =>
         this.http.post(this.queryUrl, {
           tenantId,
-          userId,
+          // userId,
           params: {
             condition: {
               Admin: '0'
@@ -102,7 +104,7 @@ export class UserService {
       .mergeMap(([tenantId, userId]) => {
         return this.http.post(this.deleteUrl, {
           tenantId,
-          userId,
+          // userId,
           params: {
             recordId: id
           }

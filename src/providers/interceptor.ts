@@ -39,8 +39,12 @@ export class ApiErrorInterceptor implements HttpInterceptor {
           if (event instanceof HttpResponse) {
             if (event.body && event.url.indexOf(HOST) >= 0) {
               if (event.body.resCode !== 0) {
-                console.error(`API Error; ${event.body.resMsg}`)
-                throw new Error(event.body.resMsg)
+                let msg = event.body.resMsg
+                if (event.body.resCode === 1004) {
+                  msg = '手机号不存在'
+                }
+                console.error(`API Error; ${msg}`)
+                throw new Error(msg)
               }
             }
           }

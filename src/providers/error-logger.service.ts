@@ -77,7 +77,7 @@ export class ErrorLoggerService {
       ? info.error.message
       : info.error.status
         ? `${info.error.status} - ${info.error.statusText}`
-        : 'Server error'
+        : '服务器繁忙，请稍候'
 
     this.error({
       module: info.module,
@@ -85,7 +85,7 @@ export class ErrorLoggerService {
       description: errMsg
     })
 
-    return Observable.throw(errMsg)
+    return Observable.throw(new Error(errMsg))
   }
 
   /**

@@ -3,8 +3,10 @@ import { Action } from '@ngrx/store'
 import { FetchExhibitionsAndLoginResp } from '../../../providers/login.service'
 
 export const FETCH_ALL_EXHIBITIONS = '[Login] Fetch All Exhibitions'
-export const FETCH_ALL_EXHIBITIONS_SUCCESS = '[Login] Fetch All Exhibitions Success'
-export const FETCH_ALL_EXHIBITIONS_FAILURE = '[Login] Fetch All Exhibitions Failure'
+export const FETCH_ALL_EXHIBITIONS_SUCCESS =
+  '[Login] Fetch All Exhibitions Success'
+export const FETCH_ALL_EXHIBITIONS_FAILURE =
+  '[Login] Fetch All Exhibitions Failure'
 export const TO_WELCOME = '[Login] To Welcome'
 export const SELECT_EXHIBITION = '[Login] Select Exhibition'
 /**
@@ -26,7 +28,7 @@ export class FetchAllExhibitionsSuccessAction implements Action {
 
 export class FetchAllExhibitionsFailureAction implements Action {
   readonly type = FETCH_ALL_EXHIBITIONS_FAILURE
-  constructor() {}
+  constructor(public errorMsg: string) {}
 }
 
 export class ToWelcomeAction implements Action {
@@ -39,15 +41,13 @@ export class SelectExhibitionAction implements Action {
   constructor(public exhibitionId: string) {}
 }
 
-
-
 /**
  * Export a type alias of all actions in this action group
  * so that reducers can easily compose action types
  */
 export type Actions =
-FetchAllExhibitionsAction |
-FetchAllExhibitionsSuccessAction |
-FetchAllExhibitionsFailureAction |
-ToWelcomeAction |
-SelectExhibitionAction
+  | FetchAllExhibitionsAction
+  | FetchAllExhibitionsSuccessAction
+  | FetchAllExhibitionsFailureAction
+  | ToWelcomeAction
+  | SelectExhibitionAction

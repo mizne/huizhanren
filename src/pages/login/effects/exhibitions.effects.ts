@@ -31,39 +31,46 @@ export class ExhibitionsEffects {
             new fromExhibitions.ToWelcomeAction()
           ]
         })
-        .catch(() => {
+        .catch(e => {
           loadingCtrl.dismiss()
-          return Observable.of(new fromExhibitions.FetchAllExhibitionsFailureAction())
+          return Observable.of(
+            new fromExhibitions.FetchAllExhibitionsFailureAction(e.message)
+          )
         })
     })
 
   @Effect({ dispatch: false })
   fetchAllExhibitionsFailure$ = this.actions$
     .ofType(fromExhibitions.FETCH_ALL_EXHIBITIONS_FAILURE)
-    .do(() => {
-        this.toastService.show('未绑定该手机号')
+    .map(
+      (action: fromExhibitions.FetchAllExhibitionsFailureAction) =>
+        action.errorMsg
+    )
+    .do(msg => {
+      this.toastService.show(msg)
     })
 
   @Effect({ dispatch: false })
-  toWelcome$ = this.actions$.ofType(fromExhibitions.TO_WELCOME)
-  .switchMap(() => {
-    return Observable.fromPromise(
-      new Promise((res, _) => {
-        const welcomeModal = this.modalCtrl.create(WelcomeModal, {})
-        welcomeModal.onDidDismiss(text => {
-          res(text)
-        })
+  toWelcome$ = this.actions$
+    .ofType(fromExhibitions.TO_WELCOME)
+    .switchMap(() => {
+      return Observable.fromPromise(
+        new Promise((res, _) => {
+          const welcomeModal = this.modalCtrl.create(WelcomeModal, {})
+          welcomeModal.onDidDismiss(text => {
+            res(text)
+          })
 
-        welcomeModal.present()
-      })
-    )
-  })
+          welcomeModal.present()
+        })
+      )
+    })
 
   constructor(
     private actions$: Actions,
     private modalCtrl: ModalController,
     private toastService: ToastService,
     private loadCtrl: LoadingController,
-    private loginService: LoginService,
+    private loginService: LoginService
   ) {}
 }

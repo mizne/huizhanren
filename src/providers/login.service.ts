@@ -10,7 +10,7 @@ export interface FetchExhibitionsAndLoginResp extends LoginResp {
   exhibitions: Exhibition[]
 }
 
-interface LoginResp {
+export interface LoginResp {
   adminName: string
   userName: string
   tenantId: string
@@ -20,6 +20,13 @@ interface LoginResp {
   boothNo: string
   exhibitionIds: string[]
 }
+
+export interface ExhibitorContact {
+  Name: string
+  Phone: string
+  isAdmin: number
+}
+
 /*
   Generated class for the OcrServiceProvider provider.
 
@@ -28,8 +35,9 @@ interface LoginResp {
 */
 @Injectable()
 export class LoginService {
-  private exhibitionsUrl: string = '/data/queryList/Exhibition'
-  private loginUrl: string = '/data/boxLogin'
+  private exhibitionsUrl = '/data/queryList/Exhibition'
+  private queryExhibitorContact = '/data/queryList/ExhibitorContact'
+  private loginUrl = '/data/boxLogin'
 
   /**
    * 最大 http请求错误 重试次数
@@ -60,46 +68,30 @@ export class LoginService {
    * @memberof LoginService
    */
   fetchExhibitionsAndLogin(phone): Observable<FetchExhibitionsAndLoginResp> {
-    return (
-      this.login(phone)
-        .mergeMap(loginResp => {
-          return this.fetchExhibitions(loginResp.exhibitionIds).map(
-            exhibitions => {
-              return {
-                adminName: loginResp.adminName,
-                userName: loginResp.userName,
-                tenantId: loginResp.tenantId,
-                userId: loginResp.userId,
-                exhibitorId: loginResp.exhibitorId,
-                companyName: loginResp.companyName,
-                boothNo: loginResp.boothNo,
-                exhibitions: exhibitions
-              }
+    return this.login(phone)
+      .mergeMap(loginResp => {
+        return this.fetchExhibitions(loginResp.exhibitionIds).map(
+          exhibitions => {
+            return {
+              adminName: loginResp.adminName,
+              userName: loginResp.userName,
+              tenantId: loginResp.tenantId,
+              userId: loginResp.userId,
+              exhibitorId: loginResp.exhibitorId,
+              companyName: loginResp.companyName,
+              boothNo: loginResp.boothNo,
+              exhibitions: exhibitions
             }
-          )
+          }
+        )
+      })
+      .catch(e => {
+        return this.logger.httpError({
+          module: 'LoginService',
+          method: 'fetchExhibitionsAndLogin',
+          error: e
         })
-
-        // return Observable.forkJoin(this.fetchExhibitions(phone), this.login(phone))
-        //   .map(([exhibitons, loginResp]) => {
-        //     return {
-        //       adminName: loginResp.adminName,
-        //       userName: loginResp.userName,
-        //       tenantId: loginResp.tenantId,
-        //       userId: loginResp.userId,
-        //       exhibitorId: loginResp.exhibitorId,
-        //       companyName: loginResp.companyName,
-        //       boothNo: loginResp.boothNo,
-        //       exhibitions: exhibitons
-        //     }
-        //   })
-        .catch(e => {
-          return this.logger.httpError({
-            module: 'LoginService',
-            method: 'fetchExhibitionsAndLogin',
-            error: e
-          })
-        })
-    )
+      })
   }
 
   /**
@@ -145,10 +137,10 @@ export class LoginService {
   }
 
   /**
-   * 登录
+   * 录
    *
    * @private
-   * @param {any} phone
+   * @param {string} phone
    * @returns {Observable<LoginResp>}
    * @memberof LoginService
    */
@@ -159,21 +151,28 @@ export class LoginService {
           UserName: phone
         }
       })
-      .map(res => {
+      .mergeMap(res => {
         const results = (res as APIResponse).result
-        const adminName = results[0].LinkList.find(e => e.admin === 1).LinkName
-        const userName = results[0].LinkList.find(e => e.LinkMob === phone)
-          .LinkName
-        return {
-          adminName: adminName,
-          userName: userName,
-          tenantId: results[0].TenantId,
-          userId: results[0].UserId,
-          exhibitorId: results[0].RecordId,
-          companyName: results[0].CompanyName,
-          boothNo: results[0].BoothNo,
-          exhibitionIds: results.map(e => e.ExhibitionId)
-        }
+        return this.fetchExhibitorContact(results[0].TenantId).map(contacts => {
+          const admin = contacts.find(e => e.isAdmin === 1)
+          if (!admin) {
+            throw new Error(`该手机号未匹配到展商管理员`)
+          }
+          const user = contacts.find(e => e.Phone === phone)
+          if (!user) {
+            throw new Error(`该手机号未注册展商联系人`)
+          }
+          return {
+            adminName: admin.Name,
+            userName: user.Name,
+            tenantId: results[0].TenantId,
+            userId: results[0].UserId,
+            exhibitorId: results[0].RecordId,
+            companyName: results[0].CompanyName,
+            boothNo: results[0].BoothNo,
+            exhibitionIds: results.map(e => e.ExhibitionId)
+          }
+        })
       })
       .retryWhen(errStream =>
         errStream
@@ -185,5 +184,26 @@ export class LoginService {
           }, 0)
           .delay(this.RETRY_DELAY)
       )
+  }
+
+  /**
+   * 获取展商联系人
+   *
+   * @private
+   * @param {string} tenantId
+   * @returns {Observable<ExhibitorContact[]>}
+   * @memberof LoginService
+   */
+  private fetchExhibitorContact(
+    tenantId: string
+  ): Observable<ExhibitorContact[]> {
+    return this.http
+      .post(this.queryExhibitorContact, {
+        tenantId,
+        params: {
+          condition: {}
+        }
+      })
+      .map(res => (res as any).result)
   }
 }

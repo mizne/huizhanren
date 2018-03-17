@@ -11,7 +11,6 @@ export class ImgDetectorDirective {
     this.img = this.el.nativeElement
     this.img.onload = function(ev) {
       console.log(`width: ${this.width}; height: ${this.height}`)
-      debugger
       if (this.height > this.width) {
         self.addTransform()
       } else {
@@ -26,16 +25,19 @@ export class ImgDetectorDirective {
         this.rd.setStyle(
           this.img,
           'transform',
-          'scale(0.7) rotate(-90deg) translateX(67%)'
+          'scale(0.7) rotate(-90deg) translateX(61%)'
         )
       }
       if (this.imgDetector === 'detailable') {
         this.rd.setStyle(
           this.img,
           'transform',
-          'scale(0.7) rotate(-90deg) translateX(-83%)'
+          'scale(0.7) rotate(-90deg) translateX(-63%)'
         )
       }
+
+      this.rd.setStyle(this.img, 'width', '310px')
+      this.rd.setStyle(this.img, 'height', '460px')
     }
   }
 
