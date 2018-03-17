@@ -121,19 +121,7 @@ export class LoginService {
           endTime: e.EndTime
         }))
       })
-      .retryWhen(errStream =>
-        errStream
-          .scan((errCount, err) => {
-            if (err.message === '没有查询到会展信息') {
-              throw err
-            }
-            if (errCount >= this.MAX_RETRY_COUNT) {
-              throw err
-            }
-            return errCount + 1
-          }, 0)
-          .delay(this.RETRY_DELAY)
-      )
+      .pipe(retry(this.MAX_RETRY_COUNT, this.RETRY_DELAY))
   }
 
   /**
@@ -174,16 +162,7 @@ export class LoginService {
           }
         })
       })
-      .retryWhen(errStream =>
-        errStream
-          .scan((errCount, err) => {
-            if (errCount >= this.MAX_RETRY_COUNT) {
-              throw err
-            }
-            return errCount + 1
-          }, 0)
-          .delay(this.RETRY_DELAY)
-      )
+      .pipe(retry(this.MAX_RETRY_COUNT, this.RETRY_DELAY))
   }
 
   /**
@@ -205,5 +184,23 @@ export class LoginService {
         }
       })
       .map(res => (res as any).result)
+  }
+}
+
+function retry<T>(
+  count = 3,
+  delay = 5e2
+): (source: Observable<T>) => Observable<T> {
+  return (src: Observable<T>) => {
+    return src.retryWhen(errors =>
+      errors
+        .scan((errCount, err) => {
+          if (errCount >= count) {
+            throw err
+          }
+          return errCount + 1
+        }, 0)
+        .delay(delay)
+    )
   }
 }

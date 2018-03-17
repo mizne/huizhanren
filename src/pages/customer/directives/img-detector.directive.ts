@@ -10,7 +10,6 @@ export class ImgDetectorDirective {
     const self = this
     this.img = this.el.nativeElement
     this.img.onload = function(ev) {
-      console.log(`width: ${this.width}; height: ${this.height}`)
       if (this.height > this.width) {
         self.addTransform()
       } else {
