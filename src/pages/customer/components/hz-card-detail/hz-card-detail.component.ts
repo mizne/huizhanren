@@ -41,10 +41,12 @@ interface Field {
           </div>
         </ion-slide>
         <ion-slide>
-          <div *ngIf="(customer$ | async)?.imageBehindUrl" class="swiper-zoom-container">
+          <div *ngIf="(customer$ | async)?.imageBehindUrl; else noBehindBlock;" class="swiper-zoom-container">
             <img [src]="(customer$ | async)?.imageBehindUrl">
           </div>
-          <ion-label *ngIf="!(customer$ | async)?.imageBehindUrl">背面未添加</ion-label>
+          <ng-template #noBehindBlock>
+            <div class="no-behind-image">背面未添加</div>
+          </ng-template>
         </ion-slide>
       </ion-slides>
         </div>

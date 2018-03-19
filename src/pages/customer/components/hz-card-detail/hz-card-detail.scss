@@ -28,10 +28,6 @@ hz-card-detail {
     padding: 18px 30px;
     transition: all ease 0.8s;
 
-    ion-label {
-      color: map-get($map: $colors, $key: white);
-    }
-
     .hz-img-wrapper {
       height: 100%;
       img {
@@ -48,6 +44,11 @@ hz-card-detail {
 
     .hz-img-wrapper {
       width: 50%;
+
+      .no-behind-image {
+        transform: translateY(-70px);
+        color: map-get($map: $colors, $key: white);
+      }
     }
   }
 
