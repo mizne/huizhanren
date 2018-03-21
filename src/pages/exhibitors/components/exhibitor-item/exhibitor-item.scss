@@ -59,6 +59,7 @@
 
       .industry {
         padding: 2px 5px;
+        @include textOverflow(100px);
         color: map-get($map: $colors, $key: primary);
       }
 
